@@ -5,7 +5,7 @@ import Startup from './src/Components/Startup/Startup';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Startup/>
+      <Startup />
       <StatusBar style="auto" />
     </View>
   );
