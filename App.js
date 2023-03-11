@@ -2,29 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
+import { ThemeProvider } from '@rneui/themed';
 
-import ScreenTemplate from './src/Components/ScreenTemplate';
-import LandingScreen from './src/Screens/LandingScreen';
-import HomeScreen from './src/Screens/Home/HomeScreen';
+import HomeScreen from './src/Screens/HomeScreen';
 
 import ROUTES from './src/_shared/constant/routes';
-import { COLORS } from './src/_shared/constant/theme';
+import { THEME } from './src/_shared/constant/theme';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
-
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: COLORS.primary,
-    background: COLORS.lightGray,
-    text: COLORS.gray,
-  },
-};
 
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
@@ -32,21 +21,45 @@ function App() {
   useEffect(() => {
     async function init() {
       try {
-        // Load outline icon font
         await Font.loadAsync(
-          'antoutline',
-          require('@ant-design/icons-react-native/fonts/antoutline.ttf'),
+          'ZenKakuGothicNewBlack',
+          require('./assets/fonts/ZenKakuGothicNew-Black.ttf'),
         );
 
-        // Load fill icon font
         await Font.loadAsync(
-          'antfill',
-          require('@ant-design/icons-react-native/fonts/antfill.ttf'),
+          'ZenKakuGothicNewBlack',
+          require('./assets/fonts/ZenKakuGothicNew-Black.ttf'),
+        );
+
+        await Font.loadAsync(
+          'ZenKakuGothicNewBold',
+          require('./assets/fonts/ZenKakuGothicNew-Bold.ttf'),
+        );
+
+        await Font.loadAsync(
+          'ZenKakuGothicNewLight',
+          require('./assets/fonts/ZenKakuGothicNew-Light.ttf'),
+        );
+
+        await Font.loadAsync(
+          'ZenKakuGothicNewMedium',
+          require('./assets/fonts/ZenKakuGothicNew-Medium.ttf'),
+        );
+
+        await Font.loadAsync(
+          'ZenKakuGothicNewRegular',
+          require('./assets/fonts/ZenKakuGothicNew-Regular.ttf'),
+        );
+
+        // Custom icon font
+        await Font.loadAsync(
+          'Nucleo',
+          require('./assets/icons/fonts/Nucleo.ttf'),
         );
 
         // TODO: REMOVE IN PROD
         // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.log(e);
       } finally {
@@ -68,29 +81,22 @@ function App() {
     }
   }, [isAppReady]);
 
-  const wrapScreenTemplate = children => (
-    <ScreenTemplate onLayout={onLayoutRootView}>{children}</ScreenTemplate>
-  );
-
   if (!isAppReady) {
     return null;
   }
 
   return (
-    <NavigationContainer theme={theme}>
-      <Stack.Navigator
-        initialRouteName={ROUTES.landing}
-        screenOptions={{ headerShown: false, animation: 'none' }}>
-        <Stack.Screen
-          name={ROUTES.landing}
-          children={() => wrapScreenTemplate(<LandingScreen />)}
-        />
-        <Stack.Screen
-          name={ROUTES.home}
-          children={() => wrapScreenTemplate(<HomeScreen />)}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={THEME}>
+      <NavigationContainer theme={THEME}>
+        <Stack.Navigator
+          initialRouteName={ROUTES.home}
+          screenOptions={{ headerShown: false, animation: 'none' }}>
+          <Stack.Screen name={ROUTES.home}>
+            {props => <HomeScreen {...props} onLayout={onLayoutRootView} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 
