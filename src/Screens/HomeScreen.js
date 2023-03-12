@@ -87,17 +87,17 @@ export default HomeScreen;
 const getStyles = theme =>
   StyleSheet.create({
     tabBarIcon: {
-      marginTop: theme.spacing.sm,
+      marginTop: theme.spacing.md,
     },
     tabBarLabel: {
       fontFamily: theme.fontFamily.medium,
-      fontSize: theme.spacing.lg,
-      marginBottom: theme.spacing.sm,
+      fontSize: theme.fontSizes.caption,
+      marginBottom: theme.spacing.md,
     },
     tabBar: {
       borderTopColor: theme.colors.grey4,
-      backgroundColor: theme.colors.grey5,
-      height: '8%',
+      backgroundColor: theme.colors.white,
+      height: '10%',
       maxHeight: 60,
     },
   });

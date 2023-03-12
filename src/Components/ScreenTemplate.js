@@ -1,5 +1,6 @@
-import { StyleSheet, SafeAreaView } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 import { useTheme } from '@rneui/themed';
 
 function ScreenTemplate(props) {
@@ -7,10 +8,9 @@ function ScreenTemplate(props) {
   const styles = getStyles(theme);
 
   return (
-    <SafeAreaView style={styles.container} {...props}>
-      <StatusBar />
+    <SafeAreaProvider style={styles.container} {...props}>
       {props.children}
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
