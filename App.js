@@ -82,7 +82,7 @@ function App() {
 
   return (
     <ThemeProvider theme={THEME}>
-      <NavigationContainer>{render()}</NavigationContainer>
+      <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
     </ThemeProvider>
   );
 }

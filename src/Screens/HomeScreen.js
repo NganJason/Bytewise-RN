@@ -3,7 +3,6 @@ import { useTheme } from '@rneui/themed';
 import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
-import ScreenTemplate from '../Components/ScreenTemplate';
 import BudgetScreen from './Budget/BudgetScreen';
 import AssetScreen from './Asset/AssetScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
@@ -19,10 +18,6 @@ const Icon = createIconSet(glyphMap, 'Nucleo');
 const HomeScreen = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-
-  const wrapScreenTemplate = children => (
-    <ScreenTemplate>{children}</ScreenTemplate>
-  );
 
   const renderTabIcon = (routeName, { color, size }) => {
     let iconName;
@@ -62,22 +57,10 @@ const HomeScreen = () => {
         tabBarIcon: ({ _, color, size }) =>
           renderTabIcon(route.name, { color, size }),
       })}>
-      <Tab.Screen
-        name={ROUTES.budget}
-        children={() => wrapScreenTemplate(<BudgetScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.transaction}
-        children={() => wrapScreenTemplate(<TransactionScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.asset}
-        children={() => wrapScreenTemplate(<AssetScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.settings}
-        children={() => wrapScreenTemplate(<SettingScreen />)}
-      />
+      <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
+      <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
+      <Tab.Screen name={ROUTES.asset} component={AssetScreen} />
+      <Tab.Screen name={ROUTES.settings} component={SettingScreen} />
     </Tab.Navigator>
   );
 };

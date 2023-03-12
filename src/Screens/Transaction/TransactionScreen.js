@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme, Header, Icon, Button } from '@rneui/themed';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import BaseText from '../../Components/BaseText';
 import { MONTHS } from '../../_shared/constant/constant';
@@ -24,7 +25,7 @@ const TransactionScreen = () => {
   const subOneMonth = () => setDate(moveMonth(-1));
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaProvider style={styles.screen}>
       <Header
         centerComponent={
           <BaseText h3 style={styles.dateText}>
@@ -41,15 +42,15 @@ const TransactionScreen = () => {
             <Icon name="chevron-left" color={theme.colors.primary} />
           </Button>
         }
-        containerStyle={styles.parentContainer}
-        rightContainerStyle={styles.childContainer}
-        leftContainerStyle={styles.childContainer}
-        centerContainerStyle={styles.childContainer}
+        containerStyle={styles.header}
+        rightContainerStyle={styles.headerItem}
+        leftContainerStyle={styles.headerItem}
+        centerContainerStyle={styles.headerItem}
       />
-      <View>
+      <View style={styles.body}>
         <Text>Body</Text>
       </View>
-    </View>
+    </SafeAreaProvider>
   );
 };
 
@@ -58,14 +59,22 @@ export default TransactionScreen;
 const getStyles = theme =>
   StyleSheet.create({
     screen: {
-      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
     },
-    parentContainer: {
+    header: {
+      width: '70%',
       backgroundColor: theme.colors.white,
       borderBottomColor: theme.colors.white,
+      paddingVertical: theme.spacing.xl,
     },
-    childContainer: {
+    headerItem: {
       justifyContent: 'center',
+    },
+    body: {
+      width: '100%',
+      height: '100%',
+      paddingHorizontal: theme.spacing.xl,
     },
     dateText: {
       color: theme.colors.primary,
