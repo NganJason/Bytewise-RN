@@ -1,6 +1,52 @@
 import { View, StyleSheet } from 'react-native';
-import { useTheme, Text, LinearProgress } from '@rneui/themed';
+import { useTheme, LinearProgress } from '@rneui/themed';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import BaseText from '../../Components/BaseText';
+
+const fakeCategory = [
+  {
+    name: 'Food',
+    budget: 'S$150',
+    used: 0.4,
+  },
+  {
+    name: 'Transport',
+    budget: 'S$100',
+    used: 0.7,
+  },
+  {
+    name: 'Personal',
+    budget: 'S$200',
+    used: 0.1,
+  },
+  {
+    name: 'Groceries',
+    budget: 'S$50',
+    used: 0.8,
+  },
+];
+
+const getBudgetCategory = (theme, styles, category) => {
+  return (
+    <View style={styles.budgetItemContainer}>
+      <View style={styles.budgetItemInfo}>
+        <BaseText h5 style={{ color: theme.colors.grey6 }}>
+          {category.name}
+        </BaseText>
+        <BaseText h5 style={{ color: theme.colors.grey6 }}>
+          {category.budget}
+        </BaseText>
+      </View>
+      <View style={styles.progress}>
+        <LinearProgress
+          color={theme.colors.primary}
+          trackColor={theme.colors.secondary}
+          value={category.used}
+        />
+      </View>
+    </View>
+  );
+};
 
 const BudgetScreen = () => {
   const { theme } = useTheme();
@@ -16,7 +62,14 @@ const BudgetScreen = () => {
             color={theme.colors.grey4}
           />
         </View>
-        <Text style={styles.budgetHeaderText}>2023 Budget</Text>
+        <BaseText
+          h3
+          style={{
+            color: theme.colors.primary,
+            fontFamily: theme.fontFamily.semiBold,
+          }}>
+          2023 Budget
+        </BaseText>
         <View style={styles.budgetHeaderIcon}>
           <Ionicons
             name="chevron-forward-outline"
@@ -28,9 +81,16 @@ const BudgetScreen = () => {
 
       <View style={styles.overviewContainer}>
         <View style={styles.overview}>
-          <Text style={styles.budgetText}>Budget: S$90,000</Text>
-          <Text style={styles.separatorText}> | </Text>
-          <Text style={styles.usedText}>Used: S$30,000</Text>
+          <BaseText style={{ color: theme.colors.primary, fontSize: '15%' }}>
+            Budget: S$90,000
+          </BaseText>
+          <BaseText style={{ color: theme.colors.grey4, fontSize: '15%' }}>
+            {' '}
+            |{' '}
+          </BaseText>
+          <BaseText style={{ color: theme.colors.red0, fontSize: '15%' }}>
+            Used: S$30,000
+          </BaseText>
         </View>
         <View style={styles.progress}>
           <LinearProgress
@@ -41,19 +101,9 @@ const BudgetScreen = () => {
         </View>
       </View>
 
-      <View style={styles.budgetItemContainer}>
-        <View style={styles.budgetItemInfo}>
-          <Text style={styles.budgetText}>Food</Text>
-          <Text>S$150</Text>
-        </View>
-        <View>
-          <LinearProgress
-            color={theme.colors.primary}
-            trackColor={theme.colors.secondary}
-            value={0.5}
-          />
-        </View>
-      </View>
+      {fakeCategory.map(category => {
+        return getBudgetCategory(theme, styles, category);
+      })}
     </View>
   );
 };
@@ -65,7 +115,7 @@ const getStyles = theme => {
       width: '100%',
       display: 'flex',
       alignItems: 'center',
-      paddingTop: '7%',
+      paddingTop: '13%',
       paddingHorizontal: '10%',
     },
     budgetHeader: {
@@ -96,19 +146,11 @@ const getStyles = theme => {
     },
     progress: {
       width: '100%',
-    },
-    budgetText: {
-      color: theme.colors.primary,
-    },
-    usedText: {
-      color: theme.colors.red0,
-    },
-    separatorText: {
-      color: theme.colors.grey4,
+      marginTop: '1.5%',
     },
     budgetItemContainer: {
       width: '100%',
-      marginTop: '10%',
+      marginTop: '13%',
     },
     budgetItemInfo: {
       display: 'flex',
