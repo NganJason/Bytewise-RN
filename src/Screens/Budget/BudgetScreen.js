@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import { useTheme, LinearProgress } from '@rneui/themed';
+import { useTheme, LinearProgress, Button } from '@rneui/themed';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import BaseText from '../../Components/BaseText';
 
@@ -113,6 +113,19 @@ const BudgetScreen = () => {
       {mockBudgetCategories.map(category => {
         return getBudgetCategory(theme, styles, category);
       })}
+
+      <Button
+        buttonStyle={styles.editBtn}
+        containerStyle={styles.editBtnContainer}>
+        <BaseText
+          h4
+          style={{
+            color: theme.colors.grey2,
+            fontFamily: theme.fontFamily.medium,
+          }}>
+          Edit
+        </BaseText>
+      </Button>
     </View>
   );
 };
@@ -156,6 +169,13 @@ const getStyles = theme => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: '3%',
+    },
+    editBtn: {
+      borderRadius: '7',
+      backgroundColor: theme.colors.secondary,
+    },
+    editBtnContainer: {
+      marginTop: '15%',
     },
   });
 };
