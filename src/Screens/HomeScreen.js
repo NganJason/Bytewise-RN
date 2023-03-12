@@ -22,6 +22,7 @@ const HomeScreen = ({ onLayout }) => {
   const styles = StyleSheet.create({
     tabBarIcon: {
       marginTop: theme.spacing.sm,
+      height: '100%',
     },
     tabBarLabel: {
       marginBottom: theme.spacing.sm,
@@ -29,10 +30,8 @@ const HomeScreen = ({ onLayout }) => {
       fontSize: theme.spacing.lg,
     },
     tabBar: {
-      backgroundColor: theme.colors.grey5,
       borderTopColor: theme.colors.grey4,
-      height: '8%',
-      maxHeight: 60,
+      paddingVertical: 5,
     },
   });
 

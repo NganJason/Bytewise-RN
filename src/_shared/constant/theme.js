@@ -2,7 +2,8 @@ import { createTheme } from '@rneui/themed';
 import { DefaultTheme } from '@react-navigation/native';
 
 const COLORS = {
-  primary: '#008248',
+  primary: '#00754A',
+  secondary: '#E4F2ED',
   black: '#252525',
   white: '#FFF',
   grey0: '#383E42',
@@ -11,6 +12,7 @@ const COLORS = {
   grey3: '#86939E',
   grey4: '#bdc6cf',
   grey5: '#F2F2F2',
+  red0: '#B85050',
   disabled: '#E3E6E8',
   error: '#F41A0F',
   success: '#52C41A',
@@ -28,9 +30,10 @@ const FONTS = {
 export const THEME = createTheme({
   colors: {
     ...DefaultTheme.colors,
-    background: COLORS.grey5,
+    background: COLORS.white,
     text: COLORS.grey1,
     primary: COLORS.primary,
+    secondary: COLORS.secondary,
     error: COLORS.error,
     success: COLORS.success,
     warning: COLORS.warning,
@@ -41,6 +44,7 @@ export const THEME = createTheme({
     grey3: COLORS.grey3,
     grey4: COLORS.grey4,
     grey5: COLORS.grey5,
+    red0: COLORS.red0,
   },
   fontFamily: {
     bold: FONTS.ZenKakuGothicNewBlack,

@@ -1,1 +1,6 @@
-{ "icon-budget": 59909, "icon-asset": 59911, "icon-transaction": 59912, "icon-settings": 59913}
+{ 
+    "icon-budget": 59909, 
+    "icon-asset": 59911, 
+    "icon-transaction": 59912, 
+    "icon-settings": 59913
+}
