@@ -1,0 +1,40 @@
+{
+  "categories": [
+    {
+      "category_id": 4,
+      "category_name": "Shopee Salary",
+      "category_parent": 3,
+      "transaction_type": 1,
+      "ctime": 1673153014,
+      "mtime": 1673153014
+    },
+    {
+      "category_id": 3,
+      "category_name": "Fixed Income",
+      "category_parent": 0,
+      "transaction_type": 1,
+      "ctime": 1673153014,
+      "mtime": 1673153014
+    },
+    {
+      "category_id": 2,
+      "category_name": "Lunch",
+      "category_parent": 1,
+      "transaction_type": 2,
+      "ctime": 1673153014,
+      "mtime": 1673153014
+    },
+    {
+      "category_id": 1,
+      "category_name": "Food",
+      "category_parent": 0,
+      "transaction_type": 2,
+      "ctime": 1673153014,
+      "mtime": 1673153014
+    }
+  ],
+  "paging": {
+    "cursor": 0,
+    "limit": 1000
+  }
+}
