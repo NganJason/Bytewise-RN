@@ -30,9 +30,9 @@ const FONTS = {
 
 const FONT_SIZES = {
   h1: 32,
-  h2: 28,
-  h3: 24,
-  h4: 18,
+  h2: 22,
+  h3: 18,
+  h4: 15,
   body: 16,
   caption: 12,
 };

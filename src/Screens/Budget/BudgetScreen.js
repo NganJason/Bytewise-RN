@@ -3,7 +3,7 @@ import { useTheme, LinearProgress } from '@rneui/themed';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import BaseText from '../../Components/BaseText';
 
-const fakeCategory = [
+const mockBudgetCategories = [
   {
     name: 'Food',
     budget: 'S$150',
@@ -28,12 +28,22 @@ const fakeCategory = [
 
 const getBudgetCategory = (theme, styles, category) => {
   return (
-    <View style={styles.budgetItemContainer}>
-      <View style={styles.budgetItemInfo}>
-        <BaseText h5 style={{ color: theme.colors.grey6 }}>
+    <View style={styles.budgetCatContainer}>
+      <View style={styles.budgetCatInfo}>
+        <BaseText
+          h3
+          style={{
+            color: theme.colors.grey6,
+            fontFamily: theme.fontFamily.regular,
+          }}>
           {category.name}
         </BaseText>
-        <BaseText h5 style={{ color: theme.colors.grey6 }}>
+        <BaseText
+          h3
+          style={{
+            color: theme.colors.grey6,
+            fontFamily: theme.fontFamily.regular,
+          }}>
           {category.budget}
         </BaseText>
       </View>
@@ -63,10 +73,9 @@ const BudgetScreen = () => {
           />
         </View>
         <BaseText
-          h3
+          h2
           style={{
             color: theme.colors.primary,
-            fontFamily: theme.fontFamily.semiBold,
           }}>
           2023 Budget
         </BaseText>
@@ -81,14 +90,14 @@ const BudgetScreen = () => {
 
       <View style={styles.overviewContainer}>
         <View style={styles.overview}>
-          <BaseText style={{ color: theme.colors.primary, fontSize: '15%' }}>
+          <BaseText h4 style={{ color: theme.colors.primary }}>
             Budget: S$90,000
           </BaseText>
-          <BaseText style={{ color: theme.colors.grey4, fontSize: '15%' }}>
+          <BaseText h4 style={{ color: theme.colors.grey4 }}>
             {' '}
             |{' '}
           </BaseText>
-          <BaseText style={{ color: theme.colors.red0, fontSize: '15%' }}>
+          <BaseText h4 style={{ color: theme.colors.red0 }}>
             Used: S$30,000
           </BaseText>
         </View>
@@ -101,7 +110,7 @@ const BudgetScreen = () => {
         </View>
       </View>
 
-      {fakeCategory.map(category => {
+      {mockBudgetCategories.map(category => {
         return getBudgetCategory(theme, styles, category);
       })}
     </View>
@@ -113,21 +122,14 @@ const getStyles = theme => {
     pageContainer: {
       height: '100%',
       width: '100%',
-      display: 'flex',
       alignItems: 'center',
       paddingTop: '13%',
       paddingHorizontal: '10%',
     },
     budgetHeader: {
-      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    budgetHeaderText: {
-      color: theme.colors.primary,
-      fontFamily: theme.fontFamily.semiBold,
-      fontSize: '25%',
     },
     budgetHeaderIcon: {
       marginTop: '1%',
@@ -135,12 +137,10 @@ const getStyles = theme => {
     },
     overviewContainer: {
       width: '90%',
-      display: 'flex',
       alignItems: 'center',
       marginBottom: '5%',
     },
     overview: {
-      display: 'flex',
       flexDirection: 'row',
       marginVertical: '6%',
     },
@@ -148,12 +148,11 @@ const getStyles = theme => {
       width: '100%',
       marginTop: '1.5%',
     },
-    budgetItemContainer: {
+    budgetCatContainer: {
       width: '100%',
-      marginTop: '13%',
+      marginTop: '12%',
     },
-    budgetItemInfo: {
-      display: 'flex',
+    budgetCatInfo: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: '3%',

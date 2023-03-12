@@ -20,10 +20,10 @@ const BaseText = ({
         fontSize: theme.fontSizes.body,
         ...style,
       }}
-      h1Style={styles.h1Style}
-      h2Style={styles.h2Style}
-      h3Style={styles.h3Style}
-      h4Style={styles.h4Style}
+      h1Style={{ ...styles.h1Style, ...style }}
+      h2Style={{ ...styles.h2Style, ...style }}
+      h3Style={{ ...styles.h3Style, ...style }}
+      h4Style={{ ...styles.h4Style, ...style }}
       h1={h1}
       h2={h2}
       h3={h3}
@@ -50,7 +50,7 @@ const getStyles = theme =>
       fontSize: theme.fontSizes.h3,
     },
     h4Style: {
-      fontFamily: theme.fontFamily.medium,
+      fontFamily: theme.fontFamily.regular,
       fontSize: theme.fontSizes.h4,
     },
   });
