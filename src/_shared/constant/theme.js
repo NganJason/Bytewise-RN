@@ -27,6 +27,15 @@ const FONTS = {
   ZenKakuGothicNewRegular: 'ZenKakuGothicNewRegular',
 };
 
+const FONT_SIZES = {
+  h1: 32,
+  h2: 28,
+  h3: 24,
+  h4: 20,
+  body: 16,
+  caption: 12,
+};
+
 export const THEME = createTheme({
   colors: {
     ...DefaultTheme.colors,
@@ -45,6 +54,8 @@ export const THEME = createTheme({
     grey4: COLORS.grey4,
     grey5: COLORS.grey5,
     red0: COLORS.red0,
+    white: COLORS.white,
+    black: COLORS.black,
   },
   fontFamily: {
     bold: FONTS.ZenKakuGothicNewBlack,
@@ -52,5 +63,13 @@ export const THEME = createTheme({
     light: FONTS.ZenKakuGothicNewLight,
     medium: FONTS.ZenKakuGothicNewMedium,
     regular: FONTS.ZenKakuGothicNewRegular,
+  },
+  fontSizes: {
+    h1: FONT_SIZES.h1,
+    h2: FONT_SIZES.h2,
+    h3: FONT_SIZES.h3,
+    h4: FONT_SIZES.h4,
+    body: FONT_SIZES.body,
+    caption: FONT_SIZES.caption,
   },
 });

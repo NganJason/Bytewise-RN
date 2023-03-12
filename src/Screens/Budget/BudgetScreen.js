@@ -58,7 +58,7 @@ const BudgetScreen = () => {
   );
 };
 
-const getStyles = (theme) => {
+const getStyles = theme => {
   return StyleSheet.create({
     pageContainer: {
       height: '100%',

@@ -3,7 +3,6 @@ import { useTheme } from '@rneui/themed';
 import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
-import ScreenTemplate from '../Components/ScreenTemplate';
 import BudgetScreen from './Budget/BudgetScreen';
 import AssetScreen from './Asset/AssetScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
@@ -16,28 +15,9 @@ import glyphMap from '../../assets/icons/unicodesMap.json';
 const Tab = createBottomTabNavigator();
 const Icon = createIconSet(glyphMap, 'Nucleo');
 
-const HomeScreen = ({ onLayout }) => {
+const HomeScreen = () => {
   const { theme } = useTheme();
-
-  const styles = StyleSheet.create({
-    tabBarIcon: {
-      marginTop: theme.spacing.sm,
-      height: '100%',
-    },
-    tabBarLabel: {
-      marginBottom: theme.spacing.sm,
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.spacing.lg,
-    },
-    tabBar: {
-      borderTopColor: theme.colors.grey4,
-      paddingVertical: 5,
-    },
-  });
-
-  const wrapScreenTemplate = children => (
-    <ScreenTemplate onLayout={onLayout}>{children}</ScreenTemplate>
-  );
+  const styles = getStyles(theme);
 
   const renderTabIcon = (routeName, { color, size }) => {
     let iconName;
@@ -70,30 +50,39 @@ const HomeScreen = ({ onLayout }) => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.inactive,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarIcon: ({ _, color, size }) =>
           renderTabIcon(route.name, { color, size }),
       })}>
-      <Tab.Screen
-        name={ROUTES.budget}
-        children={() => wrapScreenTemplate(<BudgetScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.transaction}
-        children={() => wrapScreenTemplate(<TransactionScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.asset}
-        children={() => wrapScreenTemplate(<AssetScreen />)}
-      />
-      <Tab.Screen
-        name={ROUTES.settings}
-        children={() => wrapScreenTemplate(<SettingScreen />)}
-      />
+      <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
+      <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
+      <Tab.Screen name={ROUTES.asset} component={AssetScreen} />
+      <Tab.Screen name={ROUTES.settings} component={SettingScreen} />
     </Tab.Navigator>
   );
 };
 
 export default HomeScreen;
+
+const getStyles = theme =>
+  StyleSheet.create({
+    tabBarIcon: {
+      marginTop: theme.spacing.md,
+      height: '100%',
+    },
+    tabBarLabel: {
+      fontFamily: theme.fontFamily.medium,
+      fontSize: theme.fontSizes.caption,
+      marginBottom: theme.spacing.md,
+    },
+    tabBar: {
+      borderTopColor: theme.colors.grey4,
+      backgroundColor: theme.colors.white,
+      height: '10%',
+      maxHeight: 60,
+      paddingVertical: 5,
+    },
+  });
