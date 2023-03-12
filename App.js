@@ -1,17 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import * as SplashScreen from 'expo-splash-screen';
+import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 
+import SplashScreen from './src/Components/SplashScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 
@@ -59,7 +56,7 @@ function App() {
 
         // TODO: REMOVE IN PROD
         // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN
-        // await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 2000));
       } catch (e) {
         console.log(e);
       } finally {
@@ -70,32 +67,22 @@ function App() {
     init();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (isAppReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      await SplashScreen.hideAsync();
+  const render = () => {
+    if (!isAppReady) {
+      return <SplashScreen />;
     }
-  }, [isAppReady]);
-
-  if (!isAppReady) {
-    return null;
-  }
+    return (
+      <Stack.Navigator
+        initialRouteName={ROUTES.home}
+        screenOptions={{ headerShown: false, animation: 'none' }}>
+        <Stack.Screen name={ROUTES.home} component={HomeScreen} />
+      </Stack.Navigator>
+    );
+  };
 
   return (
     <ThemeProvider theme={THEME}>
-      <NavigationContainer theme={THEME}>
-        <Stack.Navigator
-          initialRouteName={ROUTES.home}
-          screenOptions={{ headerShown: false, animation: 'none' }}>
-          <Stack.Screen name={ROUTES.home}>
-            {props => <HomeScreen {...props} onLayout={onLayoutRootView} />}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <NavigationContainer>{render()}</NavigationContainer>
     </ThemeProvider>
   );
 }

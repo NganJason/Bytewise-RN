@@ -16,28 +16,12 @@ import glyphMap from '../../assets/icons/unicodesMap.json';
 const Tab = createBottomTabNavigator();
 const Icon = createIconSet(glyphMap, 'Nucleo');
 
-const HomeScreen = ({ onLayout }) => {
+const HomeScreen = () => {
   const { theme } = useTheme();
-
-  const styles = StyleSheet.create({
-    tabBarIcon: {
-      marginTop: theme.spacing.sm,
-    },
-    tabBarLabel: {
-      marginBottom: theme.spacing.sm,
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.spacing.lg,
-    },
-    tabBar: {
-      backgroundColor: theme.colors.grey5,
-      borderTopColor: theme.colors.grey4,
-      height: '8%',
-      maxHeight: 60,
-    },
-  });
+  const styles = getStyles(theme);
 
   const wrapScreenTemplate = children => (
-    <ScreenTemplate onLayout={onLayout}>{children}</ScreenTemplate>
+    <ScreenTemplate>{children}</ScreenTemplate>
   );
 
   const renderTabIcon = (routeName, { color, size }) => {
@@ -71,6 +55,7 @@ const HomeScreen = ({ onLayout }) => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.inactive,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
@@ -98,3 +83,21 @@ const HomeScreen = ({ onLayout }) => {
 };
 
 export default HomeScreen;
+
+const getStyles = theme =>
+  StyleSheet.create({
+    tabBarIcon: {
+      marginTop: theme.spacing.sm,
+    },
+    tabBarLabel: {
+      fontFamily: theme.fontFamily.medium,
+      fontSize: theme.spacing.lg,
+      marginBottom: theme.spacing.sm,
+    },
+    tabBar: {
+      borderTopColor: theme.colors.grey4,
+      backgroundColor: theme.colors.grey5,
+      height: '8%',
+      maxHeight: 60,
+    },
+  });
