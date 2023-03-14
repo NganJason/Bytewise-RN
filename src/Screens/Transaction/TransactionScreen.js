@@ -1,9 +1,11 @@
 import { useState, useCallback } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { useTheme, Header, Icon, Button } from '@rneui/themed';
+import { View, StyleSheet } from 'react-native';
+import { useTheme, Header, Icon, Button, Divider } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import BaseText from '../../Components/BaseText';
+
+import { CURRENCY } from '../../_shared/api/data/model';
 import { MONTHS } from '../../_shared/constant/constant';
 
 const TODAY = new Date();
@@ -28,7 +30,7 @@ const TransactionScreen = () => {
     <SafeAreaProvider style={styles.screen}>
       <Header
         centerComponent={
-          <BaseText h3 style={styles.dateText}>
+          <BaseText h2 style={styles.dateText}>
             {renderDate()}
           </BaseText>
         }
@@ -48,7 +50,19 @@ const TransactionScreen = () => {
         centerContainerStyle={styles.headerItem}
       />
       <View style={styles.body}>
-        <Text>Body</Text>
+        <View style={styles.aggr}>
+          <BaseText h4 style={styles.incomeText}>
+            Income: {CURRENCY.SGD} 30000
+          </BaseText>
+          <Divider
+            orientation="vertical"
+            style={styles.divider}
+            color={theme.colors.grey1}
+          />
+          <BaseText h4 style={styles.expenseText}>
+            Expense: {CURRENCY.SGD} 300
+          </BaseText>
+        </View>
       </View>
     </SafeAreaProvider>
   );
@@ -78,9 +92,25 @@ const getStyles = theme =>
       height: '100%',
       paddingHorizontal: theme.spacing.xl,
     },
+    aggr: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+    },
+    divider: {
+      marginHorizontal: theme.spacing.lg,
+    },
     dateText: {
       color: theme.colors.primary,
       textAlign: 'center',
       width: '100%',
+    },
+    incomeText: {
+      color: theme.colors.primary,
+    },
+    expenseText: {
+      color: theme.colors.red0,
     },
   });

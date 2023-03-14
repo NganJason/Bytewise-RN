@@ -76,13 +76,9 @@ const getStyles = theme =>
     tabBarLabel: {
       fontFamily: theme.fontFamily.medium,
       fontSize: theme.fontSizes.caption,
-      marginBottom: theme.spacing.md,
     },
     tabBar: {
       borderTopColor: theme.colors.grey4,
       backgroundColor: theme.colors.white,
-      height: '10%',
-      maxHeight: 60,
-      paddingVertical: 5,
     },
   });

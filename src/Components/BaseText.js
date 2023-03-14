@@ -37,24 +37,23 @@ export default BaseText;
 const getStyles = theme =>
   StyleSheet.create({
     h1Style: {
-      fontFamily: theme.fontFamily.bold,
+      //fontFamily: theme.fontFamily.bold,
       fontSize: theme.fontSizes.h1,
     },
     h2Style: {
-      fontFamily: theme.fontFamily.semiBold,
+      //fontFamily: theme.fontFamily.semiBold,
       fontSize: theme.fontSizes.h2,
     },
     h3Style: {
-      fontFamily: theme.fontFamily.medium,
+      //fontFamily: theme.fontFamily.medium,
       fontSize: theme.fontSizes.h3,
     },
     h4Style: {
-      fontFamily: theme.fontFamily.regular,
+      //fontFamily: theme.fontFamily.regular,
       fontSize: theme.fontSizes.h4,
     },
     pStyle: {
-      fontFamily: theme.fontFamily.regular,
+      //fontFamily: theme.fontFamily.regular,
       fontSize: theme.fontSizes.body,
-      paddingBottom: 3,
     },
   });

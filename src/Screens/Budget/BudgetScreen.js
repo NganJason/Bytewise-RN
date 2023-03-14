@@ -5,21 +5,25 @@ import BaseText from '../../Components/BaseText';
 
 const mockBudgetCategories = [
   {
+    id: 1,
     name: 'Food',
     budget: 'S$150',
     used: 0.4,
   },
   {
+    id: 2,
     name: 'Transport',
     budget: 'S$100',
     used: 0.7,
   },
   {
+    id: 3,
     name: 'Personal',
     budget: 'S$200',
     used: 0.1,
   },
   {
+    id: 4,
     name: 'Groceries',
     budget: 'S$50',
     used: 0.8,
@@ -28,7 +32,7 @@ const mockBudgetCategories = [
 
 const getBudgetCategory = (theme, styles, category) => {
   return (
-    <View style={styles.budgetCatContainer}>
+    <View style={styles.budgetCatContainer} key={category.id}>
       <View style={styles.budgetCatInfo}>
         <BaseText
           h3
