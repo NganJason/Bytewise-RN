@@ -16,8 +16,7 @@ const BaseText = ({
   return (
     <Text
       style={{
-        fontFamily: theme.fontFamily.regular,
-        fontSize: theme.fontSizes.body,
+        ...styles.pStyle,
         ...style,
       }}
       h1Style={{ ...styles.h1Style, ...style }}
@@ -52,5 +51,10 @@ const getStyles = theme =>
     h4Style: {
       fontFamily: theme.fontFamily.regular,
       fontSize: theme.fontSizes.h4,
+    },
+    pStyle: {
+      fontFamily: theme.fontFamily.regular,
+      fontSize: theme.fontSizes.body,
+      paddingBottom: 3,
     },
   });

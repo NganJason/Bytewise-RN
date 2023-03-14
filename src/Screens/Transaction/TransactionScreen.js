@@ -69,7 +69,9 @@ const getStyles = theme =>
       paddingVertical: theme.spacing.xl,
     },
     headerItem: {
+      display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
     },
     body: {
       width: '100%',
