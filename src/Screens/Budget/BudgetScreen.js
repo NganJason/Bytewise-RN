@@ -1,5 +1,13 @@
-import { View, StyleSheet } from 'react-native';
-import { useTheme, LinearProgress, Button } from '@rneui/themed';
+import { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { useTheme, LinearProgress, Icon } from '@rneui/themed';
+import Collapsible from 'react-native-collapsible';
+
 import Ionicons from '@expo/vector-icons/Ionicons';
 import BaseText from '../../Components/BaseText';
 
@@ -56,6 +64,7 @@ const getBudgetCategory = (theme, styles, category) => {
           color={theme.colors.primary}
           trackColor={theme.colors.secondary}
           value={category.used}
+          style={styles.progressBar}
         />
       </View>
     </View>
@@ -65,72 +74,88 @@ const getBudgetCategory = (theme, styles, category) => {
 const BudgetScreen = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleAccordion = () => {
+    setExpanded(!expanded);
+  };
 
   return (
-    <View style={styles.pageContainer}>
-      <View style={styles.budgetHeader}>
-        <View style={styles.budgetHeaderIcon}>
-          <Ionicons
-            name="chevron-back-outline"
-            size={20}
-            color={theme.colors.grey4}
-          />
+    <ScrollView>
+      <View style={styles.pageContainer}>
+        <View style={styles.pageHeader}>
+          <View style={styles.pageHeaderIcon}>
+            <Ionicons
+              name="chevron-back-outline"
+              size={20}
+              color={theme.colors.grey4}
+            />
+          </View>
+          <BaseText
+            h2
+            style={{
+              color: theme.colors.primary,
+            }}>
+            Mar 2023
+          </BaseText>
+          <View style={styles.pageHeaderIcon}>
+            <Ionicons
+              name="chevron-forward-outline"
+              size={20}
+              color={theme.colors.grey4}
+            />
+          </View>
         </View>
-        <BaseText
-          h2
-          style={{
-            color: theme.colors.primary,
-          }}>
-          2023 Budget
-        </BaseText>
-        <View style={styles.budgetHeaderIcon}>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={20}
-            color={theme.colors.grey4}
-          />
+
+        <View style={styles.overviewContainer}>
+          <View style={styles.overview}>
+            <BaseText h4 style={{ color: theme.colors.primary }}>
+              Budget: S$90,000
+            </BaseText>
+            <BaseText h4 style={{ color: theme.colors.grey4 }}>
+              {' '}
+              |{' '}
+            </BaseText>
+            <BaseText h4 style={{ color: theme.colors.red0 }}>
+              Used: S$30,000
+            </BaseText>
+          </View>
         </View>
+
+        <View style={styles.budgetContainer}>
+          {mockBudgetCategories.map(category => {
+            return getBudgetCategory(theme, styles, category);
+          })}
+        </View>
+
+        <TouchableWithoutFeedback onPress={toggleAccordion}>
+          <View style={styles.catHeaderContainer}>
+            {expanded ? (
+              <Icon
+                name="chevron-up"
+                type="entypo"
+                color={theme.colors.grey4}
+              />
+            ) : (
+              <Icon
+                name="chevron-down"
+                type="entypo"
+                color={theme.colors.grey4}
+              />
+            )}
+
+            <BaseText h2 style={styles.catHeader}>
+              Annual budget
+            </BaseText>
+          </View>
+        </TouchableWithoutFeedback>
+        <Collapsible collapsed={!expanded} style={styles.collapsible}>
+          {mockBudgetCategories.map(category => {
+            return getBudgetCategory(theme, styles, category);
+          })}
+        </Collapsible>
       </View>
-
-      <View style={styles.overviewContainer}>
-        <View style={styles.overview}>
-          <BaseText h4 style={{ color: theme.colors.primary }}>
-            Budget: S$90,000
-          </BaseText>
-          <BaseText h4 style={{ color: theme.colors.grey4 }}>
-            {' '}
-            |{' '}
-          </BaseText>
-          <BaseText h4 style={{ color: theme.colors.red0 }}>
-            Used: S$30,000
-          </BaseText>
-        </View>
-        <View style={styles.progress}>
-          <LinearProgress
-            color={theme.colors.primary}
-            trackColor={theme.colors.secondary}
-            value={0.5}
-          />
-        </View>
-      </View>
-
-      {mockBudgetCategories.map(category => {
-        return getBudgetCategory(theme, styles, category);
-      })}
-
-      <Button
-        buttonStyle={styles.editBtn}
-        containerStyle={styles.editBtnContainer}>
-        <BaseText
-          h4
-          style={{
-            color: theme.colors.grey2,
-            fontFamily: theme.fontFamily.medium,
-          }}>
-          Edit
-        </BaseText>
-      </Button>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -139,23 +164,21 @@ const getStyles = theme => {
     pageContainer: {
       height: '100%',
       width: '100%',
-      alignItems: 'center',
       paddingTop: '13%',
       paddingHorizontal: '10%',
     },
-    budgetHeader: {
+    pageHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
     },
-    budgetHeaderIcon: {
+    pageHeaderIcon: {
       marginTop: '1%',
       marginHorizontal: '3%',
     },
     overviewContainer: {
-      width: '90%',
       alignItems: 'center',
-      marginBottom: '5%',
+      marginBottom: '8%',
     },
     overview: {
       flexDirection: 'row',
@@ -165,21 +188,33 @@ const getStyles = theme => {
       width: '100%',
       marginTop: '1.5%',
     },
+    progressBar: {
+      height: 1,
+    },
+    budgetContainer: {
+      width: '100%',
+    },
     budgetCatContainer: {
       width: '100%',
-      marginTop: '12%',
+      marginBottom: '10%',
     },
     budgetCatInfo: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: '3%',
     },
-    editBtn: {
-      borderRadius: '7',
-      backgroundColor: theme.colors.secondary,
+    catHeaderContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: '8%',
+      shadowColor: theme.colors.grey4,
+      // borderBottomColor: theme.colors.grey4,
+      // borderBottomWidth: '0.5%',
     },
-    editBtnContainer: {
-      marginTop: '15%',
+    catHeader: {
+      color: theme.colors.primary,
+      fontFamily: theme.fontFamily.bold,
     },
   });
 };
