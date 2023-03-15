@@ -29,10 +29,10 @@ const FONTS = {
 };
 
 const FONT_SIZES = {
-  h1: 32,
-  h2: 22,
-  h3: 18,
-  h4: 15,
+  h1: 20,
+  h2: 18,
+  h3: 16,
+  h4: 12,
   body: 16,
   caption: 12,
 };
