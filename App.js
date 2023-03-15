@@ -6,6 +6,7 @@ import { ThemeProvider } from '@rneui/themed';
 
 import SplashScreen from './src/Components/SplashScreen';
 import HomeScreen from './src/Screens/HomeScreen';
+import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
@@ -74,8 +75,12 @@ function App() {
     return (
       <Stack.Navigator
         initialRouteName={ROUTES.home}
-        screenOptions={{ headerShown: false, animation: 'none' }}>
+        screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         <Stack.Screen name={ROUTES.home} component={HomeScreen} />
+        <Stack.Screen
+          name={ROUTES.transactionForm}
+          component={TransactionForm}
+        />
       </Stack.Navigator>
     );
   };

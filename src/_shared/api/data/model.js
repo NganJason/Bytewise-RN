@@ -1,6 +1,9 @@
+export const TRANSACTION_EXPENSE = 1;
+export const TRANSACTION_INCOME = 2;
+
 export const TRANSACTION_TYPE = {
-  1: 'Expense',
-  2: 'Income',
+  TRANSACTION_EXPENSE: 'Expense',
+  TRANSACTION_INCOME: 'Income',
 };
 
 export const CURRENCY = {

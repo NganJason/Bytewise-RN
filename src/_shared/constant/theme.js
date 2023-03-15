@@ -74,4 +74,11 @@ export const THEME = createTheme({
     body: FONT_SIZES.body,
     caption: FONT_SIZES.caption,
   },
+  spacing: {
+    lg: 12,
+    md: 8,
+    sm: 4,
+    xl: 24,
+    xs: 2,
+  },
 });
