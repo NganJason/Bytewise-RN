@@ -1,72 +1,69 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { useTheme, LinearProgress, Icon } from '@rneui/themed';
+import { useTheme, LinearProgress, Icon, Header, Button } from '@rneui/themed';
 import Collapsible from 'react-native-collapsible';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import Ionicons from '@expo/vector-icons/Ionicons';
 import BaseText from '../../Components/BaseText';
+import BaseDivider from '../../Components/BaseDivider';
+
+import { CURRENCY } from '../../_shared/api/data/model';
 
 const mockBudgetCategories = [
   {
     id: 1,
     name: 'Food',
-    budget: 'S$150',
-    used: 0.4,
+    budget: '150',
+    used: '10',
+    currency: 'SGD',
   },
   {
     id: 2,
     name: 'Transport',
-    budget: 'S$100',
-    used: 0.7,
+    budget: '100',
+    used: '20',
+    currency: 'SGD',
   },
   {
     id: 3,
     name: 'Personal',
-    budget: 'S$200',
-    used: 0.1,
+    budget: '200',
+    used: '100',
+    currency: 'SGD',
   },
   {
     id: 4,
     name: 'Groceries',
-    budget: 'S$50',
-    used: 0.8,
+    budget: '50',
+    used: '20',
+    currency: 'SGD',
   },
 ];
 
+const getProgress = (val, total) => {
+  return val / total;
+};
+
 const getBudgetCategory = (theme, styles, category) => {
   return (
-    <View style={styles.budgetCatContainer} key={category.id}>
-      <View style={styles.budgetCatInfo}>
-        <BaseText
-          h3
-          style={{
-            color: theme.colors.grey6,
-            fontFamily: theme.fontFamily.regular,
-          }}>
-          {category.name}
-        </BaseText>
-        <BaseText
-          h3
-          style={{
-            color: theme.colors.grey6,
-            fontFamily: theme.fontFamily.regular,
-          }}>
-          {category.budget}
-        </BaseText>
-      </View>
-      <View style={styles.progress}>
-        <LinearProgress
-          color={theme.colors.primary}
-          trackColor={theme.colors.secondary}
-          value={category.used}
-          style={styles.progressBar}
-        />
-      </View>
+    <View style={styles.budgetContainer}>
+      <Button type="clear" buttonStyle={styles.budget} onPress={() => {}}>
+        <View style={styles.budgetInfo}>
+          <BaseText style={styles.budgetText}>{category.name}</BaseText>
+        </View>
+        <BaseText>{`${CURRENCY.SGD} ${category.budget}`}</BaseText>
+      </Button>
+      <LinearProgress
+        trackColor={theme.colors.secondary}
+        color={theme.colors.primary}
+        style={styles.progressBar}
+        value={getProgress(category.used, category.budget)}
+      />
     </View>
   );
 };
@@ -82,137 +79,129 @@ const BudgetScreen = () => {
 
   return (
     <ScrollView>
-      <View style={styles.pageContainer}>
-        <View style={styles.pageHeader}>
-          <View style={styles.pageHeaderIcon}>
-            <Ionicons
-              name="chevron-back-outline"
-              size={20}
-              color={theme.colors.grey4}
-            />
-          </View>
-          <BaseText
-            h2
-            style={{
-              color: theme.colors.primary,
-            }}>
-            Mar 2023
+      <SafeAreaProvider style={styles.screen}>
+        <Header
+          centerComponent={
+            <BaseText h2 style={{ color: theme.colors.primary }}>
+              Mar 2023
+            </BaseText>
+          }
+          rightComponent={
+            <Button type="clear">
+              <Icon name="chevron-right" color={theme.colors.grey3} />
+            </Button>
+          }
+          leftComponent={
+            <Button type="clear">
+              <Icon name="chevron-left" color={theme.colors.grey3} />
+            </Button>
+          }
+          containerStyle={styles.header}
+          rightContainerStyle={styles.headerItem}
+          leftContainerStyle={styles.headerItem}
+          centerContainerStyle={styles.headerItem}
+        />
+
+        <View style={styles.aggr}>
+          <BaseText h3 style={{ color: theme.colors.primary }}>
+            Budget: {CURRENCY.SGD} 90000
           </BaseText>
-          <View style={styles.pageHeaderIcon}>
-            <Ionicons
-              name="chevron-forward-outline"
-              size={20}
-              color={theme.colors.grey4}
-            />
-          </View>
+          <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
+          <BaseText h3 style={{ color: theme.colors.red0 }}>
+            Used: {CURRENCY.SGD} 30000
+          </BaseText>
         </View>
 
-        <View style={styles.overviewContainer}>
-          <View style={styles.overview}>
-            <BaseText h4 style={{ color: theme.colors.primary }}>
-              Budget: S$90,000
-            </BaseText>
-            <BaseText h4 style={{ color: theme.colors.grey4 }}>
-              {' '}
-              |{' '}
-            </BaseText>
-            <BaseText h4 style={{ color: theme.colors.red0 }}>
-              Used: S$30,000
-            </BaseText>
-          </View>
-        </View>
-
-        <View style={styles.budgetContainer}>
+        <View style={styles.body}>
           {mockBudgetCategories.map(category => {
-            return getBudgetCategory(theme, styles, category);
+            return (
+              <React.Fragment key={category.id}>
+                {getBudgetCategory(theme, styles, category)}
+              </React.Fragment>
+            );
           })}
+
+          <TouchableWithoutFeedback onPress={toggleAccordion}>
+            <View style={styles.annualContainer}>
+              {expanded ? (
+                <Icon
+                  name="chevron-up"
+                  type="entypo"
+                  color={theme.colors.grey4}
+                />
+              ) : (
+                <Icon
+                  name="chevron-down"
+                  type="entypo"
+                  color={theme.colors.grey4}
+                />
+              )}
+
+              <BaseText h2 style={styles.annualHeader}>
+                Annual budget
+              </BaseText>
+            </View>
+          </TouchableWithoutFeedback>
+          <Collapsible collapsed={!expanded} style={styles.collapsible}>
+            {mockBudgetCategories.map(category => {
+              return (
+                <React.Fragment key={category.id}>
+                  {getBudgetCategory(theme, styles, category)}
+                </React.Fragment>
+              );
+            })}
+          </Collapsible>
         </View>
-
-        <TouchableWithoutFeedback onPress={toggleAccordion}>
-          <View style={styles.catHeaderContainer}>
-            {expanded ? (
-              <Icon
-                name="chevron-up"
-                type="entypo"
-                color={theme.colors.grey4}
-              />
-            ) : (
-              <Icon
-                name="chevron-down"
-                type="entypo"
-                color={theme.colors.grey4}
-              />
-            )}
-
-            <BaseText h2 style={styles.catHeader}>
-              Annual budget
-            </BaseText>
-          </View>
-        </TouchableWithoutFeedback>
-        <Collapsible collapsed={!expanded} style={styles.collapsible}>
-          {mockBudgetCategories.map(category => {
-            return getBudgetCategory(theme, styles, category);
-          })}
-        </Collapsible>
-      </View>
+      </SafeAreaProvider>
     </ScrollView>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    pageContainer: {
-      height: '100%',
-      width: '100%',
-      paddingTop: '13%',
-      paddingHorizontal: '10%',
+    screen: {},
+    header: {
+      width: '60%',
+      alignSelf: 'center',
+      backgroundColor: theme.colors.white,
+      borderBottomColor: theme.colors.white,
+      paddingVertical: theme.spacing.xl,
     },
-    pageHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+    headerItem: {
       justifyContent: 'center',
-    },
-    pageHeaderIcon: {
-      marginTop: '1%',
-      marginHorizontal: '3%',
-    },
-    overviewContainer: {
       alignItems: 'center',
-      marginBottom: '8%',
     },
-    overview: {
+    aggr: {
       flexDirection: 'row',
-      marginVertical: '6%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    body: {
+      padding: theme.spacing.xl,
+    },
+    budgetContainer: {
+      marginVertical: theme.spacing.md,
+    },
+    budget: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    budgetText: {
+      marginBottom: theme.spacing.sm,
     },
     progress: {
       width: '100%',
-      marginTop: '1.5%',
+      marginVertical: theme.spacing.lg,
     },
     progressBar: {
       height: 1,
+      marginVertical: theme.spacing.md,
     },
-    budgetContainer: {
-      width: '100%',
-    },
-    budgetCatContainer: {
-      width: '100%',
-      marginBottom: '10%',
-    },
-    budgetCatInfo: {
+    annualContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: '3%',
+      marginVertical: theme.spacing.md,
     },
-    catHeaderContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: '8%',
-      shadowColor: theme.colors.grey4,
-      // borderBottomColor: theme.colors.grey4,
-      // borderBottomWidth: '0.5%',
-    },
-    catHeader: {
+    annualHeader: {
       color: theme.colors.primary,
       fontFamily: theme.fontFamily.bold,
     },
