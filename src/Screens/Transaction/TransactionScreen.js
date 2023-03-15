@@ -89,11 +89,11 @@ const TransactionScreen = ({ navigation }) => {
         centerContainerStyle={styles.headerItem}
       />
       <View style={styles.aggr}>
-        <BaseText h4 style={styles.incomeText}>
+        <BaseText h3 style={styles.incomeText}>
           Income: {CURRENCY.SGD} 30000
         </BaseText>
         <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-        <BaseText h4 style={styles.expenseText}>
+        <BaseText h3 style={styles.expenseText}>
           Expense: {CURRENCY.SGD} 300
         </BaseText>
       </View>
