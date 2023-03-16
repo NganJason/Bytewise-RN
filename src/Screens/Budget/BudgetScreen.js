@@ -5,7 +5,14 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { useTheme, LinearProgress, Icon, Header, Button } from '@rneui/themed';
+import {
+  useTheme,
+  LinearProgress,
+  Icon,
+  Header,
+  Button,
+  FAB,
+} from '@rneui/themed';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -13,6 +20,7 @@ import BaseText from '../../Components/BaseText';
 import BaseDivider from '../../Components/BaseDivider';
 
 import { CURRENCY } from '../../_shared/api/data/model';
+import ROUTES from '../../_shared/constant/routes';
 
 const mockBudgetCategories = [
   {
@@ -68,7 +76,7 @@ const getBudgetCategory = (theme, styles, category) => {
   );
 };
 
-const BudgetScreen = () => {
+const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [expanded, setExpanded] = useState(false);
@@ -78,8 +86,8 @@ const BudgetScreen = () => {
   };
 
   return (
-    <ScrollView>
-      <SafeAreaProvider style={styles.screen}>
+    <SafeAreaProvider>
+      <ScrollView style={styles.screen}>
         <Header
           centerComponent={
             <BaseText h2 style={{ color: theme.colors.primary }}>
@@ -152,14 +160,19 @@ const BudgetScreen = () => {
             })}
           </Collapsible>
         </View>
-      </SafeAreaProvider>
-    </ScrollView>
+      </ScrollView>
+      <FAB
+        placement="right"
+        icon={<Icon name="add" color={theme.colors.white} />}
+        color={theme.colors.primary}
+        onPress={() => navigation.navigate(ROUTES.transactionForm)}
+      />
+    </SafeAreaProvider>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    screen: {},
     header: {
       width: '60%',
       alignSelf: 'center',
