@@ -29,7 +29,7 @@ const FONTS = {
 };
 
 const FONT_SIZES = {
-  h1: 20,
+  h1: 28,
   h2: 18,
   h3: 16,
   h4: 12,

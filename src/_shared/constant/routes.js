@@ -5,6 +5,7 @@ const ROUTES = {
   transactionForm: 'Transaction Form',
   asset: 'Asset',
   settings: 'Settings',
+  addCategory: 'Add Category',
 };
 
 export default ROUTES;

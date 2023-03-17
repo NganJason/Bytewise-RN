@@ -7,6 +7,7 @@ import { ThemeProvider } from '@rneui/themed';
 import SplashScreen from './src/Components/SplashScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
+import AddCategoryScreen from './src/Screens/AddCategory/AddCategoryScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
@@ -81,6 +82,7 @@ function App() {
           name={ROUTES.transactionForm}
           component={TransactionForm}
         />
+        <Stack.Screen name={ROUTES.addCategory} component={AddCategoryScreen} />
       </Stack.Navigator>
     );
   };

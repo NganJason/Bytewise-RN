@@ -87,7 +87,7 @@ const BudgetScreen = ({ navigation }) => {
 
   return (
     <SafeAreaProvider>
-      <ScrollView style={styles.screen}>
+      <ScrollView>
         <Header
           centerComponent={
             <BaseText h2 style={{ color: theme.colors.primary }}>
@@ -165,7 +165,7 @@ const BudgetScreen = ({ navigation }) => {
         placement="right"
         icon={<Icon name="add" color={theme.colors.white} />}
         color={theme.colors.primary}
-        onPress={() => navigation.navigate(ROUTES.transactionForm)}
+        onPress={() => navigation.navigate(ROUTES.addCategory)}
       />
     </SafeAreaProvider>
   );
