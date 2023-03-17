@@ -1,6 +1,7 @@
+import 'react-native-gesture-handler';
 import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 
@@ -12,7 +13,7 @@ import AddCategoryScreen from './src/Screens/AddCategory/AddCategoryScreen';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
