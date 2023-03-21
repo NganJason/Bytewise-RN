@@ -59,8 +59,6 @@ export const THEME = createTheme({
     white: COLORS.white,
     black: COLORS.black,
   },
-  fontFamily: FONT_FAMILY,
-  fontSizes: FONT_SIZES,
   fontStyles: {
     h1: {
       fontFamily: FONT_FAMILY.bold,

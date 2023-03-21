@@ -190,9 +190,8 @@ const getStyles = theme => {
       marginVertical: theme.spacing.lg,
     },
     checkBoxText: {
+      ...theme.fontStyles.h3,
       alignSelf: 'center',
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.fontSizes.h3,
       color: theme.colors.grey6,
     },
     collapsible: {

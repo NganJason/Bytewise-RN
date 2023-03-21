@@ -216,7 +216,6 @@ const getStyles = theme => {
     },
     annualHeader: {
       color: theme.colors.primary,
-      fontFamily: theme.fontFamily.bold,
     },
   });
 };
