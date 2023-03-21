@@ -57,33 +57,10 @@ export default BaseText;
 
 const getStyles = theme =>
   StyleSheet.create({
-    h1Style: {
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.fontSizes.h1,
-      color: theme.colors.black,
-    },
-    h2Style: {
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.fontSizes.h2,
-      color: theme.colors.black,
-    },
-    h3Style: {
-      fontFamily: theme.fontFamily.regular,
-      fontSize: theme.fontSizes.h3,
-      color: theme.colors.black,
-    },
-    h4Style: {
-      fontFamily: theme.fontFamily.regular,
-      fontSize: theme.fontSizes.h4,
-      color: theme.colors.black,
-    },
-    pStyle: {
-      fontFamily: theme.fontFamily.regular,
-      fontSize: theme.fontSizes.body,
-      color: theme.colors.black,
-    },
-    captionStyle: {
-      fontSize: theme.fontSizes.caption,
-      color: theme.colors.grey2,
-    },
+    h1Style: theme.fontStyles.h1,
+    h2Style: theme.fontStyles.h2,
+    h3Style: theme.fontStyles.h3,
+    h4Style: theme.fontStyles.h4,
+    pStyle: theme.fontStyles.p,
+    captionStyle: theme.fontStyles.caption,
   });

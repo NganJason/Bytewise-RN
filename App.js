@@ -1,11 +1,11 @@
-import 'react-native-gesture-handler';
 import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 
-import SplashScreen from './src/Components/SplashScreen';
+import { SplashScreen } from './src/Components';
+
 import HomeScreen from './src/Screens/HomeScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
 import AddCategoryScreen from './src/Screens/AddCategory/AddCategoryScreen';
