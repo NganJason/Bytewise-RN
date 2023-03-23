@@ -15,6 +15,7 @@ import {
   BaseText,
   BaseInput,
   BaseCurrencyInput,
+  BaseButton,
   HideKeyboard,
 } from '../../Components';
 
@@ -95,28 +96,31 @@ const TransactionForm = () => {
           centerComponent={<BaseText h2>Add Transaction</BaseText>}
           containerStyle={styles.header}
         />
-        <View style={styles.formBody}>
-          <BaseInput
-            ref={dateRef}
-            label="Date"
-            value={formatDate(selectedDate)}
-            carretHidden
-            showSoftInputOnFocus={false}
-            onFocus={() => presentModal()}
-            onBlur={() => dismissModal()}
-          />
-          <BaseCurrencyInput
-            ref={amountRef}
-            label="Amount"
-            value={form.amount}
-            onChangeText={onAmountChange}
-            autoFocus
-          />
-          <BaseInput
-            label="Note"
-            value={form.note}
-            onChangeText={onNoteChange}
-          />
+        <View style={styles.form}>
+          <View style={styles.formBody}>
+            <BaseInput
+              ref={dateRef}
+              label="Date"
+              value={formatDate(selectedDate)}
+              carretHidden
+              showSoftInputOnFocus={false}
+              onFocus={() => presentModal()}
+              onBlur={() => dismissModal()}
+            />
+            <BaseCurrencyInput
+              ref={amountRef}
+              label="Amount"
+              value={form.amount}
+              onChangeText={onAmountChange}
+              autoFocus
+            />
+            <BaseInput
+              label="Note"
+              value={form.note}
+              onChangeText={onNoteChange}
+            />
+          </View>
+          <BaseButton title="Save" width={150} size="lg" />
         </View>
         {/* https://github.com/gorhom/react-native-bottom-sheet/issues/341 */}
         <BottomSheetModalProvider>
@@ -169,12 +173,14 @@ const getStyles = theme =>
     header: {
       backgroundColor: theme.colors.white,
       borderBottomColor: theme.colors.white,
-      paddingVertical: theme.spacing.xl,
+      paddingTop: theme.spacing.xl,
     },
-    formBody: {
+    form: {
       width: '100%',
       height: '100%',
       padding: theme.spacing.xl,
-      marginTop: theme.spacing.md,
+    },
+    formBody: {
+      marginBottom: theme.spacing.lg,
     },
   });

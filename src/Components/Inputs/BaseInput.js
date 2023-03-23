@@ -54,6 +54,7 @@ const BaseInput = forwardRef(
         showSoftInputOnFocus={showSoftInputOnFocus}
         leftIcon={leftIcon !== null && leftIcon}
         autoFocus={autoFocus}
+        containerStyle={{ marginBottom: theme.spacing.sm }}
       />
     );
   },

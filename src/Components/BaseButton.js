@@ -1,11 +1,34 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import { Button } from '@rneui/themed';
 
-const BaseButton = () => {
+const BaseButton = ({
+  type = 'solid',
+  title = '',
+  loading = false,
+  disabled = false,
+  width = 0,
+  fullWidth = true,
+  align = 'center',
+  size = 'md',
+}) => {
+  const getButtonWidth = () => {
+    switch (true) {
+      case width !== 0:
+        return width;
+      case fullWidth || width === 0:
+        return '100%';
+    }
+  };
+
   return (
-    <View>
-      <Text>BaseButton</Text>
-    </View>
+    <Button
+      title={title}
+      type={type}
+      loading={loading}
+      disabled={disabled}
+      buttonStyle={{ width: getButtonWidth() }}
+      containerStyle={{ alignItems: align }}
+      size={size}
+    />
   );
 };
 
