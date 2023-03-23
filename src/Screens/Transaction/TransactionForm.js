@@ -21,7 +21,7 @@ import {
 const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
-const DAY = `${TODAY.getDate()}`;
+const DATE = `${TODAY.getDate()}`;
 
 const TransactionForm = () => {
   const { theme } = useTheme();
@@ -49,7 +49,7 @@ const TransactionForm = () => {
   }, []);
 
   // for rendering
-  const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DAY}`);
+  const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
 
   const formatDate = date => {
     let [yyyy, mm, dd] = date.split('-');
@@ -60,7 +60,7 @@ const TransactionForm = () => {
   };
 
   const [form, setForm] = useState({
-    date: 0,
+    timestamp: TODAY.valueOf(), // unix
     amount: '',
     note: '',
     category: '',
