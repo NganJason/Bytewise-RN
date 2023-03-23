@@ -8,4 +8,5 @@ export const TRANSACTION_TYPE = {
 
 export const CURRENCY = {
   SGD: 'S$',
+  DEFAULT: '$',
 };

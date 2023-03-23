@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import SplashScreen from './src/Components/SplashScreen';
 import HomeScreen from './src/Screens/HomeScreen';
@@ -14,6 +15,7 @@ import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 
 const Stack = createStackNavigator();
+const queryClient = new QueryClient();
 
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
@@ -89,9 +91,11 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={THEME}>
-      <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={THEME}>
+        <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

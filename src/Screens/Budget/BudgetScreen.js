@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import {
   useTheme,
@@ -19,52 +20,30 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BaseText from '../../Components/BaseText';
 import BaseDivider from '../../Components/BaseDivider';
 
-import { CURRENCY } from '../../_shared/api/data/model';
 import ROUTES from '../../_shared/constant/routes';
+import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
+import {
+  formatMonetaryVal,
+  getProgress,
+  moveMonth,
+} from '../../_shared/util/util';
+import { MONTHS } from '../../_shared/constant/constant';
 
-const mockBudgetCategories = [
-  {
-    id: 1,
-    name: 'Food',
-    budget: '150',
-    used: '10',
-    currency: 'SGD',
-  },
-  {
-    id: 2,
-    name: 'Transport',
-    budget: '100',
-    used: '20',
-    currency: 'SGD',
-  },
-  {
-    id: 3,
-    name: 'Personal',
-    budget: '200',
-    used: '100',
-    currency: 'SGD',
-  },
-  {
-    id: 4,
-    name: 'Groceries',
-    budget: '50',
-    used: '20',
-    currency: 'SGD',
-  },
-];
+const TODAY = new Date();
 
-const getProgress = (val, total) => {
-  return val / total;
-};
-
-const getBudgetCategory = (theme, styles, category) => {
+const getBudgetCategory = (navigation, theme, styles, category) => {
   return (
     <View style={styles.budgetContainer}>
-      <Button type="clear" buttonStyle={styles.budget} onPress={() => {}}>
-        <View style={styles.budgetInfo}>
-          <BaseText style={styles.budgetText}>{category.name}</BaseText>
+      <Button
+        type="clear"
+        buttonStyle={styles.budget}
+        onPress={() => navigation.navigate(ROUTES.addCategory)}>
+        <View>
+          <BaseText style={styles.budgetText}>{category.category}</BaseText>
         </View>
-        <BaseText>{`${CURRENCY.SGD} ${category.budget}`}</BaseText>
+        <BaseText>
+          {formatMonetaryVal(category.budget, category.currency)}
+        </BaseText>
       </Button>
       <LinearProgress
         trackColor={theme.colors.secondary}
@@ -79,7 +58,18 @@ const getBudgetCategory = (theme, styles, category) => {
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+
+  const [date, setDate] = useState(TODAY);
   const [expanded, setExpanded] = useState(false);
+  const { data: budgetOverview, isLoading } = useGetBudgetOverviewQuery({});
+
+  const renderDate = useCallback(() => {
+    const month = MONTHS[date.getMonth()];
+    return `${month} ${date.getFullYear()}`;
+  }, [date]);
+
+  const addOneMonth = () => setDate(moveMonth(date, 1));
+  const subOneMonth = () => setDate(moveMonth(date, -1));
 
   const toggleAccordion = () => {
     setExpanded(!expanded);
@@ -87,20 +77,20 @@ const BudgetScreen = ({ navigation }) => {
 
   return (
     <SafeAreaProvider>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollView}>
         <Header
           centerComponent={
             <BaseText h2 style={{ color: theme.colors.primary }}>
-              Mar 2023
+              {renderDate()}
             </BaseText>
           }
           rightComponent={
-            <Button type="clear">
+            <Button onPress={addOneMonth} type="clear">
               <Icon name="chevron-right" color={theme.colors.grey3} />
             </Button>
           }
           leftComponent={
-            <Button type="clear">
+            <Button onPress={subOneMonth} type="clear">
               <Icon name="chevron-left" color={theme.colors.grey3} />
             </Button>
           }
@@ -110,56 +100,74 @@ const BudgetScreen = ({ navigation }) => {
           centerContainerStyle={styles.headerItem}
         />
 
-        <View style={styles.aggr}>
-          <BaseText h3 style={{ color: theme.colors.primary }}>
-            Budget: {CURRENCY.SGD} 90000
-          </BaseText>
-          <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-          <BaseText h3 style={{ color: theme.colors.red0 }}>
-            Used: {CURRENCY.SGD} 30000
-          </BaseText>
-        </View>
-
-        <View style={styles.body}>
-          {mockBudgetCategories.map(category => {
-            return (
-              <React.Fragment key={category.id}>
-                {getBudgetCategory(theme, styles, category)}
-              </React.Fragment>
-            );
-          })}
-
-          <TouchableWithoutFeedback onPress={toggleAccordion}>
-            <View style={styles.annualContainer}>
-              {expanded ? (
-                <Icon
-                  name="chevron-up"
-                  type="entypo"
-                  color={theme.colors.grey4}
-                />
-              ) : (
-                <Icon
-                  name="chevron-down"
-                  type="entypo"
-                  color={theme.colors.grey4}
-                />
-              )}
-
-              <BaseText h2 style={styles.annualHeader}>
-                Annual budget
+        {isLoading ? (
+          <React.Fragment>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" />
+            </View>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <View style={styles.aggr}>
+              <BaseText h3 style={{ color: theme.colors.primary }}>
+                Budget:{' '}
+                {formatMonetaryVal(
+                  budgetOverview.budget,
+                  budgetOverview.currency,
+                )}
+              </BaseText>
+              <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
+              <BaseText h3 style={{ color: theme.colors.red0 }}>
+                Used:{' '}
+                {formatMonetaryVal(
+                  budgetOverview.used,
+                  budgetOverview.currency,
+                )}
               </BaseText>
             </View>
-          </TouchableWithoutFeedback>
-          <Collapsible collapsed={!expanded} style={styles.collapsible}>
-            {mockBudgetCategories.map(category => {
-              return (
-                <React.Fragment key={category.id}>
-                  {getBudgetCategory(theme, styles, category)}
-                </React.Fragment>
-              );
-            })}
-          </Collapsible>
-        </View>
+
+            <View style={styles.body}>
+              {budgetOverview.monthly_budget.map(category => {
+                return (
+                  <React.Fragment key={category.id}>
+                    {getBudgetCategory(navigation, theme, styles, category)}
+                  </React.Fragment>
+                );
+              })}
+
+              <TouchableWithoutFeedback onPress={toggleAccordion}>
+                <View style={styles.annualContainer}>
+                  {expanded ? (
+                    <Icon
+                      name="chevron-up"
+                      type="entypo"
+                      color={theme.colors.grey4}
+                    />
+                  ) : (
+                    <Icon
+                      name="chevron-down"
+                      type="entypo"
+                      color={theme.colors.grey4}
+                    />
+                  )}
+
+                  <BaseText h2 style={styles.annualHeader}>
+                    Annual budget
+                  </BaseText>
+                </View>
+              </TouchableWithoutFeedback>
+              <Collapsible collapsed={!expanded}>
+                {budgetOverview.annual_budget.map(category => {
+                  return (
+                    <React.Fragment key={category.id}>
+                      {getBudgetCategory(navigation, theme, styles, category)}
+                    </React.Fragment>
+                  );
+                })}
+              </Collapsible>
+            </View>
+          </React.Fragment>
+        )}
       </ScrollView>
       <FAB
         placement="right"
@@ -173,6 +181,9 @@ const BudgetScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
+    scrollView: {
+      flexGrow: 1,
+    },
     header: {
       width: '60%',
       alignSelf: 'center',
@@ -189,6 +200,9 @@ const getStyles = theme => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    loadingContainer: {
+      marginVertical: '50%',
+    },
     body: {
       padding: theme.spacing.xl,
     },
@@ -202,12 +216,8 @@ const getStyles = theme => {
     budgetText: {
       marginBottom: theme.spacing.sm,
     },
-    progress: {
-      width: '100%',
-      marginVertical: theme.spacing.lg,
-    },
     progressBar: {
-      height: 1,
+      height: 2,
       marginVertical: theme.spacing.md,
     },
     annualContainer: {

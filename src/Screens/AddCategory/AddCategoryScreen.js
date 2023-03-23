@@ -1,38 +1,33 @@
 import React, { useState } from 'react';
 import {
   StyleSheet,
-  ScrollView,
   View,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Collapsible from 'react-native-collapsible';
 import BaseText from '../../Components/BaseText';
-import {
-  useTheme,
-  Header,
-  Input,
-  CheckBox,
-  Icon,
-  BottomSheet,
-  ListItem,
-} from '@rneui/themed';
+import { useTheme, Header, Input, CheckBox, Icon, Button } from '@rneui/themed';
 
 import { BUDGETOPTIONS } from '../../_shared/constant/constant';
+import ROUTES from '../../_shared/constant/routes';
+import { useCreateCategory } from '../../_shared/mutation/mutation';
 
-const AddCategoryScreen = () => {
+const AddCategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const [categoryInput, setCategoryInput] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [option, setOption] = useState(BUDGETOPTIONS.monthly);
-
-  const [currencyModalVisible, setCurrencyModelVisible] = useState(false);
-
-  const list = [{ title: 'MYR' }, { title: 'USD' }];
+  const [categoryInput, setCategoryInput] = useState('');
+  const [budgetInput, setBudgetInput] = useState('');
 
   const onCategoryInputChange = e => {
     setCategoryInput(e);
+  };
+
+  const onBudgetInputChange = e => {
+    setBudgetInput(e);
   };
 
   const onOptionChange = o => {
@@ -43,9 +38,18 @@ const AddCategoryScreen = () => {
     setExpanded(!expanded);
   };
 
-  const toggleCurrencyModal = () => {
-    setCurrencyModelVisible(!currencyModalVisible);
+  const handleSave = () => {
+    createCategory();
   };
+
+  const { mutate: createCategory, isLoading } = useCreateCategory({
+    onSuccess: resp => {
+      navigation.navigate(ROUTES.budget);
+    },
+    onError: err => {
+      console.log(err);
+    },
+  });
 
   return (
     <SafeAreaProvider>
@@ -67,13 +71,11 @@ const AddCategoryScreen = () => {
               <BaseText h2 style={{ color: theme.colors.grey6 }}>
                 Category:
               </BaseText>
-            }
-            inputComponent={
-              <BaseText h2 style={{ color: theme.colors.grey6 }}>
-                {categoryInput}
-              </BaseText>
-            }
-          />
+            }>
+            <BaseText h2 style={{ color: theme.colors.grey6 }}>
+              {categoryInput}
+            </BaseText>
+          </Input>
 
           <TouchableWithoutFeedback onPress={toggleAccordion}>
             <View style={styles.addBudgetContainer}>
@@ -92,7 +94,7 @@ const AddCategoryScreen = () => {
           <Collapsible collapsed={!expanded} style={styles.collapsible}>
             <Input
               keyboardType="numeric"
-              onChangeText={onCategoryInputChange}
+              onChangeText={onBudgetInputChange}
               label={
                 <BaseText h2 style={{ color: theme.colors.grey6 }}>
                   Budget:
@@ -100,20 +102,11 @@ const AddCategoryScreen = () => {
               }
               inputComponent={
                 <BaseText h2 style={{ color: theme.colors.grey6 }}>
-                  {categoryInput}
+                  {budgetInput}
                 </BaseText>
               }
               leftIcon={
-                <TouchableWithoutFeedback onPress={toggleCurrencyModal}>
-                  <View style={styles.addBudgetContainer}>
-                    <Icon
-                      name="chevron-down"
-                      type="entypo"
-                      color={theme.colors.primary}
-                    />
-                    <BaseText>MYR</BaseText>
-                  </View>
-                </TouchableWithoutFeedback>
+                <BaseText style={{ color: theme.colors.primary }}>MYR</BaseText>
               }
             />
 
@@ -142,20 +135,13 @@ const AddCategoryScreen = () => {
           </Collapsible>
         </View>
 
-        <BottomSheet
-          isVisible={currencyModalVisible}
-          onBackdropPress={toggleCurrencyModal}>
-          {list.map((l, i) => (
-            <ListItem
-              key={i}
-              containerStyle={l.containerStyle}
-              onPress={l.onPress}>
-              <ListItem.Content>
-                <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
-          ))}
-        </BottomSheet>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button containerStyle={styles.btn} onPress={handleSave}>
+            Save
+          </Button>
+        )}
       </View>
     </SafeAreaProvider>
   );
@@ -163,6 +149,12 @@ const AddCategoryScreen = () => {
 
 const getStyles = theme => {
   return StyleSheet.create({
+    screen: {
+      height: '100%',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     header: {
       alignSelf: 'center',
       backgroundColor: theme.colors.white,
@@ -171,7 +163,7 @@ const getStyles = theme => {
     },
     body: {
       width: '90%',
-      height: '100%',
+      height: '70%',
       padding: theme.spacing.xl,
       marginTop: theme.spacing.md,
       alignSelf: 'center',
@@ -197,6 +189,10 @@ const getStyles = theme => {
     },
     collapsible: {
       marginVertical: theme.spacing.xl,
+    },
+    btn: {
+      width: '50%',
+      marginBottom: theme.spacing.xl,
     },
   });
 };
