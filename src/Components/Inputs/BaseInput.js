@@ -1,32 +1,73 @@
+import { useState, forwardRef } from 'react';
 import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
 import BaseText from '../BaseText';
 
-const BaseInput = ({
-  label = 'Hello',
-  value = '',
-  placeholder = '',
-  keyboardType = 'default',
-  onChangeText = function () {},
-  onBlur = function () {},
-}) => {
-  const { theme } = useTheme();
-  //const styles = getStyles(theme);
+const BaseInput = forwardRef(
+  (
+    {
+      label = '',
+      value = '',
+      placeholder = '',
+      keyboardType = 'default',
+      carretHidden = false,
+      readOnly = false,
+      showSoftInputOnFocus = true,
+      onChangeText = function () {},
+      onBlur = function () {},
+      onFocus = function () {},
+      leftIcon = null,
+      autoFocus = false,
+    },
+    ref,
+  ) => {
+    const { theme } = useTheme();
+    const styles = getStyles(theme);
 
-  return (
-    <Input
-      keyboardType={keyboardType}
-      onChangeText={onChangeText}
-      onBlur={onBlur}
-      placeholder={placeholder}
-      label={label !== '' && <BaseText h3>{label}</BaseText>}
-      value={value}
-      selectionColor={theme.colors.primary}
-    />
-  );
-};
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleBlur = () => {
+      setIsFocused(false);
+      onBlur();
+    };
+
+    const handleFocus = () => {
+      setIsFocused(true);
+      onFocus();
+    };
+
+    return (
+      <Input
+        ref={ref}
+        keyboardType={keyboardType}
+        onChangeText={onChangeText}
+        onBlur={handleBlur}
+        placeholder={placeholder}
+        label={label !== '' && <BaseText h3>{label}</BaseText>}
+        value={value}
+        selectionColor={theme.colors.primary}
+        onFocus={handleFocus}
+        inputContainerStyle={isFocused ? styles.focused : styles.blur}
+        caretHidden={carretHidden}
+        readOnly={readOnly}
+        showSoftInputOnFocus={showSoftInputOnFocus}
+        leftIcon={leftIcon !== null && leftIcon}
+        autoFocus={autoFocus}
+      />
+    );
+  },
+);
 
 export default BaseInput;
 
-//const getStyles = _ => StyleSheet.create({});
+const getStyles = theme =>
+  StyleSheet.create({
+    focused: {
+      borderBottomColor: theme.colors.primary,
+      borderBottomWidth: theme.spacing.xs,
+    },
+    blur: {
+      borderBottomWidth: theme.spacing.xs,
+    },
+  });

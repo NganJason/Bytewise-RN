@@ -3,8 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme, Header, Icon, Button, FAB } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import BaseText from '../../Components/BaseText';
-import BaseDivider from '../../Components/BaseDivider';
+import { BaseText, BaseDivider } from '../../Components';
 
 import {
   CURRENCY,

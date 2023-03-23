@@ -92,10 +92,10 @@ export const THEME = createTheme({
     },
   },
   spacing: {
+    xl: 24,
     lg: 12,
     md: 8,
     sm: 4,
-    xl: 24,
     xs: 2,
   },
 });

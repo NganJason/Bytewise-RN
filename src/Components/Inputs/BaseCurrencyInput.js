@@ -1,33 +1,43 @@
+import { forwardRef } from 'react';
+import { useTheme } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
+
 import BaseInput from './BaseInput';
 
-import CurrencyInput from 'react-native-currency-input';
+const BaseCurrencyInput = forwardRef(
+  (
+    {
+      label = '',
+      value = '',
+      placeholder = '',
+      onChangeText = function () {},
+      onBlur = function () {},
+      autoFocus = false,
+    },
+    ref,
+  ) => {
+    const { theme } = useTheme();
 
-const BaseCurrencyInput = ({
-  label = '',
-  value = '100',
-  placeholder = '',
-  onChangeText = function () {},
-  onBlur = function () {},
-}) => {
-  console.log(label);
-  return (
-    <CurrencyInput
-      onChangeValue={onChangeText}
-      renderTextInput={textInputProps => {
-        console.log(textInputProps);
-        return <BaseInput {...textInputProps} />;
-      }}
-      value={value}
-      renderText
-      prefix="R$"
-      delimiter="."
-      separator=","
-      precision={2}
-      onBlur={onBlur}
-      placeholder={placeholder}
-      label={label}
-    />
-  );
-};
+    return (
+      <BaseInput
+        ref={ref}
+        label={label}
+        value={value}
+        placeholder={placeholder}
+        onBlur={onBlur}
+        onChangeText={onChangeText}
+        keyboardType="numeric"
+        autoFocus={autoFocus}
+        leftIcon={
+          <Icon
+            name="dollar"
+            type="font-awesome"
+            color={theme.colors.primary}
+          />
+        }
+      />
+    );
+  },
+);
 
 export default BaseCurrencyInput;
