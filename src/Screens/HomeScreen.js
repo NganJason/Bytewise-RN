@@ -73,10 +73,7 @@ const getStyles = theme =>
       marginTop: theme.spacing.md,
       height: '100%',
     },
-    tabBarLabel: {
-      fontFamily: theme.fontFamily.medium,
-      fontSize: theme.fontSizes.caption,
-    },
+    tabBarLabel: { ...theme.fontStyles.caption },
     tabBar: {
       borderTopColor: theme.colors.grey4,
       backgroundColor: theme.colors.white,

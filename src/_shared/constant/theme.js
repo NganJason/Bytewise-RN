@@ -20,14 +20,6 @@ const COLORS = {
   warning: '#F8AD16',
 };
 
-const FONTS = {
-  ZenKakuGothicNewBlack: 'ZenKakuGothicNewBlack',
-  ZenKakuGothicNewBold: 'ZenKakuGothicNewBold',
-  ZenKakuGothicNewLight: 'ZenKakuGothicNewLight',
-  ZenKakuGothicNewMedium: 'ZenKakuGothicNewMedium',
-  ZenKakuGothicNewRegular: 'ZenKakuGothicNewRegular',
-};
-
 const FONT_SIZES = {
   h1: 28,
   h2: 18,
@@ -35,6 +27,14 @@ const FONT_SIZES = {
   h4: 12,
   body: 16,
   caption: 12,
+};
+
+const FONT_FAMILY = {
+  bold: 'ZenKakuGothicNewBlack',
+  semiBold: 'ZenKakuGothicNewBold',
+  medium: 'ZenKakuGothicNewMedium',
+  regular: 'ZenKakuGothicNewRegular',
+  light: 'ZenKakuGothicNewLight',
 };
 
 export const THEME = createTheme({
@@ -59,20 +59,37 @@ export const THEME = createTheme({
     white: COLORS.white,
     black: COLORS.black,
   },
-  fontFamily: {
-    bold: FONTS.ZenKakuGothicNewBlack,
-    semiBold: FONTS.ZenKakuGothicNewBold,
-    light: FONTS.ZenKakuGothicNewLight,
-    medium: FONTS.ZenKakuGothicNewMedium,
-    regular: FONTS.ZenKakuGothicNewRegular,
-  },
-  fontSizes: {
-    h1: FONT_SIZES.h1,
-    h2: FONT_SIZES.h2,
-    h3: FONT_SIZES.h3,
-    h4: FONT_SIZES.h4,
-    body: FONT_SIZES.body,
-    caption: FONT_SIZES.caption,
+  fontStyles: {
+    h1: {
+      fontFamily: FONT_FAMILY.bold,
+      fontSize: FONT_SIZES.h1,
+      color: COLORS.black,
+    },
+    h2: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h2,
+      color: COLORS.black,
+    },
+    h3: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h3,
+      color: COLORS.black,
+    },
+    h4: {
+      fontFamily: FONT_FAMILY.regular,
+      fontSize: FONT_SIZES.h4,
+      color: COLORS.black,
+    },
+    p: {
+      fontFamily: FONT_FAMILY.regular,
+      fontSize: FONT_SIZES.body,
+      color: COLORS.black,
+    },
+    caption: {
+      fontFamily: FONT_FAMILY.regular,
+      fontSize: FONT_SIZES.caption,
+      color: COLORS.grey2,
+    },
   },
   spacing: {
     lg: 12,
