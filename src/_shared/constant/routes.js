@@ -6,6 +6,7 @@ const ROUTES = {
   asset: 'Asset',
   settings: 'Settings',
   addCategory: 'Add Category',
+  budgetBreakdown: 'Budget Breakdown',
 };
 
 export default ROUTES;

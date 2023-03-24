@@ -13,6 +13,7 @@ import AddCategoryScreen from './src/Screens/AddCategory/AddCategoryScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+import BudgetBreakdownScreen from './src/Screens/BudgetBreakdown/BudgetBreakdownScreen';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -86,6 +87,10 @@ function App() {
           component={TransactionForm}
         />
         <Stack.Screen name={ROUTES.addCategory} component={AddCategoryScreen} />
+        <Stack.Screen
+          name={ROUTES.budgetBreakdown}
+          component={BudgetBreakdownScreen}
+        />
       </Stack.Navigator>
     );
   };

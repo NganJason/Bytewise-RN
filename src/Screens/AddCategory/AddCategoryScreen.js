@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Collapsible from 'react-native-collapsible';
 import BaseText from '../../Components/BaseText';
 import { useTheme, Header, Input, CheckBox, Icon, Button } from '@rneui/themed';
@@ -13,6 +12,7 @@ import { useTheme, Header, Input, CheckBox, Icon, Button } from '@rneui/themed';
 import { BUDGETOPTIONS } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useCreateCategory } from '../../_shared/mutation/mutation';
+import BaseScreen from '../../Components/BaseScreen';
 
 const AddCategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -52,7 +52,7 @@ const AddCategoryScreen = ({ navigation }) => {
   });
 
   return (
-    <SafeAreaProvider>
+    <BaseScreen>
       <View style={styles.screen}>
         <Header
           centerComponent={
@@ -143,7 +143,7 @@ const AddCategoryScreen = ({ navigation }) => {
           </Button>
         )}
       </View>
-    </SafeAreaProvider>
+    </BaseScreen>
   );
 };
 
