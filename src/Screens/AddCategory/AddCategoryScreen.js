@@ -5,14 +5,13 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import Collapsible from 'react-native-collapsible';
-import BaseText from '../../Components/BaseText';
 import { useTheme, Header, Input, CheckBox, Icon, Button } from '@rneui/themed';
+import { BaseScreen, BaseText } from '../../Components';
+import Collapsible from 'react-native-collapsible';
 
-import { BUDGETOPTIONS } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import { BUDGETOPTIONS } from '../../_shared/constant/constant';
 import { useCreateCategory } from '../../_shared/mutation/mutation';
-import BaseScreen from '../../Components/BaseScreen';
 
 const AddCategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();

@@ -8,18 +8,19 @@ import {
   Button,
   FAB,
 } from '@rneui/themed';
+import {
+  ArrowSelector,
+  BaseScreen,
+  BaseDivider,
+  BaseText,
+  BaseLoadScreen,
+} from '../../Components';
 import Collapsible from 'react-native-collapsible';
-
-import BaseText from '../../Components/BaseText';
-import BaseDivider from '../../Components/BaseDivider';
-import ArrowSelector from '../../Components/ArrowSelector';
-import BaseScreen from '../../Components/BaseScreen';
 
 import ROUTES from '../../_shared/constant/routes';
 import { formatMonetaryVal, getProgress } from '../../_shared/util/util';
 import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 import useSetDate from '../../_shared/hooks/useSetDate';
-import BaseLoadScreen from '../../Components/BaseLoadScreen';
 
 const getBudgetCategory = (navigation, key, theme, styles, category) => {
   return (
