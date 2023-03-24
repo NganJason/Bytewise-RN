@@ -2,16 +2,14 @@ import React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-const BaseLoadScreen = ({ isLoading = false, children }) => {
+const BaseLoadScreen = ({ isLoading, children }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return isLoading ? (
-    <React.Fragment>
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" />
-      </View>
-    </React.Fragment>
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="small" />
+    </View>
   ) : (
     <React.Fragment>{children}</React.Fragment>
   );

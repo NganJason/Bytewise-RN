@@ -5,8 +5,14 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, Header, Input, CheckBox, Icon, Button } from '@rneui/themed';
-import { BaseScreen, BaseText } from '../../Components';
+import { useTheme, Header, CheckBox, Icon } from '@rneui/themed';
+import {
+  BaseButton,
+  BaseCurrencyInput,
+  BaseInput,
+  BaseScreen,
+  BaseText,
+} from '../../Components';
 import Collapsible from 'react-native-collapsible';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -64,17 +70,13 @@ const AddCategoryScreen = ({ navigation }) => {
         />
 
         <View style={styles.body}>
-          <Input
+          <BaseInput
+            label="Category"
+            value={categoryInput}
+            carretHidden
+            showSoftInputOnFocus={false}
             onChangeText={onCategoryInputChange}
-            label={
-              <BaseText h2 style={{ color: theme.colors.grey6 }}>
-                Category:
-              </BaseText>
-            }>
-            <BaseText h2 style={{ color: theme.colors.grey6 }}>
-              {categoryInput}
-            </BaseText>
-          </Input>
+          />
 
           <TouchableWithoutFeedback onPress={toggleAccordion}>
             <View style={styles.addBudgetContainer}>
@@ -91,22 +93,11 @@ const AddCategoryScreen = ({ navigation }) => {
           </TouchableWithoutFeedback>
 
           <Collapsible collapsed={!expanded} style={styles.collapsible}>
-            <Input
-              keyboardType="numeric"
+            <BaseCurrencyInput
+              label="Budget"
+              value={budgetInput}
               onChangeText={onBudgetInputChange}
-              label={
-                <BaseText h2 style={{ color: theme.colors.grey6 }}>
-                  Budget:
-                </BaseText>
-              }
-              inputComponent={
-                <BaseText h2 style={{ color: theme.colors.grey6 }}>
-                  {budgetInput}
-                </BaseText>
-              }
-              leftIcon={
-                <BaseText style={{ color: theme.colors.primary }}>MYR</BaseText>
-              }
+              autofocus
             />
 
             <CheckBox
@@ -137,9 +128,7 @@ const AddCategoryScreen = ({ navigation }) => {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <Button containerStyle={styles.btn} onPress={handleSave}>
-            Save
-          </Button>
+          <BaseButton title="Save" width={150} size="lg" onPress={handleSave} />
         )}
       </View>
     </BaseScreen>

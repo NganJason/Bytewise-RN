@@ -9,6 +9,7 @@ const BaseButton = ({
   fullWidth = true,
   align = 'center',
   size = 'md',
+  ...props
 }) => {
   const getButtonWidth = () => {
     switch (true) {
@@ -28,6 +29,7 @@ const BaseButton = ({
       buttonStyle={{ width: getButtonWidth() }}
       containerStyle={{ alignItems: align }}
       size={size}
+      {...props}
     />
   );
 };

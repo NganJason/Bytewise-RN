@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from 'react-native';
 import {
   useTheme,
   LinearProgress,
@@ -13,7 +18,6 @@ import {
   BaseScreen,
   BaseDivider,
   BaseText,
-  BaseLoadScreen,
 } from '../../Components';
 import Collapsible from 'react-native-collapsible';
 
@@ -85,7 +89,11 @@ const BudgetScreen = ({ navigation }) => {
         containerStyle={styles.header}
       />
 
-      <BaseLoadScreen isLoading={isLoading}>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" />
+        </View>
+      ) : (
         <React.Fragment>
           <View style={styles.aggr}>
             <BaseText h3 style={{ color: theme.colors.primary }}>
@@ -156,7 +164,7 @@ const BudgetScreen = ({ navigation }) => {
             </Collapsible>
           </View>
         </React.Fragment>
-      </BaseLoadScreen>
+      )}
     </BaseScreen>
   );
 };
@@ -198,6 +206,9 @@ const getStyles = theme => {
     },
     annualHeader: {
       color: theme.colors.primary,
+    },
+    loadingContainer: {
+      marginVertical: '50%',
     },
   });
 };
