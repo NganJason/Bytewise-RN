@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useTheme, Header, LinearProgress, Icon } from '@rneui/themed';
-import BaseText from '../../Components/BaseText';
-import BaseDivider from '../../Components/BaseDivider';
+import { StyleSheet, View } from 'react-native';
+import { useTheme, LinearProgress, Icon } from '@rneui/themed';
+import {
+  BaseDivider,
+  BaseText,
+  BaseScreen,
+  BaseButton,
+} from '../../Components';
 
 import {
   CURRENCY,
   TRANSACTION_EXPENSE,
   TRANSACTION_INCOME,
 } from '../../_shared/api/data/model';
-import ArrowSelector from '../../Components/ArrowSelector';
-import useSetDate from '../../_shared/hooks/useSetDate';
 
 const TRANSACTIONS = [
   {
@@ -40,7 +41,6 @@ const TRANSACTIONS = [
 const BudgetBreakdownScreen = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const { renderDate, addOneMonth, subOneMonth } = useSetDate();
 
   const getAmountStyles = ({ transaction_type }) => {
     switch (transaction_type) {
@@ -52,27 +52,16 @@ const BudgetBreakdownScreen = () => {
   };
 
   return (
-    <SafeAreaProvider>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <Header
-          centerComponent={
-            <>
-              <BaseText h2 style={{ color: theme.colors.primary }}>
-                Food
-              </BaseText>
-
-              <ArrowSelector
-                contentSpacing={theme.spacing.sm}
-                onPrev={subOneMonth}
-                onNext={addOneMonth}>
-                <BaseText h3 style={styles.dateHeader}>
-                  {renderDate()}
-                </BaseText>
-              </ArrowSelector>
-            </>
-          }
-          containerStyle={styles.header}
-        />
+    <BaseScreen style={styles.screen}>
+      <View style={styles.header}>
+        <View style={styles.primaryHeader}>
+          <BaseText h1 style={{ color: theme.colors.primary }}>
+            Food
+          </BaseText>
+          <BaseButton buttonStyle={styles.editBtn} align="flex-end">
+            <Icon name="edit" type="fontawesome" color={theme.colors.grey3} />
+          </BaseButton>
+        </View>
 
         <View style={styles.aggr}>
           <BaseText h3 style={{ color: theme.colors.primary }}>
@@ -84,70 +73,70 @@ const BudgetBreakdownScreen = () => {
           </BaseText>
         </View>
 
+        <BaseText h3 style={{ color: theme.colors.primary }}>
+          Monthly budget
+        </BaseText>
+
         <LinearProgress
           trackColor={theme.colors.secondary}
           color={theme.colors.primary}
           style={styles.progressBar}
           value={0.2}
         />
+      </View>
 
-        <View style={styles.body}>
-          {TRANSACTIONS.map(transaction => (
-            <React.Fragment key={transaction.id}>
-              <View style={styles.transaction}>
-                <View style={styles.summary}>
-                  <BaseText style={styles.noteText}>
-                    {transaction.note}
-                  </BaseText>
-                  <BaseText caption>{transaction.category}</BaseText>
-                </View>
-                <BaseText
-                  style={getAmountStyles(
-                    transaction,
-                  )}>{`${CURRENCY.SGD} ${transaction.amount}`}</BaseText>
+      <View style={styles.body}>
+        {TRANSACTIONS.map(transaction => (
+          <React.Fragment key={transaction.id}>
+            <View style={styles.transaction}>
+              <View style={styles.summary}>
+                <BaseText style={styles.noteText}>{transaction.note}</BaseText>
+                <BaseText caption>{transaction.category}</BaseText>
               </View>
-              <BaseDivider orientation="horizontal" margin={theme.spacing.lg} />
-            </React.Fragment>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaProvider>
+              <BaseText
+                style={getAmountStyles(
+                  transaction,
+                )}>{`${CURRENCY.SGD} ${transaction.amount}`}</BaseText>
+            </View>
+            <BaseDivider orientation="horizontal" margin={theme.spacing.lg} />
+          </React.Fragment>
+        ))}
+      </View>
+    </BaseScreen>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    scrollView: {
-      flexGrow: 1,
+    screen: {
+      padding: theme.spacing.xl,
     },
     header: {
-      alignSelf: 'center',
-      alignItems: 'center',
-      backgroundColor: theme.colors.white,
-      paddingVertical: theme.spacing.md,
-      marginBottom: theme.spacing.sm,
-      borderBottomColor: theme.colors.white,
-      width: '90%',
+      marginTop: theme.spacing.xl,
+      marginBottom: theme.spacing.lg,
+      width: '100%',
     },
-    dateHeader: {
-      marginHorizontal: theme.spacing.md,
-      color: theme.colors.primary,
+    primaryHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    editBtn: {
+      backgroundColor: 'white',
     },
     aggr: {
       flexDirection: 'row',
-      justifyContent: 'center',
-      marginTop: theme.spacing.sm,
+      marginVertical: theme.spacing.xl,
     },
     progressBar: {
       height: 2,
-      width: '80%',
-      alignSelf: 'center',
-      marginVertical: theme.spacing.sm,
+      width: '100%',
+      marginVertical: theme.spacing.xl,
     },
     body: {
       width: '100%',
       height: '100%',
-      padding: theme.spacing.xl,
     },
     transaction: {
       display: 'flex',

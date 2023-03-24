@@ -26,9 +26,9 @@ import { formatMonetaryVal, getProgress } from '../../_shared/util/util';
 import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 import useSetDate from '../../_shared/hooks/useSetDate';
 
-const getBudgetCategory = (navigation, key, theme, styles, category) => {
+const getBudgetCategory = (navigation, theme, styles, category) => {
   return (
-    <View key={key} style={styles.budgetContainer}>
+    <View style={styles.budgetContainer}>
       <Button
         type="clear"
         buttonStyle={styles.budget}
@@ -113,13 +113,7 @@ const BudgetScreen = ({ navigation }) => {
           <View style={styles.body}>
             {budgetOverview.monthly_budget.map(category => (
               <React.Fragment key={category.id}>
-                {getBudgetCategory(
-                  navigation,
-                  category.id,
-                  theme,
-                  styles,
-                  category,
-                )}
+                {getBudgetCategory(navigation, theme, styles, category)}
               </React.Fragment>
             ))}
 
@@ -148,13 +142,7 @@ const BudgetScreen = ({ navigation }) => {
             <Collapsible collapsed={!expanded}>
               {budgetOverview.annual_budget.map(category => (
                 <React.Fragment key={category.id}>
-                  {getBudgetCategory(
-                    navigation,
-                    category.id,
-                    theme,
-                    styles,
-                    category,
-                  )}
+                  {getBudgetCategory(navigation, theme, styles, category)}
                 </React.Fragment>
               ))}
             </Collapsible>

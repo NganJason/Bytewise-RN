@@ -9,6 +9,8 @@ const BaseButton = ({
   fullWidth = true,
   align = 'center',
   size = 'md',
+  buttonStyle,
+  containerStyle,
   ...props
 }) => {
   const getButtonWidth = () => {
@@ -26,8 +28,14 @@ const BaseButton = ({
       type={type}
       loading={loading}
       disabled={disabled}
-      buttonStyle={{ width: getButtonWidth() }}
-      containerStyle={{ alignItems: align }}
+      buttonStyle={{
+        width: getButtonWidth(),
+        ...buttonStyle,
+      }}
+      containerStyle={{
+        alignItems: align,
+        ...containerStyle,
+      }}
       size={size}
       {...props}
     />

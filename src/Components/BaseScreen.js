@@ -5,14 +5,16 @@ import HideKeyboard from './HideKeyboard';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-const BaseScreen = ({ children, fab, ...props }) => {
+const BaseScreen = ({ children, fab, style }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
     <HideKeyboard>
       <SafeAreaProvider>
-        <ScrollView style={styles.scrollView}>{children}</ScrollView>
+        <ScrollView style={{ ...styles.scrollView, ...style }}>
+          {children}
+        </ScrollView>
         {fab}
       </SafeAreaProvider>
     </HideKeyboard>
