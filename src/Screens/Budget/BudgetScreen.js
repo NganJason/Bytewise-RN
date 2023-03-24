@@ -111,19 +111,17 @@ const BudgetScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.body}>
-            {budgetOverview.monthly_budget.map(category => {
-              return (
-                <React.Fragment key={category.id}>
-                  {getBudgetCategory(
-                    navigation,
-                    category.id,
-                    theme,
-                    styles,
-                    category,
-                  )}
-                </React.Fragment>
-              );
-            })}
+            {budgetOverview.monthly_budget.map(category => (
+              <React.Fragment key={category.id}>
+                {getBudgetCategory(
+                  navigation,
+                  category.id,
+                  theme,
+                  styles,
+                  category,
+                )}
+              </React.Fragment>
+            ))}
 
             <TouchableWithoutFeedback onPress={toggleAccordion}>
               <View style={styles.annualContainer}>
@@ -148,19 +146,17 @@ const BudgetScreen = ({ navigation }) => {
             </TouchableWithoutFeedback>
 
             <Collapsible collapsed={!expanded}>
-              {budgetOverview.annual_budget.map(category => {
-                return (
-                  <React.Fragment key={category.id}>
-                    {getBudgetCategory(
-                      navigation,
-                      category.id,
-                      theme,
-                      styles,
-                      category,
-                    )}
-                  </React.Fragment>
-                );
-              })}
+              {budgetOverview.annual_budget.map(category => (
+                <React.Fragment key={category.id}>
+                  {getBudgetCategory(
+                    navigation,
+                    category.id,
+                    theme,
+                    styles,
+                    category,
+                  )}
+                </React.Fragment>
+              ))}
             </Collapsible>
           </View>
         </React.Fragment>
