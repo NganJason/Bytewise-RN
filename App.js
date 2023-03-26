@@ -9,7 +9,7 @@ import { SplashScreen } from './src/Components';
 
 import HomeScreen from './src/Screens/HomeScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
-import AddCategoryScreen from './src/Screens/AddCategory/AddCategoryScreen';
+import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
@@ -86,7 +86,7 @@ function App() {
           name={ROUTES.transactionForm}
           component={TransactionForm}
         />
-        <Stack.Screen name={ROUTES.addCategory} component={AddCategoryScreen} />
+        <Stack.Screen name={ROUTES.setCategory} component={SetCategoryScreen} />
         <Stack.Screen
           name={ROUTES.budgetBreakdown}
           component={BudgetBreakdownScreen}

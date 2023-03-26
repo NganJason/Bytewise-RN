@@ -14,6 +14,6 @@ export const MONTHS = {
 };
 
 export const BUDGETOPTIONS = {
-  monthly: 'Monthly budget',
-  annually: 'One-time budget (Annually)',
+  monthly: 1,
+  annually: 2,
 };

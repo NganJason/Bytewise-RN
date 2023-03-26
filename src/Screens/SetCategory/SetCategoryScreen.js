@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,17 +15,30 @@ import {
 } from '../../Components';
 import Collapsible from 'react-native-collapsible';
 
-import ROUTES from '../../_shared/constant/routes';
 import { BUDGETOPTIONS } from '../../_shared/constant/constant';
 import { useCreateCategory } from '../../_shared/mutation/mutation';
 
-const AddCategoryScreen = ({ navigation }) => {
+const SetCategoryScreen = ({ navigation, route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [expanded, setExpanded] = useState(false);
   const [option, setOption] = useState(BUDGETOPTIONS.monthly);
   const [categoryInput, setCategoryInput] = useState('');
   const [budgetInput, setBudgetInput] = useState('');
+
+  useEffect(() => {
+    if (route.params.data === undefined) {
+      return;
+    }
+
+    setCategoryInput(route.params.data.category);
+    setBudgetInput(route.params.data.budget);
+    setOption(route.params.data.budgetType);
+
+    if (route.params.data.budget !== undefined) {
+      setExpanded(true);
+    }
+  }, [route.params]);
 
   const onCategoryInputChange = e => {
     setCategoryInput(e);
@@ -49,7 +62,7 @@ const AddCategoryScreen = ({ navigation }) => {
 
   const { mutate: createCategory, isLoading } = useCreateCategory({
     onSuccess: resp => {
-      navigation.navigate(ROUTES.budget);
+      navigation.goBack();
     },
     onError: err => {
       console.log(err);
@@ -62,7 +75,7 @@ const AddCategoryScreen = ({ navigation }) => {
         <Header
           centerComponent={
             <BaseText h2 style={{ color: theme.colors.grey6 }}>
-              Add a category
+              {route.params.isEdit ? 'Edit category' : 'Add a category'}
             </BaseText>
           }
           containerStyle={styles.header}
@@ -87,7 +100,7 @@ const AddCategoryScreen = ({ navigation }) => {
               )}
 
               <BaseText h2 style={styles.addBudgetText}>
-                Add budget
+                {expanded ? 'Delete budget' : 'Add budget'}
               </BaseText>
             </View>
           </TouchableWithoutFeedback>
@@ -184,4 +197,4 @@ const getStyles = theme => {
   });
 };
 
-export default AddCategoryScreen;
+export default SetCategoryScreen;

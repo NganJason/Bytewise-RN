@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
-import { useTheme } from '@rneui/themed';
-import { Icon, Button } from '@rneui/themed';
+import { useTheme, Button } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
 
 const ArrowSelector = ({
   children = '',

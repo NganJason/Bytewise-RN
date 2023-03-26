@@ -5,7 +5,7 @@ const ROUTES = {
   transactionForm: 'Transaction Form',
   asset: 'Asset',
   settings: 'Settings',
-  addCategory: 'Add Category',
+  setCategory: 'Set Category',
   budgetBreakdown: 'Budget Breakdown',
 };
 

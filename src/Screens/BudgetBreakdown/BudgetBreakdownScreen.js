@@ -13,6 +13,7 @@ import {
   TRANSACTION_EXPENSE,
   TRANSACTION_INCOME,
 } from '../../_shared/api/data/model';
+import ROUTES from '../../_shared/constant/routes';
 
 const TRANSACTIONS = [
   {
@@ -38,7 +39,17 @@ const TRANSACTIONS = [
   },
 ];
 
-const BudgetBreakdownScreen = () => {
+const BUDGET = {
+  category: 'Food',
+  budgetType: 1,
+  budget: '200',
+  used: '100',
+  currency: 'SGD',
+  ctime: 1673153014,
+  mtime: 1673153014,
+};
+
+const BudgetBreakdownScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -58,7 +69,15 @@ const BudgetBreakdownScreen = () => {
           <BaseText h1 style={{ color: theme.colors.primary }}>
             Food
           </BaseText>
-          <BaseButton buttonStyle={styles.editBtn} align="flex-end">
+          <BaseButton
+            buttonStyle={styles.editBtn}
+            align="flex-end"
+            onPress={() => {
+              navigation.navigate(ROUTES.setCategory, {
+                isEdit: true,
+                data: BUDGET,
+              });
+            }}>
             <Icon name="edit" type="fontawesome" color={theme.colors.grey3} />
           </BaseButton>
         </View>

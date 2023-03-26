@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -52,11 +53,16 @@ const getBudgetCategory = (navigation, theme, styles, category) => {
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
+  const isFocused = useIsFocused();
   const styles = getStyles(theme);
 
   const [expanded, setExpanded] = useState(false);
   const { renderDate, addOneMonth, subOneMonth } = useSetDate();
   const { data: budgetOverview, isLoading } = useGetBudgetOverviewQuery({});
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [isFocused]);
 
   const toggleAccordion = () => {
     setExpanded(!expanded);
@@ -68,7 +74,9 @@ const BudgetScreen = ({ navigation }) => {
         placement="right"
         icon={<Icon name="add" color={theme.colors.white} />}
         color={theme.colors.primary}
-        onPress={() => navigation.navigate(ROUTES.addCategory)}
+        onPress={() =>
+          navigation.navigate(ROUTES.setCategory, { isEdit: false })
+        }
       />
     );
   };
