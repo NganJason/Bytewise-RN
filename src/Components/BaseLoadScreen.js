@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
@@ -11,7 +10,7 @@ const BaseLoadScreen = ({ isLoading, children }) => {
       <ActivityIndicator size="small" />
     </View>
   ) : (
-    <React.Fragment>{children}</React.Fragment>
+    <>{children}</>
   );
 };
 

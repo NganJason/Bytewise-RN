@@ -1,15 +1,15 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useTheme, Header } from '@rneui/themed';
+import { useTheme, Header, ButtonGroup, Icon } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
-
 import {
   BottomSheetModal,
   useBottomSheetDynamicSnapPoints,
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import {
   BaseText,
@@ -18,6 +18,12 @@ import {
   BaseButton,
   HideKeyboard,
 } from '../../Components';
+
+import {
+  TRANSACTION_EXPENSE,
+  TRANSACTION_INCOME,
+  TRANSACTION_TYPES,
+} from '../../_shared/api/data/model';
 
 const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
@@ -31,6 +37,9 @@ const TransactionForm = () => {
   const dateRef = useRef(null);
   const amountRef = useRef(null);
   const modalRef = useRef(null);
+
+  const [selectedTransactionType, setSelectedTransactionType] =
+    useState(TRANSACTION_EXPENSE);
 
   const snapPoints = useMemo(() => ['CONTENT_HEIGHT'], []);
 
@@ -96,32 +105,52 @@ const TransactionForm = () => {
           centerComponent={<BaseText h2>Add Transaction</BaseText>}
           containerStyle={styles.header}
         />
-        <View style={styles.form}>
-          <View style={styles.formBody}>
-            <BaseInput
-              ref={dateRef}
-              label="Date"
-              value={formatDate(selectedDate)}
-              carretHidden
-              showSoftInputOnFocus={false}
-              onFocus={() => presentModal()}
-              onBlur={() => dismissModal()}
+        <KeyboardAwareScrollView
+          style={styles.scrollView}
+          extraHeight={300}
+          keyboardOpeningTime={0}>
+          <View style={styles.form}>
+            <ButtonGroup
+              onPress={index => setSelectedTransactionType(index + 1)}
+              selectedIndex={selectedTransactionType - 1}
+              buttons={[
+                TRANSACTION_TYPES[TRANSACTION_INCOME],
+                TRANSACTION_TYPES[TRANSACTION_EXPENSE],
+              ]}
             />
-            <BaseCurrencyInput
-              ref={amountRef}
-              label="Amount"
-              value={form.amount}
-              onChangeText={onAmountChange}
-              autoFocus
-            />
-            <BaseInput
-              label="Note"
-              value={form.note}
-              onChangeText={onNoteChange}
-            />
+            <View style={styles.formBody}>
+              <BaseInput
+                ref={dateRef}
+                label="Date"
+                value={formatDate(selectedDate)}
+                carretHidden
+                showSoftInputOnFocus={false}
+                onFocus={() => presentModal()}
+                onBlur={() => dismissModal()}
+              />
+              <BaseCurrencyInput
+                ref={amountRef}
+                label="Amount"
+                value={form.amount}
+                onChangeText={onAmountChange}
+                autoFocus
+              />
+              <BaseInput
+                label="Note"
+                value={form.note}
+                onChangeText={onNoteChange}
+                rightIcon={
+                  <Icon
+                    name="clear"
+                    type="material-icons"
+                    onPress={() => onNoteChange('')}
+                  />
+                }
+              />
+            </View>
+            <BaseButton title="Save" width={150} size="lg" />
           </View>
-          <BaseButton title="Save" width={150} size="lg" />
-        </View>
+        </KeyboardAwareScrollView>
         {/* https://github.com/gorhom/react-native-bottom-sheet/issues/341 */}
         <BottomSheetModalProvider>
           <BottomSheetModal
@@ -166,9 +195,8 @@ export default TransactionForm;
 
 const getStyles = theme =>
   StyleSheet.create({
-    screen: {
-      display: 'flex',
-      alignItems: 'center',
+    scrollView: {
+      width: '100%',
     },
     header: {
       backgroundColor: theme.colors.white,
@@ -181,6 +209,6 @@ const getStyles = theme =>
       padding: theme.spacing.xl,
     },
     formBody: {
-      marginBottom: theme.spacing.lg,
+      marginVertical: theme.spacing.xl,
     },
   });

@@ -102,7 +102,7 @@ const BudgetScreen = ({ navigation }) => {
           <ActivityIndicator size="small" />
         </View>
       ) : (
-        <React.Fragment>
+        <>
           <View style={styles.aggr}>
             <BaseText h3 style={{ color: theme.colors.primary }}>
               Budget:{' '}
@@ -119,8 +119,8 @@ const BudgetScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.body}>
-            {budgetOverview.monthly_budget.map(category => (
-              <React.Fragment key={category.id}>
+            {budgetOverview.monthly_budget.map((category, i) => (
+              <React.Fragment key={i}>
                 {getBudgetCategory(navigation, theme, styles, category)}
               </React.Fragment>
             ))}
@@ -148,14 +148,14 @@ const BudgetScreen = ({ navigation }) => {
             </TouchableWithoutFeedback>
 
             <Collapsible collapsed={!expanded}>
-              {budgetOverview.annual_budget.map(category => (
-                <React.Fragment key={category.id}>
+              {budgetOverview.annual_budget.map((category, i) => (
+                <React.Fragment key={i}>
                   {getBudgetCategory(navigation, theme, styles, category)}
                 </React.Fragment>
               ))}
             </Collapsible>
           </View>
-        </React.Fragment>
+        </>
       )}
     </BaseScreen>
   );
