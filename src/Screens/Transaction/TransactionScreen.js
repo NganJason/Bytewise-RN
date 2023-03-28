@@ -21,6 +21,7 @@ import useSetDate from '../../_shared/hooks/useSetDate';
 
 const TODAY = new Date();
 
+// TODO: REMOVE
 const TRANSACTIONS = [
   {
     id: 1,

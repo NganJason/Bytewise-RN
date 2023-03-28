@@ -10,9 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "1.17.11",
-    "@react-native-community/datetimepicker": "6.7.3",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
@@ -20,24 +20,21 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "expo": "~48.0.6",
     "expo-font": "^11.1.1",
-    "expo-splash-screen": "~0.18.1",
-    "expo-status-bar": "~1.4.4",
     "lottie-react-native": "5.1.4",
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-native": "^0.71.4",
-    "react-native-calendar-picker": "^7.1.4",
     "react-native-calendars": "^1.1294.0",
     "react-native-collapsible": "^1.6.0",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-reanimated": "~2.14.4",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "^3.20.0",
-    "react-native-vector-icons": "^9.2.0",
     "react-query": "^3.39.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "eslint": "^8.35.0",
     "prettier": "^2.8.4"

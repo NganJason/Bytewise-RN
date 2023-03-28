@@ -18,6 +18,7 @@ const BaseInput = forwardRef(
       onBlur = function () {},
       onFocus = function () {},
       leftIcon = null,
+      rightIcon = null,
       autoFocus = false,
     },
     ref,
@@ -53,6 +54,7 @@ const BaseInput = forwardRef(
         readOnly={readOnly}
         showSoftInputOnFocus={showSoftInputOnFocus}
         leftIcon={leftIcon !== null && leftIcon}
+        rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
         containerStyle={{ marginBottom: theme.spacing.sm }}
       />
