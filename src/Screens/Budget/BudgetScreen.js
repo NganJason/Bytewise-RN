@@ -169,7 +169,7 @@ const getStyles = theme => {
       alignItems: 'center',
     },
     body: {
-      padding: theme.spacing.xl,
+      paddingVertical: theme.spacing.xl,
     },
     budgetContainer: {
       marginVertical: theme.spacing.md,

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme, Icon, Button, FAB } from '@rneui/themed';
 
@@ -15,11 +15,8 @@ import {
   TRANSACTION_EXPENSE,
   TRANSACTION_INCOME,
 } from '../../_shared/api/data/model';
-import { MONTHS } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useSetDate from '../../_shared/hooks/useSetDate';
-
-const TODAY = new Date();
 
 // TODO: REMOVE
 const TRANSACTIONS = [
@@ -133,7 +130,7 @@ const getStyles = theme =>
     body: {
       width: '100%',
       height: '100%',
-      padding: theme.spacing.xl,
+      paddingVertical: theme.spacing.xl,
     },
     aggr: {
       display: 'flex',

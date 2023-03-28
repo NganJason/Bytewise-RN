@@ -6,6 +6,7 @@ import {
   BaseText,
   BaseScreen,
   BaseButton,
+  BaseHeader,
 } from '../../Components';
 
 import {
@@ -64,11 +65,13 @@ const BudgetBreakdownScreen = ({ navigation }) => {
 
   return (
     <BaseScreen style={styles.screen}>
-      <View style={styles.header}>
-        <View style={styles.primaryHeader}>
+      <BaseHeader
+        leftComponent={
           <BaseText h1 style={{ color: theme.colors.primary }}>
             Food
           </BaseText>
+        }
+        rightComponent={
           <BaseButton
             buttonStyle={styles.editBtn}
             align="flex-end"
@@ -80,8 +83,10 @@ const BudgetBreakdownScreen = ({ navigation }) => {
             }}>
             <Icon name="edit" type="fontawesome" color={theme.colors.grey3} />
           </BaseButton>
-        </View>
+        }
+      />
 
+      <View style={styles.header}>
         <View style={styles.aggr}>
           <BaseText h3 style={{ color: theme.colors.primary }}>
             Budget: {100}
@@ -127,17 +132,8 @@ const BudgetBreakdownScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    screen: {
-      padding: theme.spacing.xl,
-    },
     header: {
       marginBottom: theme.spacing.lg,
-      width: '100%',
-    },
-    primaryHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
       width: '100%',
     },
     editBtn: {

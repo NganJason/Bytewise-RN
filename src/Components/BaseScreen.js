@@ -25,6 +25,7 @@ const getStyles = theme =>
   StyleSheet.create({
     scrollView: {
       flexGrow: 1,
+      paddingHorizontal: theme.spacing.xl,
       minHeight: '100%',
     },
   });

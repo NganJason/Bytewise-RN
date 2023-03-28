@@ -32,6 +32,7 @@ const getStyles = theme => {
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: theme.spacing.sm,
+      marginTop: theme.spacing.md,
       marginBottom: theme.spacing.sm,
     },
     container: {
