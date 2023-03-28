@@ -15,6 +15,7 @@ import ROUTES from '../../_shared/constant/routes';
 
 const TODAY = new Date();
 
+// TODO: REMOVE
 const TRANSACTIONS = [
   {
     id: 1,

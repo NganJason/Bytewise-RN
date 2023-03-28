@@ -3,13 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTheme, Header, ButtonGroup, Icon } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BottomSheetModal,
   useBottomSheetDynamicSnapPoints,
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import {
   BaseText,
@@ -25,6 +26,19 @@ import {
   TRANSACTION_TYPES,
 } from '../../_shared/api/data/model';
 
+// TODO: REMOVE
+const EXPENSE_CATEGORIES = [
+  { categoryName: 'Food', categoryID: 1 },
+  { categoryName: 'Lunch', categoryID: 2, parent: 1 },
+  { categoryName: 'Dinner', categoryID: 3, parent: 1 },
+];
+
+// TODO: REMOVE
+const INCOME_CATEGORIES = [
+  { categoryName: 'Shopee Salary', categoryID: 4 },
+  { categoryName: 'Dividend Income', categoryID: 4 },
+];
+
 const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
@@ -37,9 +51,6 @@ const TransactionForm = () => {
   const dateRef = useRef(null);
   const amountRef = useRef(null);
   const modalRef = useRef(null);
-
-  const [selectedTransactionType, setSelectedTransactionType] =
-    useState(TRANSACTION_EXPENSE);
 
   const snapPoints = useMemo(() => ['CONTENT_HEIGHT'], []);
 
@@ -74,6 +85,7 @@ const TransactionForm = () => {
     amount: '',
     note: '',
     category: '',
+    transactionType: TRANSACTION_EXPENSE,
   });
 
   const onNoteChange = e => {
@@ -82,6 +94,10 @@ const TransactionForm = () => {
 
   const onAmountChange = e => {
     setForm({ ...form, amount: e });
+  };
+
+  const onTransactionTypeChange = e => {
+    setForm({ ...form, transactionType: e });
   };
 
   const onDateChange = e => {
@@ -107,15 +123,16 @@ const TransactionForm = () => {
         />
         <KeyboardAwareScrollView
           style={styles.scrollView}
-          extraHeight={300}
+          extraHeight={200}
+          enableOnAndroid={true}
           keyboardOpeningTime={0}>
           <View style={styles.form}>
             <ButtonGroup
-              onPress={index => setSelectedTransactionType(index + 1)}
-              selectedIndex={selectedTransactionType - 1}
+              onPress={index => onTransactionTypeChange(index + 1)}
+              selectedIndex={form.transactionType - 1}
               buttons={[
-                TRANSACTION_TYPES[TRANSACTION_INCOME],
                 TRANSACTION_TYPES[TRANSACTION_EXPENSE],
+                TRANSACTION_TYPES[TRANSACTION_INCOME],
               ]}
             />
             <View style={styles.formBody}>
@@ -134,6 +151,15 @@ const TransactionForm = () => {
                 value={form.amount}
                 onChangeText={onAmountChange}
                 autoFocus
+              />
+              <DropDownPicker
+                schema={{
+                  label: 'categoryName',
+                  value: 'categoryID',
+                }}
+                items={EXPENSE_CATEGORIES}
+                open={true}
+                searchable
               />
               <BaseInput
                 label="Note"
