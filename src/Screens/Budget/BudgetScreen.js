@@ -6,19 +6,13 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import {
-  useTheme,
-  LinearProgress,
-  Icon,
-  Header,
-  Button,
-  FAB,
-} from '@rneui/themed';
+import { useTheme, LinearProgress, Icon, Button, FAB } from '@rneui/themed';
 import {
   ArrowSelector,
   BaseScreen,
   BaseDivider,
   BaseText,
+  BaseHeader,
 } from '../../Components';
 import Collapsible from 'react-native-collapsible';
 
@@ -83,7 +77,7 @@ const BudgetScreen = ({ navigation }) => {
 
   return (
     <BaseScreen fab={getFab()}>
-      <Header
+      <BaseHeader
         centerComponent={
           <ArrowSelector
             contentSpacing={theme.spacing.xl}
@@ -94,7 +88,7 @@ const BudgetScreen = ({ navigation }) => {
             </BaseText>
           </ArrowSelector>
         }
-        containerStyle={styles.header}
+        centerContainerStyle={styles.header}
       />
 
       {isLoading ? (
@@ -168,7 +162,6 @@ const getStyles = theme => {
       alignSelf: 'center',
       backgroundColor: theme.colors.white,
       borderBottomColor: theme.colors.white,
-      paddingVertical: theme.spacing.xl,
     },
     aggr: {
       flexDirection: 'row',

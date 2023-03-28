@@ -160,7 +160,6 @@ const getStyles = theme => {
       alignSelf: 'center',
       backgroundColor: theme.colors.white,
       borderBottomColor: theme.colors.white,
-      paddingVertical: theme.spacing.xl,
     },
     body: {
       width: '90%',

@@ -9,6 +9,7 @@ import SplashScreen from './SplashScreen';
 import ArrowSelector from './ArrowSelector';
 import BaseLoadScreen from './BaseLoadScreen';
 import BaseScreen from './BaseScreen';
+import BaseHeader from './BaseHeader';
 
 export {
   BaseDivider,
@@ -22,4 +23,5 @@ export {
   ArrowSelector,
   BaseLoadScreen,
   BaseScreen,
+  BaseHeader,
 };

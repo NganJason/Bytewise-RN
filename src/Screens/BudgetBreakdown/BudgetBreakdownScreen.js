@@ -131,7 +131,6 @@ const getStyles = theme => {
       padding: theme.spacing.xl,
     },
     header: {
-      marginTop: theme.spacing.xl,
       marginBottom: theme.spacing.lg,
       width: '100%',
     },

@@ -1,5 +1,5 @@
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import HideKeyboard from './HideKeyboard';
 
 import { StyleSheet } from 'react-native';
@@ -11,12 +11,12 @@ const BaseScreen = ({ children, fab, style }) => {
 
   return (
     <HideKeyboard>
-      <SafeAreaProvider>
+      <SafeAreaView>
         <ScrollView style={{ ...styles.scrollView, ...style }}>
           {children}
         </ScrollView>
         {fab}
-      </SafeAreaProvider>
+      </SafeAreaView>
     </HideKeyboard>
   );
 };
@@ -25,6 +25,7 @@ const getStyles = theme =>
   StyleSheet.create({
     scrollView: {
       flexGrow: 1,
+      minHeight: '100%',
     },
   });
 

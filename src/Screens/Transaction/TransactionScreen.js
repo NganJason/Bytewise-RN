@@ -1,9 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useTheme, Header, Icon, Button, FAB } from '@rneui/themed';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useTheme, Icon, Button, FAB } from '@rneui/themed';
 
-import { BaseText, BaseDivider } from '../../Components';
+import {
+  BaseText,
+  BaseDivider,
+  BaseScreen,
+  BaseHeader,
+  ArrowSelector,
+} from '../../Components';
 
 import {
   CURRENCY,
@@ -12,6 +17,7 @@ import {
 } from '../../_shared/api/data/model';
 import { MONTHS } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import useSetDate from '../../_shared/hooks/useSetDate';
 
 const TODAY = new Date();
 
@@ -43,17 +49,7 @@ const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const [date, setDate] = useState(TODAY);
-
-  const renderDate = useCallback(() => {
-    const month = MONTHS[date.getMonth()];
-    return `${month} ${date.getFullYear()}`;
-  }, [date]);
-
-  const moveMonth = diff => new Date(date.setMonth(date.getMonth() + diff));
-
-  const addOneMonth = () => setDate(moveMonth(1));
-  const subOneMonth = () => setDate(moveMonth(-1));
+  const { renderDate, addOneMonth, subOneMonth } = useSetDate();
 
   const getAmountStyles = ({ transaction_type }) => {
     switch (transaction_type) {
@@ -65,26 +61,26 @@ const TransactionScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaProvider style={styles.screen}>
-      <Header
+    <BaseScreen
+      fab={
+        <FAB
+          placement="right"
+          icon={<Icon name="add" color={theme.colors.white} />}
+          color={theme.colors.primary}
+          onPress={() => navigation.navigate(ROUTES.transactionForm)}
+        />
+      }>
+      <BaseHeader
         centerComponent={
-          <BaseText h2 style={styles.dateText}>
-            {renderDate()}
-          </BaseText>
+          <ArrowSelector
+            contentSpacing={theme.spacing.xl}
+            onNext={addOneMonth}
+            onPrev={subOneMonth}>
+            <BaseText h2 style={{ color: theme.colors.primary }}>
+              {renderDate()}
+            </BaseText>
+          </ArrowSelector>
         }
-        rightComponent={
-          <Button onPress={addOneMonth} type="clear">
-            <Icon name="chevron-right" color={theme.colors.grey3} />
-          </Button>
-        }
-        leftComponent={
-          <Button onPress={subOneMonth} type="clear">
-            <Icon name="chevron-left" color={theme.colors.grey3} />
-          </Button>
-        }
-        containerStyle={styles.header}
-        rightContainerStyle={styles.headerItem}
-        leftContainerStyle={styles.headerItem}
         centerContainerStyle={styles.headerItem}
       />
       <View style={styles.aggr}>
@@ -116,13 +112,7 @@ const TransactionScreen = ({ navigation }) => {
           </React.Fragment>
         ))}
       </View>
-      <FAB
-        placement="right"
-        icon={<Icon name="add" color={theme.colors.white} />}
-        color={theme.colors.primary}
-        onPress={() => navigation.navigate(ROUTES.transactionForm)}
-      />
-    </SafeAreaProvider>
+    </BaseScreen>
   );
 };
 
@@ -133,12 +123,6 @@ const getStyles = theme =>
     screen: {
       display: 'flex',
       alignItems: 'center',
-    },
-    header: {
-      width: '60%',
-      backgroundColor: theme.colors.white,
-      borderBottomColor: theme.colors.white,
-      paddingVertical: theme.spacing.xl,
     },
     headerItem: {
       display: 'flex',

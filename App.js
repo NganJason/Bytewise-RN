@@ -14,6 +14,7 @@ import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import BudgetBreakdownScreen from './src/Screens/BudgetBreakdown/BudgetBreakdownScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -98,7 +99,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={THEME}>
-        <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+        <SafeAreaProvider>
+          <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+        </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
