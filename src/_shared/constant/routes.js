@@ -7,6 +7,7 @@ const ROUTES = {
   settings: 'Settings',
   setCategory: 'Set Category',
   budgetBreakdown: 'Budget Breakdown',
+  assetAccount: 'Asset Account',
 };
 
 export default ROUTES;

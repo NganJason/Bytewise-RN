@@ -15,6 +15,7 @@ import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import BudgetBreakdownScreen from './src/Screens/BudgetBreakdown/BudgetBreakdownScreen';
+import AssetAccountScreen from './src/Screens/Asset/AssetAccount';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -91,6 +92,10 @@ function App() {
         <Stack.Screen
           name={ROUTES.budgetBreakdown}
           component={BudgetBreakdownScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.assetAccount}
+          component={AssetAccountScreen}
         />
       </Stack.Navigator>
     );
