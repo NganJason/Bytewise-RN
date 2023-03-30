@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
 
@@ -14,7 +15,6 @@ import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import BudgetBreakdownScreen from './src/Screens/BudgetBreakdown/BudgetBreakdownScreen';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();

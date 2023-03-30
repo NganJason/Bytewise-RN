@@ -11,15 +11,17 @@ const BaseInput = forwardRef(
       value = '',
       placeholder = '',
       keyboardType = 'default',
-      carretHidden = false,
       readOnly = false,
       showSoftInputOnFocus = true,
-      onChangeText = function () {},
-      onBlur = function () {},
-      onFocus = function () {},
       leftIcon = null,
       rightIcon = null,
       autoFocus = false,
+      caretHidden = false,
+      highlight = false,
+      onChangeText = function () {},
+      onBlur = function () {},
+      onFocus = function () {},
+      onPress = function () {},
     },
     ref,
   ) => {
@@ -44,13 +46,16 @@ const BaseInput = forwardRef(
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         onBlur={handleBlur}
+        onPressOut={onPress}
         placeholder={placeholder}
         label={label !== '' && <BaseText h3>{label}</BaseText>}
         value={value}
         selectionColor={theme.colors.primary}
         onFocus={handleFocus}
-        inputContainerStyle={isFocused ? styles.focused : styles.blur}
-        caretHidden={carretHidden}
+        inputContainerStyle={
+          isFocused || highlight ? styles.focused : styles.blur
+        }
+        caretHidden={caretHidden}
         readOnly={readOnly}
         showSoftInputOnFocus={showSoftInputOnFocus}
         leftIcon={leftIcon !== null && leftIcon}

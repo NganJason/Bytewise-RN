@@ -6,19 +6,21 @@ const BaseButton = ({
   loading = false,
   disabled = false,
   width = 0,
-  fullWidth = true,
+  fullWidth = false,
   align = 'center',
   size = 'md',
   buttonStyle,
   containerStyle,
-  ...props
+  onPress = function () {},
 }) => {
   const getButtonWidth = () => {
     switch (true) {
       case width !== 0:
         return width;
-      case fullWidth || width === 0:
+      case fullWidth:
         return '100%';
+      default:
+        return 'auto';
     }
   };
 
@@ -37,7 +39,7 @@ const BaseButton = ({
         ...containerStyle,
       }}
       size={size}
-      {...props}
+      onPress={onPress}
     />
   );
 };
