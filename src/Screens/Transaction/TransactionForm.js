@@ -1,10 +1,17 @@
 import { useState, useRef } from 'react';
-import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useTheme, Header, ButtonGroup, Icon, Dialog } from '@rneui/themed';
+import {
+  useTheme,
+  Header,
+  ButtonGroup,
+  Icon,
+  Dialog,
+  BottomSheet,
+  ListItem,
+} from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SimpleGrid } from 'react-native-super-grid';
 
 import {
   BaseText,
@@ -93,7 +100,7 @@ const TransactionForm = () => {
   };
 
   const onTransactionTypeChange = e => {
-    setForm({ ...form, transaction_type: e });
+    setForm({ ...form, transaction_type: e, category: {} });
   };
 
   const onDateChange = e => {
@@ -106,8 +113,6 @@ const TransactionForm = () => {
     toggleCategoryModal();
   };
 
-  const { width } = Dimensions.get('window');
-  const categoryModalWidth = width * 0.8; // see styles.categoryModal
   const categories = TRANSACTION_CATEGORIES[form.transaction_type];
 
   return (
@@ -176,38 +181,29 @@ const TransactionForm = () => {
                 onPress={toggleCategoryModal}
                 readOnly
               />
-              <Dialog
+              <BottomSheet
                 isVisible={isCategoryModalVisible}
-                onBackdropPress={toggleCategoryModal}
-                overlayStyle={styles.categoryModal}>
-                <ScrollView>
-                  <SimpleGrid
-                    itemDimension={categoryModalWidth / 3}
-                    data={categories}
-                    style={styles.gridView}
-                    spacing={0}
-                    renderItem={({ item: cat, index }) => {
-                      return (
-                        <View
-                          style={{
-                            ...(index % 2 === 0 && styles.categoryBtnEven),
-                            ...styles.categoryBtn,
-                            ...(index < categories.length - 2 &&
-                              styles.categoryBtnNotLastTwo),
-                          }}>
-                          <BaseButton
-                            title={cat.cat_name}
-                            fullWidth
-                            size="lg"
-                            type="clear"
-                            onPress={() => onCategoryChange(cat)}
-                          />
-                        </View>
-                      );
-                    }}
-                  />
-                </ScrollView>
-              </Dialog>
+                onBackdropPress={toggleCategoryModal}>
+                {categories.map((cat, i) => (
+                  <ListItem
+                    key={i}
+                    onPress={() => onCategoryChange(cat)}
+                    containerStyle={styles.modalItem}>
+                    <ListItem.Content key={i}>
+                      <ListItem.Title>
+                        <BaseText>{cat.cat_name}</BaseText>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))}
+                <BaseButton
+                  title="Close"
+                  fullWidth
+                  size="lg"
+                  activeOpacity={1}
+                  onPress={toggleCategoryModal}
+                />
+              </BottomSheet>
               <BaseInput
                 label="Note"
                 value={form.note}
@@ -249,16 +245,12 @@ const getStyles = theme =>
     formBody: {
       marginVertical: theme.spacing.xl,
     },
-    categoryModal: {
-      maxHeight: '60%',
+    modalItem: {
+      paddingHorizontal: theme.spacing.xl,
+      paddingVertical: 16, // TODO: SPACING FIX
     },
-    categoryBtn: {
-      borderColor: theme.colors.primary,
-    },
-    categoryBtnNotLastTwo: {
-      borderBottomWidth: theme.spacing.xs,
-    },
-    categoryBtnEven: {
-      borderRightWidth: theme.spacing.xs,
+    modalBtnText: {
+      color: theme.colors.white,
+      alignSelf: 'center',
     },
   });

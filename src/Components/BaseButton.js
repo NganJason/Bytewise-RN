@@ -2,7 +2,7 @@ import { Button } from '@rneui/themed';
 
 const BaseButton = ({
   type = 'solid',
-  title = '',
+  title = '', // TODO: Wrap text styles
   loading = false,
   disabled = false,
   width = 0,
@@ -11,6 +11,7 @@ const BaseButton = ({
   size = 'md',
   buttonStyle,
   containerStyle,
+  activeOpacity = 0.85,
   onPress = function () {},
 }) => {
   const getButtonWidth = () => {
@@ -26,6 +27,7 @@ const BaseButton = ({
 
   return (
     <Button
+      activeOpacity={activeOpacity}
       title={title}
       type={type}
       loading={loading}

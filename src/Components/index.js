@@ -9,6 +9,7 @@ import ArrowSelector from './ArrowSelector';
 import BaseLoadScreen from './BaseLoadScreen';
 import BaseScreen from './BaseScreen';
 import BaseHeader from './BaseHeader';
+import DailyTransactions from './DailyTransactions';
 
 export {
   BaseDivider,
@@ -22,4 +23,5 @@ export {
   BaseLoadScreen,
   BaseScreen,
   BaseHeader,
+  DailyTransactions,
 };
