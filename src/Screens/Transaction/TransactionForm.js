@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTheme, Header, ButtonGroup, Icon, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SimpleGrid } from 'react-native-super-grid';
 
 import {
   BaseText,
@@ -20,17 +21,26 @@ import {
 } from '../../_shared/api/data/model';
 
 // TODO: REMOVE
-// const EXPENSE_CATEGORIES = [
-//   { categoryName: 'Food', categoryID: 1 },
-//   { categoryName: 'Lunch', categoryID: 2, parent: 1 },
-//   { categoryName: 'Dinner', categoryID: 3, parent: 1 },
-// ];
+const EXPENSE_CATEGORIES = [
+  { cat_name: 'Food', cat_id: 1 },
+  { cat_name: 'Clothes', cat_id: 2 },
+  { cat_name: 'Rent', cat_id: 3 },
+  { cat_name: 'Sports', cat_id: 4 },
+  { cat_name: 'Friends', cat_id: 5 },
+  { cat_name: 'Tax', cat_id: 6 },
+];
 
 // TODO: REMOVE
-// const INCOME_CATEGORIES = [
-//   { categoryName: 'Shopee Salary', categoryID: 3 },
-//   { categoryName: 'Dividend Income', categoryID: 4 },
-// ];
+const INCOME_CATEGORIES = [
+  { cat_name: 'Shopee Salary', cat_id: 4 },
+  { cat_name: 'Dividend Income', cat_id: 5 },
+];
+
+// TODO: REMOVE
+const TRANSACTION_CATEGORIES = {
+  [TRANSACTION_EXPENSE]: EXPENSE_CATEGORIES,
+  [TRANSACTION_INCOME]: INCOME_CATEGORIES,
+};
 
 const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
@@ -50,18 +60,20 @@ const TransactionForm = () => {
     timestamp: TODAY.valueOf(), // unix
     amount: '',
     note: '',
-    category: '',
-    transactionType: TRANSACTION_EXPENSE,
+    category: {},
+    transaction_type: TRANSACTION_EXPENSE,
   });
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
 
-  const openCalendarModal = () => {
-    setIsCalendarModalVisible(true);
+  const toggleCalendarModal = () => {
+    setIsCalendarModalVisible(!isCalendarModalVisible);
   };
 
-  const closeCalendarModal = () => {
-    setIsCalendarModalVisible(false);
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+
+  const toggleCategoryModal = () => {
+    setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
   const formatDate = date => {
@@ -81,13 +93,22 @@ const TransactionForm = () => {
   };
 
   const onTransactionTypeChange = e => {
-    setForm({ ...form, transactionType: e });
+    setForm({ ...form, transaction_type: e });
   };
 
   const onDateChange = e => {
     setForm({ ...form, date: e });
-    closeCalendarModal();
+    toggleCalendarModal();
   };
+
+  const onCategoryChange = e => {
+    setForm({ ...form, category: e });
+    toggleCategoryModal();
+  };
+
+  const { width } = Dimensions.get('window');
+  const categoryModalWidth = width * 0.8; // see styles.categoryModal
+  const categories = TRANSACTION_CATEGORIES[form.transaction_type];
 
   return (
     <HideKeyboard>
@@ -104,7 +125,7 @@ const TransactionForm = () => {
           <View style={styles.form}>
             <ButtonGroup
               onPress={index => onTransactionTypeChange(index + 1)}
-              selectedIndex={form.transactionType - 1}
+              selectedIndex={form.transaction_type - 1}
               buttons={[
                 TRANSACTION_TYPES[TRANSACTION_EXPENSE],
                 TRANSACTION_TYPES[TRANSACTION_INCOME],
@@ -115,12 +136,12 @@ const TransactionForm = () => {
                 ref={inputRef}
                 label="Date"
                 value={formatDate(selectedDate)}
-                onPress={openCalendarModal}
+                onPress={toggleCalendarModal}
                 readOnly
               />
               <Dialog
                 isVisible={isCalendarModalVisible}
-                onBackdropPress={closeCalendarModal}>
+                onBackdropPress={toggleCalendarModal}>
                 <Calendar
                   showSixWeeks
                   initialDate={selectedDate}
@@ -149,6 +170,45 @@ const TransactionForm = () => {
                 autoFocus
               />
               <BaseInput
+                ref={inputRef}
+                label="Category"
+                value={form.category.cat_name}
+                onPress={toggleCategoryModal}
+                readOnly
+              />
+              <Dialog
+                isVisible={isCategoryModalVisible}
+                onBackdropPress={toggleCategoryModal}
+                overlayStyle={styles.categoryModal}>
+                <ScrollView>
+                  <SimpleGrid
+                    itemDimension={categoryModalWidth / 3}
+                    data={categories}
+                    style={styles.gridView}
+                    spacing={0}
+                    renderItem={({ item: cat, index }) => {
+                      return (
+                        <View
+                          style={{
+                            ...(index % 2 === 0 && styles.categoryBtnEven),
+                            ...styles.categoryBtn,
+                            ...(index < categories.length - 2 &&
+                              styles.categoryBtnNotLastTwo),
+                          }}>
+                          <BaseButton
+                            title={cat.cat_name}
+                            fullWidth
+                            size="lg"
+                            type="clear"
+                            onPress={() => onCategoryChange(cat)}
+                          />
+                        </View>
+                      );
+                    }}
+                  />
+                </ScrollView>
+              </Dialog>
+              <BaseInput
                 label="Note"
                 value={form.note}
                 onChangeText={onNoteChange}
@@ -161,7 +221,7 @@ const TransactionForm = () => {
                 }
               />
             </View>
-            <BaseButton title="Save" width={150} size="lg" />
+            <BaseButton title="Save" size="lg" width={200} />
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaProvider>
@@ -188,5 +248,17 @@ const getStyles = theme =>
     },
     formBody: {
       marginVertical: theme.spacing.xl,
+    },
+    categoryModal: {
+      maxHeight: '60%',
+    },
+    categoryBtn: {
+      borderColor: theme.colors.primary,
+    },
+    categoryBtnNotLastTwo: {
+      borderBottomWidth: theme.spacing.xs,
+    },
+    categoryBtnEven: {
+      borderRightWidth: theme.spacing.xs,
     },
   });

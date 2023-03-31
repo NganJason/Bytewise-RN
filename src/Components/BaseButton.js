@@ -35,7 +35,7 @@ const BaseButton = ({
         ...buttonStyle,
       }}
       containerStyle={{
-        alignItems: align,
+        ...(!fullWidth && { alignItems: align }),
         ...containerStyle,
       }}
       size={size}
