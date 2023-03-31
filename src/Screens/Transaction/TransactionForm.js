@@ -1,11 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   useTheme,
   Header,
   ButtonGroup,
-  Icon,
   Dialog,
   BottomSheet,
   ListItem,
@@ -57,8 +56,6 @@ const DATE = `${TODAY.getDate()}`;
 const TransactionForm = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-
-  const inputRef = useRef(null);
 
   // for rendering
   const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
@@ -138,7 +135,6 @@ const TransactionForm = () => {
             />
             <View style={styles.formBody}>
               <BaseInput
-                ref={inputRef}
                 label="Date"
                 value={formatDate(selectedDate)}
                 onPress={toggleCalendarModal}
@@ -175,7 +171,6 @@ const TransactionForm = () => {
                 autoFocus
               />
               <BaseInput
-                ref={inputRef}
                 label="Category"
                 value={form.category.cat_name}
                 onPress={toggleCategoryModal}
@@ -208,13 +203,7 @@ const TransactionForm = () => {
                 label="Note"
                 value={form.note}
                 onChangeText={onNoteChange}
-                rightIcon={
-                  <BaseButton
-                    onPress={() => onNoteChange('')}
-                    type="clear"
-                    title={<Icon name="clear" type="material-icons" />}
-                  />
-                }
+                clearButtonMode="always"
               />
             </View>
             <BaseButton title="Save" size="lg" width={200} />

@@ -11,7 +11,7 @@ const BaseButton = ({
   size = 'md',
   buttonStyle,
   containerStyle,
-  activeOpacity = 0.85,
+  activeOpacity = 0.3,
   onPress = function () {},
 }) => {
   const getButtonWidth = () => {

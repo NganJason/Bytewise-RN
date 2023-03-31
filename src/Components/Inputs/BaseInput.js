@@ -22,6 +22,7 @@ const BaseInput = forwardRef(
       onBlur = function () {},
       onFocus = function () {},
       onPress = function () {},
+      clearButtonMode = 'never', // IOS only
     },
     ref,
   ) => {
@@ -61,7 +62,8 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={{ marginBottom: theme.spacing.sm }}
+        containerStyle={{ marginBottom: theme.spacing.xs }}
+        clearButtonMode={clearButtonMode}
       />
     );
   },
