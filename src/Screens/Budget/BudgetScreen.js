@@ -78,7 +78,7 @@ const BudgetScreen = ({ navigation }) => {
   return (
     <BaseScreen fab={getFab()}>
       <BaseHeader
-        centerComponent={
+        center={
           <ArrowSelector
             contentSpacing={theme.spacing.xl}
             onNext={addOneMonth}
@@ -88,7 +88,7 @@ const BudgetScreen = ({ navigation }) => {
             </BaseText>
           </ArrowSelector>
         }
-        centerContainerStyle={styles.header}
+        //centerContainerStyle={styles.header}
       />
 
       {isLoading ? (

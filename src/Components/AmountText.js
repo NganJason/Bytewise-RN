@@ -5,12 +5,12 @@ import BaseText from './BaseText';
 
 import { CURRENCY } from '../_shared/api/data/mock/user';
 
-const AmountText = ({ amount = '', showSymbol = false }) => {
+const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const getAmountAttr = () => {
-    if (amount > 0) {
+    if (children > 0) {
       return { styles: styles.positive, symbol: '+' };
     }
     return { styles: styles.negative, symbol: '-' };
@@ -18,11 +18,15 @@ const AmountText = ({ amount = '', showSymbol = false }) => {
 
   const renderAmountText = () => {
     let text = '';
+    let amount = children;
+
+    // use symbol string to show negative
+    if (amount < 0) {
+      amount *= -1;
+    }
 
     // add currency
-    if (amount !== '') {
-      text = `${CURRENCY} ${amount}`;
-    }
+    text = `${CURRENCY} ${amount}`;
 
     // add + or -
     if (showSymbol) {
@@ -34,7 +38,9 @@ const AmountText = ({ amount = '', showSymbol = false }) => {
   };
 
   return (
-    <BaseText style={getAmountAttr().styles}>{renderAmountText()}</BaseText>
+    <BaseText style={{ ...getAmountAttr().styles, ...style }}>
+      {renderAmountText()}
+    </BaseText>
   );
 };
 
@@ -46,6 +52,6 @@ const getStyles = theme =>
       color: theme.colors.primary,
     },
     negative: {
-      color: theme.colors.red,
+      color: theme.colors.red0,
     },
   });

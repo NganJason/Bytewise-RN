@@ -10,7 +10,7 @@ const AssetScreen = ({ navigation }) => {
   return (
     <BaseScreen>
       <BaseHeader
-        leftComponent={
+        left={
           <View>
             <BaseText h3 style={{ color: theme.colors.grey2 }}>
               You have
@@ -28,7 +28,6 @@ const AssetScreen = ({ navigation }) => {
             </BaseText>
           </View>
         }
-        leftContainerStyle={styles.header}
       />
 
       <View style={styles.body}>
@@ -41,7 +40,6 @@ const AssetScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    header: { maxWidth: '100%' },
     body: {
       marginTop: theme.spacing.xl,
     },

@@ -64,14 +64,14 @@ const BudgetBreakdownScreen = ({ navigation }) => {
   };
 
   return (
-    <BaseScreen style={styles.screen}>
+    <BaseScreen>
       <BaseHeader
-        leftComponent={
+        left={
           <BaseText h1 style={{ color: theme.colors.primary }}>
             Food
           </BaseText>
         }
-        rightComponent={
+        right={
           <BaseButton
             buttonStyle={styles.editBtn}
             align="flex-end"

@@ -73,7 +73,7 @@ const SetCategoryScreen = ({ navigation, route }) => {
     <BaseScreen>
       <View style={styles.screen}>
         <Header
-          centerComponent={
+          center={
             <BaseText h2 style={{ color: theme.colors.grey6 }}>
               {route.params.isEdit ? 'Edit category' : 'Add a category'}
             </BaseText>

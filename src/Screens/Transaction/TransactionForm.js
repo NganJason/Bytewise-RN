@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import {
   useTheme,
-  Header,
   ButtonGroup,
   Dialog,
   BottomSheet,
@@ -16,7 +15,8 @@ import {
   BaseInput,
   BaseCurrencyInput,
   BaseButton,
-  HideKeyboard,
+  BaseScreen,
+  BaseHeader,
 } from '../../Components';
 
 import {
@@ -111,18 +111,14 @@ const TransactionForm = () => {
   };
 
   return (
-    <HideKeyboard>
+    <BaseScreen>
       <>
-        <Header
-          centerComponent={<BaseText h2>Add Transaction</BaseText>}
-          containerStyle={styles.header}
-        />
+        <BaseHeader center={<BaseText h2>Add Transaction</BaseText>} />
         <KeyboardAwareScrollView
-          style={styles.scrollView}
           extraHeight={200}
           enableOnAndroid={true}
           keyboardOpeningTime={0}>
-          <View style={styles.form}>
+          <>
             <ButtonGroup
               onPress={index => onTransactionTypeChange(index + 1)}
               selectedIndex={form.transaction_type - 1}
@@ -206,10 +202,10 @@ const TransactionForm = () => {
               />
             </View>
             <BaseButton title="Save" size="lg" width={200} />
-          </View>
+          </>
         </KeyboardAwareScrollView>
       </>
-    </HideKeyboard>
+    </BaseScreen>
   );
 };
 
@@ -217,19 +213,6 @@ export default TransactionForm;
 
 const getStyles = theme =>
   StyleSheet.create({
-    scrollView: {
-      width: '100%',
-    },
-    header: {
-      backgroundColor: theme.colors.white,
-      borderBottomColor: theme.colors.white,
-      paddingTop: theme.spacing.xl,
-    },
-    form: {
-      width: '100%',
-      height: '100%',
-      padding: theme.spacing.xl,
-    },
     formBody: {
       marginVertical: theme.spacing.xl,
     },

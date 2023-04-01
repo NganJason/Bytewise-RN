@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme, Icon, FAB } from '@rneui/themed';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   BaseText,
@@ -10,6 +11,7 @@ import {
   DailyTransactions,
 } from '../../Components';
 
+import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
 import ROUTES from '../../_shared/constant/routes';
 import useSetDate from '../../_shared/hooks/useSetDate';
 
@@ -30,7 +32,7 @@ const TransactionScreen = ({ navigation }) => {
         />
       }>
       <BaseHeader
-        centerComponent={
+        center={
           <ArrowSelector
             contentSpacing={theme.spacing.xl}
             onNext={addOneMonth}
@@ -40,11 +42,16 @@ const TransactionScreen = ({ navigation }) => {
             </BaseText>
           </ArrowSelector>
         }
-        centerContainerStyle={styles.headerItem}
       />
-      <View style={styles.body}>
-        <DailyTransactions />
-      </View>
+      <ScrollView style={styles.body}>
+        {TRANSACTIONS.map((t, i) => (
+          <DailyTransactions
+            key={i}
+            transactions={t.transactions}
+            timestamp={t.timestamp}
+          />
+        ))}
+      </ScrollView>
     </BaseScreen>
   );
 };
@@ -53,14 +60,9 @@ export default TransactionScreen;
 
 const getStyles = theme =>
   StyleSheet.create({
-    headerItem: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     body: {
+      flex: 1,
       width: '100%',
       height: '100%',
-      paddingVertical: theme.spacing.xl,
     },
   });

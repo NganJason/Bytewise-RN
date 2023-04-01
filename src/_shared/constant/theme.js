@@ -13,7 +13,7 @@ const COLORS = {
   grey4: '#bdc6cf',
   grey5: '#F2F2F2',
   grey6: '#6D6D6D',
-  red0: '#B85050',
+  red0: '#800000',
   disabled: '#E3E6E8',
   error: '#F41A0F',
   success: '#52C41A',
@@ -62,32 +62,32 @@ export const THEME = createTheme({
   fontFamily: FONT_FAMILY,
   fontStyles: {
     h1: {
-      fontFamily: FONT_FAMILY.bold,
+      //fontFamily: FONT_FAMILY.bold,
       fontSize: FONT_SIZES.h1,
       color: COLORS.black,
     },
     h2: {
-      fontFamily: FONT_FAMILY.semiBold,
+      //fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h2,
       color: COLORS.black,
     },
     h3: {
-      fontFamily: FONT_FAMILY.medium,
+      //fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h3,
       color: COLORS.black,
     },
     h4: {
-      fontFamily: FONT_FAMILY.regular,
+      //fontFamily: FONT_FAMILY.regular,
       fontSize: FONT_SIZES.h4,
       color: COLORS.black,
     },
     p: {
-      fontFamily: FONT_FAMILY.regular,
+      //fontFamily: FONT_FAMILY.regular,
       fontSize: FONT_SIZES.body,
       color: COLORS.black,
     },
     caption: {
-      fontFamily: FONT_FAMILY.regular,
+      //fontFamily: FONT_FAMILY.regular,
       fontSize: FONT_SIZES.caption,
       color: COLORS.grey2,
     },
