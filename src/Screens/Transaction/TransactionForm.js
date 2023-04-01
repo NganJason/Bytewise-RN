@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import {
   useTheme,
   Header,
@@ -38,6 +37,8 @@ const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
 const DATE = `${TODAY.getDate()}`.padStart(2, '0');
+
+const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 
 const TransactionForm = () => {
   const { theme } = useTheme();
@@ -111,7 +112,7 @@ const TransactionForm = () => {
 
   return (
     <HideKeyboard>
-      <SafeAreaProvider style={styles.screen}>
+      <>
         <Header
           centerComponent={<BaseText h2>Add Transaction</BaseText>}
           containerStyle={styles.header}
@@ -174,6 +175,7 @@ const TransactionForm = () => {
                 readOnly
               />
               <BottomSheet
+                scrollViewProps={{ style: { maxHeight: WINDOW_HEIGHT / 2 } }}
                 isVisible={isCategoryModalVisible}
                 onBackdropPress={toggleCategoryModal}>
                 {activeCategories.map((cat, i) => (
@@ -206,7 +208,7 @@ const TransactionForm = () => {
             <BaseButton title="Save" size="lg" width={200} />
           </View>
         </KeyboardAwareScrollView>
-      </SafeAreaProvider>
+      </>
     </HideKeyboard>
   );
 };

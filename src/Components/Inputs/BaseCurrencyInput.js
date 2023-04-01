@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
-import { useTheme } from '@rneui/themed';
-import { Icon } from '@rneui/themed';
 
 import BaseInput from './BaseInput';
+
+import { CURRENCY } from '../../_shared/api/data/mock/user';
 
 const BaseCurrencyInput = forwardRef(
   (
@@ -16,25 +16,32 @@ const BaseCurrencyInput = forwardRef(
     },
     ref,
   ) => {
-    const { theme } = useTheme();
+    const formatAmount = () => {
+      if (value !== '') {
+        return `${CURRENCY} ${value}`;
+      }
+    };
+
+    const handleChangeText = e => {
+      const arr = e.split(' ');
+      // remove currency symbol
+      if (arr.length === 2) {
+        onChangeText(arr[1]);
+        return;
+      }
+      onChangeText(e);
+    };
 
     return (
       <BaseInput
         ref={ref}
         label={label}
-        value={value}
+        value={formatAmount()}
         placeholder={placeholder}
         onBlur={onBlur}
-        onChangeText={onChangeText}
+        onChangeText={handleChangeText}
         keyboardType="numeric"
         autoFocus={autoFocus}
-        leftIcon={
-          <Icon
-            name="dollar"
-            type="font-awesome"
-            color={theme.colors.primary}
-          />
-        }
       />
     );
   },

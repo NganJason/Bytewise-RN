@@ -17,7 +17,6 @@ const BaseInput = forwardRef(
       rightIcon = null,
       autoFocus = false,
       caretHidden = false,
-      highlight = false,
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
@@ -53,9 +52,7 @@ const BaseInput = forwardRef(
         value={value}
         selectionColor={theme.colors.primary}
         onFocus={handleFocus}
-        inputContainerStyle={
-          isFocused || highlight ? styles.focused : styles.blur
-        }
+        inputContainerStyle={isFocused ? styles.focused : styles.blur}
         caretHidden={caretHidden}
         readOnly={readOnly}
         showSoftInputOnFocus={showSoftInputOnFocus}
