@@ -1,62 +1,23 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useTheme, Icon, Button, FAB } from '@rneui/themed';
+import { useTheme, Icon, FAB } from '@rneui/themed';
 
 import {
   BaseText,
-  BaseDivider,
   BaseScreen,
   BaseHeader,
   ArrowSelector,
+  DailyTransactions,
 } from '../../Components';
 
-import {
-  CURRENCY,
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/data/model';
 import ROUTES from '../../_shared/constant/routes';
 import useSetDate from '../../_shared/hooks/useSetDate';
-
-// TODO: REMOVE
-const TRANSACTIONS = [
-  {
-    id: 1,
-    note: 'Dinner',
-    category: 'Food',
-    amount: 10,
-    transaction_type: 2,
-  },
-  {
-    id: 2,
-    note: 'Salary',
-    category: 'Fixed Income',
-    amount: 3000,
-    transaction_type: 1,
-  },
-  {
-    id: 3,
-    note: 'Uniqlo',
-    category: 'Personal',
-    amount: 60,
-    transaction_type: 2,
-  },
-];
 
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const { renderDate, addOneMonth, subOneMonth } = useSetDate();
-
-  const getAmountStyles = ({ transaction_type }) => {
-    switch (transaction_type) {
-      case TRANSACTION_TYPE_EXPENSE:
-        return styles.expenseText;
-      case TRANSACTION_TYPE_INCOME:
-        return styles.incomeText;
-    }
-  };
 
   return (
     <BaseScreen
@@ -81,34 +42,8 @@ const TransactionScreen = ({ navigation }) => {
         }
         centerContainerStyle={styles.headerItem}
       />
-      <View style={styles.aggr}>
-        <BaseText h3 style={styles.incomeText}>
-          Income: {CURRENCY.SGD} 30000
-        </BaseText>
-        <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-        <BaseText h3 style={styles.expenseText}>
-          Expense: {CURRENCY.SGD} 300
-        </BaseText>
-      </View>
       <View style={styles.body}>
-        {TRANSACTIONS.map(transaction => (
-          <React.Fragment key={transaction.id}>
-            <Button
-              type="clear"
-              buttonStyle={styles.transaction}
-              onPress={() => navigation.navigate(ROUTES.transactionForm)}>
-              <View style={styles.summary}>
-                <BaseText style={styles.noteText}>{transaction.note}</BaseText>
-                <BaseText caption>{transaction.category}</BaseText>
-              </View>
-              <BaseText
-                style={getAmountStyles(
-                  transaction,
-                )}>{`${CURRENCY.SGD} ${transaction.amount}`}</BaseText>
-            </Button>
-            <BaseDivider orientation="horizontal" margin={theme.spacing.md} />
-          </React.Fragment>
-        ))}
+        <DailyTransactions />
       </View>
     </BaseScreen>
   );
@@ -118,10 +53,6 @@ export default TransactionScreen;
 
 const getStyles = theme =>
   StyleSheet.create({
-    screen: {
-      display: 'flex',
-      alignItems: 'center',
-    },
     headerItem: {
       display: 'flex',
       justifyContent: 'center',
@@ -131,37 +62,5 @@ const getStyles = theme =>
       width: '100%',
       height: '100%',
       paddingVertical: theme.spacing.xl,
-    },
-    aggr: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-    },
-    summary: {
-      display: 'flex',
-    },
-    transaction: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    divider: {
-      marginHorizontal: theme.spacing.lg,
-    },
-    dateText: {
-      color: theme.colors.primary,
-      textAlign: 'center',
-      width: '100%',
-    },
-    incomeText: {
-      color: theme.colors.primary,
-    },
-    expenseText: {
-      color: theme.colors.red0,
-    },
-    noteText: {
-      marginBottom: theme.spacing.sm,
     },
   });

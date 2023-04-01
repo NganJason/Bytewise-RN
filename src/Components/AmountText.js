@@ -5,25 +5,36 @@ import BaseText from './BaseText';
 
 import { CURRENCY } from '../_shared/api/data/mock/user';
 
-const AmountText = ({ amount = '', highlight = false }) => {
+const AmountText = ({ amount = '', showSymbol = false }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const getTextHighlightStyles = () => {
-    if (highlight) {
-      switch (amount > 0) {
-        case true:
-          return styles.positive;
-        case false:
-          return styles.negative;
-      }
+  const getAmountAttr = () => {
+    if (amount > 0) {
+      return { styles: styles.positive, symbol: '+' };
     }
+    return { styles: styles.negative, symbol: '-' };
+  };
+
+  const renderAmountText = () => {
+    let text = '';
+
+    // add currency
+    if (amount !== '') {
+      text = `${CURRENCY} ${amount}`;
+    }
+
+    // add + or -
+    if (showSymbol) {
+      const { symbol } = getAmountAttr();
+      text = `${symbol} ${text}`;
+    }
+
+    return text;
   };
 
   return (
-    <BaseText style={getTextHighlightStyles()}>
-      {amount !== '' && `${CURRENCY} ${amount}`}
-    </BaseText>
+    <BaseText style={getAmountAttr().styles}>{renderAmountText()}</BaseText>
   );
 };
 
