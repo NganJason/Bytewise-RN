@@ -21,52 +21,47 @@ import {
 } from '../../Components';
 
 import {
-  TRANSACTION_EXPENSE,
-  TRANSACTION_INCOME,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/api/data/model';
 
-// TODO: REMOVE
-const EXPENSE_CATEGORIES = [
-  { cat_name: 'Food', cat_id: 1 },
-  { cat_name: 'Clothes', cat_id: 2 },
-  { cat_name: 'Rent', cat_id: 3 },
-  { cat_name: 'Sports', cat_id: 4 },
-  { cat_name: 'Friends', cat_id: 5 },
-  { cat_name: 'Tax', cat_id: 6 },
-];
+import {
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
+} from '../../_shared/api/data/mock/category';
 
-// TODO: REMOVE
-const INCOME_CATEGORIES = [
-  { cat_name: 'Shopee Salary', cat_id: 4 },
-  { cat_name: 'Dividend Income', cat_id: 5 },
-];
+import { DAYS } from '../../_shared/constant/constant';
 
-// TODO: REMOVE
-const TRANSACTION_CATEGORIES = {
-  [TRANSACTION_EXPENSE]: EXPENSE_CATEGORIES,
-  [TRANSACTION_INCOME]: INCOME_CATEGORIES,
-};
-
+// Initial date
 const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
-const DATE = `${TODAY.getDate()}`;
+const DATE = `${TODAY.getDate()}`.padStart(2, '0');
 
 const TransactionForm = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const transactionCategories = {
+    [TRANSACTION_TYPE_EXPENSE]: EXPENSE_CATEGORIES,
+    [TRANSACTION_TYPE_INCOME]: INCOME_CATEGORIES,
+  };
+
   // for rendering
   const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
 
   const [form, setForm] = useState({
-    timestamp: TODAY.valueOf(), // unix
+    timestamp: TODAY.valueOf(), // milli unix
     amount: '',
     note: '',
     category: {},
-    transaction_type: TRANSACTION_EXPENSE,
+    transaction_type: TRANSACTION_TYPE_EXPENSE,
   });
+
+  const [activeCategories, setActiveCategories] = useState(
+    transactionCategories[form.transaction_type],
+  );
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
 
@@ -80,12 +75,15 @@ const TransactionForm = () => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
-  const formatDate = date => {
-    let [yyyy, mm, dd] = date.split('-');
-    if (mm.length === 2 && mm[0] === '0') {
-      mm = mm[1];
-    }
-    return `${yyyy}/${mm}/${dd}`;
+  const formatTimestamp = timestamp => {
+    const d = new Date(timestamp);
+
+    const yyyy = d.getFullYear();
+    const mm = d.getMonth() + 1;
+    const date = d.getDate();
+    const day = DAYS[d.getDay()];
+
+    return `${date}/${mm}/${yyyy} (${day})`;
   };
 
   const onNoteChange = e => {
@@ -98,10 +96,11 @@ const TransactionForm = () => {
 
   const onTransactionTypeChange = e => {
     setForm({ ...form, transaction_type: e, category: {} });
+    setActiveCategories(transactionCategories[e]);
   };
 
-  const onDateChange = e => {
-    setForm({ ...form, date: e });
+  const onTimestampChange = e => {
+    setForm({ ...form, timestamp: e });
     toggleCalendarModal();
   };
 
@@ -109,8 +108,6 @@ const TransactionForm = () => {
     setForm({ ...form, category: e });
     toggleCategoryModal();
   };
-
-  const categories = TRANSACTION_CATEGORIES[form.transaction_type];
 
   return (
     <HideKeyboard>
@@ -129,14 +126,14 @@ const TransactionForm = () => {
               onPress={index => onTransactionTypeChange(index + 1)}
               selectedIndex={form.transaction_type - 1}
               buttons={[
-                TRANSACTION_TYPES[TRANSACTION_EXPENSE],
-                TRANSACTION_TYPES[TRANSACTION_INCOME],
+                TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+                TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
               ]}
             />
             <View style={styles.formBody}>
               <BaseInput
                 label="Date"
-                value={formatDate(selectedDate)}
+                value={formatTimestamp(form.timestamp)}
                 onPress={toggleCalendarModal}
                 readOnly
               />
@@ -149,7 +146,7 @@ const TransactionForm = () => {
                   hideExtraDays={false}
                   onDayPress={obj => {
                     setSelectedDate(obj.dateString);
-                    onDateChange(obj.timestamp);
+                    onTimestampChange(obj.timestamp);
                   }}
                   markedDates={{
                     [selectedDate]: {
@@ -179,7 +176,7 @@ const TransactionForm = () => {
               <BottomSheet
                 isVisible={isCategoryModalVisible}
                 onBackdropPress={toggleCategoryModal}>
-                {categories.map((cat, i) => (
+                {activeCategories.map((cat, i) => (
                   <ListItem
                     key={i}
                     onPress={() => onCategoryChange(cat)}

@@ -12,8 +12,8 @@ import {
 
 import {
   CURRENCY,
-  TRANSACTION_EXPENSE,
-  TRANSACTION_INCOME,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
 } from '../../_shared/api/data/model';
 import ROUTES from '../../_shared/constant/routes';
 import useSetDate from '../../_shared/hooks/useSetDate';
@@ -51,9 +51,9 @@ const TransactionScreen = ({ navigation }) => {
 
   const getAmountStyles = ({ transaction_type }) => {
     switch (transaction_type) {
-      case TRANSACTION_EXPENSE:
+      case TRANSACTION_TYPE_EXPENSE:
         return styles.expenseText;
-      case TRANSACTION_INCOME:
+      case TRANSACTION_TYPE_INCOME:
         return styles.incomeText;
     }
   };

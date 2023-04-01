@@ -15,14 +15,14 @@ import {
 } from '../../Components';
 import Collapsible from 'react-native-collapsible';
 
-import { BUDGETOPTIONS } from '../../_shared/constant/constant';
+import { BUDGET_OPTIONS } from '../../_shared/constant/constant';
 import { useCreateCategory } from '../../_shared/mutation/mutation';
 
 const SetCategoryScreen = ({ navigation, route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [expanded, setExpanded] = useState(false);
-  const [option, setOption] = useState(BUDGETOPTIONS.monthly);
+  const [option, setOption] = useState(BUDGET_OPTIONS.monthly);
   const [categoryInput, setCategoryInput] = useState('');
   const [budgetInput, setBudgetInput] = useState('');
 
@@ -117,9 +117,9 @@ const SetCategoryScreen = ({ navigation, route }) => {
               left
               title="Monthly budget"
               onPress={() => {
-                onOptionChange(BUDGETOPTIONS.monthly);
+                onOptionChange(BUDGET_OPTIONS.monthly);
               }}
-              checked={option === BUDGETOPTIONS.monthly}
+              checked={option === BUDGET_OPTIONS.monthly}
               containerStyle={styles.checkbox}
               textStyle={styles.checkBoxText}
             />
@@ -128,12 +128,12 @@ const SetCategoryScreen = ({ navigation, route }) => {
               left
               title="One-time budget (Annual)"
               onPress={() => {
-                onOptionChange(BUDGETOPTIONS.annually);
+                onOptionChange(BUDGET_OPTIONS.annually);
               }}
-              checked={option === BUDGETOPTIONS.annually}
+              checked={option === BUDGET_OPTIONS.annually}
               containerStyle={styles.checkbox}
               textStyle={styles.checkBoxText}
-              name={BUDGETOPTIONS.annually}
+              name={BUDGET_OPTIONS.annually}
             />
           </Collapsible>
         </View>
