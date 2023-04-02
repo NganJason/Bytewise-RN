@@ -74,6 +74,15 @@ const DailyTransactions = ({
     });
   };
 
+  const renderTransactionAmount = (amount, transactionType) => {
+    switch (transactionType) {
+      case TRANSACTION_TYPE_EXPENSE:
+        return amount * -1;
+      case TRANSACTION_TYPE_INCOME:
+        return amount;
+    }
+  };
+
   return (
     <View style={styles.body}>
       <View style={styles.row}>
@@ -97,11 +106,18 @@ const DailyTransactions = ({
         const cat = getCategory(t.cat_id);
         return (
           <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat)}>
-            <ListItem>
+            <ListItem bottomDivider containerStyle={styles.listItem}>
               <ListItem.Content>
-                <ListItem.Title>{cat.cat_name}</ListItem.Title>
-                <ListItem.Subtitle>{t.note}</ListItem.Subtitle>
+                <ListItem.Title style={styles.listItemTitle}>
+                  {cat.cat_name}
+                </ListItem.Title>
+                <ListItem.Subtitle style={styles.listItemSubtitle}>
+                  {t.note}
+                </ListItem.Subtitle>
               </ListItem.Content>
+              <AmountText>
+                {renderTransactionAmount(t.amount, t.transaction_type)}
+              </AmountText>
             </ListItem>
           </TouchableOpacity>
         );
@@ -115,7 +131,7 @@ export default DailyTransactions;
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      marginBottom: 24,
+      marginBottom: 28,
     },
     row: {
       flexDirection: 'row',
@@ -139,5 +155,16 @@ const getStyles = theme =>
     },
     sumText: {
       fontSize: 18,
+    },
+    listItem: {
+      paddingHorizontal: 0,
+    },
+    listItemTitle: {
+      fontSize: 16,
+      marginBottom: 10,
+    },
+    listItemSubtitle: {
+      fontSize: 14,
+      color: theme.colors.grey1,
     },
   });

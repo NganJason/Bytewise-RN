@@ -13,7 +13,9 @@ const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
     if (children > 0) {
       return { styles: styles.positive, symbol: '+' };
     }
-    return { styles: styles.negative, symbol: '-' };
+    if (children < 0) {
+      return { styles: styles.negative, symbol: '-' };
+    }
   };
 
   const renderAmountText = () => {
@@ -38,7 +40,7 @@ const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
   };
 
   return (
-    <BaseText style={{ ...getAmountAttr().styles, ...style }}>
+    <BaseText style={{ ...getAmountAttr()?.styles, ...style }}>
       {renderAmountText()}
     </BaseText>
   );
