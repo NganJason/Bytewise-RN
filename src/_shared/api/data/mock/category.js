@@ -8,6 +8,6 @@ export const EXPENSE_CATEGORIES = [
 ];
 
 export const INCOME_CATEGORIES = [
-  { cat_name: 'Shopee Salary', cat_id: 4 },
-  { cat_name: 'Dividend Income', cat_id: 5 },
+  { cat_name: 'Shopee Salary', cat_id: 7 },
+  { cat_name: 'Dividend Income', cat_id: 8 },
 ];

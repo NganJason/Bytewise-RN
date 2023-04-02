@@ -40,7 +40,7 @@ const DATE = `${TODAY.getDate()}`.padStart(2, '0');
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 
-const TransactionForm = () => {
+const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -49,16 +49,24 @@ const TransactionForm = () => {
     [TRANSACTION_TYPE_INCOME]: INCOME_CATEGORIES,
   };
 
-  // for rendering
-  const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
+  const {
+    timestamp = TODAY.valueOf(),
+    amount = '',
+    note = '',
+    cat = {},
+    transaction_type = TRANSACTION_TYPE_EXPENSE,
+  } = route.params?.transaction || {};
 
   const [form, setForm] = useState({
-    timestamp: TODAY.valueOf(), // milli unix
-    amount: '',
-    note: '',
-    category: {},
-    transaction_type: TRANSACTION_TYPE_EXPENSE,
+    timestamp: timestamp, // milli unix
+    amount: amount,
+    note: note,
+    cat: cat,
+    transaction_type: transaction_type,
   });
+
+  // for rendering
+  const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
 
   const [activeCategories, setActiveCategories] = useState(
     transactionCategories[form.transaction_type],
@@ -96,7 +104,7 @@ const TransactionForm = () => {
   };
 
   const onTransactionTypeChange = e => {
-    setForm({ ...form, transaction_type: e, category: {} });
+    setForm({ ...form, transaction_type: e, cat: {} });
     setActiveCategories(transactionCategories[e]);
   };
 
@@ -106,7 +114,7 @@ const TransactionForm = () => {
   };
 
   const onCategoryChange = e => {
-    setForm({ ...form, category: e });
+    setForm({ ...form, cat: e });
     toggleCategoryModal();
   };
 
@@ -166,7 +174,7 @@ const TransactionForm = () => {
               />
               <BaseInput
                 label="Category"
-                value={form.category.cat_name}
+                value={form.cat.cat_name}
                 onPress={toggleCategoryModal}
                 readOnly
               />

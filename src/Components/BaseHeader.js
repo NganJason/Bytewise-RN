@@ -20,7 +20,7 @@ const getStyles = theme => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: theme.spacing.xl,
+      paddingVertical: theme.spacing.xl,
     },
   });
 };

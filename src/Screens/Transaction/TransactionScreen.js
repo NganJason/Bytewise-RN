@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useTheme, Icon, FAB } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
@@ -23,14 +23,14 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
-      fab={
-        <FAB
-          placement="right"
-          icon={<Icon name="add" color={theme.colors.white} />}
-          color={theme.colors.primary}
-          onPress={() => navigation.navigate(ROUTES.transactionForm)}
-        />
-      }>
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'add',
+        iconColor: theme.colors.white,
+        color: theme.colors.primary,
+        onPress: () => navigation.navigate(ROUTES.transactionForm),
+      }}>
       <BaseHeader
         center={
           <ArrowSelector
