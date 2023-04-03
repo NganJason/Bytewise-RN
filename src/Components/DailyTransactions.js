@@ -107,17 +107,26 @@ const DailyTransactions = ({
         return (
           <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat)}>
             <ListItem bottomDivider containerStyle={styles.listItem}>
-              <ListItem.Content>
-                <ListItem.Title style={styles.listItemTitle}>
+              <ListItem.Content style={styles.listItemContent}>
+                <BaseText
+                  style={styles.category}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
                   {cat.cat_name}
-                </ListItem.Title>
-                <ListItem.Subtitle style={styles.listItemSubtitle}>
+                </BaseText>
+                <BaseText
+                  style={styles.note}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
                   {t.note}
-                </ListItem.Subtitle>
+                </BaseText>
+                <AmountText
+                  style={styles.amount}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {renderTransactionAmount(t.amount, t.transaction_type)}
+                </AmountText>
               </ListItem.Content>
-              <AmountText>
-                {renderTransactionAmount(t.amount, t.transaction_type)}
-              </AmountText>
             </ListItem>
           </TouchableOpacity>
         );
@@ -128,7 +137,7 @@ const DailyTransactions = ({
 
 export default DailyTransactions;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     body: {
       marginBottom: 28,
@@ -147,7 +156,7 @@ const getStyles = theme =>
       fontWeight: 'bold',
     },
     chip: {
-      marginLeft: theme.spacing.lg,
+      marginLeft: 10,
     },
     chipText: {
       fontSize: 10,
@@ -158,13 +167,23 @@ const getStyles = theme =>
     },
     listItem: {
       paddingHorizontal: 0,
+      marginBottom: 6,
     },
-    listItemTitle: {
-      fontSize: 16,
-      marginBottom: 10,
+    listItemContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
-    listItemSubtitle: {
+    category: {
+      flex: 1,
       fontSize: 14,
-      color: theme.colors.grey1,
+    },
+    note: {
+      flex: 2,
+      fontWeight: 'bold',
+      marginHorizontal: 10,
+    },
+    amount: {
+      flex: 1,
+      textAlign: 'right',
     },
   });

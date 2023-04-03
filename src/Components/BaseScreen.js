@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB } from '@rneui/themed';
 
 import HideKeyboard from './HideKeyboard';
@@ -16,14 +16,22 @@ const BaseScreen = ({
     color: '',
     onPress: function () {},
   },
+  useScrollView = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const renderView = () => {
+    if (useScrollView) {
+      return <ScrollView style={styles.view}>{children}</ScrollView>;
+    }
+    return <View style={styles.view}>{children}</View>;
+  };
+
   return (
     <HideKeyboard>
       <SafeAreaView>
-        <ScrollView style={styles.scrollView}>{children}</ScrollView>
+        {renderView()}
         {fabProps.show && (
           <FAB
             placement={fabProps.placement}
@@ -45,7 +53,7 @@ const BaseScreen = ({
 
 const getStyles = theme =>
   StyleSheet.create({
-    scrollView: {
+    view: {
       flexGrow: 1,
       paddingHorizontal: theme.spacing.xl,
       height: '100%',

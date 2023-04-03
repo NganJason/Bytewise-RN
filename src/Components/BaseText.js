@@ -10,6 +10,9 @@ const BaseText = ({
   p = true,
   caption = false,
   children = '',
+  adjustsFontSizeToFit = false,
+  numberOfLines = 0,
+  ellipsizeMode = 'tail',
   style = {},
 }) => {
   const { theme } = useTheme();
@@ -40,6 +43,9 @@ const BaseText = ({
         ...commonTextStyles,
         ...style,
       }}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      numberOfLines={numberOfLines}
+      ellipsizeMode={ellipsizeMode}
       h1Style={{ ...commonTextStyles, ...style }}
       h2Style={{ ...commonTextStyles, ...style }}
       h3Style={{ ...commonTextStyles, ...style }}

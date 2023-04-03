@@ -40,7 +40,10 @@ const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
   };
 
   return (
-    <BaseText style={{ ...getAmountAttr()?.styles, ...style }}>
+    <BaseText
+      style={{ ...getAmountAttr()?.styles, ...style }}
+      numberOfLines={1}
+      adjustsFontSizeToFit>
       {renderAmountText()}
     </BaseText>
   );

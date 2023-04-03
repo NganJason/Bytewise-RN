@@ -43,7 +43,7 @@ const TransactionScreen = ({ navigation }) => {
           </ArrowSelector>
         }
       />
-      <ScrollView style={styles.body}>
+      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
             key={i}
@@ -58,7 +58,7 @@ const TransactionScreen = ({ navigation }) => {
 
 export default TransactionScreen;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     body: {
       flex: 1,
