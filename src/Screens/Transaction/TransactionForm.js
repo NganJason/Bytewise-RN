@@ -1,12 +1,6 @@
 import { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import {
-  useTheme,
-  ButtonGroup,
-  Dialog,
-  BottomSheet,
-  ListItem,
-} from '@rneui/themed';
+import { StyleSheet, View } from 'react-native';
+import { useTheme, ButtonGroup, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -17,6 +11,7 @@ import {
   BaseButton,
   BaseScreen,
   BaseHeader,
+  BaseBottomSheet,
 } from '../../Components';
 
 import {
@@ -30,6 +25,8 @@ import {
   INCOME_CATEGORIES,
 } from '../../_shared/api/data/mock/category';
 
+import { ACCOUNTS } from '../../_shared/api/data/mock/account';
+
 import { DAYS } from '../../_shared/constant/constant';
 
 // Initial date
@@ -37,8 +34,6 @@ const TODAY = new Date();
 const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
 const DATE = `${TODAY.getDate()}`.padStart(2, '0');
-
-const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
@@ -54,6 +49,7 @@ const TransactionForm = ({ route }) => {
     amount = '',
     note = '',
     cat = {},
+    account = ACCOUNTS[0] || {},
     transaction_type = TRANSACTION_TYPE_EXPENSE,
   } = route.params?.transaction || {};
 
@@ -62,6 +58,7 @@ const TransactionForm = ({ route }) => {
     amount: amount,
     note: note,
     cat: cat,
+    account: account,
     transaction_type: transaction_type,
   });
 
@@ -84,8 +81,14 @@ const TransactionForm = ({ route }) => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
-  const formatTimestamp = timestamp => {
-    const d = new Date(timestamp);
+  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
+
+  const toggleAccountModal = () => {
+    setIsAccountModalVisible(!isAccountModalVisible);
+  };
+
+  const formatTimestamp = ts => {
+    const d = new Date(ts);
 
     const yyyy = d.getFullYear();
     const mm = d.getMonth() + 1;
@@ -116,6 +119,11 @@ const TransactionForm = ({ route }) => {
   const onCategoryChange = e => {
     setForm({ ...form, cat: e });
     toggleCategoryModal();
+  };
+
+  const onAccountChange = e => {
+    setForm({ ...form, account: e });
+    toggleAccountModal();
   };
 
   return (
@@ -166,6 +174,20 @@ const TransactionForm = ({ route }) => {
                   }}
                 />
               </Dialog>
+              <BaseInput
+                label="Account"
+                value={form.account.acc_name}
+                onPress={toggleAccountModal}
+                readOnly
+              />
+              <BaseBottomSheet
+                isVisible={isAccountModalVisible}
+                onBackdropPress={toggleAccountModal}
+                onButtonPress={toggleAccountModal}
+                onSelect={onAccountChange}
+                items={ACCOUNTS}
+                label="acc_name"
+              />
               <BaseCurrencyInput
                 label="Amount"
                 value={form.amount}
@@ -178,30 +200,14 @@ const TransactionForm = ({ route }) => {
                 onPress={toggleCategoryModal}
                 readOnly
               />
-              <BottomSheet
-                scrollViewProps={{ style: { maxHeight: WINDOW_HEIGHT / 2 } }}
+              <BaseBottomSheet
                 isVisible={isCategoryModalVisible}
-                onBackdropPress={toggleCategoryModal}>
-                {activeCategories.map((cat, i) => (
-                  <ListItem
-                    key={i}
-                    onPress={() => onCategoryChange(cat)}
-                    containerStyle={styles.modalItem}>
-                    <ListItem.Content key={i}>
-                      <ListItem.Title>
-                        <BaseText>{cat.cat_name}</BaseText>
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  </ListItem>
-                ))}
-                <BaseButton
-                  title="Close"
-                  fullWidth
-                  size="lg"
-                  activeOpacity={1}
-                  onPress={toggleCategoryModal}
-                />
-              </BottomSheet>
+                onBackdropPress={toggleCategoryModal}
+                onButtonPress={toggleCategoryModal}
+                onSelect={onCategoryChange}
+                items={activeCategories}
+                label="cat_name"
+              />
               <BaseInput
                 label="Note"
                 value={form.note}

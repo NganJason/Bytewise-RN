@@ -11,6 +11,7 @@ import BaseScreen from './BaseScreen';
 import BaseHeader from './BaseHeader';
 import DailyTransactions from './DailyTransactions';
 import AmountText from './AmountText';
+import BaseBottomSheet from './BaseBottomSheet';
 
 export {
   BaseDivider,
@@ -26,4 +27,5 @@ export {
   BaseHeader,
   DailyTransactions,
   AmountText,
+  BaseBottomSheet,
 };

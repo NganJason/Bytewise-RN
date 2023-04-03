@@ -15,6 +15,8 @@ import {
   INCOME_CATEGORIES,
 } from '../_shared/api/data/mock/category';
 
+import { ACCOUNTS } from '../_shared/api/data/mock/account';
+
 import ROUTES from '../_shared/constant/routes';
 
 import { DAYS } from '../_shared/constant/constant';
@@ -26,6 +28,7 @@ const DailyTransactions = ({
       id: 0,
       note: '',
       cat_id: 0,
+      acc_id: 0,
       amount: 0,
       transaction_type: TRANSACTION_TYPE_EXPENSE,
     },
@@ -62,13 +65,19 @@ const DailyTransactions = ({
     return foundCat;
   };
 
-  const navigateToForm = (t, cat) => {
+  // TODO: temporary
+  const getAccount = accID => {
+    return ACCOUNTS.find(acc => acc.acc_id === accID);
+  };
+
+  const navigateToForm = (t, cat, acc) => {
     navigation.navigate(ROUTES.transactionForm, {
       transaction: {
         timestamp: t.timestamp,
         amount: t.amount,
         note: t.note,
         cat: cat,
+        account: acc,
         transaction_type: t.transaction_type,
       },
     });
@@ -104,8 +113,9 @@ const DailyTransactions = ({
       </View>
       {transactions.map((t, i) => {
         const cat = getCategory(t.cat_id);
+        const acc = getAccount(t.acc_id);
         return (
-          <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat)}>
+          <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat, acc)}>
             <ListItem bottomDivider containerStyle={styles.listItem}>
               <ListItem.Content style={styles.listItemContent}>
                 <BaseText
