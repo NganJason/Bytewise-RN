@@ -80,6 +80,7 @@ const DailyTransactions = ({
         account: acc,
         transaction_type: t.transaction_type,
       },
+      autoFocus: false,
     });
   };
 
@@ -124,12 +125,20 @@ const DailyTransactions = ({
                   ellipsizeMode="tail">
                   {cat.cat_name}
                 </BaseText>
-                <BaseText
-                  style={styles.note}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {t.note}
-                </BaseText>
+                <View style={styles.noteAccountWrapper}>
+                  <BaseText
+                    style={styles.note}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {t.note}
+                  </BaseText>
+                  <BaseText
+                    style={styles.account}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {acc.acc_name}
+                  </BaseText>
+                </View>
                 <AmountText
                   style={styles.amount}
                   numberOfLines={1}
@@ -158,6 +167,7 @@ const getStyles = _ =>
       alignItems: 'center',
     },
     titleItem: {
+      flex: 2,
       flexDirection: 'row',
       alignItems: 'center',
     },
@@ -173,7 +183,9 @@ const getStyles = _ =>
       fontWeight: 'bold',
     },
     sumText: {
+      flex: 1,
       fontSize: 18,
+      textAlign: 'right',
     },
     listItem: {
       paddingHorizontal: 0,
@@ -187,10 +199,15 @@ const getStyles = _ =>
       flex: 1,
       fontSize: 14,
     },
-    note: {
+    noteAccountWrapper: {
       flex: 2,
-      fontWeight: 'bold',
       marginHorizontal: 10,
+    },
+    note: {
+      marginBottom: 4,
+    },
+    account: {
+      fontSize: 12,
     },
     amount: {
       flex: 1,

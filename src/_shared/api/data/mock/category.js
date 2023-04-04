@@ -10,4 +10,5 @@ export const EXPENSE_CATEGORIES = [
 export const INCOME_CATEGORIES = [
   { cat_name: 'Shopee Salary', cat_id: 7 },
   { cat_name: 'Dividend Income', cat_id: 8 },
+  { cat_name: 'Side Income', cat_id: 9 },
 ];

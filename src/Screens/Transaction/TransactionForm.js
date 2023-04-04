@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme, ButtonGroup, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -45,13 +45,16 @@ const TransactionForm = ({ route }) => {
   };
 
   const {
-    timestamp = TODAY.valueOf(),
-    amount = '',
-    note = '',
-    cat = {},
-    account = ACCOUNTS[0] || {},
-    transaction_type = TRANSACTION_TYPE_EXPENSE,
-  } = route.params?.transaction || {};
+    transaction: {
+      timestamp = TODAY.valueOf(),
+      amount = '',
+      note = '',
+      cat = {},
+      account = ACCOUNTS[0] || {},
+      transaction_type = TRANSACTION_TYPE_EXPENSE,
+    },
+    autoFocus = true,
+  } = route.params || { transaction: {}, autoFocus: true };
 
   const [form, setForm] = useState({
     timestamp: timestamp, // milli unix
@@ -130,93 +133,90 @@ const TransactionForm = ({ route }) => {
     <BaseScreen>
       <>
         <BaseHeader center={<BaseText h2>Add Transaction</BaseText>} />
+        <ButtonGroup
+          onPress={index => onTransactionTypeChange(index + 1)}
+          selectedIndex={form.transaction_type - 1}
+          buttons={[
+            TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+            TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+          ]}
+        />
         <KeyboardAwareScrollView
-          extraHeight={200}
+          extraHeight={400}
           enableOnAndroid={true}
-          keyboardOpeningTime={0}>
-          <>
-            <ButtonGroup
-              onPress={index => onTransactionTypeChange(index + 1)}
-              selectedIndex={form.transaction_type - 1}
-              buttons={[
-                TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-                TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              ]}
+          keyboardOpeningTime={0}
+          style={styles.formBody}>
+          <BaseInput
+            label="Date"
+            value={formatTimestamp(form.timestamp)}
+            onPress={toggleCalendarModal}
+            readOnly
+          />
+          <Dialog
+            isVisible={isCalendarModalVisible}
+            onBackdropPress={toggleCalendarModal}>
+            <Calendar
+              showSixWeeks
+              initialDate={selectedDate}
+              hideExtraDays={false}
+              onDayPress={obj => {
+                setSelectedDate(obj.dateString);
+                onTimestampChange(obj.timestamp);
+              }}
+              markedDates={{
+                [selectedDate]: {
+                  selected: true,
+                  disableTouchEvent: true,
+                  selectedColor: theme.colors.primary,
+                },
+              }}
+              theme={{
+                todayTextColor: theme.colors.primary,
+                arrowColor: theme.colors.primary,
+              }}
             />
-            <View style={styles.formBody}>
-              <BaseInput
-                label="Date"
-                value={formatTimestamp(form.timestamp)}
-                onPress={toggleCalendarModal}
-                readOnly
-              />
-              <Dialog
-                isVisible={isCalendarModalVisible}
-                onBackdropPress={toggleCalendarModal}>
-                <Calendar
-                  showSixWeeks
-                  initialDate={selectedDate}
-                  hideExtraDays={false}
-                  onDayPress={obj => {
-                    setSelectedDate(obj.dateString);
-                    onTimestampChange(obj.timestamp);
-                  }}
-                  markedDates={{
-                    [selectedDate]: {
-                      selected: true,
-                      disableTouchEvent: true,
-                      selectedColor: theme.colors.primary,
-                    },
-                  }}
-                  theme={{
-                    todayTextColor: theme.colors.primary,
-                    arrowColor: theme.colors.primary,
-                  }}
-                />
-              </Dialog>
-              <BaseInput
-                label="Account"
-                value={form.account.acc_name}
-                onPress={toggleAccountModal}
-                readOnly
-              />
-              <BaseBottomSheet
-                isVisible={isAccountModalVisible}
-                onBackdropPress={toggleAccountModal}
-                onButtonPress={toggleAccountModal}
-                onSelect={onAccountChange}
-                items={ACCOUNTS}
-                label="acc_name"
-              />
-              <BaseCurrencyInput
-                label="Amount"
-                value={form.amount}
-                onChangeText={onAmountChange}
-                autoFocus
-              />
-              <BaseInput
-                label="Category"
-                value={form.cat.cat_name}
-                onPress={toggleCategoryModal}
-                readOnly
-              />
-              <BaseBottomSheet
-                isVisible={isCategoryModalVisible}
-                onBackdropPress={toggleCategoryModal}
-                onButtonPress={toggleCategoryModal}
-                onSelect={onCategoryChange}
-                items={activeCategories}
-                label="cat_name"
-              />
-              <BaseInput
-                label="Note"
-                value={form.note}
-                onChangeText={onNoteChange}
-                clearButtonMode="always"
-              />
-            </View>
-            <BaseButton title="Save" size="lg" width={200} />
-          </>
+          </Dialog>
+          <BaseInput
+            label="Account"
+            value={form.account.acc_name}
+            onPress={toggleAccountModal}
+            readOnly
+          />
+          <BaseBottomSheet
+            isVisible={isAccountModalVisible}
+            onBackdropPress={toggleAccountModal}
+            onButtonPress={toggleAccountModal}
+            onSelect={onAccountChange}
+            items={ACCOUNTS}
+            label="acc_name"
+          />
+          <BaseCurrencyInput
+            label="Amount"
+            value={form.amount}
+            onChangeText={onAmountChange}
+            autoFocus={autoFocus}
+          />
+          <BaseInput
+            label="Category"
+            value={form.cat.cat_name}
+            onPress={toggleCategoryModal}
+            readOnly
+          />
+          <BaseBottomSheet
+            isVisible={isCategoryModalVisible}
+            onBackdropPress={toggleCategoryModal}
+            onButtonPress={toggleCategoryModal}
+            onSelect={onCategoryChange}
+            items={activeCategories}
+            label="cat_name"
+          />
+          <BaseInput
+            label="Note"
+            value={form.note}
+            onChangeText={onNoteChange}
+            clearButtonMode="always"
+          />
+          <BaseButton title="Save" size="lg" width={200} />
         </KeyboardAwareScrollView>
       </>
     </BaseScreen>
@@ -225,17 +225,9 @@ const TransactionForm = ({ route }) => {
 
 export default TransactionForm;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     formBody: {
-      marginVertical: theme.spacing.xl,
-    },
-    modalItem: {
-      paddingHorizontal: theme.spacing.xl,
-      paddingVertical: 16, // TODO: SPACING FIX
-    },
-    modalBtnText: {
-      color: theme.colors.white,
-      alignSelf: 'center',
+      marginVertical: 20,
     },
   });

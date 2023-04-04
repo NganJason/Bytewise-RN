@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme, LinearProgress, Icon } from '@rneui/themed';
 import {
   BaseDivider,
@@ -7,38 +8,17 @@ import {
   BaseScreen,
   BaseButton,
   BaseHeader,
+  DailyTransactions,
 } from '../../Components';
 
 import {
-  CURRENCY,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/api/data/model';
+
 import ROUTES from '../../_shared/constant/routes';
 
-const TRANSACTIONS = [
-  {
-    id: 1,
-    note: 'Dinner',
-    category: 'Food',
-    amount: 10,
-    transaction_type: 2,
-  },
-  {
-    id: 2,
-    note: 'Salary',
-    category: 'Fixed Income',
-    amount: 3000,
-    transaction_type: 1,
-  },
-  {
-    id: 3,
-    note: 'Uniqlo',
-    category: 'Personal',
-    amount: 60,
-    transaction_type: 2,
-  },
-];
+import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
 
 const BUDGET = {
   category: 'Food',
@@ -109,29 +89,26 @@ const BudgetBreakdownScreen = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.body}>
-        {TRANSACTIONS.map(transaction => (
-          <React.Fragment key={transaction.id}>
-            <View style={styles.transaction}>
-              <View style={styles.summary}>
-                <BaseText style={styles.noteText}>{transaction.note}</BaseText>
-                <BaseText caption>{transaction.category}</BaseText>
-              </View>
-              <BaseText
-                style={getAmountStyles(
-                  transaction,
-                )}>{`${CURRENCY.SGD} ${transaction.amount}`}</BaseText>
-            </View>
-            <BaseDivider orientation="horizontal" margin={theme.spacing.lg} />
-          </React.Fragment>
+      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+        {TRANSACTIONS.map((t, i) => (
+          <DailyTransactions
+            key={i}
+            transactions={t.transactions}
+            timestamp={t.timestamp}
+          />
         ))}
-      </View>
+      </ScrollView>
     </BaseScreen>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
+    body: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    },
     header: {
       marginBottom: theme.spacing.lg,
       width: '100%',
@@ -147,10 +124,6 @@ const getStyles = theme => {
       height: 2,
       width: '100%',
       marginVertical: theme.spacing.xl,
-    },
-    body: {
-      width: '100%',
-      height: '100%',
     },
     transaction: {
       display: 'flex',
