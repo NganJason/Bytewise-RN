@@ -6,7 +6,6 @@ import { StyleSheet } from 'react-native';
 import BudgetScreen from './Budget/BudgetScreen';
 import AssetScreen from './Asset/AssetScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
-import SettingScreen from './Setting/SettingScreen';
 
 import ROUTES from '../_shared/constant/routes';
 
@@ -30,9 +29,6 @@ const HomeScreen = () => {
         break;
       case ROUTES.asset:
         iconName = 'icon-asset';
-        break;
-      case ROUTES.settings:
-        iconName = 'icon-settings';
         break;
     }
     return (
@@ -60,7 +56,6 @@ const HomeScreen = () => {
       <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
       <Tab.Screen name={ROUTES.asset} component={AssetScreen} />
-      <Tab.Screen name={ROUTES.settings} component={SettingScreen} />
     </Tab.Navigator>
   );
 };

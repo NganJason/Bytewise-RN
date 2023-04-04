@@ -4,7 +4,6 @@ const ROUTES = {
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
   asset: 'Asset',
-  settings: 'Settings',
   setCategory: 'Set Category',
   budgetBreakdown: 'Budget Breakdown',
   assetAccount: 'Asset Account',

@@ -142,7 +142,7 @@ const TransactionForm = ({ route }) => {
           ]}
         />
         <KeyboardAwareScrollView
-          extraHeight={400}
+          extraHeight={200}
           enableOnAndroid={true}
           keyboardOpeningTime={0}
           style={styles.formBody}>
@@ -185,7 +185,7 @@ const TransactionForm = ({ route }) => {
           <BaseBottomSheet
             isVisible={isAccountModalVisible}
             onBackdropPress={toggleAccountModal}
-            onButtonPress={toggleAccountModal}
+            close={toggleAccountModal}
             onSelect={onAccountChange}
             items={ACCOUNTS}
             label="acc_name"
@@ -205,7 +205,7 @@ const TransactionForm = ({ route }) => {
           <BaseBottomSheet
             isVisible={isCategoryModalVisible}
             onBackdropPress={toggleCategoryModal}
-            onButtonPress={toggleCategoryModal}
+            close={toggleCategoryModal}
             onSelect={onCategoryChange}
             items={activeCategories}
             label="cat_name"
