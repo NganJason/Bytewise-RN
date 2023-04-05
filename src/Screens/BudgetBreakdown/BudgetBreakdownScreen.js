@@ -11,11 +11,6 @@ import {
   DailyTransactions,
 } from '../../Components';
 
-import {
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/data/model';
-
 import ROUTES from '../../_shared/constant/routes';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
@@ -33,15 +28,6 @@ const BUDGET = {
 const BudgetBreakdownScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-
-  const getAmountStyles = ({ transaction_type }) => {
-    switch (transaction_type) {
-      case TRANSACTION_TYPE_EXPENSE:
-        return styles.expenseText;
-      case TRANSACTION_TYPE_INCOME:
-        return styles.incomeText;
-    }
-  };
 
   return (
     <BaseScreen>

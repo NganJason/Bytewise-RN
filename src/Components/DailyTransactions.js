@@ -172,7 +172,7 @@ const getStyles = _ =>
       alignItems: 'center',
     },
     titleItemText: {
-      fontSize: 24,
+      fontSize: 20,
       fontWeight: 'bold',
     },
     chip: {
@@ -184,7 +184,6 @@ const getStyles = _ =>
     },
     sumText: {
       flex: 1,
-      fontSize: 18,
       textAlign: 'right',
     },
     listItem: {
@@ -197,7 +196,7 @@ const getStyles = _ =>
     },
     category: {
       flex: 1,
-      fontSize: 14,
+      fontSize: 12,
     },
     noteAccountWrapper: {
       flex: 2,

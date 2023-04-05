@@ -20,8 +20,8 @@ const BaseInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
-      onPress = function () {},
       clearButtonMode = 'never', // IOS only
+      pointerEvents = 'auto',
     },
     ref,
   ) => {
@@ -46,7 +46,6 @@ const BaseInput = forwardRef(
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         onBlur={handleBlur}
-        onPressOut={onPress}
         placeholder={placeholder}
         label={label !== '' && <BaseText h3>{label}</BaseText>}
         value={value}
@@ -59,8 +58,9 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={{ marginBottom: theme.spacing.xs }}
+        containerStyle={styles.input}
         clearButtonMode={clearButtonMode}
+        pointerEvents={pointerEvents}
       />
     );
   },
@@ -76,5 +76,8 @@ const getStyles = theme =>
     },
     blur: {
       borderBottomWidth: theme.spacing.xs,
+    },
+    input: {
+      marginBottom: 4,
     },
   });

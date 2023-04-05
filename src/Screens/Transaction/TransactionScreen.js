@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -9,6 +9,8 @@ import {
   BaseHeader,
   ArrowSelector,
   DailyTransactions,
+  TextGroup,
+  AmountText,
 } from '../../Components';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
@@ -43,6 +45,15 @@ const TransactionScreen = ({ navigation }) => {
           </ArrowSelector>
         }
       />
+      <View style={styles.textGroupWrapper}>
+        <TextGroup
+          texts={[
+            { label: 'Income: ', value: '100' },
+            { label: 'Expense: ', value: '-1000' },
+          ]}
+          ValueComponent={AmountText}
+        />
+      </View>
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
@@ -64,5 +75,8 @@ const getStyles = _ =>
       flex: 1,
       width: '100%',
       height: '100%',
+    },
+    textGroupWrapper: {
+      paddingBottom: 22,
     },
   });

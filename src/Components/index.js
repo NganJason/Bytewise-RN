@@ -12,6 +12,8 @@ import BaseHeader from './BaseHeader';
 import DailyTransactions from './DailyTransactions';
 import AmountText from './AmountText';
 import BaseBottomSheet from './BaseBottomSheet';
+import TextGroup from './TextGroup';
+import BaseTabView from './BaseTabView';
 
 export {
   BaseDivider,
@@ -28,4 +30,6 @@ export {
   DailyTransactions,
   AmountText,
   BaseBottomSheet,
+  TextGroup,
+  BaseTabView,
 };

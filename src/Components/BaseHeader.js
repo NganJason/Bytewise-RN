@@ -14,13 +14,13 @@ const BaseHeader = ({ left, center, right }) => {
   );
 };
 
-const getStyles = theme => {
+const getStyles = _ => {
   return StyleSheet.create({
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingVertical: theme.spacing.xl,
+      paddingVertical: 14,
     },
   });
 };

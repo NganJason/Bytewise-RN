@@ -9,10 +9,10 @@ const BaseButton = ({
   fullWidth = false,
   align = 'center',
   size = 'md',
-  buttonStyle,
-  containerStyle,
   activeOpacity = 0.3,
   onPress = function () {},
+  buttonStyle = {},
+  containerStyle = {},
 }) => {
   const getButtonWidth = () => {
     switch (true) {

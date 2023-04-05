@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 import { SplashScreen } from './src/Components';
 
@@ -105,6 +106,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={THEME}>
         <SafeAreaProvider>
+          <StatusBar />
           <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
         </SafeAreaProvider>
       </ThemeProvider>
