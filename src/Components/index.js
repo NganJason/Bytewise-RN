@@ -1,17 +1,20 @@
-import BaseDivider from './BaseDivider';
-import BaseText from './BaseText';
-import BaseInput from './Inputs/BaseInput';
-import BaseCurrencyInput from './Inputs/BaseCurrencyInput';
-import BaseButton from './BaseButton';
-import HideKeyboard from './HideKeyboard';
-import SplashScreen from './SplashScreen';
-import ArrowSelector from './ArrowSelector';
-import BaseLoadScreen from './BaseLoadScreen';
-import BaseScreen from './BaseScreen';
-import BaseHeader from './BaseHeader';
-import DailyTransactions from './DailyTransactions';
-import AmountText from './AmountText';
-import BaseBottomSheet from './BaseBottomSheet';
+// Input
+import { BaseCurrencyInput, BaseInput } from './Input';
+
+// Screen
+import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
+
+// Text
+import { BaseText, AmountText, TextGroup } from './Text';
+
+// Touch
+import { BaseButton } from './Touch';
+
+// View
+import { BaseDivider, BaseHeader, BaseBottomSheet, BaseTabView } from './View';
+
+// Common
+import { ArrowSelector, DailyTransactions } from './Common';
 
 export {
   BaseDivider,
@@ -22,10 +25,11 @@ export {
   HideKeyboard,
   SplashScreen,
   ArrowSelector,
-  BaseLoadScreen,
   BaseScreen,
   BaseHeader,
   DailyTransactions,
   AmountText,
   BaseBottomSheet,
+  TextGroup,
+  BaseTabView,
 };

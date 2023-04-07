@@ -1,6 +1,6 @@
 import { Button, useTheme } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
-import BaseText from './BaseText';
+import BaseText from '../Text/BaseText';
 
 const BaseButton = ({
   type = 'solid',
@@ -11,10 +11,10 @@ const BaseButton = ({
   fullWidth = false,
   align = 'center',
   size = 'md',
-  buttonStyle,
-  containerStyle,
   activeOpacity = 0.3,
   onPress = function () {},
+  buttonStyle = {},
+  containerStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);

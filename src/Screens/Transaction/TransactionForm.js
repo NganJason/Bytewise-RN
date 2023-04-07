@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { useTheme, ButtonGroup, Dialog } from '@rneui/themed';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -12,6 +12,7 @@ import {
   BaseScreen,
   BaseHeader,
   BaseBottomSheet,
+  BaseTabView,
 } from '../../Components';
 
 import {
@@ -35,6 +36,9 @@ const YEAR = `${TODAY.getFullYear()}`;
 const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
 const DATE = `${TODAY.getDate()}`.padStart(2, '0');
 
+const AMOUNT_SCROLL_HEIGHT = 0;
+const NOTE_SCROLL_HEIGHT = 200;
+
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -53,7 +57,7 @@ const TransactionForm = ({ route }) => {
       account = ACCOUNTS[0] || {},
       transaction_type = TRANSACTION_TYPE_EXPENSE,
     },
-    autoFocus = true,
+    isEdit = false,
   } = route.params || { transaction: {}, autoFocus: true };
 
   const [form, setForm] = useState({
@@ -64,6 +68,8 @@ const TransactionForm = ({ route }) => {
     account: account,
     transaction_type: transaction_type,
   });
+
+  const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
 
   // for rendering
   const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
@@ -132,26 +138,33 @@ const TransactionForm = ({ route }) => {
   return (
     <BaseScreen>
       <>
-        <BaseHeader center={<BaseText h1>Add Transaction</BaseText>} />
-        <ButtonGroup
+        <BaseHeader
+          center={
+            <BaseText h1>{TRANSACTION_TYPES[form.transaction_type]}</BaseText>
+          }
+        />
+        <BaseTabView
           onPress={index => onTransactionTypeChange(index + 1)}
           selectedIndex={form.transaction_type - 1}
-          buttons={[
+          titles={[
             TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
             TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
           ]}
         />
         <KeyboardAwareScrollView
-          extraHeight={200}
+          keyboardShouldPersistTaps="always"
+          extraHeight={scrollHeight}
           enableOnAndroid={true}
           keyboardOpeningTime={0}
-          style={styles.formBody}>
-          <BaseInput
-            label="Date"
-            value={formatTimestamp(form.timestamp)}
-            onPress={toggleCalendarModal}
-            readOnly
-          />
+          contentContainerStyle={styles.formBody}>
+          <TouchableOpacity activeOpacity={1} onPress={toggleCalendarModal}>
+            <BaseInput
+              label="Date"
+              pointerEvents="none"
+              value={formatTimestamp(form.timestamp)}
+              readOnly
+            />
+          </TouchableOpacity>
           <Dialog
             isVisible={isCalendarModalVisible}
             onBackdropPress={toggleCalendarModal}>
@@ -176,12 +189,14 @@ const TransactionForm = ({ route }) => {
               }}
             />
           </Dialog>
-          <BaseInput
-            label="Account"
-            value={form.account.acc_name}
-            onPress={toggleAccountModal}
-            readOnly
-          />
+          <TouchableOpacity activeOpacity={1} onPress={toggleAccountModal}>
+            <BaseInput
+              label="Account"
+              pointerEvents="none"
+              value={form.account.acc_name}
+              readOnly
+            />
+          </TouchableOpacity>
           <BaseBottomSheet
             isVisible={isAccountModalVisible}
             onBackdropPress={toggleAccountModal}
@@ -194,14 +209,18 @@ const TransactionForm = ({ route }) => {
             label="Amount"
             value={form.amount}
             onChangeText={onAmountChange}
-            autoFocus={autoFocus}
+            autoFocus={!isEdit}
+            onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           />
-          <BaseInput
-            label="Category"
-            value={form.cat.cat_name}
-            onPress={toggleCategoryModal}
-            readOnly
-          />
+          <TouchableOpacity activeOpacity={1} onPress={toggleCategoryModal}>
+            <BaseInput
+              label="Category"
+              pointerEvents="none"
+              value={form.cat.cat_name}
+              onPress={toggleCategoryModal}
+              readOnly
+            />
+          </TouchableOpacity>
           <BaseBottomSheet
             isVisible={isCategoryModalVisible}
             onBackdropPress={toggleCategoryModal}
@@ -215,6 +234,7 @@ const TransactionForm = ({ route }) => {
             value={form.note}
             onChangeText={onNoteChange}
             clearButtonMode="always"
+            onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
           />
           <BaseButton title="Save" size="lg" width={200} />
         </KeyboardAwareScrollView>
@@ -228,6 +248,6 @@ export default TransactionForm;
 const getStyles = _ =>
   StyleSheet.create({
     formBody: {
-      marginVertical: 20,
+      paddingVertical: 28,
     },
   });

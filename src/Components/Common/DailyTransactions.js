@@ -2,24 +2,23 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, useTheme, Chip } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import BaseText from './BaseText';
-import AmountText from './AmountText';
+import { BaseText, AmountText } from '../Text';
 
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../_shared/api/data/model';
+} from '../../_shared/api/data/model';
 
 import {
   EXPENSE_CATEGORIES,
   INCOME_CATEGORIES,
-} from '../_shared/api/data/mock/category';
+} from '../../_shared/api/data/mock/category';
 
-import { ACCOUNTS } from '../_shared/api/data/mock/account';
+import { ACCOUNTS } from '../../_shared/api/data/mock/account';
 
-import ROUTES from '../_shared/constant/routes';
+import ROUTES from '../../_shared/constant/routes';
 
-import { DAYS } from '../_shared/constant/constant';
+import { DAYS } from '../../_shared/constant/constant';
 
 const DailyTransactions = ({
   timestamp = 0,
@@ -80,7 +79,7 @@ const DailyTransactions = ({
         account: acc,
         transaction_type: t.transaction_type,
       },
-      autoFocus: false,
+      isEdit: true,
     });
   };
 

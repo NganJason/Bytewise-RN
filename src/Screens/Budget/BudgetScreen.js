@@ -156,12 +156,6 @@ const BudgetScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    header: {
-      width: '60%',
-      alignSelf: 'center',
-      backgroundColor: theme.colors.white,
-      borderBottomColor: theme.colors.white,
-    },
     aggr: {
       flexDirection: 'row',
       justifyContent: 'center',

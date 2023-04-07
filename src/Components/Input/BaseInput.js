@@ -2,7 +2,7 @@ import { useState, forwardRef } from 'react';
 import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import BaseText from '../BaseText';
+import BaseText from '../Text/BaseText';
 
 const BaseInput = forwardRef(
   (
@@ -20,8 +20,8 @@ const BaseInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
-      onPress = function () {},
       clearButtonMode = 'never', // IOS only
+      pointerEvents = 'auto',
     },
     ref,
   ) => {
@@ -46,7 +46,6 @@ const BaseInput = forwardRef(
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         onBlur={handleBlur}
-        onPressOut={onPress}
         placeholder={placeholder}
         label={label !== '' && <BaseText h3>{label}</BaseText>}
         value={value}
@@ -59,9 +58,10 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={{ marginBottom: theme.spacing.xs }}
+        containerStyle={styles.inputContainer}
         clearButtonMode={clearButtonMode}
         inputStyle={styles.input}
+        pointerEvents={pointerEvents}
       />
     );
   },
@@ -81,5 +81,8 @@ const getStyles = theme =>
     },
     input: {
       ...theme.fontStyles.h4,
+    },
+    inputContainer: {
+      marginBottom: 4,
     },
   });
