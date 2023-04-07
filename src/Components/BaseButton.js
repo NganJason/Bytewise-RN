@@ -1,4 +1,6 @@
-import { Button } from '@rneui/themed';
+import { Button, useTheme } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+import BaseText from './BaseText';
 
 const BaseButton = ({
   type = 'solid',
@@ -14,6 +16,9 @@ const BaseButton = ({
   activeOpacity = 0.3,
   onPress = function () {},
 }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   const getButtonWidth = () => {
     switch (true) {
       case width !== 0:
@@ -28,12 +33,12 @@ const BaseButton = ({
   return (
     <Button
       activeOpacity={activeOpacity}
-      title={title}
       type={type}
       loading={loading}
       disabled={disabled}
       buttonStyle={{
         width: getButtonWidth(),
+        ...styles.buttonDefaultStyle,
         ...buttonStyle,
       }}
       containerStyle={{
@@ -41,9 +46,19 @@ const BaseButton = ({
         ...containerStyle,
       }}
       size={size}
-      onPress={onPress}
-    />
+      onPress={onPress}>
+      <BaseText h2 style={{ color: theme.colors.white }}>
+        {title}
+      </BaseText>
+    </Button>
   );
 };
 
 export default BaseButton;
+
+const getStyles = theme =>
+  StyleSheet.create({
+    buttonDefaultStyle: {
+      ...theme.button,
+    },
+  });

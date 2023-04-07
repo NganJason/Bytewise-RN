@@ -5,7 +5,12 @@ import BaseText from './BaseText';
 
 import { CURRENCY } from '../_shared/api/data/mock/user';
 
-const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
+const AmountText = ({
+  children = 0,
+  showSymbol = false,
+  style = {},
+  ...props
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -43,7 +48,7 @@ const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
     <BaseText
       style={{ ...getAmountAttr()?.styles, ...style }}
       numberOfLines={1}
-      adjustsFontSizeToFit>
+      {...props}>
       {renderAmountText()}
     </BaseText>
   );
@@ -57,6 +62,6 @@ const getStyles = theme =>
       color: theme.colors.primary,
     },
     negative: {
-      color: theme.colors.red0,
+      color: theme.colors.red,
     },
   });

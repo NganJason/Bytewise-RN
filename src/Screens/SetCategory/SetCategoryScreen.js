@@ -94,9 +94,9 @@ const SetCategoryScreen = ({ navigation, route }) => {
           <TouchableWithoutFeedback onPress={toggleAccordion}>
             <View style={styles.addBudgetContainer}>
               {expanded ? (
-                <Icon name="minus" type="entypo" color={theme.colors.grey4} />
+                <Icon name="minus" type="entypo" color={theme.colors.color5} />
               ) : (
-                <Icon name="plus" type="entypo" color={theme.colors.grey4} />
+                <Icon name="plus" type="entypo" color={theme.colors.color5} />
               )}
 
               <BaseText h2 style={styles.addBudgetText}>
@@ -141,7 +141,7 @@ const SetCategoryScreen = ({ navigation, route }) => {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <BaseButton title="Save" width={150} size="lg" onPress={handleSave} />
+          <BaseButton title="Save" size="lg" onPress={handleSave} />
         )}
       </View>
     </BaseScreen>
@@ -153,7 +153,6 @@ const getStyles = theme => {
     screen: {
       height: '100%',
       flexDirection: 'column',
-      justifyContent: 'space-between',
       alignItems: 'center',
     },
     header: {
@@ -163,7 +162,7 @@ const getStyles = theme => {
     },
     body: {
       width: '90%',
-      height: '70%',
+      minHeight: '70%',
       padding: theme.spacing.xl,
       marginTop: theme.spacing.md,
       alignSelf: 'center',
@@ -184,14 +183,14 @@ const getStyles = theme => {
     checkBoxText: {
       ...theme.fontStyles.h3,
       alignSelf: 'center',
-      color: theme.colors.grey6,
+      color: theme.colors.color4,
     },
     collapsible: {
       marginVertical: theme.spacing.xl,
     },
     btn: {
       width: '50%',
-      marginBottom: theme.spacing.xl,
+      marginVertical: theme.spacing.xl,
     },
   });
 };

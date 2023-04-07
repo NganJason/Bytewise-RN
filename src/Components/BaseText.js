@@ -7,6 +7,8 @@ const BaseText = ({
   h2 = false,
   h3 = false,
   h4 = false,
+  h5 = false,
+  h6 = false,
   p = true,
   caption = false,
   children = '',
@@ -28,6 +30,10 @@ const BaseText = ({
         return styles.h3Style;
       case h4:
         return styles.h4Style;
+      case h5:
+        return styles.h5Style;
+      case h6:
+        return styles.h6Style;
       case caption:
         return styles.captionStyle;
       case p:
@@ -45,15 +51,7 @@ const BaseText = ({
       }}
       adjustsFontSizeToFit={adjustsFontSizeToFit}
       numberOfLines={numberOfLines}
-      ellipsizeMode={ellipsizeMode}
-      h1Style={{ ...commonTextStyles, ...style }}
-      h2Style={{ ...commonTextStyles, ...style }}
-      h3Style={{ ...commonTextStyles, ...style }}
-      h4Style={{ ...commonTextStyles, ...style }}
-      h1={h1}
-      h2={h2}
-      h3={h3}
-      h4={h4}>
+      ellipsizeMode={ellipsizeMode}>
       {children}
     </Text>
   );
@@ -67,6 +65,8 @@ const getStyles = theme =>
     h2Style: theme.fontStyles.h2,
     h3Style: theme.fontStyles.h3,
     h4Style: theme.fontStyles.h4,
+    h5Style: theme.fontStyles.h5,
+    h6Style: theme.fontStyles.h6,
     pStyle: theme.fontStyles.p,
     captionStyle: theme.fontStyles.caption,
   });

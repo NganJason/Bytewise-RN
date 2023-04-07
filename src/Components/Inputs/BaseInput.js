@@ -61,6 +61,7 @@ const BaseInput = forwardRef(
         autoFocus={autoFocus}
         containerStyle={{ marginBottom: theme.spacing.xs }}
         clearButtonMode={clearButtonMode}
+        inputStyle={styles.input}
       />
     );
   },
@@ -72,9 +73,13 @@ const getStyles = theme =>
   StyleSheet.create({
     focused: {
       borderBottomColor: theme.colors.primary,
-      borderBottomWidth: theme.spacing.xs,
+      borderBottomWidth: 1,
     },
     blur: {
-      borderBottomWidth: theme.spacing.xs,
+      borderBottomColor: theme.colors.color5,
+      borderBottomWidth: 1,
+    },
+    input: {
+      ...theme.fontStyles.h4,
     },
   });

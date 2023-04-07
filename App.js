@@ -27,33 +27,38 @@ function App() {
     async function init() {
       try {
         await Font.loadAsync(
-          'ZenKakuGothicNewBlack',
-          require('./assets/fonts/ZenKakuGothicNew-Black.ttf'),
+          'InterBlack',
+          require('./assets/fonts/inter/Inter-Black.ttf'),
         );
 
         await Font.loadAsync(
-          'ZenKakuGothicNewBlack',
-          require('./assets/fonts/ZenKakuGothicNew-Black.ttf'),
+          'InterExtraBold',
+          require('./assets/fonts/inter/Inter-ExtraBold.ttf'),
         );
 
         await Font.loadAsync(
-          'ZenKakuGothicNewBold',
-          require('./assets/fonts/ZenKakuGothicNew-Bold.ttf'),
+          'InterBold',
+          require('./assets/fonts/inter/Inter-Bold.ttf'),
         );
 
         await Font.loadAsync(
-          'ZenKakuGothicNewLight',
-          require('./assets/fonts/ZenKakuGothicNew-Light.ttf'),
+          'InterSemiBold',
+          require('./assets/fonts/inter/Inter-SemiBold.ttf'),
         );
 
         await Font.loadAsync(
-          'ZenKakuGothicNewMedium',
-          require('./assets/fonts/ZenKakuGothicNew-Medium.ttf'),
+          'InterMedium',
+          require('./assets/fonts/inter/Inter-Medium.ttf'),
         );
 
         await Font.loadAsync(
-          'ZenKakuGothicNewRegular',
-          require('./assets/fonts/ZenKakuGothicNew-Regular.ttf'),
+          'InterRegular',
+          require('./assets/fonts/inter/Inter-Regular.ttf'),
+        );
+
+        await Font.loadAsync(
+          'InterLight',
+          require('./assets/fonts/inter/Inter-Light.ttf'),
         );
 
         // Custom icon font

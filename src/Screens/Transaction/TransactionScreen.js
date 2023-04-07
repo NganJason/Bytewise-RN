@@ -37,7 +37,7 @@ const TransactionScreen = ({ navigation }) => {
             contentSpacing={theme.spacing.xl}
             onNext={addOneMonth}
             onPrev={subOneMonth}>
-            <BaseText h2 style={{ color: theme.colors.primary }}>
+            <BaseText h1 style={{ color: theme.colors.color1 }}>
               {renderDate()}
             </BaseText>
           </ArrowSelector>

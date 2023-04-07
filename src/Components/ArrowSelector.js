@@ -35,7 +35,7 @@ const ArrowSelector = ({
         marginVertical: getMarginVertical(),
       }}>
       <Button type="clear" onPress={onPrev}>
-        <Icon name="chevron-left" type="entypo" color={theme.colors.grey4} />
+        <Icon name="chevron-left" type="entypo" color={theme.colors.color5} />
       </Button>
 
       <View
@@ -46,7 +46,7 @@ const ArrowSelector = ({
       </View>
 
       <Button type="clear" onPress={onNext}>
-        <Icon name="chevron-right" type="entypo" color={theme.colors.grey4} />
+        <Icon name="chevron-right" type="entypo" color={theme.colors.color5} />
       </Button>
     </View>
   );

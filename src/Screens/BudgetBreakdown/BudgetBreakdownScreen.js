@@ -11,11 +11,6 @@ import {
   DailyTransactions,
 } from '../../Components';
 
-import {
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/data/model';
-
 import ROUTES from '../../_shared/constant/routes';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
@@ -34,20 +29,11 @@ const BudgetBreakdownScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const getAmountStyles = ({ transaction_type }) => {
-    switch (transaction_type) {
-      case TRANSACTION_TYPE_EXPENSE:
-        return styles.expenseText;
-      case TRANSACTION_TYPE_INCOME:
-        return styles.incomeText;
-    }
-  };
-
   return (
     <BaseScreen>
       <BaseHeader
         left={
-          <BaseText h1 style={{ color: theme.colors.primary }}>
+          <BaseText h1 style={{ color: theme.colors.color1 }}>
             Food
           </BaseText>
         }
@@ -61,18 +47,18 @@ const BudgetBreakdownScreen = ({ navigation }) => {
                 data: BUDGET,
               });
             }}>
-            <Icon name="edit" type="fontawesome" color={theme.colors.grey3} />
+            <Icon name="edit" type="fontawesome" color={theme.colors.color5} />
           </BaseButton>
         }
       />
 
       <View style={styles.header}>
         <View style={styles.aggr}>
-          <BaseText h3 style={{ color: theme.colors.primary }}>
+          <BaseText h4 style={{ color: theme.colors.color1 }}>
             Budget: {100}
           </BaseText>
           <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-          <BaseText h3 style={{ color: theme.colors.red0 }}>
+          <BaseText h4 style={{ color: theme.colors.red }}>
             Used: {200}
           </BaseText>
         </View>

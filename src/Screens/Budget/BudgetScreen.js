@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, LinearProgress, Icon, Button, FAB } from '@rneui/themed';
+import { useTheme, LinearProgress, Icon, Button } from '@rneui/themed';
 import {
   ArrowSelector,
   BaseScreen,
@@ -29,9 +29,11 @@ const getBudgetCategory = (navigation, theme, styles, category) => {
         buttonStyle={styles.budget}
         onPress={() => navigation.navigate(ROUTES.budgetBreakdown)}>
         <View>
-          <BaseText style={styles.budgetText}>{category.category}</BaseText>
+          <BaseText h4 style={styles.budgetText}>
+            {category.category}
+          </BaseText>
         </View>
-        <BaseText>
+        <BaseText h4>
           {formatMonetaryVal(category.budget, category.currency)}
         </BaseText>
       </Button>
@@ -62,33 +64,30 @@ const BudgetScreen = ({ navigation }) => {
     setExpanded(!expanded);
   };
 
-  const getFab = () => {
-    return (
-      <FAB
-        placement="right"
-        icon={<Icon name="add" color={theme.colors.white} />}
-        color={theme.colors.primary}
-        onPress={() =>
-          navigation.navigate(ROUTES.setCategory, { isEdit: false })
-        }
-      />
-    );
-  };
-
   return (
-    <BaseScreen fab={getFab()}>
+    <BaseScreen
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'add',
+        iconColor: theme.colors.white,
+        color: theme.colors.primary,
+        onPress: () =>
+          navigation.navigate(ROUTES.setCategory, {
+            isEdit: true,
+          }),
+      }}>
       <BaseHeader
         center={
           <ArrowSelector
             contentSpacing={theme.spacing.xl}
             onNext={addOneMonth}
             onPrev={subOneMonth}>
-            <BaseText h2 style={{ color: theme.colors.primary }}>
+            <BaseText h1 style={{ color: theme.colors.color1 }}>
               {renderDate()}
             </BaseText>
           </ArrowSelector>
         }
-        //centerContainerStyle={styles.header}
       />
 
       {isLoading ? (
@@ -98,7 +97,7 @@ const BudgetScreen = ({ navigation }) => {
       ) : (
         <>
           <View style={styles.aggr}>
-            <BaseText h3 style={{ color: theme.colors.primary }}>
+            <BaseText h4 style={{ color: theme.colors.color1 }}>
               Budget:{' '}
               {formatMonetaryVal(
                 budgetOverview.budget,
@@ -106,7 +105,7 @@ const BudgetScreen = ({ navigation }) => {
               )}
             </BaseText>
             <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-            <BaseText h3 style={{ color: theme.colors.red0 }}>
+            <BaseText h4 style={{ color: theme.colors.red }}>
               Used:{' '}
               {formatMonetaryVal(budgetOverview.used, budgetOverview.currency)}
             </BaseText>
@@ -125,17 +124,17 @@ const BudgetScreen = ({ navigation }) => {
                   <Icon
                     name="chevron-up"
                     type="entypo"
-                    color={theme.colors.grey4}
+                    color={theme.colors.color5}
                   />
                 ) : (
                   <Icon
                     name="chevron-down"
                     type="entypo"
-                    color={theme.colors.grey4}
+                    color={theme.colors.color5}
                   />
                 )}
 
-                <BaseText h2 style={styles.annualHeader}>
+                <BaseText h3 style={styles.annualHeader}>
                   Annual budget
                 </BaseText>
               </View>
@@ -172,7 +171,7 @@ const getStyles = theme => {
       paddingVertical: theme.spacing.xl,
     },
     budgetContainer: {
-      marginVertical: theme.spacing.md,
+      marginVertical: theme.spacing.lg,
     },
     budget: {
       flexDirection: 'row',
@@ -187,7 +186,7 @@ const getStyles = theme => {
     },
     annualContainer: {
       flexDirection: 'row',
-      marginVertical: theme.spacing.md,
+      marginVertical: theme.spacing.lg,
     },
     annualHeader: {
       color: theme.colors.primary,

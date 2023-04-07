@@ -2,18 +2,15 @@ import { createTheme } from '@rneui/themed';
 import { DefaultTheme } from '@react-navigation/native';
 
 const COLORS = {
-  primary: '#00754A',
-  secondary: '#E4F2ED',
+  color1: '#00754A', // green
+  color2: '#E4F2ED', // light green
+  color3: '#255171', // blue
+  color4: '#6D6D6D', // grey
+  color5: '#B4B4B4', // light grey
+  color6: '#C7D1D6', // extra light grey
   black: '#252525',
+  red: '#800000',
   white: '#FFF',
-  grey0: '#383E42',
-  grey1: '#43484D',
-  grey2: '#5E6977',
-  grey3: '#86939E',
-  grey4: '#bdc6cf',
-  grey5: '#F2F2F2',
-  grey6: '#6D6D6D',
-  red0: '#800000',
   disabled: '#E3E6E8',
   error: '#F41A0F',
   success: '#52C41A',
@@ -21,76 +18,92 @@ const COLORS = {
 };
 
 const FONT_SIZES = {
-  h1: 28,
-  h2: 18,
-  h3: 16,
-  h4: 12,
+  h1: 22,
+  h2: 20,
+  h3: 18,
+  h4: 16,
+  h5: 13,
+  h6: 10,
   body: 16,
   caption: 12,
 };
 
 const FONT_FAMILY = {
-  bold: 'ZenKakuGothicNewBlack',
-  semiBold: 'ZenKakuGothicNewBold',
-  medium: 'ZenKakuGothicNewMedium',
-  regular: 'ZenKakuGothicNewRegular',
-  light: 'ZenKakuGothicNewLight',
+  bold: 'InterBold',
+  semiBold: 'InterSemiBold',
+  medium: 'InterMedium',
+  regular: 'InterRegular',
+  light: 'InterLight',
 };
 
 export const THEME = createTheme({
   colors: {
     ...DefaultTheme.colors,
     background: COLORS.white,
-    text: COLORS.grey1,
-    primary: COLORS.primary,
-    secondary: COLORS.secondary,
+    text: COLORS.grey4,
+    primary: COLORS.color1,
+    secondary: COLORS.color2,
+    color1: COLORS.color1,
+    color2: COLORS.color2,
+    color3: COLORS.color3,
+    color4: COLORS.color4,
+    color5: COLORS.color5,
+    color6: COLORS.color6,
     error: COLORS.error,
     success: COLORS.success,
     warning: COLORS.warning,
-    inactive: COLORS.grey3,
-    grey0: COLORS.grey0,
-    grey1: COLORS.grey1,
-    grey2: COLORS.grey2,
-    grey3: COLORS.grey3,
-    grey4: COLORS.grey4,
-    grey5: COLORS.grey5,
-    grey6: COLORS.grey6,
-    red0: COLORS.red0,
+    inactive: COLORS.color5,
+    red: COLORS.red,
     white: COLORS.white,
     black: COLORS.black,
   },
   fontFamily: FONT_FAMILY,
   fontStyles: {
     h1: {
-      //fontFamily: FONT_FAMILY.bold,
+      fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h1,
-      color: COLORS.black,
+      color: COLORS.color4,
     },
     h2: {
-      //fontFamily: FONT_FAMILY.semiBold,
+      fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h2,
-      color: COLORS.black,
+      color: COLORS.color4,
     },
     h3: {
-      //fontFamily: FONT_FAMILY.medium,
+      fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h3,
-      color: COLORS.black,
+      color: COLORS.color4,
     },
     h4: {
-      //fontFamily: FONT_FAMILY.regular,
+      fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h4,
-      color: COLORS.black,
+      color: COLORS.color4,
+    },
+    h5: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h5,
+      color: COLORS.color4,
+    },
+    h6: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h6,
+      color: COLORS.color4,
     },
     p: {
-      //fontFamily: FONT_FAMILY.regular,
+      fontFamily: FONT_FAMILY.regular,
       fontSize: FONT_SIZES.body,
-      color: COLORS.black,
+      color: COLORS.color4,
     },
     caption: {
-      //fontFamily: FONT_FAMILY.regular,
+      fontFamily: FONT_FAMILY.regular,
       fontSize: FONT_SIZES.caption,
-      color: COLORS.grey2,
+      color: COLORS.color4,
     },
+  },
+  button: {
+    borderRadius: 10,
+    width: 250,
+    maxWidth: '80%',
   },
   spacing: {
     xl: 24,

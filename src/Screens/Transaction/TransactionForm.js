@@ -132,7 +132,7 @@ const TransactionForm = ({ route }) => {
   return (
     <BaseScreen>
       <>
-        <BaseHeader center={<BaseText h2>Add Transaction</BaseText>} />
+        <BaseHeader center={<BaseText h1>Add Transaction</BaseText>} />
         <ButtonGroup
           onPress={index => onTransactionTypeChange(index + 1)}
           selectedIndex={form.transaction_type - 1}
