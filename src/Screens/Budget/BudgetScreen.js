@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, LinearProgress, Icon, Button, FAB } from '@rneui/themed';
+import { useTheme, LinearProgress, Icon, Button } from '@rneui/themed';
 import {
   ArrowSelector,
   BaseScreen,
@@ -62,21 +62,16 @@ const BudgetScreen = ({ navigation }) => {
     setExpanded(!expanded);
   };
 
-  const getFab = () => {
-    return (
-      <FAB
-        placement="right"
-        icon={<Icon name="add" color={theme.colors.white} />}
-        color={theme.colors.primary}
-        onPress={() =>
-          navigation.navigate(ROUTES.setCategory, { isEdit: false })
-        }
-      />
-    );
-  };
-
   return (
-    <BaseScreen fab={getFab()}>
+    <BaseScreen
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'add',
+        iconColor: theme.colors.white,
+        color: theme.colors.primary,
+        onPress: () => navigation.navigate(ROUTES.setCategory),
+      }}>
       <BaseHeader
         center={
           <ArrowSelector
@@ -88,7 +83,6 @@ const BudgetScreen = ({ navigation }) => {
             </BaseText>
           </ArrowSelector>
         }
-        //centerContainerStyle={styles.header}
       />
 
       {isLoading ? (
@@ -157,12 +151,6 @@ const BudgetScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    header: {
-      width: '60%',
-      alignSelf: 'center',
-      backgroundColor: theme.colors.white,
-      borderBottomColor: theme.colors.white,
-    },
     aggr: {
       flexDirection: 'row',
       justifyContent: 'center',

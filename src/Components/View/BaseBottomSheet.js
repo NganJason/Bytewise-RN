@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { BottomSheet, useTheme, ListItem, Icon } from '@rneui/themed';
 
-import BaseText from './BaseText';
+import BaseText from '../Text/BaseText';
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 

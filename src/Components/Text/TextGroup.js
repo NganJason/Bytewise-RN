@@ -7,19 +7,12 @@ const TextGroup = ({
   texts = [{ label: '', value: '' }],
   LabelComponent = BaseText,
   ValueComponent = BaseText,
-  justifyContent = 'space-around',
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
-    <View
-      style={[
-        {
-          ...styles.textGroup,
-          justifyContent: justifyContent,
-        },
-      ]}>
+    <View style={styles.textGroup}>
       {texts.map((text, i) => (
         <View key={i} style={styles.textWrapper}>
           <LabelComponent>{text.label}</LabelComponent>
@@ -37,6 +30,7 @@ const getStyles = _ =>
     textGroup: {
       width: '100%',
       flexDirection: 'row',
+      justifyContent: 'space-around',
     },
     textWrapper: {
       flex: 1,

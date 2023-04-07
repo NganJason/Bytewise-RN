@@ -57,7 +57,7 @@ const TransactionForm = ({ route }) => {
       account = ACCOUNTS[0] || {},
       transaction_type = TRANSACTION_TYPE_EXPENSE,
     },
-    autoFocus = true,
+    isEdit = false,
   } = route.params || { transaction: {}, autoFocus: true };
 
   const [form, setForm] = useState({
@@ -209,7 +209,7 @@ const TransactionForm = ({ route }) => {
             label="Amount"
             value={form.amount}
             onChangeText={onAmountChange}
-            autoFocus={autoFocus}
+            autoFocus={!isEdit}
             onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           />
           <TouchableOpacity activeOpacity={1} onPress={toggleCategoryModal}>

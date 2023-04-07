@@ -2,7 +2,7 @@ import { useState, forwardRef } from 'react';
 import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import BaseText from '../BaseText';
+import BaseText from '../Text/BaseText';
 
 const BaseInput = forwardRef(
   (
