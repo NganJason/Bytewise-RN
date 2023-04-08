@@ -4,7 +4,7 @@ import { Divider, useTheme } from '@rneui/themed';
 const HORIZONTAL = 'horizontal',
   VERTICAL = 'vertical';
 
-const BaseDivider = ({ orientation = HORIZONTAL, margin = 0 }) => {
+const BaseDivider = ({ orientation = HORIZONTAL, margin = 0, width = 2 }) => {
   const { theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -19,6 +19,7 @@ const BaseDivider = ({ orientation = HORIZONTAL, margin = 0 }) => {
       orientation={orientation}
       color={theme.colors.grey3}
       style={styles.divider}
+      width={width}
     />
   );
 };

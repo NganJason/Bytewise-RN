@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
+import { View, StyleSheet } from 'react-native';
+import { useTheme, LinearProgress, Button, ListItem } from '@rneui/themed';
+import { ScrollView } from 'react-native-gesture-handler';
+
 import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  ActivityIndicator,
-} from 'react-native';
-import { useTheme, LinearProgress, Icon, Button } from '@rneui/themed';
-import {
-  ArrowSelector,
   BaseScreen,
-  BaseDivider,
   BaseText,
-  BaseHeader,
+  MonthNavigator,
+  TextGroup,
+  AmountText,
 } from '../../Components';
-import Collapsible from 'react-native-collapsible';
 
 import ROUTES from '../../_shared/constant/routes';
 import { formatMonetaryVal, getProgress } from '../../_shared/util/util';
 import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
-import useSetDate from '../../_shared/hooks/useSetDate';
 
 const getBudgetCategory = (navigation, theme, styles, category) => {
   return (
@@ -47,118 +42,123 @@ const getBudgetCategory = (navigation, theme, styles, category) => {
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const isFocused = useIsFocused();
   const styles = getStyles(theme);
 
-  const [expanded, setExpanded] = useState(false);
-  const { renderDate, addOneMonth, subOneMonth } = useSetDate();
-  const { data: budgetOverview, isLoading } = useGetBudgetOverviewQuery({});
+  const {
+    data: budgetOverview = {
+      budget: '',
+      used: '',
+      monthly_budget: [],
+      annual_budget: [],
+    },
+    isLoading,
+  } = useGetBudgetOverviewQuery({});
+
+  const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(false);
+  const [isAnnualExpanded, setIsAnnualExpanded] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    setExpanded(false);
+    setIsMonthlyExpanded(false);
+    setIsAnnualExpanded(false);
   }, [isFocused]);
 
-  const toggleAccordion = () => {
-    setExpanded(!expanded);
+  const toggleMonthly = () => {
+    setIsMonthlyExpanded(!isMonthlyExpanded);
+  };
+
+  const toggleAnnual = () => {
+    setIsAnnualExpanded(!isAnnualExpanded);
   };
 
   return (
     <BaseScreen
+      isLoading={isLoading}
+      headerProps={{
+        show: true,
+        allowBack: false,
+        centerComponent: <MonthNavigator />,
+      }}
       fabProps={{
         show: true,
         placement: 'right',
         iconName: 'add',
         iconColor: theme.colors.white,
         color: theme.colors.primary,
-        onPress: () => navigation.navigate(ROUTES.setCategory),
+        onPress: () =>
+          navigation.navigate(ROUTES.setCategory, { isEdit: false }),
       }}>
-      <BaseHeader
-        center={
-          <ArrowSelector
-            contentSpacing={theme.spacing.xl}
-            onNext={addOneMonth}
-            onPrev={subOneMonth}>
-            <BaseText h2 style={{ color: theme.colors.primary }}>
-              {renderDate()}
-            </BaseText>
-          </ArrowSelector>
-        }
-      />
-
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" />
+      <>
+        <View style={styles.textGroupWrapper}>
+          <TextGroup
+            texts={[
+              { label: 'Budget: ', value: budgetOverview.budget },
+              { label: 'Used: ', value: -budgetOverview.used },
+            ]}
+            ValueComponent={AmountText}
+          />
         </View>
-      ) : (
-        <>
-          <View style={styles.aggr}>
-            <BaseText h3 style={{ color: theme.colors.primary }}>
-              Budget:{' '}
-              {formatMonetaryVal(
-                budgetOverview.budget,
-                budgetOverview.currency,
-              )}
-            </BaseText>
-            <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-            <BaseText h3 style={{ color: theme.colors.red0 }}>
-              Used:{' '}
-              {formatMonetaryVal(budgetOverview.used, budgetOverview.currency)}
-            </BaseText>
-          </View>
+        <ScrollView>
+          <ListItem.Accordion
+            containerStyle={{ padding: 0 }}
+            expanded={isMonthlyExpanded}
+            onPress={toggleMonthly}
+            content={
+              <>
+                <ListItem.Content>
+                  <ListItem.Title>List Accordion</ListItem.Title>
+                </ListItem.Content>
+              </>
+            }>
+            <BaseText>Hello</BaseText>
+          </ListItem.Accordion>
+          {/* {budgetOverview.monthly_budget.map((category, i) => (
+            <React.Fragment key={i}>
+              {getBudgetCategory(navigation, theme, styles, category)}
+            </React.Fragment>
+          ))}
 
-          <View style={styles.body}>
-            {budgetOverview.monthly_budget.map((category, i) => (
+          <TouchableWithoutFeedback onPress={toggleAccordion}>
+            <View style={styles.annualContainer}>
+              {expanded ? (
+                <Icon
+                  name="chevron-up"
+                  type="entypo"
+                  color={theme.colors.grey4}
+                />
+              ) : (
+                <Icon
+                  name="chevron-down"
+                  type="entypo"
+                  color={theme.colors.grey4}
+                />
+              )}
+
+              <BaseText h2 style={styles.annualHeader}>
+                Annual budget
+              </BaseText>
+            </View>
+          </TouchableWithoutFeedback>
+
+          <Collapsible collapsed={!expanded}>
+            {budgetOverview.annual_budget.map((category, i) => (
               <React.Fragment key={i}>
                 {getBudgetCategory(navigation, theme, styles, category)}
               </React.Fragment>
             ))}
-
-            <TouchableWithoutFeedback onPress={toggleAccordion}>
-              <View style={styles.annualContainer}>
-                {expanded ? (
-                  <Icon
-                    name="chevron-up"
-                    type="entypo"
-                    color={theme.colors.grey4}
-                  />
-                ) : (
-                  <Icon
-                    name="chevron-down"
-                    type="entypo"
-                    color={theme.colors.grey4}
-                  />
-                )}
-
-                <BaseText h2 style={styles.annualHeader}>
-                  Annual budget
-                </BaseText>
-              </View>
-            </TouchableWithoutFeedback>
-
-            <Collapsible collapsed={!expanded}>
-              {budgetOverview.annual_budget.map((category, i) => (
-                <React.Fragment key={i}>
-                  {getBudgetCategory(navigation, theme, styles, category)}
-                </React.Fragment>
-              ))}
-            </Collapsible>
-          </View>
-        </>
-      )}
+          </Collapsible> */}
+        </ScrollView>
+      </>
     </BaseScreen>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    aggr: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+    textGroupWrapper: {
+      paddingBottom: 18,
     },
-    body: {
-      paddingVertical: theme.spacing.xl,
-    },
+
     budgetContainer: {
       marginVertical: theme.spacing.md,
     },

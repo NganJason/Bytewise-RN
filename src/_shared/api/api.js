@@ -29,6 +29,9 @@ class localStorage {
       if (value !== null) {
         console.log(value);
       }
+      // TODO: REMOVE IN PROD
+      // USED TO MOCK SLOW LOAD TO SEE LOADING SCREEN
+      await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
       console.log(error);
     }

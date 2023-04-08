@@ -5,16 +5,21 @@ import BaseText from './BaseText';
 
 import { CURRENCY } from '../../_shared/api/data/mock/user';
 
-const AmountText = ({ children = 0, showSymbol = false, style = {} }) => {
+const AmountText = ({
+  children = 0,
+  showSymbol = false,
+  style = {},
+  showColor = true,
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const getAmountAttr = () => {
     if (children > 0) {
-      return { styles: styles.positive, symbol: '+' };
+      return { styles: showColor && styles.positive, symbol: '+' };
     }
     if (children < 0) {
-      return { styles: styles.negative, symbol: '-' };
+      return { styles: showColor && styles.negative, symbol: '-' };
     }
   };
 

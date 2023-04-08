@@ -4,10 +4,8 @@ import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
-  BaseText,
   BaseScreen,
-  BaseHeader,
-  ArrowSelector,
+  MonthNavigator,
   DailyTransactions,
   TextGroup,
   AmountText,
@@ -15,16 +13,18 @@ import {
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
 import ROUTES from '../../_shared/constant/routes';
-import useSetDate from '../../_shared/hooks/useSetDate';
 
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const { renderDate, addOneMonth, subOneMonth } = useSetDate();
-
   return (
     <BaseScreen
+      headerProps={{
+        show: true,
+        allowBack: false,
+        centerComponent: <MonthNavigator />,
+      }}
       fabProps={{
         show: true,
         placement: 'right',
@@ -33,18 +33,6 @@ const TransactionScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
-      <BaseHeader
-        center={
-          <ArrowSelector
-            contentSpacing={theme.spacing.xl}
-            onNext={addOneMonth}
-            onPrev={subOneMonth}>
-            <BaseText h2 style={{ color: theme.colors.primary }}>
-              {renderDate()}
-            </BaseText>
-          </ArrowSelector>
-        }
-      />
       <View style={styles.textGroupWrapper}>
         <TextGroup
           texts={[
@@ -54,7 +42,7 @@ const TransactionScreen = ({ navigation }) => {
           ValueComponent={AmountText}
         />
       </View>
-      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
             key={i}
@@ -71,12 +59,7 @@ export default TransactionScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
-    body: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-    },
     textGroupWrapper: {
-      paddingBottom: 22,
+      paddingBottom: 18,
     },
   });
