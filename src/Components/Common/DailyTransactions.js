@@ -116,9 +116,10 @@ const DailyTransactions = ({
         const acc = getAccount(t.acc_id);
         return (
           <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat, acc)}>
-            <ListItem bottomDivider containerStyle={styles.listItem}>
+            <ListItem containerStyle={styles.listItem}>
               <ListItem.Content style={styles.listItemContent}>
                 <BaseText
+                  h5
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
@@ -126,19 +127,18 @@ const DailyTransactions = ({
                 </BaseText>
                 <View style={styles.noteAccountWrapper}>
                   <BaseText
+                    h4
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {t.note}
                   </BaseText>
-                  <BaseText
-                    style={styles.account}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
+                  <BaseText h5 numberOfLines={1} ellipsizeMode="tail">
                     {acc.acc_name}
                   </BaseText>
                 </View>
                 <AmountText
+                  h4
                   style={styles.amount}
                   numberOfLines={1}
                   ellipsizeMode="tail">
@@ -155,7 +155,7 @@ const DailyTransactions = ({
 
 export default DailyTransactions;
 
-const getStyles = _ =>
+const getStyles = theme =>
   StyleSheet.create({
     body: {
       marginBottom: 28,
@@ -164,6 +164,7 @@ const getStyles = _ =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      marginBottom: theme.spacing.md,
     },
     titleItem: {
       flex: 2,
@@ -171,7 +172,6 @@ const getStyles = _ =>
       alignItems: 'center',
     },
     titleItemText: {
-      fontSize: 20,
       fontWeight: 'bold',
     },
     chip: {
@@ -184,31 +184,35 @@ const getStyles = _ =>
     sumText: {
       flex: 1,
       textAlign: 'right',
+      fontFamily: theme.fontStyles.h4.fontFamily,
+      fontSize: theme.fontStyles.h4.fontSize,
     },
     listItem: {
       paddingHorizontal: 0,
-      marginBottom: 6,
+      paddingTop: 20,
+      paddingBottom: 14,
+      borderBottomColor: theme.colors.color6,
+      borderBottomWidth: 0.5,
     },
     listItemContent: {
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
     },
     category: {
       flex: 1,
-      fontSize: 12,
     },
     noteAccountWrapper: {
       flex: 2,
       marginHorizontal: 10,
     },
     note: {
-      marginBottom: 4,
-    },
-    account: {
-      fontSize: 12,
+      marginBottom: 2,
     },
     amount: {
       flex: 1,
       textAlign: 'right',
+      color: theme.colors.color4,
+      fontFamily: theme.fontStyles.h4.fontFamily,
+      fontSize: theme.fontStyles.h4.fontSize,
     },
   });

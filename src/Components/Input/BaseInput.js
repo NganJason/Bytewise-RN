@@ -58,8 +58,9 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={styles.input}
+        containerStyle={styles.inputContainer}
         clearButtonMode={clearButtonMode}
+        inputStyle={styles.input}
         pointerEvents={pointerEvents}
       />
     );
@@ -72,12 +73,16 @@ const getStyles = theme =>
   StyleSheet.create({
     focused: {
       borderBottomColor: theme.colors.primary,
-      borderBottomWidth: theme.spacing.xs,
+      borderBottomWidth: 1,
     },
     blur: {
-      borderBottomWidth: theme.spacing.xs,
+      borderBottomColor: theme.colors.color5,
+      borderBottomWidth: 1,
     },
     input: {
+      ...theme.fontStyles.h4,
+    },
+    inputContainer: {
       marginBottom: 4,
     },
   });

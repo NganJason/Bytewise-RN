@@ -24,9 +24,11 @@ const getBudgetCategory = (navigation, theme, styles, category) => {
         buttonStyle={styles.budget}
         onPress={() => navigation.navigate(ROUTES.budgetBreakdown)}>
         <View>
-          <BaseText style={styles.budgetText}>{category.category}</BaseText>
+          <BaseText h4 style={styles.budgetText}>
+            {category.category}
+          </BaseText>
         </View>
-        <BaseText>
+        <BaseText h4>
           {formatMonetaryVal(category.budget, category.currency)}
         </BaseText>
       </Button>
@@ -160,7 +162,7 @@ const getStyles = theme => {
     },
 
     budgetContainer: {
-      marginVertical: theme.spacing.md,
+      marginVertical: theme.spacing.lg,
     },
     budget: {
       flexDirection: 'row',
@@ -175,7 +177,7 @@ const getStyles = theme => {
     },
     annualContainer: {
       flexDirection: 'row',
-      marginVertical: theme.spacing.md,
+      marginVertical: theme.spacing.lg,
     },
     annualHeader: {
       color: theme.colors.primary,

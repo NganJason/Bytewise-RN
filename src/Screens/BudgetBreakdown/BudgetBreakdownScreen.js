@@ -33,7 +33,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
     <BaseScreen>
       <BaseHeader
         left={
-          <BaseText h1 style={{ color: theme.colors.primary }}>
+          <BaseText h1 style={{ color: theme.colors.color1 }}>
             Food
           </BaseText>
         }
@@ -47,18 +47,18 @@ const BudgetBreakdownScreen = ({ navigation }) => {
                 data: BUDGET,
               });
             }}>
-            <Icon name="edit" type="fontawesome" color={theme.colors.grey3} />
+            <Icon name="edit" type="fontawesome" color={theme.colors.color5} />
           </BaseButton>
         }
       />
 
       <View style={styles.header}>
         <View style={styles.aggr}>
-          <BaseText h3 style={{ color: theme.colors.primary }}>
+          <BaseText h4 style={{ color: theme.colors.color1 }}>
             Budget: {100}
           </BaseText>
           <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-          <BaseText h3 style={{ color: theme.colors.red0 }}>
+          <BaseText h4 style={{ color: theme.colors.red }}>
             Used: {200}
           </BaseText>
         </View>
