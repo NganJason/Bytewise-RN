@@ -107,7 +107,7 @@ const DailyTransactions = ({
             {DAYS[ts.getDay()]}
           </Chip>
         </View>
-        <AmountText showSymbol style={styles.sumText}>
+        <AmountText showSymbol showColor={true} style={styles.sumText}>
           {computeAmountSum()}
         </AmountText>
       </View>
@@ -191,8 +191,7 @@ const getStyles = theme =>
       paddingHorizontal: 0,
       paddingTop: 20,
       paddingBottom: 14,
-      borderBottomColor: theme.colors.color6,
-      borderBottomWidth: 0.5,
+      ...theme.borderBottom,
     },
     listItemContent: {
       flexDirection: 'row',

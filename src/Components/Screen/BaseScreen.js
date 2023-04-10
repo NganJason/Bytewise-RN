@@ -17,15 +17,18 @@ const BaseScreen = ({
     onPress: function () {},
   },
   useScrollView = false,
+  style = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const renderView = () => {
     if (useScrollView) {
-      return <ScrollView style={styles.view}>{children}</ScrollView>;
+      return (
+        <ScrollView style={{ ...styles.view, ...style }}>{children}</ScrollView>
+      );
     }
-    return <View style={styles.view}>{children}</View>;
+    return <View style={{ ...styles.view, ...style }}>{children}</View>;
   };
 
   return (

@@ -16,7 +16,9 @@ import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import BudgetBreakdownScreen from './src/Screens/BudgetBreakdown/BudgetBreakdownScreen';
-import AssetAccountScreen from './src/Screens/Asset/AssetAccount';
+import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
+import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
+import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -99,9 +101,14 @@ function App() {
           name={ROUTES.budgetBreakdown}
           component={BudgetBreakdownScreen}
         />
+        <Stack.Screen name={ROUTES.cashAccount} component={CashAccountScreen} />
         <Stack.Screen
-          name={ROUTES.assetAccount}
-          component={AssetAccountScreen}
+          name={ROUTES.investmentAccount}
+          component={InvestmentAccountScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.investmentLotBreakdown}
+          component={InvestmentLotBreakdownScreen}
         />
       </Stack.Navigator>
     );

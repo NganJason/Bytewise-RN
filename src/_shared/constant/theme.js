@@ -105,6 +105,10 @@ export const THEME = createTheme({
     width: 250,
     maxWidth: '80%',
   },
+  borderBottom: {
+    borderColor: COLORS.color5,
+    borderBottomWidth: 0.4,
+  },
   spacing: {
     xl: 24,
     lg: 12,

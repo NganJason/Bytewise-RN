@@ -8,6 +8,7 @@ import { CURRENCY } from '../../_shared/api/data/mock/user';
 const AmountText = ({
   children = 0,
   showSymbol = false,
+  showColor = false,
   style = {},
   ...props
 }) => {
@@ -15,12 +16,22 @@ const AmountText = ({
   const styles = getStyles(theme);
 
   const getAmountAttr = () => {
+    let symbol = '';
+    let colorStyle = {};
+
     if (children > 0) {
-      return { styles: styles.positive, symbol: '+' };
+      symbol = '+';
+      colorStyle = styles.positive;
+    } else {
+      symbol = '-';
+      colorStyle = styles.negative;
     }
-    if (children < 0) {
-      return { styles: styles.negative, symbol: '-' };
+
+    if (!showColor) {
+      colorStyle = {};
     }
+
+    return { styles: colorStyle, symbol: symbol };
   };
 
   const renderAmountText = () => {

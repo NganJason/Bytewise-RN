@@ -156,7 +156,8 @@ const TransactionForm = ({ route }) => {
           extraHeight={scrollHeight}
           enableOnAndroid={true}
           keyboardOpeningTime={0}
-          contentContainerStyle={styles.formBody}>
+          contentContainerStyle={styles.formBody}
+          showsVerticalScrollIndicator={false}>
           <TouchableOpacity activeOpacity={1} onPress={toggleCalendarModal}>
             <BaseInput
               label="Date"
