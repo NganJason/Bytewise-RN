@@ -24,9 +24,13 @@
     "react": "18.2.0",
     "react-native": "0.71.6",
     "react-native-calendars": "^1.1294.0",
+<<<<<<< HEAD
     "react-native-collapsible": "^1.6.0",
     "react-native-fast-image": "^8.6.3",
+=======
+>>>>>>> 73975f02c2c14f5c8604b408a78f6b868ebc3020
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "^3.20.0",

@@ -10,6 +10,7 @@ const AmountText = ({
   showSymbol = false,
   showColor = false,
   style = {},
+  showColor = true,
   ...props
 }) => {
   const { theme } = useTheme();
@@ -20,15 +21,10 @@ const AmountText = ({
     let colorStyle = {};
 
     if (children > 0) {
-      symbol = '+';
-      colorStyle = styles.positive;
-    } else {
-      symbol = '-';
-      colorStyle = styles.negative;
+      return { styles: showColor && styles.positive, symbol: '+' };
     }
-
-    if (!showColor) {
-      colorStyle = {};
+    if (children < 0) {
+      return { styles: showColor && styles.negative, symbol: '-' };
     }
 
     return { styles: colorStyle, symbol: symbol };
