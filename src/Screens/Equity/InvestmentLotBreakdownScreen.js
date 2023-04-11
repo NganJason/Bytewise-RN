@@ -1,13 +1,7 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
-import {
-  AmountText,
-  BaseButton,
-  BaseHeader,
-  BaseScreen,
-  BaseText,
-} from '../../Components';
+import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
 
 const InvestmentLotBreakdownScreen = ({ navigation, route }) => {
   const { theme } = useTheme();
@@ -24,16 +18,18 @@ const InvestmentLotBreakdownScreen = ({ navigation, route }) => {
   } = route;
 
   return (
-    <BaseScreen style={styles.screen}>
+    <BaseScreen
+      bodyStyle={styles.screen}
+      headerProps={{
+        show: true,
+        allowBack: true,
+        centerComponent: (
+          <BaseText h1 style={{ color: theme.colors.color1 }}>
+            {holding.symbol}
+          </BaseText>
+        ),
+      }}>
       <View>
-        <BaseHeader
-          center={
-            <BaseText h1 style={{ color: theme.colors.color1 }}>
-              {holding.symbol}
-            </BaseText>
-          }
-        />
-
         <View style={styles.rowContainer}>
           {lot_breakdown.map(d => {
             return (
@@ -48,7 +44,12 @@ const InvestmentLotBreakdownScreen = ({ navigation, route }) => {
         </View>
       </View>
 
-      <BaseButton title="Add Lot" size="lg" containerStyle={styles.addBtn} />
+      <BaseButton
+        title="Add Lot"
+        size="lg"
+        fullWidth={true}
+        containerStyle={styles.addBtn}
+      />
     </BaseScreen>
   );
 };
@@ -59,7 +60,7 @@ const getStyles = theme => {
       justifyContent: 'space-between',
     },
     rowContainer: {
-      marginTop: '20%',
+      marginTop: '5%',
     },
     row: {
       padding: theme.spacing.xl,
@@ -68,7 +69,7 @@ const getStyles = theme => {
       ...theme.borderBottom,
     },
     addBtn: {
-      marginVertical: theme.spacing.xl,
+      marginVertical: 50,
     },
   });
 };

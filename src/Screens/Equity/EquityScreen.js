@@ -1,7 +1,7 @@
 import { useTheme, Image } from '@rneui/themed';
 import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 
-import { AmountText, BaseHeader, BaseScreen, BaseText } from '../../Components';
+import { AmountText, BaseScreen, BaseText } from '../../Components';
 import EquityRow from './EquityRow';
 import { EQUITY } from '../../_shared/api/data/mock/equity';
 import { EQUITY_TYPE } from '../../_shared/constant/constant';
@@ -56,26 +56,27 @@ const EquityScreen = ({ navigation }) => {
   };
 
   return (
-    <BaseScreen>
+    <BaseScreen
+      headerProps={{
+        show: true,
+        leftComponentStyle: styles.header,
+        leftComponent: (
+          <View>
+            <BaseText h4 style={{ color: theme.colors.color3 }}>
+              You have
+            </BaseText>
+            <AmountText
+              h1
+              style={{
+                color: theme.colors.color3,
+                marginVertical: theme.spacing.lg,
+              }}>
+              {EQUITY.total}
+            </AmountText>
+          </View>
+        ),
+      }}>
       <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
-        <BaseHeader
-          left={
-            <View>
-              <BaseText h4 style={{ color: theme.colors.color3 }}>
-                You have
-              </BaseText>
-              <AmountText
-                h1
-                style={{
-                  color: theme.colors.color3,
-                  marginVertical: theme.spacing.lg,
-                }}>
-                {EQUITY.total}
-              </AmountText>
-            </View>
-          }
-        />
-
         <View style={styles.heroImgContainer}>
           <Image source={require(heroImgPath)} style={styles.heroImg} />
         </View>
@@ -97,6 +98,9 @@ const EquityScreen = ({ navigation }) => {
 
 const getStyles = (theme, screenWidth) => {
   return StyleSheet.create({
+    header: {
+      flex: 10,
+    },
     heroImgContainer: {
       flexDirection: 'row',
       justifyContent: 'center',

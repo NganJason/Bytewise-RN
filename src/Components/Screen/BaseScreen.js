@@ -20,11 +20,15 @@ const BaseScreen = ({
   headerProps = {
     show: false,
     allowBack: false,
+    leftComponent: {},
     centerComponent: {},
     rightComponent: {},
+    leftComponentStyle: {},
+    centerComponentStyle: {},
+    rightComponentStyle: {},
   },
   isLoading = false,
-  style = {},
+  bodyStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -32,30 +36,43 @@ const BaseScreen = ({
   const navigation = useNavigation();
 
   return (
-    <View>
+    <>
       {headerProps.show && (
         <Header
           containerStyle={styles.header}
           leftComponent={
-            headerProps.allowBack && (
+            headerProps.allowBack ? (
               <IconButton
                 buttonSize="xs"
                 type="clear"
                 onPress={() => navigation.goBack()}
                 iconName="chevron-left"
                 iconType="entypo"
+                color={theme.colors.color4}
               />
+            ) : (
+              headerProps.leftComponent
             )
           }
           centerComponent={headerProps.centerComponent}
           rightComponent={headerProps.rightComponent}
-          leftContainerStyle={styles.leftHeaderContainerStyle}
-          centerContainerStyle={styles.centerHeaderContainerStyle}
-          rightContainerStyle={styles.rightHeaderContainerStyle}
+          leftContainerStyle={{
+            ...headerProps.leftComponentStyle,
+            ...styles.leftHeaderContainerStyle,
+            ...styles.backIcon,
+          }}
+          centerContainerStyle={{
+            ...headerProps.centerComponentStyle,
+            ...styles.centerHeaderContainerStyle,
+          }}
+          rightContainerStyle={{
+            ...headerProps.rightComponentStyle,
+            ...styles.rightHeaderContainerStyle,
+          }}
         />
       )}
       <HideKeyboard>
-        <View style={{...styles.body, ...style}}>
+        <View style={{ ...styles.body, ...bodyStyle }}>
           {isLoading ? (
             <PacmanIndicator size={70} color={theme.colors.primary} />
           ) : (
@@ -79,7 +96,7 @@ const BaseScreen = ({
           )}
         </View>
       </HideKeyboard>
-    </View>
+    </>
   );
 };
 
@@ -94,6 +111,10 @@ const getStyles = theme =>
       backgroundColor: theme.colors.white,
       borderBottomWidth: 0,
       paddingVertical: 16,
+      paddingHorizontal: theme.spacing.xl,
+    },
+    backIcon: {
+      justifyContent: 'flex-start',
     },
     leftHeaderContainerStyle: {
       justifyContent: 'center',

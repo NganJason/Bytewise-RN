@@ -26,7 +26,7 @@ const BaseButton = ({
       case width !== 0:
         return width;
       case fullWidth:
-        return '100%';
+        return '90%';
       default:
         return 'auto';
     }
@@ -39,12 +39,12 @@ const BaseButton = ({
       loading={loading}
       disabled={disabled}
       buttonStyle={{
-        width: getButtonWidth(),
         ...styles.buttonDefaultStyle,
+        width: getButtonWidth(),
+        ...(!fullWidth ? { alignSelf: align } : { alignSelf: 'center' }),
         ...buttonStyle,
       }}
       containerStyle={{
-        ...(!fullWidth && { alignItems: align }),
         ...containerStyle,
       }}
       size={size}
@@ -59,9 +59,9 @@ const BaseButton = ({
 
 export default BaseButton;
 
-const getStyles = _ =>
+const getStyles = theme =>
   StyleSheet.create({
     buttonDefaultStyle: {
-      borderRadius: 10,
+      ...theme.button,
     },
   });

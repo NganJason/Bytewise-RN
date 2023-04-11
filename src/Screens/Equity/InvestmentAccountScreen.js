@@ -1,13 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
-import {
-  AmountText,
-  BaseButton,
-  BaseHeader,
-  BaseScreen,
-  BaseText,
-} from '../../Components';
+import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { INVESTMENT_ACCOUNT } from '../../_shared/api/data/mock/investment_account';
 
@@ -25,26 +19,21 @@ const InvestmentAccountScreen = ({ navigation }) => {
   };
 
   return (
-    <BaseScreen style={styles.screen}>
-      <View>
-        <BaseHeader />
-        <View style={styles.summary}>
-          <BaseText h1 style={{ color: theme.colors.color1 }}>
-            Investment Account
-          </BaseText>
-          <AmountText h3 style={styles.summaryAmount}>
-            {INVESTMENT_ACCOUNT.total_current_value}
-          </AmountText>
-          <BaseText
-            h5
-            style={{
-              ...getColorIndicator(
-                INVESTMENT_ACCOUNT.total_current_value,
-                INVESTMENT_ACCOUNT.total_cost,
-              ),
-            }}>
-            Invested{' '}
-            <AmountText
+    <BaseScreen
+      bodyStyle={styles.screen}
+      headerProps={{
+        show: true,
+        allowBack: true,
+        centerComponentStyle: styles.header,
+        centerComponent: (
+          <View style={styles.summary}>
+            <BaseText h1 style={{ color: theme.colors.color1 }}>
+              Investment Account
+            </BaseText>
+            <AmountText h3 style={styles.summaryAmount}>
+              {INVESTMENT_ACCOUNT.total_current_value}
+            </AmountText>
+            <BaseText
               h5
               style={{
                 ...getColorIndicator(
@@ -52,11 +41,22 @@ const InvestmentAccountScreen = ({ navigation }) => {
                   INVESTMENT_ACCOUNT.total_cost,
                 ),
               }}>
-              {INVESTMENT_ACCOUNT.total_cost}
-            </AmountText>
-          </BaseText>
-        </View>
-
+              Invested{' '}
+              <AmountText
+                h5
+                style={{
+                  ...getColorIndicator(
+                    INVESTMENT_ACCOUNT.total_current_value,
+                    INVESTMENT_ACCOUNT.total_cost,
+                  ),
+                }}>
+                {INVESTMENT_ACCOUNT.total_cost}
+              </AmountText>
+            </BaseText>
+          </View>
+        ),
+      }}>
+      <View>
         <View style={styles.rowContainer}>
           {INVESTMENT_ACCOUNT.holdings.map(d => {
             return (
@@ -99,7 +99,12 @@ const InvestmentAccountScreen = ({ navigation }) => {
           })}
         </View>
       </View>
-      <BaseButton title="Add" size="lg" containerStyle={styles.addBtn} />
+      <BaseButton
+        title="Add"
+        size="lg"
+        fullWidth={true}
+        containerStyle={styles.addBtn}
+      />
     </BaseScreen>
   );
 };
@@ -109,9 +114,12 @@ const getStyles = theme => {
     screen: {
       justifyContent: 'space-between',
     },
+    header: {
+      marginTop: '10%',
+      flex: 10,
+    },
     summary: {
       alignItems: 'center',
-      marginTop: '10%',
     },
     summaryAmount: {
       color: theme.colors.color3,
@@ -139,7 +147,7 @@ const getStyles = theme => {
       marginBottom: theme.spacing.md,
     },
     addBtn: {
-      marginVertical: theme.spacing.xl,
+      marginVertical: 50,
     },
   });
 };

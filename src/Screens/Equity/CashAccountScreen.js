@@ -1,13 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
-import {
-  AmountText,
-  BaseButton,
-  BaseHeader,
-  BaseScreen,
-  BaseText,
-} from '../../Components';
+import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
 import { CASH_ACCOUNT } from '../../_shared/api/data/mock/cash_account';
 
 const CashAccountScreen = ({ navigation }) => {
@@ -15,18 +9,23 @@ const CashAccountScreen = ({ navigation }) => {
   const styles = getStyles(theme);
 
   return (
-    <BaseScreen style={styles.screen}>
+    <BaseScreen
+      bodyStyle={styles.screen}
+      headerProps={{
+        show: true,
+        allowBack: true,
+        centerComponent: (
+          <View style={styles.summary}>
+            <BaseText h1 style={styles.summaryTitle}>
+              Cash Account
+            </BaseText>
+            <AmountText h3 style={{ color: theme.colors.color3 }}>
+              {CASH_ACCOUNT.total}
+            </AmountText>
+          </View>
+        ),
+      }}>
       <View>
-        <BaseHeader />
-        <View style={styles.summary}>
-          <BaseText h1 style={styles.summaryTitle}>
-            Cash Account
-          </BaseText>
-          <AmountText h3 style={{ color: theme.colors.color3 }}>
-            {CASH_ACCOUNT.total}
-          </AmountText>
-        </View>
-
         <View style={styles.rowContainer}>
           {CASH_ACCOUNT.accounts.map(d => {
             return (
@@ -40,7 +39,12 @@ const CashAccountScreen = ({ navigation }) => {
           })}
         </View>
       </View>
-      <BaseButton title="Add" size="lg" containerStyle={styles.addBtn} />
+      <BaseButton
+        title="Add"
+        size="lg"
+        fullWidth={true}
+        containerStyle={styles.addBtn}
+      />
     </BaseScreen>
   );
 };
@@ -68,7 +72,7 @@ const getStyles = theme => {
       ...theme.borderBottom,
     },
     addBtn: {
-      marginVertical: theme.spacing.xl,
+      marginVertical: 50,
     },
   });
 };
