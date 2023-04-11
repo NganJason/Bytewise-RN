@@ -37,7 +37,7 @@ const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
 const DATE = `${TODAY.getDate()}`.padStart(2, '0');
 
 const AMOUNT_SCROLL_HEIGHT = 0;
-const NOTE_SCROLL_HEIGHT = 200;
+const NOTE_SCROLL_HEIGHT = 300;
 
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();

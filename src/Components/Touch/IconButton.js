@@ -18,7 +18,7 @@ const IconButton = ({
       size={buttonSize}
       type={type}
       onPress={onPress}
-      title={
+      icon={
         <Icon name={iconName} type={iconType} size={iconSize} color={color} />
       }
     />

@@ -2,7 +2,8 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, useTheme, Chip } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import { BaseText, AmountText } from '../Text';
+import BaseText from '../Text/BaseText';
+import AmountText from '../Text/AmountText';
 
 import {
   TRANSACTION_TYPE_EXPENSE,

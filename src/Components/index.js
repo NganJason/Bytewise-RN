@@ -11,7 +11,13 @@ import { BaseText, AmountText, TextGroup } from './Text';
 import { BaseButton, IconButton } from './Touch';
 
 // View
-import { BaseDivider, BaseHeader, BaseBottomSheet, BaseTabView } from './View';
+import {
+  BaseDivider,
+  BaseHeader,
+  BaseBottomSheet,
+  BaseTabView,
+  BaseAccordion,
+} from './View';
 
 // Common
 import { DailyTransactions, MonthNavigator, Budget } from './Common';
@@ -22,6 +28,7 @@ export {
   BaseText,
   BaseInput,
   BaseCurrencyInput,
+  BaseAccordion,
   BaseButton,
   IconButton,
   HideKeyboard,
