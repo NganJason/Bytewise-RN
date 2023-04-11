@@ -1,6 +1,6 @@
 export const budgetOverviewData = {
   date: '2023-03',
-  totalBudget: '123',
+  totalAmount: '123',
   totalUsed: '12121',
   monthly_budget: [
     {
@@ -8,7 +8,7 @@ export const budgetOverviewData = {
         cat_id: 1,
         cat_name: 'Food',
       },
-      budget: '200',
+      amount: '600',
       used: '100',
       ctime: 1673153014,
       mtime: 1673153014,
@@ -18,7 +18,7 @@ export const budgetOverviewData = {
         cat_id: 2,
         cat_name: 'Clothes',
       },
-      budget: '200',
+      amount: '200',
       used: '100',
       ctime: 1673153014,
       mtime: 1673153014,
@@ -30,7 +30,7 @@ export const budgetOverviewData = {
         cat_id: 4,
         cat_name: 'Sports',
       },
-      budget: '200',
+      amount: '200',
       used: '100',
       ctime: 1673153014,
       mtime: 1673153014,

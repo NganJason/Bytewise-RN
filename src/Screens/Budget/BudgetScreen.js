@@ -14,33 +14,8 @@ import {
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
-import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 
-// const getBudgetCategory = (navigation, theme, styles, category) => {
-//   return (
-//     <View style={styles.budgetContainer}>
-//       <Button
-//         type="clear"
-//         buttonStyle={styles.budget}
-//         onPress={() => navigation.navigate(ROUTES.budgetBreakdown)}>
-//         <View>
-//           <BaseText h4 style={styles.budgetText}>
-//             {category.category}
-//           </BaseText>
-//         </View>
-//         <BaseText h4>
-//           {formatMonetaryVal(category.budget, category.currency)}
-//         </BaseText>
-//       </Button>
-//       <LinearProgress
-//         trackColor={theme.colors.secondary}
-//         color={theme.colors.primary}
-//         style={styles.progressBar}
-//         value={getProgress(category.used, category.budget)}
-//       />
-//     </View>
-//   );
-// };
+import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -48,7 +23,7 @@ const BudgetScreen = ({ navigation }) => {
 
   const {
     data: budgetOverview = {
-      totalBudget: '',
+      totalAmount: '',
       totalUsed: '',
       monthly_budget: [],
       annual_budget: [],
@@ -56,12 +31,13 @@ const BudgetScreen = ({ navigation }) => {
     isLoading,
   } = useGetBudgetOverviewQuery({});
 
-  const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(false);
+  const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(true);
   const [isAnnualExpanded, setIsAnnualExpanded] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    setIsMonthlyExpanded(false);
+    // revert to default
+    setIsMonthlyExpanded(true);
     setIsAnnualExpanded(false);
   }, [isFocused]);
 
@@ -106,7 +82,7 @@ const BudgetScreen = ({ navigation }) => {
         <View style={styles.textGroupWrapper}>
           <TextGroup
             texts={[
-              { label: 'Budget: ', value: budgetOverview.totalBudget },
+              { label: 'Budget: ', value: budgetOverview.totalAmount },
               { label: 'Used: ', value: -budgetOverview.totalUsed },
             ]}
             ValueComponent={AmountText}
@@ -136,31 +112,6 @@ const getStyles = _ => {
     textGroupWrapper: {
       paddingBottom: 18,
     },
-
-    // budgetContainer: {
-    //   marginVertical: theme.spacing.lg,
-    // },
-    // budget: {
-    //   flexDirection: 'row',
-    //   justifyContent: 'space-between',
-    // },
-    // budgetText: {
-    //   marginBottom: theme.spacing.sm,
-    // },
-    // progressBar: {
-    //   height: 2,
-    //   marginVertical: theme.spacing.md,
-    // },
-    // annualContainer: {
-    //   flexDirection: 'row',
-    //   marginVertical: theme.spacing.lg,
-    // },
-    // annualHeader: {
-    //   color: theme.colors.primary,
-    // },
-    // loadingContainer: {
-    //   marginVertical: '50%',
-    // },
   });
 };
 
