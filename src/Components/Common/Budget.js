@@ -6,8 +6,8 @@ import AmountText from '../Text/AmountText';
 
 const Budget = ({
   budget: {
-    category: {},
-    budget = '',
+    category: { cat_name = '' },
+    amount = '',
     used = '',
   },
 }) => {
@@ -16,20 +16,14 @@ const Budget = ({
 
   return (
     <TouchableOpacity style={styles.budgetContainer}>
-      <View>
-        <BaseText>Budget</BaseText>
-        <AmountText>Budget</AmountText>
+      <View style={styles.textGroup}>
+        <BaseText>{cat_name}</BaseText>
+        <AmountText showColor={false}>{amount - used}</AmountText>
       </View>
       <LinearProgress
         trackColor={theme.colors.color4}
         color={theme.colors.color1}
-        value={0.5}
-      />
-      <LinearProgress
-        value={0.1}
-        variant="determinate"
-        style={{ width: '100%' }}
-        color="secondary"
+        value={used / amount}
       />
     </TouchableOpacity>
   );
@@ -41,6 +35,11 @@ const getStyles = _ => {
   return StyleSheet.create({
     budgetContainer: {
       width: '100%',
+    },
+    textGroup: {
+      flexDirection: 'row',
+      marginBottom: 12,
+      justifyContent: 'space-between',
     },
   });
 };
