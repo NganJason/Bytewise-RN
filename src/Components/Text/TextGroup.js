@@ -9,12 +9,13 @@ const TextGroup = ({
   texts = [{ label: '', value: '' }],
   LabelComponent = BaseText,
   ValueComponent = BaseText,
+  containerStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
-    <View style={styles.textGroup}>
+    <View style={[styles.textGroup, containerStyle]}>
       {texts.map((text, i) => (
         <React.Fragment key={i}>
           <View style={styles.textWrapper}>

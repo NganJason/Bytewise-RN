@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -21,7 +21,6 @@ const TransactionScreen = ({ navigation }) => {
   return (
     <BaseScreen
       headerProps={{
-        show: true,
         allowBack: false,
         centerComponent: <MonthNavigator />,
       }}
@@ -33,15 +32,14 @@ const TransactionScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
-      <View style={styles.textGroupWrapper}>
-        <TextGroup
-          texts={[
-            { label: 'Income: ', value: '100' },
-            { label: 'Expense: ', value: '-1000' },
-          ]}
-          ValueComponent={AmountText}
-        />
-      </View>
+      <TextGroup
+        texts={[
+          { label: 'Income: ', value: '100' },
+          { label: 'Expense: ', value: '-1000' },
+        ]}
+        ValueComponent={AmountText}
+        containerStyle={styles.textGroupWrapper}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
@@ -60,6 +58,6 @@ export default TransactionScreen;
 const getStyles = _ =>
   StyleSheet.create({
     textGroupWrapper: {
-      paddingBottom: 18,
+      paddingBottom: 12,
     },
   });

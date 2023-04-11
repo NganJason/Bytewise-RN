@@ -31,7 +31,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
 
   return (
     <BaseScreen>
-      <BaseHeader
+      {/* <BaseHeader
         left={
           <BaseText h1 style={{ color: theme.colors.color1 }}>
             Food
@@ -50,7 +50,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
             <Icon name="edit" type="fontawesome" color={theme.colors.color5} />
           </BaseButton>
         }
-      />
+      /> */}
 
       <View style={styles.header}>
         <View style={styles.aggr}>

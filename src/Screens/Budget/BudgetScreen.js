@@ -65,7 +65,6 @@ const BudgetScreen = ({ navigation }) => {
     <BaseScreen
       isLoading={isLoading}
       headerProps={{
-        show: true,
         allowBack: false,
         centerComponent: <MonthNavigator />,
       }}
@@ -79,15 +78,14 @@ const BudgetScreen = ({ navigation }) => {
           navigation.navigate(ROUTES.setCategory, { isEdit: false }),
       }}>
       <>
-        <View style={styles.textGroupWrapper}>
-          <TextGroup
-            texts={[
-              { label: 'Budget: ', value: budgetOverview.totalAmount },
-              { label: 'Used: ', value: -budgetOverview.totalUsed },
-            ]}
-            ValueComponent={AmountText}
-          />
-        </View>
+        <TextGroup
+          texts={[
+            { label: 'Budget: ', value: budgetOverview.totalAmount },
+            { label: 'Used: ', value: -budgetOverview.totalUsed },
+          ]}
+          ValueComponent={AmountText}
+          containerStyle={styles.textGroupWrapper}
+        />
         <ScrollView>
           <BaseAccordion
             isExpanded={isMonthlyExpanded}
@@ -110,7 +108,7 @@ const BudgetScreen = ({ navigation }) => {
 const getStyles = _ => {
   return StyleSheet.create({
     textGroupWrapper: {
-      paddingBottom: 18,
+      paddingBottom: 12,
     },
   });
 };
