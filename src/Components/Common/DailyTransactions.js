@@ -108,7 +108,7 @@ const DailyTransactions = ({
             {DAYS[ts.getDay()]}
           </Chip>
         </View>
-        <AmountText showSymbol showColor={true} style={styles.sumText}>
+        <AmountText showSymbol showColor style={styles.sumText}>
           {computeAmountSum()}
         </AmountText>
       </View>
@@ -142,6 +142,7 @@ const DailyTransactions = ({
                   h4
                   style={styles.amount}
                   numberOfLines={1}
+                  showSymbol
                   ellipsizeMode="tail">
                   {renderTransactionAmount(t.amount, t.transaction_type)}
                 </AmountText>
@@ -211,7 +212,7 @@ const getStyles = theme =>
     amount: {
       flex: 1,
       textAlign: 'right',
-      color: theme.colors.color4,
+      // color: theme.colors.color4,
       fontFamily: theme.fontStyles.h4.fontFamily,
       fontSize: theme.fontStyles.h4.fontSize,
     },
