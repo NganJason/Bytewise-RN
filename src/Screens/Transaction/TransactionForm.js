@@ -53,8 +53,14 @@ const TransactionForm = ({ route }) => {
       timestamp = TODAY.valueOf(),
       amount = '',
       note = '',
-      cat = {},
-      account = ACCOUNTS[0] || {},
+      cat = {
+        cat_id: 0,
+        cat_name: '',
+      },
+      account = ACCOUNTS[0] || {
+        acc_id: 0,
+        acc_name: '',
+      },
       transaction_type = TRANSACTION_TYPE_EXPENSE,
     },
     isEdit = false,

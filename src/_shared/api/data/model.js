@@ -5,8 +5,3 @@ export const TRANSACTION_TYPES = {
   [TRANSACTION_TYPE_EXPENSE]: 'Expense',
   [TRANSACTION_TYPE_INCOME]: 'Income',
 };
-
-export const CURRENCY = {
-  SGD: 'S$',
-  DEFAULT: '$',
-};

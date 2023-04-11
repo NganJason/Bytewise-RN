@@ -16,14 +16,13 @@ const BaseAccordion = ({
       content={
         <>
           <ListItem.Content>
-            <BaseText>{title}</BaseText>
+            <BaseText h4>{title}</BaseText>
           </ListItem.Content>
         </>
       }>
       {items.map((item, i) => (
-        <ListItem>
+        <ListItem key={i}>
           <ListItem.Content>{item}</ListItem.Content>
-          <ListItem.Chevron />
         </ListItem>
       ))}
     </ListItem.Accordion>

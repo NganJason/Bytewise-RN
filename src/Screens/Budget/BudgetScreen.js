@@ -1,47 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { View, StyleSheet } from 'react-native';
-import { useTheme, LinearProgress, Button } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   BaseScreen,
-  BaseText,
   MonthNavigator,
   TextGroup,
   AmountText,
   BaseAccordion,
+  Budget,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
-import { formatMonetaryVal, getProgress } from '../../_shared/util/util';
 import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 
-const getBudgetCategory = (navigation, theme, styles, category) => {
-  return (
-    <View style={styles.budgetContainer}>
-      <Button
-        type="clear"
-        buttonStyle={styles.budget}
-        onPress={() => navigation.navigate(ROUTES.budgetBreakdown)}>
-        <View>
-          <BaseText h4 style={styles.budgetText}>
-            {category.category}
-          </BaseText>
-        </View>
-        <BaseText h4>
-          {formatMonetaryVal(category.budget, category.currency)}
-        </BaseText>
-      </Button>
-      <LinearProgress
-        trackColor={theme.colors.secondary}
-        color={theme.colors.primary}
-        style={styles.progressBar}
-        value={getProgress(category.used, category.budget)}
-      />
-    </View>
-  );
-};
+// const getBudgetCategory = (navigation, theme, styles, category) => {
+//   return (
+//     <View style={styles.budgetContainer}>
+//       <Button
+//         type="clear"
+//         buttonStyle={styles.budget}
+//         onPress={() => navigation.navigate(ROUTES.budgetBreakdown)}>
+//         <View>
+//           <BaseText h4 style={styles.budgetText}>
+//             {category.category}
+//           </BaseText>
+//         </View>
+//         <BaseText h4>
+//           {formatMonetaryVal(category.budget, category.currency)}
+//         </BaseText>
+//       </Button>
+//       <LinearProgress
+//         trackColor={theme.colors.secondary}
+//         color={theme.colors.primary}
+//         style={styles.progressBar}
+//         value={getProgress(category.used, category.budget)}
+//       />
+//     </View>
+//   );
+// };
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -49,8 +48,8 @@ const BudgetScreen = ({ navigation }) => {
 
   const {
     data: budgetOverview = {
-      budget: '',
-      used: '',
+      totalBudget: '',
+      totalUsed: '',
       monthly_budget: [],
       annual_budget: [],
     },
@@ -74,6 +73,18 @@ const BudgetScreen = ({ navigation }) => {
     setIsAnnualExpanded(!isAnnualExpanded);
   };
 
+  const renderBudgets = (
+    budgets = [{ category: { cat_id: 0, cat_name: '' }, budget: '', used: '' }],
+  ) => {
+    const comps = [];
+
+    budgets.forEach(budget => {
+      comps.push(<Budget budget={budget} />);
+    });
+
+    return comps;
+  };
+
   return (
     <BaseScreen
       isLoading={isLoading}
@@ -95,8 +106,8 @@ const BudgetScreen = ({ navigation }) => {
         <View style={styles.textGroupWrapper}>
           <TextGroup
             texts={[
-              { label: 'Budget: ', value: budgetOverview.budget },
-              { label: 'Used: ', value: -budgetOverview.used },
+              { label: 'Budget: ', value: budgetOverview.totalBudget },
+              { label: 'Used: ', value: -budgetOverview.totalUsed },
             ]}
             ValueComponent={AmountText}
           />
@@ -106,11 +117,13 @@ const BudgetScreen = ({ navigation }) => {
             isExpanded={isMonthlyExpanded}
             onPress={toggleMonthly}
             title="Monthly"
+            items={renderBudgets(budgetOverview.monthly_budget)}
           />
           <BaseAccordion
             isExpanded={isAnnualExpanded}
             onPress={toggleAnnual}
             title="Annual"
+            items={renderBudgets(budgetOverview.annual_budget)}
           />
         </ScrollView>
       </>
@@ -118,36 +131,36 @@ const BudgetScreen = ({ navigation }) => {
   );
 };
 
-const getStyles = theme => {
+const getStyles = _ => {
   return StyleSheet.create({
     textGroupWrapper: {
       paddingBottom: 18,
     },
 
-    budgetContainer: {
-      marginVertical: theme.spacing.lg,
-    },
-    budget: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    budgetText: {
-      marginBottom: theme.spacing.sm,
-    },
-    progressBar: {
-      height: 2,
-      marginVertical: theme.spacing.md,
-    },
-    annualContainer: {
-      flexDirection: 'row',
-      marginVertical: theme.spacing.lg,
-    },
-    annualHeader: {
-      color: theme.colors.primary,
-    },
-    loadingContainer: {
-      marginVertical: '50%',
-    },
+    // budgetContainer: {
+    //   marginVertical: theme.spacing.lg,
+    // },
+    // budget: {
+    //   flexDirection: 'row',
+    //   justifyContent: 'space-between',
+    // },
+    // budgetText: {
+    //   marginBottom: theme.spacing.sm,
+    // },
+    // progressBar: {
+    //   height: 2,
+    //   marginVertical: theme.spacing.md,
+    // },
+    // annualContainer: {
+    //   flexDirection: 'row',
+    //   marginVertical: theme.spacing.lg,
+    // },
+    // annualHeader: {
+    //   color: theme.colors.primary,
+    // },
+    // loadingContainer: {
+    //   marginVertical: '50%',
+    // },
   });
 };
 
