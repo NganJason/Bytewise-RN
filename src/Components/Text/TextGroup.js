@@ -2,9 +2,8 @@ import React from 'react';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
-import { BaseDivider } from '../View';
-
-import BaseText from './BaseText';
+import BaseDivider from '../View/BaseDivider';
+import BaseText from '../Text/BaseText';
 
 const TextGroup = ({
   texts = [{ label: '', value: '' }],

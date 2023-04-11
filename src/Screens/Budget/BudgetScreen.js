@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { View, StyleSheet } from 'react-native';
-import { useTheme, LinearProgress, Button, ListItem } from '@rneui/themed';
+import { useTheme, LinearProgress, Button } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
@@ -10,6 +10,7 @@ import {
   MonthNavigator,
   TextGroup,
   AmountText,
+  BaseAccordion,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -101,54 +102,16 @@ const BudgetScreen = ({ navigation }) => {
           />
         </View>
         <ScrollView>
-          <ListItem.Accordion
-            containerStyle={{ padding: 0 }}
-            expanded={isMonthlyExpanded}
+          <BaseAccordion
+            isExpanded={isMonthlyExpanded}
             onPress={toggleMonthly}
-            content={
-              <>
-                <ListItem.Content>
-                  <ListItem.Title>List Accordion</ListItem.Title>
-                </ListItem.Content>
-              </>
-            }>
-            <BaseText>Hello</BaseText>
-          </ListItem.Accordion>
-          {/* {budgetOverview.monthly_budget.map((category, i) => (
-            <React.Fragment key={i}>
-              {getBudgetCategory(navigation, theme, styles, category)}
-            </React.Fragment>
-          ))}
-
-          <TouchableWithoutFeedback onPress={toggleAccordion}>
-            <View style={styles.annualContainer}>
-              {expanded ? (
-                <Icon
-                  name="chevron-up"
-                  type="entypo"
-                  color={theme.colors.grey4}
-                />
-              ) : (
-                <Icon
-                  name="chevron-down"
-                  type="entypo"
-                  color={theme.colors.grey4}
-                />
-              )}
-
-              <BaseText h2 style={styles.annualHeader}>
-                Annual budget
-              </BaseText>
-            </View>
-          </TouchableWithoutFeedback>
-
-          <Collapsible collapsed={!expanded}>
-            {budgetOverview.annual_budget.map((category, i) => (
-              <React.Fragment key={i}>
-                {getBudgetCategory(navigation, theme, styles, category)}
-              </React.Fragment>
-            ))}
-          </Collapsible> */}
+            title="Monthly"
+          />
+          <BaseAccordion
+            isExpanded={isAnnualExpanded}
+            onPress={toggleAnnual}
+            title="Annual"
+          />
         </ScrollView>
       </>
     </BaseScreen>

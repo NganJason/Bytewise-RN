@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-import { BaseText } from '../Text';
-import { IconButton } from '../Touch';
+import BaseText from '../Text/BaseText';
+import IconButton from '../Touch/IconButton';
 
 import { moveMonth } from '../../_shared/util/util';
 import { MONTHS } from '../../_shared/constant/constant';

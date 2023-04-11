@@ -1,5 +1,6 @@
 import { Button, useTheme } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
+
 import BaseText from '../Text/BaseText';
 
 const BaseButton = ({
@@ -12,6 +13,7 @@ const BaseButton = ({
   align = 'center',
   size = 'md',
   activeOpacity = 0.3,
+  icon = null,
   onPress = function () {},
   buttonStyle = {},
   containerStyle = {},
@@ -47,6 +49,7 @@ const BaseButton = ({
       }}
       size={size}
       onPress={onPress}>
+      {icon !== null && icon}
       <BaseText h2 style={{ color: theme.colors.white }}>
         {title}
       </BaseText>
@@ -56,9 +59,9 @@ const BaseButton = ({
 
 export default BaseButton;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     buttonDefaultStyle: {
-      ...theme.button,
+      borderRadius: 10,
     },
   });

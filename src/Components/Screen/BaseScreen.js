@@ -3,9 +3,8 @@ import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
 
-import HideKeyboard from './HideKeyboard';
-
-import { IconButton } from '../Touch';
+import HideKeyboard from '../Screen/HideKeyboard';
+import IconButton from '../Touch/IconButton';
 
 const BaseScreen = ({
   children,

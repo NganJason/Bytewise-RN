@@ -102,8 +102,6 @@ export const THEME = createTheme({
   },
   button: {
     borderRadius: 10,
-    width: 250,
-    maxWidth: '80%',
   },
   borderBottom: {
     borderColor: COLORS.color5,
