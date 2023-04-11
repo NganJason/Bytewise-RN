@@ -1,4 +1,4 @@
-import { budgetOverviewData } from './data/mock/budget_overview';
+import { budgetOverviewData } from './data/mock/budget';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LOCALSTORAGEKEY } from './constant';
 

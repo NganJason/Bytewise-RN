@@ -1,32 +1,37 @@
 export const budgetOverviewData = {
   date: '2023-03',
-  budget: '123',
-  used: '12121',
-  currency: 'SGD',
+  totalBudget: '123',
+  totalUsed: '12121',
   monthly_budget: [
     {
-      category: 'Food',
+      category: {
+        cat_id: 1,
+        cat_name: 'Food',
+      },
       budget: '200',
       used: '100',
-      currency: 'SGD',
       ctime: 1673153014,
       mtime: 1673153014,
     },
     {
-      category: 'Transport',
+      category: {
+        cat_id: 2,
+        cat_name: 'Clothes',
+      },
       budget: '200',
       used: '100',
-      currency: 'SGD',
       ctime: 1673153014,
       mtime: 1673153014,
     },
   ],
   annual_budget: [
     {
-      category: 'Travel',
+      category: {
+        cat_id: 4,
+        cat_name: 'Sports',
+      },
       budget: '200',
       used: '100',
-      currency: 'SGD',
       ctime: 1673153014,
       mtime: 1673153014,
     },
