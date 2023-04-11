@@ -65,7 +65,7 @@ export default AmountText;
 const getStyles = theme =>
   StyleSheet.create({
     positive: {
-      color: theme.colors.primary,
+      color: theme.colors.color1,
     },
     negative: {
       color: theme.colors.red,

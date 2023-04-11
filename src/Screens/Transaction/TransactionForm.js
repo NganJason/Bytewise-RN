@@ -144,7 +144,6 @@ const TransactionForm = ({ route }) => {
   return (
     <BaseScreen
       headerProps={{
-        show: true,
         allowBack: true,
         centerComponent: (
           <BaseText h2>{TRANSACTION_TYPES[form.transaction_type]}</BaseText>

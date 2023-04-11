@@ -18,11 +18,10 @@ const BaseScreen = ({
     onPress: function () {},
   },
   headerProps = {
-    show: false,
     allowBack: false,
-    leftComponent: {},
-    centerComponent: {},
-    rightComponent: {},
+    leftComponent: null,
+    centerComponent: null,
+    rightComponent: null,
     leftComponentStyle: {},
     centerComponentStyle: {},
     rightComponentStyle: {},
@@ -35,42 +34,50 @@ const BaseScreen = ({
 
   const navigation = useNavigation();
 
+  const isEmptyHeader = () =>
+    headerProps.centerComponent === null && headerProps.rightComponent === null;
+
   return (
     <>
-      {headerProps.show && (
-        <Header
-          containerStyle={styles.header}
-          leftComponent={
-            headerProps.allowBack ? (
-              <IconButton
-                buttonSize="xs"
-                type="clear"
-                onPress={() => navigation.goBack()}
-                iconName="chevron-left"
-                iconType="entypo"
-                color={theme.colors.color4}
-              />
-            ) : (
-              headerProps.leftComponent
-            )
-          }
-          centerComponent={headerProps.centerComponent}
-          rightComponent={headerProps.rightComponent}
-          leftContainerStyle={{
-            ...headerProps.leftComponentStyle,
-            ...styles.leftHeaderContainerStyle,
-            ...styles.backIcon,
-          }}
-          centerContainerStyle={{
-            ...headerProps.centerComponentStyle,
-            ...styles.centerHeaderContainerStyle,
-          }}
-          rightContainerStyle={{
-            ...headerProps.rightComponentStyle,
-            ...styles.rightHeaderContainerStyle,
-          }}
-        />
-      )}
+      <Header
+        containerStyle={[
+          styles.header,
+          isEmptyHeader() ? styles.emptyHeader : styles.nonEmptyHeader,
+        ]}
+        leftComponent={
+          headerProps.allowBack ? (
+            <IconButton
+              buttonSize="xs"
+              type="clear"
+              onPress={() => navigation.goBack()}
+              iconName="chevron-left"
+              iconType="entypo"
+              color={theme.colors.color4}
+            />
+          ) : (
+            headerProps.leftComponent
+          )
+        }
+        centerComponent={headerProps.centerComponent}
+        rightComponent={headerProps.rightComponent}
+        leftContainerStyle={
+          headerProps.allowBack
+            ? styles.backIcon
+            : {
+                ...headerProps.leftComponentStyle,
+                ...styles.leftHeaderContainerStyle,
+                ...styles.backIcon,
+              }
+        }
+        centerContainerStyle={{
+          ...headerProps.centerComponentStyle,
+          ...styles.centerHeaderContainerStyle,
+        }}
+        rightContainerStyle={{
+          ...headerProps.rightComponentStyle,
+          ...styles.rightHeaderContainerStyle,
+        }}
+      />
       <HideKeyboard>
         <View style={{ ...styles.body, ...bodyStyle }}>
           {isLoading ? (
@@ -103,18 +110,24 @@ const BaseScreen = ({
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      paddingHorizontal: 28,
+      paddingHorizontal: 22,
       height: '100%',
       flex: 1,
     },
     header: {
       backgroundColor: theme.colors.white,
       borderBottomWidth: 0,
-      paddingVertical: 16,
-      paddingHorizontal: 28,
+      paddingHorizontal: 22,
+      paddingVertical: 0,
     },
     backIcon: {
       justifyContent: 'flex-start',
+    },
+    emptyHeader: {
+      paddingVertical: 0,
+    },
+    nonEmptyHeader: {
+      paddingVertical: 12,
     },
     leftHeaderContainerStyle: {
       justifyContent: 'center',

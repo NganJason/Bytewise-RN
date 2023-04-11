@@ -45,7 +45,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
                 data: BUDGET,
               });
             }}>
-            <Icon name="edit-2" type="feather" color={theme.colors.color6} />
+            <Icon name="edit" type="fontawesome" color={theme.colors.color6} />
           </TouchableWithoutFeedback>
         ),
       }}>

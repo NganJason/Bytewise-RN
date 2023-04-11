@@ -11,7 +11,7 @@ const IconButton = ({
   type = 'solid',
   buttonSize = 'md',
   iconSize = 28,
-  color = THEME.colors.black,
+  color = THEME.colors.color4,
 }) => {
   return (
     <BaseButton

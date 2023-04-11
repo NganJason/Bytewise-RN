@@ -159,7 +159,7 @@ export default DailyTransactions;
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      marginBottom: 28,
+      marginVertical: 12,
     },
     row: {
       flexDirection: 'row',
