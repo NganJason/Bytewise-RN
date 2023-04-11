@@ -7,10 +7,9 @@ import { CURRENCY } from '../../_shared/api/data/mock/user';
 
 const AmountText = ({
   children = 0,
-  showSymbol = false,
   showColor = false,
+  showSymbol = true,
   style = {},
-  showColor = true,
   ...props
 }) => {
   const { theme } = useTheme();
