@@ -4,6 +4,7 @@ import BaseText from '../Text/BaseText';
 
 const BaseAccordion = ({
   title = '',
+  titleColor = '',
   isExpanded = true,
   onPress = function () {},
   items = [],
@@ -16,7 +17,9 @@ const BaseAccordion = ({
       content={
         <>
           <ListItem.Content>
-            <BaseText h4>{title}</BaseText>
+            <BaseText h3 style={{ color: titleColor }}>
+              {title}
+            </BaseText>
           </ListItem.Content>
         </>
       }>

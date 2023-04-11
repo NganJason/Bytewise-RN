@@ -8,7 +8,7 @@ import { CURRENCY } from '../../_shared/api/data/mock/user';
 const AmountText = ({
   children = 0,
   showColor = false,
-  showSymbol = true,
+  showSymbol = false,
   style = {},
   ...props
 }) => {

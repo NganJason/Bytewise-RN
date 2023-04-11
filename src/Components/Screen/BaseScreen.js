@@ -111,7 +111,7 @@ const getStyles = theme =>
       backgroundColor: theme.colors.white,
       borderBottomWidth: 0,
       paddingVertical: 16,
-      paddingHorizontal: theme.spacing.xl,
+      paddingHorizontal: 28,
     },
     backIcon: {
       justifyContent: 'flex-start',

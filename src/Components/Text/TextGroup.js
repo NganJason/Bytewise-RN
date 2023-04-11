@@ -18,8 +18,8 @@ const TextGroup = ({
       {texts.map((text, i) => (
         <React.Fragment key={i}>
           <View style={styles.textWrapper}>
-            <LabelComponent>{text.label}</LabelComponent>
-            <ValueComponent>{text.value}</ValueComponent>
+            <LabelComponent h4>{text.label}</LabelComponent>
+            <ValueComponent h4>{text.value}</ValueComponent>
           </View>
           {i < texts.length - 1 && <BaseDivider orientation="vertical" />}
         </React.Fragment>

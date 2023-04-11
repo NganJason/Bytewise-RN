@@ -1,8 +1,10 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme, LinearProgress } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
+import ROUTES from '../../_shared/constant/routes';
 
 const Budget = ({
   budget: {
@@ -13,15 +15,22 @@ const Budget = ({
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.budgetContainer}>
+    <TouchableOpacity
+      style={styles.budgetContainer}
+      onPress={() => {
+        navigation.navigate(ROUTES.budgetBreakdown);
+      }}>
       <View style={styles.textGroup}>
-        <BaseText>{cat_name}</BaseText>
-        <AmountText showColor={false}>{amount - used}</AmountText>
+        <BaseText h4>{cat_name}</BaseText>
+        <AmountText h4 showColor={false}>
+          {amount - used}
+        </AmountText>
       </View>
       <LinearProgress
-        trackColor={theme.colors.color4}
+        trackColor={theme.colors.color2}
         color={theme.colors.color1}
         value={used / amount}
       />

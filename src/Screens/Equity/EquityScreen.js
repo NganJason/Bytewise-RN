@@ -96,7 +96,7 @@ const EquityScreen = ({ navigation }) => {
   );
 };
 
-const getStyles = (theme, screenWidth) => {
+const getStyles = (_, screenWidth) => {
   return StyleSheet.create({
     header: {
       flex: 10,

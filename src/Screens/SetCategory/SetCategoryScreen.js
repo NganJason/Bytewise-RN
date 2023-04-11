@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, Header, CheckBox, Icon } from '@rneui/themed';
+import { useTheme, CheckBox, Icon } from '@rneui/themed';
 import {
   BaseButton,
   BaseCurrencyInput,
@@ -70,78 +70,84 @@ const SetCategoryScreen = ({ navigation, route }) => {
   });
 
   return (
-    <BaseScreen>
-      <View style={styles.screen}>
-        <Header
-          center={
-            <BaseText h2 style={{ color: theme.colors.grey6 }}>
-              {route.params.isEdit ? 'Edit category' : 'Add a category'}
-            </BaseText>
-          }
-          containerStyle={styles.header}
-          centerContainerStyle={styles.headerItem}
+    <BaseScreen
+      bodyStyle={styles.screen}
+      isLoading={isLoading}
+      headerProps={{
+        show: true,
+        allowBack: true,
+        centerComponent: (
+          <BaseText h2 style={{ color: theme.colors.color4 }}>
+            Category
+          </BaseText>
+        ),
+      }}>
+      <View style={styles.body}>
+        <BaseInput
+          label="Name"
+          value={categoryInput}
+          carretHidden
+          showSoftInputOnFocus={false}
+          onChangeText={onCategoryInputChange}
         />
 
-        <View style={styles.body}>
-          <BaseInput
-            label="Category"
-            value={categoryInput}
-            carretHidden
-            showSoftInputOnFocus={false}
-            onChangeText={onCategoryInputChange}
+        <TouchableWithoutFeedback onPress={toggleAccordion}>
+          <View style={styles.addBudgetContainer}>
+            {expanded ? (
+              <Icon name="minus" type="entypo" color={theme.colors.color5} />
+            ) : (
+              <Icon name="plus" type="entypo" color={theme.colors.color5} />
+            )}
+
+            <BaseText h2 style={styles.addBudgetText}>
+              {expanded ? 'Delete budget' : 'Add budget'}
+            </BaseText>
+          </View>
+        </TouchableWithoutFeedback>
+
+        <Collapsible collapsed={!expanded} style={styles.collapsible}>
+          <BaseCurrencyInput
+            label="Budget"
+            value={budgetInput}
+            onChangeText={onBudgetInputChange}
+            autofocus
           />
 
-          <TouchableWithoutFeedback onPress={toggleAccordion}>
-            <View style={styles.addBudgetContainer}>
-              {expanded ? (
-                <Icon name="minus" type="entypo" color={theme.colors.color5} />
-              ) : (
-                <Icon name="plus" type="entypo" color={theme.colors.color5} />
-              )}
+          <CheckBox
+            left
+            title="Monthly budget"
+            onPress={() => {
+              onOptionChange(BUDGET_OPTIONS.monthly);
+            }}
+            checked={option === BUDGET_OPTIONS.monthly}
+            containerStyle={styles.checkbox}
+            textStyle={styles.checkBoxText}
+          />
 
-              <BaseText h2 style={styles.addBudgetText}>
-                {expanded ? 'Delete budget' : 'Add budget'}
-              </BaseText>
-            </View>
-          </TouchableWithoutFeedback>
+          <CheckBox
+            left
+            title="One-time budget (Annual)"
+            onPress={() => {
+              onOptionChange(BUDGET_OPTIONS.annually);
+            }}
+            checked={option === BUDGET_OPTIONS.annually}
+            containerStyle={styles.checkbox}
+            textStyle={styles.checkBoxText}
+            name={BUDGET_OPTIONS.annually}
+          />
+        </Collapsible>
+      </View>
 
-          <Collapsible collapsed={!expanded} style={styles.collapsible}>
-            <BaseCurrencyInput
-              label="Budget"
-              value={budgetInput}
-              onChangeText={onBudgetInputChange}
-              autofocus
-            />
-
-            <CheckBox
-              left
-              title="Monthly budget"
-              onPress={() => {
-                onOptionChange(BUDGET_OPTIONS.monthly);
-              }}
-              checked={option === BUDGET_OPTIONS.monthly}
-              containerStyle={styles.checkbox}
-              textStyle={styles.checkBoxText}
-            />
-
-            <CheckBox
-              left
-              title="One-time budget (Annual)"
-              onPress={() => {
-                onOptionChange(BUDGET_OPTIONS.annually);
-              }}
-              checked={option === BUDGET_OPTIONS.annually}
-              containerStyle={styles.checkbox}
-              textStyle={styles.checkBoxText}
-              name={BUDGET_OPTIONS.annually}
-            />
-          </Collapsible>
-        </View>
-
+      <View style={styles.btnContainer}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <BaseButton title="Save" size="lg" onPress={handleSave} />
+          <BaseButton
+            title="Add"
+            size="lg"
+            fullWidth={true}
+            onPress={handleSave}
+          />
         )}
       </View>
     </BaseScreen>
@@ -151,18 +157,10 @@ const SetCategoryScreen = ({ navigation, route }) => {
 const getStyles = theme => {
   return StyleSheet.create({
     screen: {
-      height: '100%',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    header: {
-      alignSelf: 'center',
-      backgroundColor: theme.colors.white,
-      borderBottomColor: theme.colors.white,
+      justifyContent: 'space-between',
     },
     body: {
       width: '90%',
-      minHeight: '70%',
       padding: theme.spacing.xl,
       marginTop: theme.spacing.md,
       alignSelf: 'center',
@@ -173,7 +171,7 @@ const getStyles = theme => {
       alignSelf: 'center',
     },
     addBudgetText: {
-      color: theme.colors.primary,
+      color: theme.colors.color1,
       marginHorizontal: theme.spacing.xs,
     },
     checkbox: {
@@ -188,9 +186,9 @@ const getStyles = theme => {
     collapsible: {
       marginVertical: theme.spacing.xl,
     },
-    btn: {
-      width: '50%',
-      marginVertical: theme.spacing.xl,
+    btnContainer: {
+      width: '100%',
+      marginVertical: 50,
     },
   });
 };

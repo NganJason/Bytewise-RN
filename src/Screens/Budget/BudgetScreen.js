@@ -93,12 +93,14 @@ const BudgetScreen = ({ navigation }) => {
             isExpanded={isMonthlyExpanded}
             onPress={toggleMonthly}
             title="Monthly"
+            titleColor={theme.colors.color4}
             items={renderBudgets(budgetOverview.monthly_budget)}
           />
           <BaseAccordion
             isExpanded={isAnnualExpanded}
             onPress={toggleAnnual}
             title="Annual"
+            titleColor={theme.colors.color4}
             items={renderBudgets(budgetOverview.annual_budget)}
           />
         </ScrollView>
