@@ -27,3 +27,8 @@ export const BUDGET_OPTIONS = {
   monthly: 1,
   annually: 2,
 };
+
+export const EQUITY_TYPE = {
+  asset: 1,
+  debt: 2,
+};

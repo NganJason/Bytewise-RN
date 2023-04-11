@@ -163,6 +163,7 @@ const TransactionForm = ({ route }) => {
           extraHeight={scrollHeight}
           enableOnAndroid={true}
           keyboardOpeningTime={0}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.formBody}>
           <TouchInput
             label="Date"

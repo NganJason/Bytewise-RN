@@ -4,7 +4,7 @@ import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import BudgetScreen from './Budget/BudgetScreen';
-import AssetScreen from './Asset/AssetScreen';
+import EquityScreen from './Equity/EquityScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
 
 import ROUTES from '../_shared/constant/routes';
@@ -55,7 +55,7 @@ const HomeScreen = () => {
       })}>
       <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
-      <Tab.Screen name={ROUTES.asset} component={AssetScreen} />
+      <Tab.Screen name={ROUTES.asset} component={EquityScreen} />
     </Tab.Navigator>
   );
 };

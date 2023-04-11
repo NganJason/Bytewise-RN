@@ -10,9 +10,11 @@ import { SplashScreen } from './src/Components';
 
 import HomeScreen from './src/Screens/HomeScreen';
 import BudgetBreakdownScreen from './src/Screens/Budget/BudgetBreakdownScreen';
-import AssetAccountScreen from './src/Screens/Asset/AssetAccount';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
 import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
+import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
+import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
+import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
@@ -98,9 +100,14 @@ function App() {
           name={ROUTES.budgetBreakdown}
           component={BudgetBreakdownScreen}
         />
+        <Stack.Screen name={ROUTES.cashAccount} component={CashAccountScreen} />
         <Stack.Screen
-          name={ROUTES.assetAccount}
-          component={AssetAccountScreen}
+          name={ROUTES.investmentAccount}
+          component={InvestmentAccountScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.investmentLotBreakdown}
+          component={InvestmentLotBreakdownScreen}
         />
       </Stack.Navigator>
     );

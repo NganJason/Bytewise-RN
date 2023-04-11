@@ -23,6 +23,7 @@ const BaseScreen = ({
     rightComponent: null,
   },
   isLoading = false,
+  bodyStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -57,7 +58,7 @@ const BaseScreen = ({
         rightContainerStyle={styles.rightHeaderContainerStyle}
       />
       <HideKeyboard>
-        <View style={styles.body}>
+        <View style={{ ...styles.body, ...bodyStyle }}>
           {isLoading ? (
             <PacmanIndicator size={70} color={theme.colors.primary} />
           ) : (

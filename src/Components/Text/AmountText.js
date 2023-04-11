@@ -7,21 +7,26 @@ import { CURRENCY } from '../../_shared/api/data/mock/user';
 
 const AmountText = ({
   children = 0,
-  showSymbol = false,
+  showColor = false,
+  showSymbol = true,
   style = {},
-  showColor = true,
   ...props
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const getAmountAttr = () => {
+    let symbol = '';
+    let colorStyle = {};
+
     if (children > 0) {
       return { styles: showColor && styles.positive, symbol: '+' };
     }
     if (children < 0) {
       return { styles: showColor && styles.negative, symbol: '-' };
     }
+
+    return { styles: colorStyle, symbol: symbol };
   };
 
   const renderAmountText = () => {
@@ -60,7 +65,7 @@ export default AmountText;
 const getStyles = theme =>
   StyleSheet.create({
     positive: {
-      color: theme.colors.primary,
+      color: theme.colors.color1,
     },
     negative: {
       color: theme.colors.red,

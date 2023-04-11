@@ -103,6 +103,10 @@ export const THEME = createTheme({
   button: {
     borderRadius: 10,
   },
+  borderBottom: {
+    borderColor: COLORS.color5,
+    borderBottomWidth: 0.4,
+  },
   spacing: {
     xl: 24,
     lg: 12,
