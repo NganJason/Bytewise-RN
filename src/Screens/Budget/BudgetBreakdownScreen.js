@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme, LinearProgress, Icon } from '@rneui/themed';
+import { useTheme, Icon } from '@rneui/themed';
 import {
   BaseDivider,
   BaseText,
   BaseScreen,
   DailyTransactions,
+  BaseLinearProgress,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -62,15 +63,8 @@ const BudgetBreakdownScreen = ({ navigation }) => {
             Used: {200}
           </BaseText>
         </View>
-
-        <LinearProgress
-          trackColor={theme.colors.secondary}
-          color={theme.colors.primary}
-          style={styles.progressBar}
-          value={0.2}
-        />
+        <BaseLinearProgress value={0.2} />
       </View>
-
       <ScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
@@ -92,10 +86,6 @@ const getStyles = theme => {
     aggr: {
       flexDirection: 'row',
       marginVertical: theme.spacing.xl,
-    },
-    progressBar: {
-      width: '100%',
-      marginVertical: theme.spacing.md,
     },
   });
 };

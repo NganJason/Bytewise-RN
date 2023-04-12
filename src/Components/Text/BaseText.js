@@ -15,6 +15,7 @@ const BaseText = ({
   adjustsFontSizeToFit = false,
   numberOfLines = 0,
   ellipsizeMode = 'tail',
+  center = false,
   style = {},
 }) => {
   const { theme } = useTheme();
@@ -47,6 +48,7 @@ const BaseText = ({
     <Text
       style={{
         ...commonTextStyles,
+        ...(center && styles.center),
         ...style,
       }}
       adjustsFontSizeToFit={adjustsFontSizeToFit}
@@ -69,4 +71,8 @@ const getStyles = theme =>
     h6Style: theme.fontStyles.h6,
     pStyle: theme.fontStyles.p,
     captionStyle: theme.fontStyles.caption,
+    center: {
+      width: '100%',
+      textAlign: 'center',
+    },
   });

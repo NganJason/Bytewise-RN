@@ -9,6 +9,7 @@ const AmountText = ({
   children = 0,
   showColor = false,
   showSymbol = false,
+  center = false,
   style = {},
   ...props
 }) => {
@@ -52,6 +53,7 @@ const AmountText = ({
 
   return (
     <BaseText
+      center={center}
       style={{ ...getAmountAttr()?.styles, ...style }}
       numberOfLines={1}
       {...props}>

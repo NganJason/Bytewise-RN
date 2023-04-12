@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   BaseScreen,
   MonthNavigator,
-  TextGroup,
   AmountText,
   BaseAccordion,
   Budget,
+  BaseText,
+  FlexRow,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -78,13 +79,27 @@ const BudgetScreen = ({ navigation }) => {
           navigation.navigate(ROUTES.setCategory, { isEdit: false }),
       }}>
       <>
-        <TextGroup
-          texts={[
-            { label: 'Budget: ', value: budgetOverview.totalAmount },
-            { label: 'Used: ', value: -budgetOverview.totalUsed },
+        <FlexRow
+          rowStyle={styles.textGroupWrapper}
+          showDivider
+          items={[
+            <>
+              <BaseText h4 center style={styles.label}>
+                Budget:
+              </BaseText>
+              <AmountText h4 showColor showSymbol center>
+                {budgetOverview.totalAmount}
+              </AmountText>
+            </>,
+            <>
+              <BaseText h4 center style={styles.label}>
+                Used:
+              </BaseText>
+              <AmountText h4 showColor showSymbol center>
+                {-budgetOverview.totalUsed}
+              </AmountText>
+            </>,
           ]}
-          ValueComponent={AmountText}
-          containerStyle={styles.textGroupWrapper}
         />
         <ScrollView>
           <BaseAccordion
@@ -107,12 +122,14 @@ const BudgetScreen = ({ navigation }) => {
   );
 };
 
-const getStyles = _ => {
-  return StyleSheet.create({
+const getStyles = _ =>
+  StyleSheet.create({
     textGroupWrapper: {
-      paddingBottom: 12,
+      marginBottom: 10,
+    },
+    label: {
+      marginBottom: 4,
     },
   });
-};
 
 export default BudgetScreen;

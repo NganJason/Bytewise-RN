@@ -5,7 +5,7 @@ import { BaseCurrencyInput, BaseInput, TouchInput } from './Input';
 import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
 
 // Text
-import { BaseText, AmountText, TextGroup } from './Text';
+import { BaseText, AmountText } from './Text';
 
 // Touch
 import { BaseButton, IconButton } from './Touch';
@@ -17,6 +17,8 @@ import {
   BaseBottomSheet,
   BaseTabView,
   BaseAccordion,
+  BaseLinearProgress,
+  FlexRow,
 } from './View';
 
 // Common
@@ -38,8 +40,9 @@ export {
   DailyTransactions,
   AmountText,
   BaseBottomSheet,
-  TextGroup,
   BaseTabView,
   MonthNavigator,
   Budget,
+  BaseLinearProgress,
+  FlexRow,
 };

@@ -212,7 +212,6 @@ const getStyles = theme =>
     amount: {
       flex: 1,
       textAlign: 'right',
-      // color: theme.colors.color4,
       fontFamily: theme.fontStyles.h4.fontFamily,
       fontSize: theme.fontStyles.h4.fontSize,
     },

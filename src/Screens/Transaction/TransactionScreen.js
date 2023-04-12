@@ -7,8 +7,9 @@ import {
   BaseScreen,
   MonthNavigator,
   DailyTransactions,
-  TextGroup,
   AmountText,
+  FlexRow,
+  BaseText,
 } from '../../Components';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
@@ -32,13 +33,27 @@ const TransactionScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
-      <TextGroup
-        texts={[
-          { label: 'Income: ', value: '100' },
-          { label: 'Expense: ', value: '-1000' },
+      <FlexRow
+        rowStyle={styles.textGroupWrapper}
+        showDivider
+        items={[
+          <>
+            <BaseText h4 center style={styles.label}>
+              Income:
+            </BaseText>
+            <AmountText h4 showColor showSymbol>
+              100
+            </AmountText>
+          </>,
+          <>
+            <BaseText h4 center style={styles.label}>
+              Expense:
+            </BaseText>
+            <AmountText h4 showColor showSymbol>
+              -1000
+            </AmountText>
+          </>,
         ]}
-        ValueComponent={AmountText}
-        containerStyle={styles.textGroupWrapper}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
@@ -58,6 +73,9 @@ export default TransactionScreen;
 const getStyles = _ =>
   StyleSheet.create({
     textGroupWrapper: {
-      paddingBottom: 12,
+      marginBottom: 10,
+    },
+    label: {
+      marginBottom: 4,
     },
   });
