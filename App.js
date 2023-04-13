@@ -11,7 +11,7 @@ import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
 import BudgetBreakdownScreen from './src/Screens/Budget/BudgetBreakdownScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
-import SetCategoryScreen from './src/Screens/SetCategory/SetCategoryScreen';
+import CategoryForm from './src/Screens/Budget/CategoryForm';
 import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
 import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
@@ -95,7 +95,7 @@ function App() {
           name={ROUTES.transactionForm}
           component={TransactionForm}
         />
-        <Stack.Screen name={ROUTES.setCategory} component={SetCategoryScreen} />
+        <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
         <Stack.Screen
           name={ROUTES.budgetBreakdown}
           component={BudgetBreakdownScreen}

@@ -73,6 +73,7 @@ const DailyTransactions = ({
   const navigateToForm = (t, cat, acc) => {
     navigation.navigate(ROUTES.transactionForm, {
       transaction: {
+        id: t.id,
         timestamp: t.timestamp,
         amount: t.amount,
         note: t.note,
@@ -80,7 +81,6 @@ const DailyTransactions = ({
         account: acc,
         transaction_type: t.transaction_type,
       },
-      isEdit: true,
     });
   };
 

@@ -1,5 +1,10 @@
 // Input
-import { BaseCurrencyInput, BaseInput, TouchInput } from './Input';
+import {
+  BaseCurrencyInput,
+  BaseInput,
+  TouchInput,
+  BaseCheckbox,
+} from './Input';
 
 // Screen
 import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
@@ -25,6 +30,7 @@ import {
 import { DailyTransactions, MonthNavigator, Budget } from './Common';
 
 export {
+  BaseCheckbox,
   TouchInput,
   BaseDivider,
   BaseText,

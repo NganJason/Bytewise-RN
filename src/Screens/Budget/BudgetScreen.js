@@ -75,8 +75,7 @@ const BudgetScreen = ({ navigation }) => {
         iconName: 'add',
         iconColor: theme.colors.white,
         color: theme.colors.primary,
-        onPress: () =>
-          navigation.navigate(ROUTES.setCategory, { isEdit: false }),
+        onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
       <>
         <FlexRow

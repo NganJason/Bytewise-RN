@@ -49,22 +49,20 @@ const TransactionForm = ({ route }) => {
   };
 
   const {
-    transaction: {
-      timestamp = TODAY.valueOf(),
-      amount = '',
-      note = '',
-      cat = {
-        cat_id: 0,
-        cat_name: '',
-      },
-      account = ACCOUNTS[0] || {
-        acc_id: 0,
-        acc_name: '',
-      },
-      transaction_type = TRANSACTION_TYPE_EXPENSE,
+    id = 0,
+    timestamp = TODAY.valueOf(),
+    amount = '',
+    note = '',
+    cat = {
+      cat_id: 0,
+      cat_name: '',
     },
-    isEdit = false,
-  } = route.params || { transaction: {}, autoFocus: true };
+    account = ACCOUNTS[0] || {
+      acc_id: 0,
+      acc_name: '',
+    },
+    transaction_type = TRANSACTION_TYPE_EXPENSE,
+  } = route.params?.transaction || {};
 
   const [form, setForm] = useState({
     timestamp: timestamp, // milli unix
@@ -211,7 +209,7 @@ const TransactionForm = ({ route }) => {
             label="Amount"
             value={form.amount}
             onChangeText={onAmountChange}
-            autoFocus={!isEdit}
+            autoFocus={id === 0}
             onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           />
           <TouchInput
@@ -246,6 +244,6 @@ export default TransactionForm;
 const getStyles = _ =>
   StyleSheet.create({
     formBody: {
-      paddingVertical: 20,
+      paddingVertical: 22,
     },
   });

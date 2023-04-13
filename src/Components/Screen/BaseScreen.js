@@ -127,7 +127,7 @@ const getStyles = theme =>
       paddingVertical: 0,
     },
     nonEmptyHeader: {
-      paddingVertical: 10,
+      paddingVertical: 16,
     },
     leftHeaderContainerStyle: {
       justifyContent: 'center',

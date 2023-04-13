@@ -1,10 +1,10 @@
 const ROUTES = {
   home: 'Home',
   budget: 'Budget',
+  categoryForm: 'Category Form',
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
   asset: 'Asset',
-  setCategory: 'Set Category',
   budgetBreakdown: 'Budget Breakdown',
   assetAccount: 'Asset Account',
   investmentAccount: 'Investment Account',

@@ -51,14 +51,17 @@ const BaseInput = forwardRef(
         value={value}
         selectionColor={theme.colors.primary}
         onFocus={handleFocus}
-        inputContainerStyle={isFocused ? styles.focused : styles.blur}
+        inputContainerStyle={[
+          styles.inputContainer,
+          isFocused ? styles.focused : styles.blur,
+        ]}
         caretHidden={caretHidden}
         readOnly={readOnly}
         showSoftInputOnFocus={showSoftInputOnFocus}
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={styles.inputContainer}
+        containerStyle={styles.container}
         clearButtonMode={clearButtonMode}
         inputStyle={styles.input}
         pointerEvents={pointerEvents}
@@ -82,7 +85,11 @@ const getStyles = theme =>
     input: {
       ...theme.fontStyles.h4,
     },
+    container: {
+      paddingHorizontal: 0,
+    },
     inputContainer: {
-      marginBottom: 4,
+      paddingVertical: 6,
+      paddingHorizontal: 4,
     },
   });
