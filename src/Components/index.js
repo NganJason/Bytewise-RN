@@ -27,7 +27,12 @@ import {
 } from './View';
 
 // Common
-import { DailyTransactions, MonthNavigator, Budget } from './Common';
+import {
+  DailyTransactions,
+  MonthNavigator,
+  Budget,
+  AggrSummary,
+} from './Common';
 
 export {
   BaseCheckbox,
@@ -37,6 +42,7 @@ export {
   BaseInput,
   BaseCurrencyInput,
   BaseAccordion,
+  AggrSummary,
   BaseButton,
   IconButton,
   HideKeyboard,

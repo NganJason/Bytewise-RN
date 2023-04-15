@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -7,11 +6,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import {
   BaseScreen,
   MonthNavigator,
-  AmountText,
   BaseAccordion,
   Budget,
-  BaseText,
-  FlexRow,
+  AggrSummary,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -20,7 +17,6 @@ import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
 
   const {
     data: budgetOverview = {
@@ -78,26 +74,10 @@ const BudgetScreen = ({ navigation }) => {
         onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
       <>
-        <FlexRow
-          rowStyle={styles.textGroupWrapper}
-          showDivider
-          items={[
-            <>
-              <BaseText h4 center style={styles.label}>
-                Budget:
-              </BaseText>
-              <AmountText h4 showColor showSymbol center>
-                {budgetOverview.totalAmount}
-              </AmountText>
-            </>,
-            <>
-              <BaseText h4 center style={styles.label}>
-                Used:
-              </BaseText>
-              <AmountText h4 showColor showSymbol center>
-                {-budgetOverview.totalUsed}
-              </AmountText>
-            </>,
+        <AggrSummary
+          aggrs={[
+            { label: 'Budget', amount: `${budgetOverview.totalAmount}` },
+            { label: 'Used', amount: `${-budgetOverview.totalUsed}` },
           ]}
         />
         <ScrollView>
@@ -120,15 +100,5 @@ const BudgetScreen = ({ navigation }) => {
     </BaseScreen>
   );
 };
-
-const getStyles = _ =>
-  StyleSheet.create({
-    textGroupWrapper: {
-      marginBottom: 10,
-    },
-    label: {
-      marginBottom: 4,
-    },
-  });
 
 export default BudgetScreen;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useTheme, Icon } from '@rneui/themed';
 import Collapsible from 'react-native-collapsible';
@@ -39,6 +39,8 @@ const CategoryForm = ({ route }) => {
     budget_type = BUDGET_TYPE_MONTHLY,
   } = route.params?.budget || {};
 
+  const budgetAmountRef = useRef(null);
+
   const [budgetForm, setBudgetForm] = useState({
     budget_id: budget_id,
     amount: amount,
@@ -48,6 +50,14 @@ const CategoryForm = ({ route }) => {
   const [isBudgetFormExpanded, setIsBudgetFormExpanded] = useState(
     budget_id !== 0,
   );
+
+  useEffect(() => {
+    if (isBudgetFormExpanded) {
+      budgetAmountRef.current.focus();
+    } else {
+      budgetAmountRef.current.blur();
+    }
+  }, [isBudgetFormExpanded]);
 
   const toggleBudgetForm = () => {
     setIsBudgetFormExpanded(!isBudgetFormExpanded);
@@ -72,7 +82,7 @@ const CategoryForm = ({ route }) => {
             style={styles.budgetToggleIcon}
           />
         ),
-        text: <BaseText h4>Delete Budget</BaseText>,
+        text: <BaseText h4>Remove Budget</BaseText>,
       };
     }
     return {
@@ -103,40 +113,40 @@ const CategoryForm = ({ route }) => {
           clearButtonMode="always"
           autoFocus={cat_id === 0}
         />
-        <TouchableOpacity onPress={toggleBudgetForm}>
-          <View style={styles.budgetToggle}>
-            {budgetToggle.icon}
-            {budgetToggle.text}
-          </View>
+        <TouchableOpacity
+          onPress={toggleBudgetForm}
+          style={styles.budgetToggleButton}>
+          {budgetToggle.icon}
+          {budgetToggle.text}
         </TouchableOpacity>
-        <Collapsible
-          collapsed={!isBudgetFormExpanded}
-          style={styles.collapsible}>
-          <>
-            <BaseCurrencyInput
-              label="Amount"
-              value={budgetForm.amount}
-              onChangeText={onAmountChange}
-              autoFocus
-            />
-            <View style={styles.checkboxes}>
-              <BaseCheckbox
-                title={BUDGET_TYPES[BUDGET_TYPE_MONTHLY]}
-                checked={budgetForm.budget_type === BUDGET_TYPE_MONTHLY}
-                onPress={() => {
-                  onBudgetTypeChange(BUDGET_TYPE_MONTHLY);
-                }}
+        <View style={isBudgetFormExpanded && styles.collapsible}>
+          <Collapsible collapsed={!isBudgetFormExpanded}>
+            <>
+              <BaseCurrencyInput
+                ref={budgetAmountRef}
+                label="Amount"
+                value={budgetForm.amount}
+                onChangeText={onAmountChange}
               />
-              <BaseCheckbox
-                title={BUDGET_TYPES[BUDGET_TYPE_ANNUAL]}
-                checked={budgetForm.budget_type === BUDGET_TYPE_ANNUAL}
-                onPress={() => {
-                  onBudgetTypeChange(BUDGET_TYPE_ANNUAL);
-                }}
-              />
-            </View>
-          </>
-        </Collapsible>
+              <View style={styles.checkboxes}>
+                <BaseCheckbox
+                  title={BUDGET_TYPES[BUDGET_TYPE_MONTHLY]}
+                  checked={budgetForm.budget_type === BUDGET_TYPE_MONTHLY}
+                  onPress={() => {
+                    onBudgetTypeChange(BUDGET_TYPE_MONTHLY);
+                  }}
+                />
+                <BaseCheckbox
+                  title={BUDGET_TYPES[BUDGET_TYPE_ANNUAL]}
+                  checked={budgetForm.budget_type === BUDGET_TYPE_ANNUAL}
+                  onPress={() => {
+                    onBudgetTypeChange(BUDGET_TYPE_ANNUAL);
+                  }}
+                />
+              </View>
+            </>
+          </Collapsible>
+        </View>
         <BaseButton title="Save" size="lg" width={200} />
       </View>
     </BaseScreen>
@@ -148,12 +158,13 @@ const getStyles = _ => {
     formBody: {
       paddingVertical: 22,
     },
-    budgetToggle: {
+    budgetToggleButton: {
       flexDirection: 'row',
       alignItems: 'center',
+      marginBottom: 20,
     },
     collapsible: {
-      paddingVertical: 20,
+      marginBottom: 20,
     },
     budgetToggleIcon: {
       marginRight: 8,

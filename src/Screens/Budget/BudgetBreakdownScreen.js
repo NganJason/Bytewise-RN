@@ -1,28 +1,19 @@
 import React from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme, Icon } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import {
-  BaseDivider,
   BaseText,
   BaseScreen,
   DailyTransactions,
   BaseLinearProgress,
+  IconButton,
+  AggrSummary,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
-
-const BUDGET = {
-  category: 'Food',
-  budgetType: 1,
-  budget: '200',
-  used: '100',
-  currency: 'SGD',
-  ctime: 1673153014,
-  mtime: 1673153014,
-};
 
 const BudgetBreakdownScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -31,38 +22,35 @@ const BudgetBreakdownScreen = ({ navigation }) => {
   return (
     <BaseScreen
       headerProps={{
-        show: true,
-        allowBack: false,
-        leftComponent: (
-          <BaseText h1 style={{ color: theme.colors.color1 }}>
-            Food
-          </BaseText>
+        allowBack: true,
+        centerComponent: (
+          <>
+            <BaseText h1 style={styles.categoryNameText}>
+              Food
+            </BaseText>
+            <BaseText caption h4>
+              Jan 2023
+            </BaseText>
+          </>
         ),
         rightComponent: (
-          <TouchableWithoutFeedback
+          <IconButton
+            iconName="edit"
+            iconType="fontawesome"
+            type="clear"
             onPress={() => {
-              navigation.navigate(ROUTES.setCategory, {
-                isEdit: true,
-                data: BUDGET,
-              });
-            }}>
-            <Icon name="edit" type="fontawesome" color={theme.colors.color6} />
-          </TouchableWithoutFeedback>
+              navigation.navigate(ROUTES.categoryForm);
+            }}
+          />
         ),
       }}>
-      <View style={styles.header}>
-        <BaseText h4 style={{ color: theme.colors.color4 }}>
-          Monthly budget
-        </BaseText>
-        <View style={styles.aggr}>
-          <BaseText h4 style={{ color: theme.colors.color4 }}>
-            Budget: {100}
-          </BaseText>
-          <BaseDivider orientation="vertical" margin={theme.spacing.lg} />
-          <BaseText h4 style={{ color: theme.colors.color4 }}>
-            Used: {200}
-          </BaseText>
-        </View>
+      <View style={styles.subHeader}>
+        <AggrSummary
+          aggrs={[
+            { label: 'Budget', amount: '100' },
+            { label: 'Used', amount: '-1000' },
+          ]}
+        />
         <BaseLinearProgress value={0.2} />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -80,12 +68,15 @@ const BudgetBreakdownScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    header: {
-      marginBottom: theme.spacing.xl,
+    subHeader: {
+      marginBottom: 16,
     },
-    aggr: {
-      flexDirection: 'row',
-      marginVertical: theme.spacing.xl,
+    budgetTypeText: {
+      marginBottom: 16,
+    },
+    categoryNameText: {
+      marginBottom: 4,
+      color: theme.colors.color1,
     },
   });
 };

@@ -45,37 +45,33 @@ const BaseScreen = ({
           isEmptyHeader() ? styles.emptyHeader : styles.nonEmptyHeader,
         ]}
         leftComponent={
-          headerProps.allowBack ? (
-            <IconButton
-              buttonSize="xs"
-              type="clear"
-              onPress={() => navigation.goBack()}
-              iconName="chevron-left"
-              iconType="entypo"
-              color={theme.colors.color4}
-            />
-          ) : (
-            headerProps.leftComponent
-          )
+          <>
+            {headerProps.allowBack && (
+              <IconButton
+                buttonSize="xs"
+                type="clear"
+                onPress={() => navigation.goBack()}
+                iconName="chevron-left"
+                iconType="entypo"
+                color={theme.colors.color4}
+              />
+            )}
+            {headerProps.leftComponent}
+          </>
         }
         centerComponent={headerProps.centerComponent}
         rightComponent={headerProps.rightComponent}
-        leftContainerStyle={
-          headerProps.allowBack
-            ? styles.backIcon
-            : {
-                ...headerProps.leftComponentStyle,
-                ...styles.leftHeaderContainerStyle,
-                ...styles.backIcon,
-              }
-        }
+        leftContainerStyle={{
+          ...headerProps.leftComponentStyle,
+          ...styles.leftComponentStyle,
+        }}
         centerContainerStyle={{
           ...headerProps.centerComponentStyle,
-          ...styles.centerHeaderContainerStyle,
+          ...styles.centerComponentStyle,
         }}
         rightContainerStyle={{
           ...headerProps.rightComponentStyle,
-          ...styles.rightHeaderContainerStyle,
+          ...styles.rightComponentStyle,
         }}
       />
       <HideKeyboard>
@@ -116,27 +112,29 @@ const getStyles = theme =>
     },
     header: {
       backgroundColor: theme.colors.white,
-      borderBottomWidth: 0,
       paddingHorizontal: 22,
+      borderBottomWidth: 0,
       paddingVertical: 0,
-    },
-    backIcon: {
-      justifyContent: 'flex-start',
     },
     emptyHeader: {
       paddingVertical: 0,
     },
     nonEmptyHeader: {
-      paddingVertical: 16,
+      paddingVertical: 18,
     },
-    leftHeaderContainerStyle: {
-      justifyContent: 'center',
+    leftComponentStyle: {
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      flexDirection: 'row',
     },
-    centerHeaderContainerStyle: {
+    centerComponentStyle: {
       justifyContent: 'center',
+      alignItems: 'center',
     },
-    rightHeaderContainerStyle: {
-      justifyContent: 'center',
+    rightComponentStyle: {
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      flexDirection: 'row',
     },
   });
 

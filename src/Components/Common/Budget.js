@@ -23,7 +23,13 @@ const Budget = ({
     <TouchableOpacity
       style={styles.budgetContainer}
       onPress={() => {
-        navigation.navigate(ROUTES.budgetBreakdown);
+        navigation.navigate(ROUTES.budgetBreakdown, {
+          budget: {
+            category: { cat_name: cat_name },
+            amount: amount,
+            used: used,
+          },
+        });
       }}>
       <View style={styles.textGroup}>
         <BaseText h4>{cat_name}</BaseText>
