@@ -26,7 +26,7 @@ const BaseBottomSheet = ({
 
   return (
     <BottomSheet
-      fullScreen
+      fullScreen={true}
       scrollViewProps={{ style: { maxHeight: WINDOW_HEIGHT / 2 } }}
       isVisible={isVisible}
       onBackdropPress={onBackdropPress}>
@@ -57,6 +57,9 @@ const BaseBottomSheet = ({
             </ListItem.Content>
           </ListItem>
         ))}
+        <ListItem>
+          <ListItem.Content />
+        </ListItem>
       </>
     </BottomSheet>
   );
