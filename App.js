@@ -3,7 +3,7 @@ import * as Font from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
@@ -18,7 +18,7 @@ import {
 import { initializeApp } from 'firebase/app';
 
 import { initCategoryDao, initBudgetDao } from './src/_shared/api/dao';
-import { initFirestore } from './src/_shared/api/storage/';
+import { initFs } from './src/_shared/api/storage/';
 
 import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
@@ -98,7 +98,7 @@ function App() {
 
         try {
           // Init Firestore
-          initFirestore(app);
+          initFs(app);
 
           // Init Daos
           initCategoryDao();

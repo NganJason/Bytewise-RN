@@ -23,6 +23,7 @@ import {
   BaseTabView,
   BaseAccordion,
   BaseLinearProgress,
+  BaseToast,
   FlexRow,
 } from './View';
 
@@ -57,4 +58,5 @@ export {
   Budget,
   BaseLinearProgress,
   FlexRow,
+  BaseToast,
 };

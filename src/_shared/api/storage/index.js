@@ -1,3 +1,3 @@
-import { initFirestore } from './firestore';
+import { initFs, getFs, addFsDoc } from './firestore';
 
-export { initFirestore };
+export { initFs, getFs, addFsDoc };

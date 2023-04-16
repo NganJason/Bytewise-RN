@@ -40,11 +40,12 @@ const BaseButton = ({
       disabled={disabled}
       buttonStyle={{
         ...styles.buttonDefaultStyle,
-        width: getButtonWidth(),
-        ...(!fullWidth ? { alignSelf: align } : { alignSelf: 'center' }),
+
         ...buttonStyle,
       }}
       containerStyle={{
+        width: getButtonWidth(),
+        ...(!fullWidth ? { alignSelf: align } : { alignSelf: 'center' }),
         ...containerStyle,
       }}
       size={size}

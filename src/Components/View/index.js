@@ -4,6 +4,7 @@ import BaseHeader from './BaseHeader';
 import BaseTabView from './BaseTabView';
 import BaseAccordion from './BaseAccordion';
 import BaseLinearProgress from './BaseLinearProgress';
+import BaseToast from './BaseToast';
 import FlexRow from './FlexRow';
 
 export {
@@ -13,5 +14,6 @@ export {
   BaseTabView,
   BaseAccordion,
   BaseLinearProgress,
+  BaseToast,
   FlexRow,
 };

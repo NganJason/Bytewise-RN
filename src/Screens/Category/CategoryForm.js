@@ -16,48 +16,47 @@ import {
   BUDGET_TYPE_MONTHLY,
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPES,
-  CATEGORY_TYPE_EXPENSE,
-  CATEGORY_TYPE_INCOME,
-  CATEGORY_TYPES,
+  TRANSACTION_TYPES,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
 } from '../../_shared/api/data/model';
+
+import { useCreateCategory } from '../../_shared/api/mutations/category';
+import { useNavigation } from '@react-navigation/native';
 
 const CategoryForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const {
-    cat_id = 0,
-    cat_name = '',
-    cat_type = 1,
-  } = route.params?.category || {};
+  const [categoryForm, setCategoryForm] = useState(
+    route.params?.category || {
+      category_id: '',
+      category_name: '',
+      category_type: TRANSACTION_TYPE_EXPENSE,
+    },
+  );
 
-  const [catForm, setCatForm] = useState({
-    cat_id: cat_id,
-    cat_name: cat_name,
-    cat_type: cat_type,
-  });
-
-  const onCatNameChange = e => {
-    setCatForm({ ...catForm, cat_name: e });
+  const onCategoryNameChange = e => {
+    setCategoryForm({ ...categoryForm, category_name: e });
   };
 
-  const {
-    budget_id = 0,
-    amount = '',
-    budget_type = BUDGET_TYPE_MONTHLY,
-  } = route.params?.budget || {};
+  const onCategoryTypeChange = e => {
+    setCategoryForm({ ...categoryForm, category_type: e });
+  };
+
+  const navigation = useNavigation();
+
+  const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
+
+  const [budgetForm, setBudgetForm] = useState(
+    route.params?.budget || {
+      budget_id: '',
+      amount: '',
+      budget_type: BUDGET_TYPE_MONTHLY,
+    },
+  );
 
   const budgetAmountRef = useRef(null);
-
-  const [budgetForm, setBudgetForm] = useState({
-    budget_id: budget_id,
-    amount: amount,
-    budget_type: budget_type,
-  });
-
-  const [isBudgetFormExpanded, setIsBudgetFormExpanded] = useState(
-    budget_id !== 0,
-  );
 
   useEffect(() => {
     if (isBudgetFormExpanded) {
@@ -66,6 +65,10 @@ const CategoryForm = ({ route }) => {
       budgetAmountRef.current.blur();
     }
   }, [isBudgetFormExpanded]);
+
+  const [isBudgetFormExpanded, setIsBudgetFormExpanded] = useState(
+    budgetForm.budget_id !== '',
+  );
 
   const toggleBudgetForm = () => {
     setIsBudgetFormExpanded(!isBudgetFormExpanded);
@@ -77,10 +80,6 @@ const CategoryForm = ({ route }) => {
 
   const onBudgetTypeChange = e => {
     setBudgetForm({ ...budgetForm, budget_type: e });
-  };
-
-  const onCategoryTypeChange = e => {
-    setCatForm({ ...catForm, cat_type: e });
   };
 
   const renderBudgetToggle = () => {
@@ -113,6 +112,11 @@ const CategoryForm = ({ route }) => {
 
   return (
     <BaseScreen
+      errorToast={{
+        show: createCategory.isError,
+        message1: createCategory.error?.message,
+        onHide: createCategory.reset,
+      }}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,
@@ -120,24 +124,24 @@ const CategoryForm = ({ route }) => {
       <View style={styles.formBody}>
         <BaseInput
           label="Category Name"
-          value={catForm.cat_name}
-          onChangeText={onCatNameChange}
+          value={categoryForm.category_name}
+          onChangeText={onCategoryNameChange}
           clearButtonMode="always"
-          autoFocus={cat_id === 0}
+          autoFocus={categoryForm.category_id === ''}
         />
         <View style={styles.checkboxes}>
           <BaseCheckbox
-            title={CATEGORY_TYPES[CATEGORY_TYPE_EXPENSE]}
-            checked={catForm.cat_type === CATEGORY_TYPE_EXPENSE}
+            title={TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE]}
+            checked={categoryForm.category_type === TRANSACTION_TYPE_EXPENSE}
             onPress={() => {
-              onCategoryTypeChange(CATEGORY_TYPE_EXPENSE);
+              onCategoryTypeChange(TRANSACTION_TYPE_EXPENSE);
             }}
           />
           <BaseCheckbox
-            title={CATEGORY_TYPES[CATEGORY_TYPE_INCOME]}
-            checked={catForm.cat_type === CATEGORY_TYPE_INCOME}
+            title={TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME]}
+            checked={categoryForm.category_type === TRANSACTION_TYPE_INCOME}
             onPress={() => {
-              onCategoryTypeChange(CATEGORY_TYPE_INCOME);
+              onCategoryTypeChange(TRANSACTION_TYPE_INCOME);
             }}
           />
         </View>
@@ -176,7 +180,13 @@ const CategoryForm = ({ route }) => {
             </>
           </Collapsible>
         </View>
-        <BaseButton title="Save" size="lg" width={200} />
+        <BaseButton
+          title="Save"
+          size="lg"
+          width={200}
+          onPress={() => createCategory.mutate(categoryForm)}
+          loading={createCategory.isLoading}
+        />
       </View>
     </BaseScreen>
   );

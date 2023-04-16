@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -5,6 +6,7 @@ import { PacmanIndicator } from 'react-native-indicators';
 
 import HideKeyboard from '../Screen/HideKeyboard';
 import IconButton from '../Touch/IconButton';
+import BaseToast from '../View/BaseToast';
 
 const BaseScreen = ({
   children,
@@ -28,6 +30,12 @@ const BaseScreen = ({
   },
   isLoading = false,
   bodyStyle = {},
+  errorToast = {
+    show: false,
+    message1: '',
+    message2: '',
+    onHide: function () {},
+  },
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -36,6 +44,22 @@ const BaseScreen = ({
 
   const isEmptyHeader = () =>
     headerProps.centerComponent === null && headerProps.rightComponent === null;
+
+  useEffect(() => {
+    if (errorToast.show) {
+      BaseToast.show({
+        type: 'error',
+        text1: errorToast.message1,
+        text2: errorToast.message2,
+        onHide: errorToast.onHide,
+      });
+    }
+  }, [
+    errorToast.show,
+    errorToast.message1,
+    errorToast.message2,
+    errorToast.onHide,
+  ]);
 
   return (
     <>
@@ -99,6 +123,7 @@ const BaseScreen = ({
           )}
         </View>
       </HideKeyboard>
+      <BaseToast />
     </>
   );
 };

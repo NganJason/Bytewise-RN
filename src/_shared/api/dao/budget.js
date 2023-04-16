@@ -1,4 +1,4 @@
-import { getFirestore } from '../storage/firestore';
+import { getFs } from '../storage/firestore';
 
 var budgetDao;
 
@@ -20,6 +20,6 @@ export const getBudgetDao = () => {
 
 class BudgetDao {
   constructor() {
-    this.db = getFirestore();
+    this.db = getFs();
   }
 }
