@@ -2,6 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { BottomSheet, useTheme, ListItem, Icon } from '@rneui/themed';
 
 import BaseText from '../Text/BaseText';
+import { useNavigation } from '@react-navigation/native';
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 
@@ -12,9 +13,16 @@ const BaseBottomSheet = ({
   onBackdropPress = function () {},
   onSelect = function () {},
   close = function () {},
+  editRoute = '',
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
+
+  const onEdit = () => {
+    close();
+    navigation.navigate(editRoute);
+  };
 
   return (
     <BottomSheet
@@ -25,6 +33,15 @@ const BaseBottomSheet = ({
       <>
         <ListItem>
           <ListItem.Content style={styles.closeBtnWrapper}>
+            {editRoute !== '' && (
+              <Icon
+                name="edit"
+                type="fontawesome"
+                color="grey"
+                style={styles.editBtn}
+                onPress={onEdit}
+              />
+            )}
             <Icon name="cross" type="entypo" color="grey" onPress={close} />
           </ListItem.Content>
         </ListItem>
@@ -50,10 +67,14 @@ const BaseBottomSheet = ({
 
 export default BaseBottomSheet;
 
-const getStyles = _ =>
+const getStyles = theme =>
   StyleSheet.create({
     closeBtnWrapper: {
-      alignItems: 'flex-end',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    },
+    editBtn: {
+      marginRight: theme.spacing.md,
     },
     modalItem: {
       paddingHorizontal: 24,

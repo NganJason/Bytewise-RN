@@ -10,10 +10,7 @@ import {
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/api/data/model';
 
-import {
-  EXPENSE_CATEGORIES,
-  INCOME_CATEGORIES,
-} from '../../_shared/api/data/mock/category';
+import { CATEGORIES } from '../../_shared/api/data/mock/category';
 
 import { ACCOUNTS } from '../../_shared/api/data/mock/account';
 
@@ -59,9 +56,7 @@ const DailyTransactions = ({
 
   // TODO: temporary
   const getCategory = catID => {
-    const categories = EXPENSE_CATEGORIES.concat(INCOME_CATEGORIES);
-
-    const foundCat = categories.find(cat => cat.cat_id === catID);
+    const foundCat = CATEGORIES.find(cat => cat.cat_id === catID);
     return foundCat;
   };
 

@@ -2,18 +2,34 @@ import { Container, Row, Col } from 'react-native-flex-grid';
 import React from 'react';
 
 import BaseDivider from './BaseDivider';
+import { useTheme } from '@rneui/themed';
 
 const FlexRow = ({
   showDivider = true,
+  bottomBorder = false,
   items = [],
   itemFlexDirection = 'column',
   itemAlign = 'center',
   itemJustify = 'center',
   rowStyle = {},
 }) => {
+  const { theme } = useTheme();
+
+  const getBottomBorderStyle = () => {
+    if (!bottomBorder) {
+      return {};
+    }
+
+    return theme.borderBottom;
+  };
+
   return (
     <Container>
-      <Row style={rowStyle}>
+      <Row
+        style={{
+          ...getBottomBorderStyle(),
+          ...rowStyle,
+        }}>
         {items.map((item, i) => (
           <React.Fragment key={i}>
             <Col
@@ -34,4 +50,4 @@ const FlexRow = ({
   );
 };
 
-export default FlexRow;
+export default React.memo(FlexRow);

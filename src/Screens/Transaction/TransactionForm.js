@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
@@ -21,14 +21,12 @@ import {
   TRANSACTION_TYPES,
 } from '../../_shared/api/data/model';
 
-import {
-  EXPENSE_CATEGORIES,
-  INCOME_CATEGORIES,
-} from '../../_shared/api/data/mock/category';
+import { CATEGORIES } from '../../_shared/api/data/mock/category';
 
 import { ACCOUNTS } from '../../_shared/api/data/mock/account';
 
 import { DAYS } from '../../_shared/constant/constant';
+import ROUTES from '../../_shared/constant/routes';
 
 // Initial date
 const TODAY = new Date();
@@ -42,11 +40,6 @@ const NOTE_SCROLL_HEIGHT = 300;
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-
-  const transactionCategories = {
-    [TRANSACTION_TYPE_EXPENSE]: EXPENSE_CATEGORIES,
-    [TRANSACTION_TYPE_INCOME]: INCOME_CATEGORIES,
-  };
 
   const {
     id = 0,
@@ -78,9 +71,9 @@ const TransactionForm = ({ route }) => {
   // for rendering
   const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
 
-  const [activeCategories, setActiveCategories] = useState(
-    transactionCategories[form.transaction_type],
-  );
+  const [transactionType, setTransactionType] = useState(transaction_type);
+
+  const [activeCategories, setActiveCategories] = useState([]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
 
@@ -99,6 +92,16 @@ const TransactionForm = ({ route }) => {
   const toggleAccountModal = () => {
     setIsAccountModalVisible(!isAccountModalVisible);
   };
+
+  useEffect(() => {
+    const getActiveCategories = () => {
+      let categories = CATEGORIES.filter(d => d.cat_type === transactionType);
+      return categories;
+    };
+
+    setForm(prev => ({ ...prev, transaction_type: transactionType, cat: {} }));
+    setActiveCategories(getActiveCategories());
+  }, [transactionType]);
 
   const formatTimestamp = ts => {
     const d = new Date(ts);
@@ -120,8 +123,7 @@ const TransactionForm = ({ route }) => {
   };
 
   const onTransactionTypeChange = e => {
-    setForm({ ...form, transaction_type: e, cat: {} });
-    setActiveCategories(transactionCategories[e]);
+    setTransactionType(e);
   };
 
   const onTimestampChange = e => {
@@ -224,6 +226,7 @@ const TransactionForm = ({ route }) => {
             onSelect={onCategoryChange}
             items={activeCategories}
             label="cat_name"
+            editRoute={ROUTES.category}
           />
           <BaseInput
             label="Note"
