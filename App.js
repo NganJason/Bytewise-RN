@@ -6,8 +6,21 @@ import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { SplashScreen } from './src/Components';
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+  FIREBASE_MEASUREMENT_ID,
+} from '@env';
+import { initializeApp } from 'firebase/app';
 
+import { initCategoryDao, initBudgetDao } from './src/_shared/api/dao';
+import { initFirestore } from './src/_shared/api/storage/';
+
+import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
 import BudgetBreakdownScreen from './src/Screens/Budget/BudgetBreakdownScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
@@ -18,6 +31,16 @@ import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBrea
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_MEASUREMENT_ID,
+};
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -69,11 +92,26 @@ function App() {
           require('./assets/icons/fonts/Nucleo.ttf'),
         );
 
+        // Init Firebase
+        const app = initializeApp(firebaseConfig);
+
+        try {
+          // Init Firestore
+          initFirestore(app);
+
+          // Init Daos
+          initCategoryDao();
+          initBudgetDao();
+        } catch (err) {
+          // TODO: Handle error
+          console.log(err);
+        }
+
         // TODO: REMOVE IN PROD
         // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN
         await new Promise(resolve => setTimeout(resolve, 2000));
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.log(err);
       } finally {
         setIsAppReady(true);
       }

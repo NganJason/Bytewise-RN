@@ -11,22 +11,21 @@ import {
   AggrSummary,
 } from '../../Components';
 
+import { budgetOverviewData } from '../../_shared/api/data/mock/budget';
 import ROUTES from '../../_shared/constant/routes';
-
-import { useGetBudgetOverviewQuery } from '../../_shared/query/query';
 
 const BudgetScreen = ({ navigation }) => {
   const { theme } = useTheme();
 
   const {
-    data: budgetOverview = {
+    budgetOverview = {
       totalAmount: '',
       totalUsed: '',
       monthly_budget: [],
       annual_budget: [],
     },
     isLoading,
-  } = useGetBudgetOverviewQuery({});
+  } = { budgetOverview: budgetOverviewData, isLoading: false };
 
   const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(true);
   const [isAnnualExpanded, setIsAnnualExpanded] = useState(false);
