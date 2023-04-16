@@ -16,17 +16,25 @@ import {
   BUDGET_TYPE_MONTHLY,
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPES,
+  CATEGORY_TYPE_EXPENSE,
+  CATEGORY_TYPE_INCOME,
+  CATEGORY_TYPES,
 } from '../../_shared/api/data/model';
 
 const CategoryForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const { cat_id = 0, cat_name = '' } = route.params?.category || {};
+  const {
+    cat_id = 0,
+    cat_name = '',
+    cat_type = 1,
+  } = route.params?.category || {};
 
   const [catForm, setCatForm] = useState({
     cat_id: cat_id,
     cat_name: cat_name,
+    cat_type: cat_type,
   });
 
   const onCatNameChange = e => {
@@ -71,6 +79,10 @@ const CategoryForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, budget_type: e });
   };
 
+  const onCategoryTypeChange = e => {
+    setCatForm({ ...catForm, cat_type: e });
+  };
+
   const renderBudgetToggle = () => {
     if (isBudgetFormExpanded) {
       return {
@@ -113,12 +125,29 @@ const CategoryForm = ({ route }) => {
           clearButtonMode="always"
           autoFocus={cat_id === 0}
         />
+        <View style={styles.checkboxes}>
+          <BaseCheckbox
+            title={CATEGORY_TYPES[CATEGORY_TYPE_EXPENSE]}
+            checked={catForm.cat_type === CATEGORY_TYPE_EXPENSE}
+            onPress={() => {
+              onCategoryTypeChange(CATEGORY_TYPE_EXPENSE);
+            }}
+          />
+          <BaseCheckbox
+            title={CATEGORY_TYPES[CATEGORY_TYPE_INCOME]}
+            checked={catForm.cat_type === CATEGORY_TYPE_INCOME}
+            onPress={() => {
+              onCategoryTypeChange(CATEGORY_TYPE_INCOME);
+            }}
+          />
+        </View>
         <TouchableOpacity
           onPress={toggleBudgetForm}
           style={styles.budgetToggleButton}>
           {budgetToggle.icon}
           {budgetToggle.text}
         </TouchableOpacity>
+
         <View style={isBudgetFormExpanded && styles.collapsible}>
           <Collapsible collapsed={!isBudgetFormExpanded}>
             <>
@@ -170,6 +199,7 @@ const getStyles = _ => {
       marginRight: 8,
     },
     checkboxes: {
+      marginBottom: 24,
       flexDirection: 'row',
     },
   });

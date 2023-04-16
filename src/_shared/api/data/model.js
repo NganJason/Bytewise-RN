@@ -1,8 +1,16 @@
 export const TRANSACTION_TYPE_EXPENSE = 1;
 export const TRANSACTION_TYPE_INCOME = 2;
 
+export const CATEGORY_TYPE_EXPENSE = 1;
+export const CATEGORY_TYPE_INCOME = 2;
+
 export const BUDGET_TYPE_MONTHLY = 1;
 export const BUDGET_TYPE_ANNUAL = 2;
+
+export const CATEGORY_TYPES = {
+  [CATEGORY_TYPE_EXPENSE]: 'Expense',
+  [CATEGORY_TYPE_INCOME]: 'Income',
+};
 
 export const TRANSACTION_TYPES = {
   [TRANSACTION_TYPE_EXPENSE]: 'Expense',

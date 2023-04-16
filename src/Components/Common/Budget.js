@@ -33,21 +33,31 @@ const Budget = ({
       }}>
       <View style={styles.textGroup}>
         <BaseText h4>{cat_name}</BaseText>
-        <AmountText h4 showColor={false}>
-          {amount - used}
-        </AmountText>
+        <BaseText h4>
+          <AmountText h4 showColor={false}>
+            {amount - used}
+          </AmountText>{' '}
+          left
+        </BaseText>
       </View>
-      <BaseLinearProgress value={used / amount} />
+      <BaseLinearProgress style={styles.progressBar} value={used / amount} />
+      <BaseText h5>
+        <AmountText h5>{used}</AmountText> of{' '}
+        <AmountText h5>{amount}</AmountText>
+      </BaseText>
     </TouchableOpacity>
   );
 };
 
 export default Budget;
 
-const getStyles = _ => {
+const getStyles = theme => {
   return StyleSheet.create({
     budgetContainer: {
       width: '100%',
+    },
+    progressBar: {
+      marginBottom: theme.spacing.lg,
     },
     textGroup: {
       flexDirection: 'row',
