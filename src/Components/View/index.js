@@ -6,6 +6,7 @@ import BaseAccordion from './BaseAccordion';
 import BaseLinearProgress from './BaseLinearProgress';
 import BaseToast from './BaseToast';
 import FlexRow from './FlexRow';
+import BaseScrollView from './BaseScrollView';
 
 export {
   BaseBottomSheet,
@@ -16,4 +17,5 @@ export {
   BaseLinearProgress,
   BaseToast,
   FlexRow,
+  BaseScrollView,
 };

@@ -40,7 +40,6 @@ const BaseButton = ({
       disabled={disabled}
       buttonStyle={{
         ...styles.buttonDefaultStyle,
-
         ...buttonStyle,
       }}
       containerStyle={{

@@ -25,13 +25,13 @@ import HomeScreen from './src/Screens/HomeScreen';
 import BudgetBreakdownScreen from './src/Screens/Budget/BudgetBreakdownScreen';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
 import CategoryForm from './src/Screens/Category/CategoryForm';
+import EditCategoryScreen from './src/Screens/Category/EditCategoryScreen';
 import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
 import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
-import CategoryScreen from './src/Screens/Category/CategoryScreen';
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
@@ -134,7 +134,10 @@ function App() {
           name={ROUTES.transactionForm}
           component={TransactionForm}
         />
-        <Stack.Screen name={ROUTES.category} component={CategoryScreen} />
+        <Stack.Screen
+          name={ROUTES.editCategory}
+          component={EditCategoryScreen}
+        />
         <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
         <Stack.Screen
           name={ROUTES.budgetBreakdown}

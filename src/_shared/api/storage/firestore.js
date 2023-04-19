@@ -17,7 +17,8 @@ class Firestore {
 
   async addDoc(collectionName = '', doc = {}) {
     try {
-      await addDoc(collection(this.db, collectionName), doc);
+      const docRef = await addDoc(collection(this.db, collectionName), doc);
+      return docRef.id;
     } catch (err) {
       throw new FirestoreError(err.message);
     }

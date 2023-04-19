@@ -11,11 +11,8 @@ import {
 } from '../../_shared/api/data/model';
 
 import { CATEGORIES } from '../../_shared/api/data/mock/category';
-
 import { ACCOUNTS } from '../../_shared/api/data/mock/account';
-
 import ROUTES from '../../_shared/constant/routes';
-
 import { DAYS } from '../../_shared/constant/constant';
 
 const DailyTransactions = ({
@@ -192,7 +189,7 @@ const getStyles = theme =>
     },
     listItemContent: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'center',
     },
     category: {
       flex: 1,

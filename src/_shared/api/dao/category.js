@@ -18,7 +18,8 @@ class CategoryDao {
 
   async create(category) {
     try {
-      await addFsDoc(this.collection, category);
+      const categoryID = await addFsDoc(this.collection, category);
+      category.category_id = categoryID;
     } catch (err) {
       throw new CategoryError(err.message);
     }
@@ -41,5 +42,4 @@ export const getCategoryDao = () => {
 
 export const createCateory = async category => {
   await categoryDao.create(category);
-  //throw new CategoryError('An error has occured');
 };

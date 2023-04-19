@@ -30,6 +30,13 @@ const AggrSummary = ({ aggrs = [] }) => {
 
   return (
     <FlexRow
+      itemPositions={[
+        {
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}
       rowStyle={styles.textGroupWrapper}
       showDivider
       items={renderAggrs()}

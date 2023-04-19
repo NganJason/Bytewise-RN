@@ -7,5 +7,9 @@ export const CATEGORIES = [
   { cat_name: 'Tax', cat_id: 6, cat_type: 1 },
   { cat_name: 'Shopee Salary', cat_id: 7, cat_type: 2 },
   { cat_name: 'Dividend Income', cat_id: 8, cat_type: 2 },
-  { cat_name: 'Side Income', cat_id: 9, cat_type: 2 },
+  { cat_name: 'AAA', cat_id: 9, cat_type: 2 },
+  { cat_name: 'Side Income', cat_id: 10, cat_type: 2 },
+  { cat_name: 'Side Income', cat_id: 11, cat_type: 2 },
+  { cat_name: 'Side Income', cat_id: 12, cat_type: 2 },
+  { cat_name: 'XXX', cat_id: 13, cat_type: 2 },
 ];

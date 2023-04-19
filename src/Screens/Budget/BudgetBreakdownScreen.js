@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from '@rneui/themed';
 import {
   BaseText,
@@ -9,6 +8,7 @@ import {
   BaseLinearProgress,
   IconButton,
   AggrSummary,
+  BaseScrollView,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -53,7 +53,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
         />
         <BaseLinearProgress value={0.2} />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
             key={i}
@@ -61,7 +61,7 @@ const BudgetBreakdownScreen = ({ navigation }) => {
             timestamp={t.timestamp}
           />
         ))}
-      </ScrollView>
+      </BaseScrollView>
     </BaseScreen>
   );
 };

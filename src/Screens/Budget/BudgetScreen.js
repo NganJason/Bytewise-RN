@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   BaseScreen,
   MonthNavigator,
   BaseAccordion,
   Budget,
-  AggrSummary,
+  BaseScrollView,
 } from '../../Components';
 
 import { budgetOverviewData } from '../../_shared/api/data/mock/budget';
@@ -72,30 +71,22 @@ const BudgetScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
-      <>
-        <AggrSummary
-          aggrs={[
-            { label: 'Budget', amount: `${budgetOverview.totalAmount}` },
-            { label: 'Used', amount: `${-budgetOverview.totalUsed}` },
-          ]}
+      <BaseScrollView>
+        <BaseAccordion
+          isExpanded={isMonthlyExpanded}
+          onPress={toggleMonthly}
+          title="Monthly"
+          titleColor={theme.colors.color4}
+          items={renderBudgets(budgetOverview.monthly_budget)}
         />
-        <ScrollView>
-          <BaseAccordion
-            isExpanded={isMonthlyExpanded}
-            onPress={toggleMonthly}
-            title="Monthly"
-            titleColor={theme.colors.color4}
-            items={renderBudgets(budgetOverview.monthly_budget)}
-          />
-          <BaseAccordion
-            isExpanded={isAnnualExpanded}
-            onPress={toggleAnnual}
-            title="Annual"
-            titleColor={theme.colors.color4}
-            items={renderBudgets(budgetOverview.annual_budget)}
-          />
-        </ScrollView>
-      </>
+        <BaseAccordion
+          isExpanded={isAnnualExpanded}
+          onPress={toggleAnnual}
+          title="Annual"
+          titleColor={theme.colors.color4}
+          items={renderBudgets(budgetOverview.annual_budget)}
+        />
+      </BaseScrollView>
     </BaseScreen>
   );
 };

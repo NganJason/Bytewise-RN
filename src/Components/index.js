@@ -25,6 +25,7 @@ import {
   BaseLinearProgress,
   BaseToast,
   FlexRow,
+  BaseScrollView,
 } from './View';
 
 // Common
@@ -59,4 +60,5 @@ export {
   BaseLinearProgress,
   FlexRow,
   BaseToast,
+  BaseScrollView,
 };

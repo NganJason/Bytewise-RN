@@ -226,7 +226,7 @@ const TransactionForm = ({ route }) => {
             onSelect={onCategoryChange}
             items={activeCategories}
             label="cat_name"
-            editRoute={ROUTES.category}
+            editRoute={ROUTES.editCategory}
           />
           <BaseInput
             label="Note"

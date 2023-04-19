@@ -1,11 +1,11 @@
 import { useTheme } from '@rneui/themed';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   BaseScreen,
   MonthNavigator,
   DailyTransactions,
   AggrSummary,
+  BaseScrollView,
 } from '../../Components';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
@@ -34,7 +34,7 @@ const TransactionScreen = ({ navigation }) => {
           { label: 'Expense', amount: '-200' },
         ]}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
             key={i}
@@ -42,7 +42,7 @@ const TransactionScreen = ({ navigation }) => {
             timestamp={t.timestamp}
           />
         ))}
-      </ScrollView>
+      </BaseScrollView>
     </BaseScreen>
   );
 };
