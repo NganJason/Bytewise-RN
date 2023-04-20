@@ -9,8 +9,8 @@ const BaseDivider = ({ orientation = HORIZONTAL, margin = 0, width = 2 }) => {
 
   const styles = StyleSheet.create({
     divider: {
-      marginHorizontal: orientation === VERTICAL && margin,
-      marginVertical: orientation === HORIZONTAL && margin,
+      marginHorizontal: orientation === HORIZONTAL && margin,
+      marginVertical: orientation === VERTICAL && margin,
     },
   });
 

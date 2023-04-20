@@ -67,14 +67,14 @@ const BaseBottomSheet = ({
 
 export default BaseBottomSheet;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     closeBtnWrapper: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
     },
     editBtn: {
-      marginRight: theme.spacing.md,
+      marginHorizontal: 18,
     },
     modalItem: {
       paddingHorizontal: 24,

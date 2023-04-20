@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 
@@ -6,25 +7,39 @@ import {
   BaseScreen,
   MonthNavigator,
   BaseAccordion,
-  Budget,
   BaseScrollView,
+  Category,
+  BaseText,
+  AmountText,
 } from '../../Components';
 
-import { budgetOverviewData } from '../../_shared/api/data/mock/budget';
 import ROUTES from '../../_shared/constant/routes';
 
-const BudgetScreen = ({ navigation }) => {
-  const { theme } = useTheme();
+const INCOME_CATEGORIES = [
+  {
+    category: { category_name: 'Shopee Salary' },
+    amount: '7050',
+  },
+  {
+    category: { category_name: 'REIT Dividend' },
+    amount: '500',
+  },
+];
 
-  const {
-    budgetOverview = {
-      totalAmount: '',
-      totalUsed: '',
-      monthly_budget: [],
-      annual_budget: [],
-    },
-    isLoading,
-  } = { budgetOverview: budgetOverviewData, isLoading: false };
+const EXPENSE_CATEGORIES = [
+  {
+    category: { category_name: 'Food' },
+    amount: '200',
+  },
+  {
+    category: { category_name: 'Transport' },
+    amount: '10',
+  },
+];
+
+const CategoryScreen = ({ navigation }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(true);
   const [isAnnualExpanded, setIsAnnualExpanded] = useState(false);
@@ -44,13 +59,15 @@ const BudgetScreen = ({ navigation }) => {
     setIsAnnualExpanded(!isAnnualExpanded);
   };
 
-  const renderBudgets = (
-    budgets = [{ category: { cat_id: 0, cat_name: '' }, budget: '', used: '' }],
+  const renderCategories = (
+    categories = [{ category: { category_name: '' }, amount: '' }],
   ) => {
     const comps = [];
 
-    budgets.forEach(budget => {
-      comps.push(<Budget budget={budget} />);
+    categories.forEach(category => {
+      comps.push(
+        <Category category={category.category} amount={category.amount} />,
+      );
     });
 
     return comps;
@@ -58,7 +75,6 @@ const BudgetScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
-      isLoading={isLoading}
       headerProps={{
         allowBack: false,
         centerComponent: <MonthNavigator />,
@@ -75,20 +91,40 @@ const BudgetScreen = ({ navigation }) => {
         <BaseAccordion
           isExpanded={isMonthlyExpanded}
           onPress={toggleMonthly}
-          title="Monthly"
+          title={
+            <View style={styles.accordionTitle}>
+              <BaseText h3>Income</BaseText>
+              <AmountText showColor>1000</AmountText>
+            </View>
+          }
           titleColor={theme.colors.color4}
-          items={renderBudgets(budgetOverview.monthly_budget)}
+          items={renderCategories(INCOME_CATEGORIES)}
         />
         <BaseAccordion
           isExpanded={isAnnualExpanded}
           onPress={toggleAnnual}
-          title="Annual"
+          title={
+            <View style={styles.accordionTitle}>
+              <BaseText h3>Expense</BaseText>
+              <AmountText showColor>-1000</AmountText>
+            </View>
+          }
           titleColor={theme.colors.color4}
-          items={renderBudgets(budgetOverview.annual_budget)}
+          items={renderCategories(EXPENSE_CATEGORIES)}
         />
       </BaseScrollView>
     </BaseScreen>
   );
 };
 
-export default BudgetScreen;
+export default CategoryScreen;
+
+const getStyles = _ =>
+  StyleSheet.create({
+    accordionTitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+  });

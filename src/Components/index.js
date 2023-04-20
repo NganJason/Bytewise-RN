@@ -32,8 +32,8 @@ import {
 import {
   DailyTransactions,
   MonthNavigator,
-  Budget,
   AggrSummary,
+  Category,
 } from './Common';
 
 export {
@@ -56,9 +56,9 @@ export {
   BaseBottomSheet,
   BaseTabView,
   MonthNavigator,
-  Budget,
   BaseLinearProgress,
   FlexRow,
   BaseToast,
   BaseScrollView,
+  Category,
 };

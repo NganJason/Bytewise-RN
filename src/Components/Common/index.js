@@ -1,6 +1,6 @@
 import DailyTransactions from './DailyTransactions';
 import MonthNavigator from './MonthNavigator';
-import Budget from './Budget';
 import AggrSummary from './AggrSummary';
+import Category from './Category';
 
-export { DailyTransactions, MonthNavigator, Budget, AggrSummary };
+export { DailyTransactions, MonthNavigator, Category, AggrSummary };

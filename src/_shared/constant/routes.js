@@ -1,6 +1,6 @@
 const ROUTES = {
   home: 'Home',
-  budget: 'Budget',
+  category: 'Category',
   editCategory: 'Edit Category',
   categoryForm: 'Category Form',
   transaction: 'Transaction',

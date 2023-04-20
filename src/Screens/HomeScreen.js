@@ -3,7 +3,7 @@ import { useTheme } from '@rneui/themed';
 import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
-import BudgetScreen from './Budget/BudgetScreen';
+import CategoryScreen from './Category/CategoryScreen';
 import EquityScreen from './Equity/EquityScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
 
@@ -21,7 +21,7 @@ const HomeScreen = () => {
   const renderTabIcon = (routeName, { color, size }) => {
     let iconName;
     switch (routeName) {
-      case ROUTES.budget:
+      case ROUTES.category:
         iconName = 'icon-budget';
         break;
       case ROUTES.transaction:
@@ -53,7 +53,7 @@ const HomeScreen = () => {
         tabBarIcon: ({ _, color, size }) =>
           renderTabIcon(route.name, { color, size }),
       })}>
-      <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
+      <Tab.Screen name={ROUTES.category} component={CategoryScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
       <Tab.Screen name={ROUTES.asset} component={EquityScreen} />
     </Tab.Navigator>
