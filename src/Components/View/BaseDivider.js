@@ -4,20 +4,20 @@ import { Divider, useTheme } from '@rneui/themed';
 const HORIZONTAL = 'horizontal',
   VERTICAL = 'vertical';
 
-const BaseDivider = ({ orientation = HORIZONTAL, margin = 0, width = 2 }) => {
+const BaseDivider = ({ orientation = HORIZONTAL, margin = 0, width = 1 }) => {
   const { theme } = useTheme();
 
   const styles = StyleSheet.create({
     divider: {
-      marginHorizontal: orientation === HORIZONTAL && margin,
-      marginVertical: orientation === VERTICAL && margin,
+      marginHorizontal: orientation === VERTICAL && margin,
+      marginVertical: orientation === HORIZONTAL && margin,
     },
   });
 
   return (
     <Divider
       orientation={orientation}
-      color={theme.colors.color4}
+      color={theme.colors.color6}
       style={styles.divider}
       width={width}
     />

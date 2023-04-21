@@ -45,12 +45,6 @@ const BudgetBreakdownScreen = ({ navigation }) => {
         ),
       }}>
       <View style={styles.subHeader}>
-        <AggrSummary
-          aggrs={[
-            { label: 'Budget', amount: '100' },
-            { label: 'Used', amount: '-1000' },
-          ]}
-        />
         <BaseLinearProgress value={0.2} />
       </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>

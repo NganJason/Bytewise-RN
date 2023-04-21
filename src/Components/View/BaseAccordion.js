@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ListItem, useTheme } from '@rneui/themed';
 
-import BaseDivider from './BaseDivider';
-import { BaseText } from '../Text';
+import BaseListItem from './BaseListItem';
+import BaseText from '../Text/BaseText';
 
 const BaseAccordion = ({
   title = '',
@@ -27,16 +27,9 @@ const BaseAccordion = ({
         </ListItem.Content>
       }>
       {items.map((item, i) => (
-        <React.Fragment key={i}>
-          <ListItem containerStyle={styles.container}>
-            <ListItem.Content>{item}</ListItem.Content>
-          </ListItem>
-          {i < items.length - 1 && showDivider && (
-            <View style={styles.container}>
-              <BaseDivider orientation="vertical" margin={10} />
-            </View>
-          )}
-        </React.Fragment>
+        <BaseListItem key={i} showDivider={showDivider}>
+          {item}
+        </BaseListItem>
       ))}
     </ListItem.Accordion>
   );
@@ -44,9 +37,4 @@ const BaseAccordion = ({
 
 export default BaseAccordion;
 
-const getStyles = _ =>
-  StyleSheet.create({
-    container: {
-      paddingHorizontal: 10,
-    },
-  });
+const getStyles = _ => StyleSheet.create({});

@@ -1,9 +1,10 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { ListItem, useTheme, Chip } from '@rneui/themed';
+import { useTheme, Chip } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
 import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
+import BaseListItem from '../View/BaseListItem';
 
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -109,8 +110,11 @@ const DailyTransactions = ({
         const acc = getAccount(t.acc_id);
         return (
           <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat, acc)}>
-            <ListItem containerStyle={styles.listItem}>
-              <ListItem.Content style={styles.listItemContent}>
+            <BaseListItem
+              containerStyle={styles.listItem}
+              showDivider
+              dividerMargin={4}>
+              <View style={styles.listItemContent}>
                 <BaseText
                   h5
                   style={styles.category}
@@ -138,8 +142,8 @@ const DailyTransactions = ({
                   ellipsizeMode="tail">
                   {renderTransactionAmount(t.amount, t.transaction_type)}
                 </AmountText>
-              </ListItem.Content>
-            </ListItem>
+              </View>
+            </BaseListItem>
           </TouchableOpacity>
         );
       })}
@@ -183,9 +187,6 @@ const getStyles = theme =>
     },
     listItem: {
       paddingHorizontal: 0,
-      paddingTop: 20,
-      paddingBottom: 14,
-      ...theme.borderBottom,
     },
     listItemContent: {
       flexDirection: 'row',

@@ -24,8 +24,8 @@ import {
   BaseAccordion,
   BaseLinearProgress,
   BaseToast,
-  FlexRow,
   BaseScrollView,
+  BaseListItem,
 } from './View';
 
 // Common
@@ -57,8 +57,8 @@ export {
   BaseTabView,
   MonthNavigator,
   BaseLinearProgress,
-  FlexRow,
   BaseToast,
   BaseScrollView,
   Category,
+  BaseListItem,
 };

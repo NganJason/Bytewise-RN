@@ -1,13 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
 import {
   BaseScreen,
   BaseText,
-  FlexRow,
   IconButton,
   BaseScrollView,
+  BaseListItem,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -35,18 +35,10 @@ const EditCategoryScreen = () => {
         ),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {CATEGORIES.map(d => (
-          <FlexRow
-            key={d.cat_id}
-            itemPositions={[
-              { flexDirection: 'row', justifyContent: 'flex-start' },
-              { flexDirection: 'row', justifyContent: 'flex-end' },
-            ]}
-            bottomBorder={true}
-            showDivider={false}
-            rowStyle={styles.row}
-            items={[
-              <BaseText h4>{d.cat_name}</BaseText>,
+        {CATEGORIES.map((d, i) => (
+          <BaseListItem key={i} showDivider>
+            <View style={styles.row}>
+              <BaseText h4>{d.cat_name}</BaseText>
               <IconButton
                 iconSize={20}
                 iconName="edit"
@@ -57,9 +49,9 @@ const EditCategoryScreen = () => {
                 onPress={() => {
                   navigation.navigate(ROUTES.categoryForm, { category: d });
                 }}
-              />,
-            ]}
-          />
+              />
+            </View>
+          </BaseListItem>
         ))}
       </BaseScrollView>
     </BaseScreen>
@@ -69,7 +61,9 @@ const EditCategoryScreen = () => {
 const getStyles = _ => {
   return StyleSheet.create({
     row: {
-      paddingVertical: 22,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
     },
   });
 };
