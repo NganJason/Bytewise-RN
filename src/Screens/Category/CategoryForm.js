@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useTheme, Icon } from '@rneui/themed';
-import Collapsible from 'react-native-collapsible';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from '@rneui/themed';
 
 import {
   BaseScreen,
@@ -9,7 +8,7 @@ import {
   BaseButton,
   BaseInput,
   BaseCurrencyInput,
-  BaseCheckbox,
+  BaseToggle,
 } from '../../Components';
 
 import {
@@ -24,6 +23,32 @@ import {
 import { useCreateCategory } from '../../_shared/api/mutations/category';
 import { useNavigation } from '@react-navigation/native';
 
+const categoryTypes = [
+  {
+    label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+    value: TRANSACTION_TYPE_INCOME,
+  },
+  {
+    label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+    value: TRANSACTION_TYPE_EXPENSE,
+  },
+];
+
+const budgetTypes = [
+  {
+    label: 'None',
+    value: 0,
+  },
+  {
+    label: BUDGET_TYPES[BUDGET_TYPE_MONTHLY],
+    value: BUDGET_TYPE_MONTHLY,
+  },
+  {
+    label: BUDGET_TYPES[BUDGET_TYPE_ANNUAL],
+    value: BUDGET_TYPE_ANNUAL,
+  },
+];
+
 const CategoryForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -32,7 +57,7 @@ const CategoryForm = ({ route }) => {
     route.params?.category || {
       category_id: '',
       category_name: '',
-      category_type: TRANSACTION_TYPE_EXPENSE,
+      category_type: categoryTypes[0].value,
     },
   );
 
@@ -41,7 +66,7 @@ const CategoryForm = ({ route }) => {
   };
 
   const onCategoryTypeChange = e => {
-    setCategoryForm({ ...categoryForm, category_type: e });
+    setCategoryForm({ ...categoryForm, category_type: e.value });
   };
 
   const navigation = useNavigation();
@@ -52,63 +77,25 @@ const CategoryForm = ({ route }) => {
     route.params?.budget || {
       budget_id: '',
       amount: '',
-      budget_type: BUDGET_TYPE_MONTHLY,
+      budget_type: budgetTypes[0].value,
     },
   );
 
   const budgetAmountRef = useRef(null);
 
   useEffect(() => {
-    if (isBudgetFormExpanded) {
+    if (budgetForm.budget_type !== 0) {
       budgetAmountRef.current.focus();
-    } else {
-      budgetAmountRef.current.blur();
     }
-  }, [isBudgetFormExpanded]);
-
-  const [isBudgetFormExpanded, setIsBudgetFormExpanded] = useState(
-    budgetForm.budget_id !== '',
-  );
-
-  const toggleBudgetForm = () => {
-    setIsBudgetFormExpanded(!isBudgetFormExpanded);
-  };
+  }, [budgetForm.budget_type]);
 
   const onAmountChange = e => {
     setBudgetForm({ ...budgetForm, amount: e });
   };
 
   const onBudgetTypeChange = e => {
-    setBudgetForm({ ...budgetForm, budget_type: e });
+    setBudgetForm({ ...budgetForm, budget_type: e.value });
   };
-
-  const renderBudgetToggle = () => {
-    if (isBudgetFormExpanded) {
-      return {
-        icon: (
-          <Icon
-            name="trash-o"
-            type="font-awesome"
-            color={theme.colors.red}
-            style={styles.budgetToggleIcon}
-          />
-        ),
-        text: <BaseText h4>Remove Budget</BaseText>,
-      };
-    }
-    return {
-      icon: (
-        <Icon
-          name="plus"
-          type="entypo"
-          color={theme.colors.color5}
-          style={styles.budgetToggleIcon}
-        />
-      ),
-      text: <BaseText h4>Add Budget</BaseText>,
-    };
-  };
-  const budgetToggle = renderBudgetToggle();
 
   return (
     <BaseScreen
@@ -129,57 +116,26 @@ const CategoryForm = ({ route }) => {
           clearButtonMode="always"
           autoFocus={categoryForm.category_id === ''}
         />
-        <View style={styles.checkboxes}>
-          <BaseCheckbox
-            title={TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE]}
-            checked={categoryForm.category_type === TRANSACTION_TYPE_EXPENSE}
-            onPress={() => {
-              onCategoryTypeChange(TRANSACTION_TYPE_EXPENSE);
-            }}
+        <BaseToggle
+          label="Category Type"
+          items={categoryTypes}
+          value={categoryForm.category_type}
+          onToggle={onCategoryTypeChange}
+        />
+        <BaseToggle
+          label="Budget Type"
+          items={budgetTypes}
+          value={budgetForm.budget_type}
+          onToggle={onBudgetTypeChange}
+        />
+        {budgetForm.budget_type !== 0 && (
+          <BaseCurrencyInput
+            ref={budgetAmountRef}
+            label="Budget Amount"
+            value={budgetForm.amount}
+            onChangeText={onAmountChange}
           />
-          <BaseCheckbox
-            title={TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME]}
-            checked={categoryForm.category_type === TRANSACTION_TYPE_INCOME}
-            onPress={() => {
-              onCategoryTypeChange(TRANSACTION_TYPE_INCOME);
-            }}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={toggleBudgetForm}
-          style={styles.budgetToggleButton}>
-          {budgetToggle.icon}
-          {budgetToggle.text}
-        </TouchableOpacity>
-
-        <View style={isBudgetFormExpanded && styles.collapsible}>
-          <Collapsible collapsed={!isBudgetFormExpanded}>
-            <>
-              <BaseCurrencyInput
-                ref={budgetAmountRef}
-                label="Amount"
-                value={budgetForm.amount}
-                onChangeText={onAmountChange}
-              />
-              <View style={styles.checkboxes}>
-                <BaseCheckbox
-                  title={BUDGET_TYPES[BUDGET_TYPE_MONTHLY]}
-                  checked={budgetForm.budget_type === BUDGET_TYPE_MONTHLY}
-                  onPress={() => {
-                    onBudgetTypeChange(BUDGET_TYPE_MONTHLY);
-                  }}
-                />
-                <BaseCheckbox
-                  title={BUDGET_TYPES[BUDGET_TYPE_ANNUAL]}
-                  checked={budgetForm.budget_type === BUDGET_TYPE_ANNUAL}
-                  onPress={() => {
-                    onBudgetTypeChange(BUDGET_TYPE_ANNUAL);
-                  }}
-                />
-              </View>
-            </>
-          </Collapsible>
-        </View>
+        )}
         <BaseButton
           title="Save"
           size="lg"
@@ -196,21 +152,6 @@ const getStyles = _ => {
   return StyleSheet.create({
     formBody: {
       paddingVertical: 22,
-    },
-    budgetToggleButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    collapsible: {
-      marginBottom: 20,
-    },
-    budgetToggleIcon: {
-      marginRight: 8,
-    },
-    checkboxes: {
-      marginBottom: 24,
-      flexDirection: 'row',
     },
   });
 };

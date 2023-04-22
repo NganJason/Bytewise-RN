@@ -16,7 +16,7 @@ const Category = ({ category: { category_name = '' }, amount = '' }) => {
     <TouchableOpacity
       style={styles.categoryContainer}
       onPress={() => {
-        navigation.navigate(ROUTES.budgetBreakdown, {
+        navigation.navigate(ROUTES.categoryBreakdown, {
           budget: {
             category: { category_name: category_name },
             amount: amount,

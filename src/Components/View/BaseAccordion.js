@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { ListItem, useTheme } from '@rneui/themed';
 
+import { BaseText } from '../Text';
 import BaseListItem from './BaseListItem';
-import BaseText from '../Text/BaseText';
 
 const BaseAccordion = ({
   title = '',
@@ -17,7 +17,7 @@ const BaseAccordion = ({
 
   return (
     <ListItem.Accordion
-      containerStyle={styles.container}
+      containerStyle={styles.accordionTitle}
       leftRotate
       isExpanded={isExpanded}
       onPress={onPress}
@@ -37,4 +37,9 @@ const BaseAccordion = ({
 
 export default BaseAccordion;
 
-const getStyles = _ => StyleSheet.create({});
+const getStyles = _ =>
+  StyleSheet.create({
+    accordionTitle: {
+      paddingHorizontal: 0,
+    },
+  });

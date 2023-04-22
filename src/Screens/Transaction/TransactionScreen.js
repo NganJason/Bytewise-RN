@@ -16,6 +16,14 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
+      subHeader={
+        <AggrSummary
+          aggrs={[
+            { label: 'Income', amount: '100' },
+            { label: 'Expense', amount: '-200' },
+          ]}
+        />
+      }
       headerProps={{
         allowBack: false,
         centerComponent: <MonthNavigator />,
@@ -28,12 +36,6 @@ const TransactionScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
-      <AggrSummary
-        aggrs={[
-          { label: 'Income', amount: '100' },
-          { label: 'Expense', amount: '-200' },
-        ]}
-      />
       <BaseScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions

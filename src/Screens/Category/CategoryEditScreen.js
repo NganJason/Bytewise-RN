@@ -13,7 +13,7 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { CATEGORIES } from '../../_shared/api/data/mock/category';
 
-const EditCategoryScreen = () => {
+const CategoryEditScreen = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -36,7 +36,7 @@ const EditCategoryScreen = () => {
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
         {CATEGORIES.map((d, i) => (
-          <BaseListItem key={i} showDivider>
+          <BaseListItem key={i} showDivider dividerMargin={6}>
             <View style={styles.row}>
               <BaseText h4>{d.cat_name}</BaseText>
               <IconButton
@@ -68,4 +68,4 @@ const getStyles = _ => {
   });
 };
 
-export default EditCategoryScreen;
+export default CategoryEditScreen;

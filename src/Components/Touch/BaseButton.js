@@ -1,7 +1,7 @@
 import { Button, useTheme } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import BaseText from '../Text/BaseText';
+import { BaseText } from '../Text';
 
 const BaseButton = ({
   type = 'solid',

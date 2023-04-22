@@ -65,6 +65,7 @@ const BaseInput = forwardRef(
         clearButtonMode={clearButtonMode}
         inputStyle={styles.input}
         pointerEvents={pointerEvents}
+        renderErrorMessage={false}
       />
     );
   },
@@ -87,6 +88,7 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
+      marginBottom: 28,
     },
     inputContainer: {
       paddingVertical: 6,

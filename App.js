@@ -21,11 +21,15 @@ import { initCategoryDao, initBudgetDao } from './src/_shared/api/dao';
 import { initFs } from './src/_shared/api/storage/';
 
 import { SplashScreen } from './src/Components';
+
 import HomeScreen from './src/Screens/HomeScreen';
-import BudgetBreakdownScreen from './src/Screens/Budget/BudgetBreakdownScreen';
-import TransactionForm from './src/Screens/Transaction/TransactionForm';
+
 import CategoryForm from './src/Screens/Category/CategoryForm';
-import EditCategoryScreen from './src/Screens/Category/EditCategoryScreen';
+import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
+import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
+
+import TransactionForm from './src/Screens/Transaction/TransactionForm';
+
 import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
 import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
@@ -135,13 +139,13 @@ function App() {
           component={TransactionForm}
         />
         <Stack.Screen
-          name={ROUTES.editCategory}
-          component={EditCategoryScreen}
+          name={ROUTES.categoryEdit}
+          component={CategoryEditScreen}
         />
         <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
         <Stack.Screen
-          name={ROUTES.budgetBreakdown}
-          component={BudgetBreakdownScreen}
+          name={ROUTES.categoryBreakdown}
+          component={CategoryBreakdownScreen}
         />
         <Stack.Screen name={ROUTES.cashAccount} component={CashAccountScreen} />
         <Stack.Screen

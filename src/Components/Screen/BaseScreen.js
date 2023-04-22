@@ -4,12 +4,13 @@ import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
 
-import HideKeyboard from '../Screen/HideKeyboard';
-import IconButton from '../Touch/IconButton';
-import BaseToast from '../View/BaseToast';
+import { IconButton } from '../Touch';
+import { BaseToast } from '../View';
+import HideKeyboard from './HideKeyboard';
 
 const BaseScreen = ({
   children,
+  subHeader = null,
   fabProps = {
     show: false,
     placement: 'right',
@@ -104,6 +105,7 @@ const BaseScreen = ({
             <PacmanIndicator size={70} color={theme.colors.primary} />
           ) : (
             <>
+              {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
               {children}
               {fabProps.show && (
                 <FAB
@@ -131,13 +133,13 @@ const BaseScreen = ({
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      paddingHorizontal: 22,
+      paddingHorizontal: 26,
       height: '100%',
       flex: 1,
     },
     header: {
       backgroundColor: theme.colors.white,
-      paddingHorizontal: 22,
+      paddingHorizontal: 26,
       borderBottomWidth: 0,
       paddingVertical: 0,
     },
@@ -145,7 +147,10 @@ const getStyles = theme =>
       paddingVertical: 0,
     },
     nonEmptyHeader: {
-      paddingVertical: 18,
+      paddingVertical: 22,
+    },
+    subHeader: {
+      paddingBottom: 22,
     },
     leftComponentStyle: {
       justifyContent: 'flex-start',

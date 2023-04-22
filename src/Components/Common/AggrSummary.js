@@ -35,7 +35,7 @@ const AggrSummary = ({ aggrs = [] }) => {
 const getStyles = _ => {
   return StyleSheet.create({
     aggrs: {
-      marginBottom: 16,
+      marginBottom: 0,
     },
     label: {
       marginBottom: 4,

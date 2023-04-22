@@ -1,26 +1,26 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import {
   BaseText,
   BaseScreen,
   DailyTransactions,
-  BaseLinearProgress,
   IconButton,
-  AggrSummary,
   BaseScrollView,
+  BudgetUsage,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
 
 import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
 
-const BudgetBreakdownScreen = ({ navigation }) => {
+const CategoryBreakdownScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
     <BaseScreen
+      subHeader={<BudgetUsage budget={'100'} used={'50'} />}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -44,9 +44,6 @@ const BudgetBreakdownScreen = ({ navigation }) => {
           />
         ),
       }}>
-      <View style={styles.subHeader}>
-        <BaseLinearProgress value={0.2} />
-      </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
         {TRANSACTIONS.map((t, i) => (
           <DailyTransactions
@@ -62,12 +59,6 @@ const BudgetBreakdownScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    subHeader: {
-      marginBottom: 16,
-    },
-    budgetTypeText: {
-      marginBottom: 16,
-    },
     categoryNameText: {
       marginBottom: 4,
       color: theme.colors.color1,
@@ -75,4 +66,4 @@ const getStyles = theme => {
   });
 };
 
-export default BudgetBreakdownScreen;
+export default CategoryBreakdownScreen;

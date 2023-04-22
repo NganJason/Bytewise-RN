@@ -41,22 +41,22 @@ const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const [isMonthlyExpanded, setIsMonthlyExpanded] = useState(true);
-  const [isAnnualExpanded, setIsAnnualExpanded] = useState(false);
+  const [isIncomeExpanded, setIsIncomeExpanded] = useState(false);
+  const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     // revert to default
-    setIsMonthlyExpanded(true);
-    setIsAnnualExpanded(false);
+    setIsIncomeExpanded(false);
+    setIsExpenseExpanded(true);
   }, [isFocused]);
 
   const toggleMonthly = () => {
-    setIsMonthlyExpanded(!isMonthlyExpanded);
+    setIsIncomeExpanded(!isIncomeExpanded);
   };
 
   const toggleAnnual = () => {
-    setIsAnnualExpanded(!isAnnualExpanded);
+    setIsExpenseExpanded(!isExpenseExpanded);
   };
 
   const renderCategories = (
@@ -89,7 +89,7 @@ const CategoryScreen = ({ navigation }) => {
       }}>
       <BaseScrollView>
         <BaseAccordion
-          isExpanded={isMonthlyExpanded}
+          isExpanded={isIncomeExpanded}
           onPress={toggleMonthly}
           title={
             <View style={styles.accordionTitle}>
@@ -101,7 +101,7 @@ const CategoryScreen = ({ navigation }) => {
           items={renderCategories(INCOME_CATEGORIES)}
         />
         <BaseAccordion
-          isExpanded={isAnnualExpanded}
+          isExpanded={isExpenseExpanded}
           onPress={toggleAnnual}
           title={
             <View style={styles.accordionTitle}>

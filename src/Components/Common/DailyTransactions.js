@@ -156,13 +156,13 @@ export default DailyTransactions;
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      marginVertical: 12,
+      marginBottom: 18,
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: theme.spacing.md,
+      marginBottom: 6,
     },
     titleItem: {
       flex: 2,

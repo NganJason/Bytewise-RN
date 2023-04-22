@@ -1,16 +1,19 @@
-import { ListItem } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+import { ListItem, useTheme } from '@rneui/themed';
 
 import BaseDivider from './BaseDivider';
 
 const BaseListItem = ({
   children,
   showDivider = false,
-  containerStyle = {},
   dividerMargin = 10,
 }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   return (
     <>
-      <ListItem containerStyle={containerStyle}>
+      <ListItem containerStyle={styles.listItem}>
         <ListItem.Content>{children}</ListItem.Content>
       </ListItem>
       {showDivider && (
@@ -21,3 +24,10 @@ const BaseListItem = ({
 };
 
 export default BaseListItem;
+
+const getStyles = _ =>
+  StyleSheet.create({
+    listItem: {
+      paddingHorizontal: 0,
+    },
+  });
