@@ -5,7 +5,7 @@ import { BaseText } from '../Text';
 
 const BaseButton = ({
   type = 'solid',
-  title = '', // TODO: Wrap text styles
+  title = '',
   loading = false,
   disabled = false,
   width = 0,
@@ -26,7 +26,7 @@ const BaseButton = ({
       case width !== 0:
         return width;
       case fullWidth:
-        return '90%';
+        return '100%';
       default:
         return 'auto';
     }
@@ -38,19 +38,24 @@ const BaseButton = ({
       type={type}
       loading={loading}
       disabled={disabled}
+      disabledStyle={styles.buttonDisabledStyle}
       buttonStyle={{
         ...styles.buttonDefaultStyle,
         ...buttonStyle,
       }}
       containerStyle={{
         width: getButtonWidth(),
-        ...(!fullWidth ? { alignSelf: align } : { alignSelf: 'center' }),
+        alignSelf: align,
         ...containerStyle,
       }}
       size={size}
       onPress={onPress}>
       {icon !== null && icon}
-      <BaseText h2 style={{ color: theme.colors.white }}>
+      <BaseText
+        h3
+        style={
+          disabled ? styles.disabledButtonTextStyle : styles.buttonTextStyle
+        }>
         {title}
       </BaseText>
     </Button>
@@ -62,6 +67,16 @@ export default BaseButton;
 const getStyles = theme =>
   StyleSheet.create({
     buttonDefaultStyle: {
-      ...theme.button,
+      borderRadius: 10,
+    },
+    buttonDisabledStyle: {
+      backgroundColor: theme.colors.color5,
+      opacity: 0.6,
+    },
+    buttonTextStyle: {
+      color: theme.colors.white,
+    },
+    disabledButtonTextStyle: {
+      color: theme.colors.color4,
     },
   });

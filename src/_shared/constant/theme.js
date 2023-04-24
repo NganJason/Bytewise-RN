@@ -99,9 +99,6 @@ export const THEME = createTheme({
       color: COLORS.color4,
     },
   },
-  button: {
-    borderRadius: 10,
-  },
   borderBottom: {
     borderColor: COLORS.color5,
     borderBottomWidth: 0.4,

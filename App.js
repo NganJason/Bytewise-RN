@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
+import * as Sentry from 'sentry-expo';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
@@ -14,11 +15,12 @@ import {
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_APP_ID,
   FIREBASE_MEASUREMENT_ID,
+  SENTRY_DSN,
 } from '@env';
 import { initializeApp } from 'firebase/app';
 
-import { initCategoryDao, initBudgetDao } from './src/_shared/api/dao';
-import { initFs } from './src/_shared/api/storage/';
+import { initCategoryDao } from './src/_shared/api/dao';
+import { initGlobalFirestore } from './src/_shared/api/storage/';
 
 import { SplashScreen } from './src/Components';
 
@@ -36,6 +38,12 @@ import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBrea
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+
+Sentry.init({
+  enableInExpoDevelopment: true,
+  dsn: SENTRY_DSN,
+  tracesSampleRate: 1.0,
+});
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
@@ -102,11 +110,10 @@ function App() {
 
         try {
           // Init Firestore
-          initFs(app);
+          initGlobalFirestore(app);
 
           // Init Daos
           initCategoryDao();
-          initBudgetDao();
         } catch (err) {
           // TODO: Handle error
           console.log(err);

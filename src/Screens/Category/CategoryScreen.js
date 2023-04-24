@@ -13,29 +13,9 @@ import {
   AmountText,
 } from '../../Components';
 
+import { useGetCategories } from '../../_shared/api/query';
+
 import ROUTES from '../../_shared/constant/routes';
-
-const INCOME_CATEGORIES = [
-  {
-    category: { category_name: 'Shopee Salary' },
-    amount: '7050',
-  },
-  {
-    category: { category_name: 'REIT Dividend' },
-    amount: '500',
-  },
-];
-
-const EXPENSE_CATEGORIES = [
-  {
-    category: { category_name: 'Food' },
-    amount: '200',
-  },
-  {
-    category: { category_name: 'Transport' },
-    amount: '10',
-  },
-];
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -44,6 +24,8 @@ const CategoryScreen = ({ navigation }) => {
   const [isIncomeExpanded, setIsIncomeExpanded] = useState(false);
   const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
   const isFocused = useIsFocused();
+
+  const categoryQuery = useGetCategories();
 
   useEffect(() => {
     // revert to default
@@ -59,15 +41,11 @@ const CategoryScreen = ({ navigation }) => {
     setIsExpenseExpanded(!isExpenseExpanded);
   };
 
-  const renderCategories = (
-    categories = [{ category: { category_name: '' }, amount: '' }],
-  ) => {
+  const renderCategories = (categories = [{ category_name: '' }]) => {
     const comps = [];
 
     categories.forEach(category => {
-      comps.push(
-        <Category category={category.category} amount={category.amount} />,
-      );
+      comps.push(<Category category={category} amount="0" />);
     });
 
     return comps;
@@ -75,6 +53,7 @@ const CategoryScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
+      isLoading={categoryQuery.isLoading}
       headerProps={{
         allowBack: false,
         centerComponent: <MonthNavigator />,
@@ -98,7 +77,7 @@ const CategoryScreen = ({ navigation }) => {
             </View>
           }
           titleColor={theme.colors.color4}
-          items={renderCategories(INCOME_CATEGORIES)}
+          items={renderCategories(categoryQuery.data)}
         />
         <BaseAccordion
           isExpanded={isExpenseExpanded}
@@ -110,7 +89,7 @@ const CategoryScreen = ({ navigation }) => {
             </View>
           }
           titleColor={theme.colors.color4}
-          items={renderCategories(EXPENSE_CATEGORIES)}
+          items={renderCategories(categoryQuery.data)}
         />
       </BaseScrollView>
     </BaseScreen>

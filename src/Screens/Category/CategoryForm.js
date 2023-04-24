@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 import {
   BaseScreen,
@@ -21,7 +22,7 @@ import {
 } from '../../_shared/api/data/model';
 
 import { useCreateCategory } from '../../_shared/api/mutations/category';
-import { useNavigation } from '@react-navigation/native';
+import { validateCategory } from '../../_shared/api/dao/category';
 
 const categoryTypes = [
   {
@@ -55,7 +56,6 @@ const CategoryForm = ({ route }) => {
 
   const [categoryForm, setCategoryForm] = useState(
     route.params?.category || {
-      category_id: '',
       category_name: '',
       category_type: categoryTypes[0].value,
     },
@@ -75,7 +75,6 @@ const CategoryForm = ({ route }) => {
 
   const [budgetForm, setBudgetForm] = useState(
     route.params?.budget || {
-      budget_id: '',
       amount: '',
       budget_type: budgetTypes[0].value,
     },
@@ -97,6 +96,19 @@ const CategoryForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, budget_type: e.value });
   };
 
+  const onFormSubmit = () => {
+    createCategory.mutate(categoryForm);
+  };
+
+  const isValidCategory = () => {
+    try {
+      validateCategory(categoryForm);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <BaseScreen
       errorToast={{
@@ -114,7 +126,7 @@ const CategoryForm = ({ route }) => {
           value={categoryForm.category_name}
           onChangeText={onCategoryNameChange}
           clearButtonMode="always"
-          autoFocus={categoryForm.category_id === ''}
+          autoFocus={true}
         />
         <BaseToggle
           label="Category Type"
@@ -140,8 +152,9 @@ const CategoryForm = ({ route }) => {
           title="Save"
           size="lg"
           width={200}
-          onPress={() => createCategory.mutate(categoryForm)}
+          onPress={onFormSubmit}
           loading={createCategory.isLoading}
+          disabled={!isValidCategory()}
         />
       </View>
     </BaseScreen>
