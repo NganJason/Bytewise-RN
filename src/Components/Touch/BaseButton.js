@@ -11,6 +11,7 @@ const BaseButton = ({
   width = 0,
   fullWidth = false,
   align = 'center',
+  marginVertical = 0,
   size = 'md',
   activeOpacity = 0.3,
   icon = null,
@@ -32,30 +33,61 @@ const BaseButton = ({
     }
   };
 
+  const getBtnTextStyle = () => {
+    switch (type) {
+      case 'solid':
+        return disabled
+          ? styles.disabledSolidButtonTextStyle
+          : styles.buttonSolidTextStyle;
+      case 'outline':
+        return disabled
+          ? styles.disabledButtonOutlineTextStyle
+          : styles.buttonOutlineTextStyle;
+      default:
+        return disabled
+          ? styles.disabledSolidButtonTextStyle
+          : styles.buttonSolidTextStyle;
+    }
+  };
+
+  const getBtnStyle = () => {
+    switch (type) {
+      case 'outline':
+        return !disabled && styles.buttonOutlineStyle;
+    }
+  };
+
+  const getBtnDisabledStyle = () => {
+    switch (type) {
+      case 'solid':
+        return styles.buttonSolidDisabledStyle;
+      case 'outline':
+        return styles.buttonOutlineDisabledStyle;
+    }
+  };
+
   return (
     <Button
       activeOpacity={activeOpacity}
       type={type}
       loading={loading}
       disabled={disabled}
-      disabledStyle={styles.buttonDisabledStyle}
+      disabledStyle={getBtnDisabledStyle()}
       buttonStyle={{
         ...styles.buttonDefaultStyle,
+        ...getBtnStyle(),
         ...buttonStyle,
       }}
       containerStyle={{
         width: getButtonWidth(),
         alignSelf: align,
+        marginVertical: marginVertical,
         ...containerStyle,
       }}
       size={size}
       onPress={onPress}>
       {icon !== null && icon}
-      <BaseText
-        h3
-        style={
-          disabled ? styles.disabledButtonTextStyle : styles.buttonTextStyle
-        }>
+      <BaseText h3 style={getBtnTextStyle()}>
         {title}
       </BaseText>
     </Button>
@@ -69,14 +101,28 @@ const getStyles = theme =>
     buttonDefaultStyle: {
       borderRadius: 10,
     },
-    buttonDisabledStyle: {
+    buttonSolidDisabledStyle: {
       backgroundColor: theme.colors.color5,
       opacity: 0.6,
     },
-    buttonTextStyle: {
+    buttonOutlineDisabledStyle: {
+      backgroundColor: theme.colors.white,
+      opacity: 0.6,
+      borderWidth: 0.6,
+    },
+    buttonSolidTextStyle: {
       color: theme.colors.white,
     },
-    disabledButtonTextStyle: {
+    disabledButtonSolidTextStyle: {
       color: theme.colors.color4,
+    },
+    buttonOutlineTextStyle: {
+      color: theme.colors.color1,
+    },
+    disabledButtonOutlineTextStyle: {
+      color: theme.colors.color4,
+    },
+    buttonOutlineStyle: {
+      borderWidth: 0.6,
     },
   });

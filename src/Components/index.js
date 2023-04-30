@@ -31,7 +31,7 @@ import {
 // Common
 import {
   DailyTransactions,
-  MonthNavigator,
+  DateNavigator,
   AggrSummary,
   Category,
   BudgetUsage,
@@ -55,7 +55,7 @@ export {
   AmountText,
   BaseBottomSheet,
   BaseTabView,
-  MonthNavigator,
+  DateNavigator,
   BaseLinearProgress,
   BaseToast,
   BaseScrollView,

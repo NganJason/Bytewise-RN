@@ -56,20 +56,17 @@ export default BaseToggle;
 
 const getStyles = theme =>
   StyleSheet.create({
-    container: {
-      marginBottom: 28,
-    },
+    container: {},
     toggle: {
       flexDirection: 'row',
       borderWidth: 2,
       borderColor: theme.colors.color1,
-      borderRadius: '30%',
+      borderRadius: '20%',
       alignSelf: 'flex-start',
       marginTop: 14,
     },
     item: {
       minWidth: 100,
-      margin: 4,
       paddingVertical: 8,
       alignItems: 'center',
     },
@@ -77,12 +74,12 @@ const getStyles = theme =>
       backgroundColor: theme.colors.color1,
     },
     leftSelected: {
-      borderTopLeftRadius: '30%',
-      borderBottomLeftRadius: '30%',
+      borderTopLeftRadius: '20%',
+      borderBottomLeftRadius: '20%',
     },
     rightSelected: {
-      borderTopRightRadius: '30%',
-      borderBottomRightRadius: '30%',
+      borderTopRightRadius: '20%',
+      borderBottomRightRadius: '20%',
     },
     selectedLabel: {
       color: theme.colors.white,

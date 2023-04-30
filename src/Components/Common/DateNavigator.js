@@ -5,13 +5,15 @@ import { useTheme } from '@rneui/themed';
 import BaseText from '../Text/BaseText';
 import IconButton from '../Touch/IconButton';
 
-import { moveMonth } from '../../_shared/util/util';
+import { moveMonth } from '../../_shared/util/date';
 import { MONTHS } from '../../_shared/constant/constant';
 
-const MonthNavigator = ({
+const DateNavigator = ({
   startingDate = new Date(),
   onForward = function () {},
   onBackward = function () {},
+  month = true,
+  year = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -19,18 +21,34 @@ const MonthNavigator = ({
   const [date, setDate] = useState(startingDate);
 
   const renderDate = () => {
-    const month = MONTHS[date.getMonth()];
-    return `${month} ${date.getFullYear()}`;
+    if (year) {
+      return `${date.getFullYear()}`;
+    }
+
+    const monthStr = MONTHS[date.getMonth()];
+    return `${monthStr} ${date.getFullYear()}`;
   };
 
-  const moveOneMonthForward = () => {
-    const newDate = moveMonth(date, 1);
+  const moveForward = () => {
+    let newDate;
+    if (year) {
+      newDate = moveMonth(date, 12);
+    } else {
+      newDate = moveMonth(date, 1);
+    }
+
     setDate(newDate);
     onForward(newDate);
   };
 
-  const moveOneMonthBackward = () => {
-    const newDate = moveMonth(date, -1);
+  const moveBackward = () => {
+    let newDate;
+    if (year) {
+      newDate = moveMonth(date, -12);
+    } else {
+      newDate = moveMonth(date, -1);
+    }
+
     setDate(newDate);
     onBackward(newDate);
   };
@@ -40,7 +58,7 @@ const MonthNavigator = ({
       <IconButton
         iconName="chevron-left"
         type="entypo"
-        onPress={moveOneMonthBackward}
+        onPress={moveBackward}
         color={theme.colors.grey2}
       />
       <BaseText h2 style={styles.date}>
@@ -49,14 +67,14 @@ const MonthNavigator = ({
       <IconButton
         iconName="chevron-right"
         type="entypo"
-        onPress={moveOneMonthForward}
+        onPress={moveForward}
         color={theme.colors.grey2}
       />
     </View>
   );
 };
 
-export default MonthNavigator;
+export default DateNavigator;
 
 const getStyles = theme =>
   StyleSheet.create({

@@ -25,19 +25,19 @@ import { initGlobalFirestore } from './src/_shared/api/storage/';
 import { SplashScreen } from './src/Components';
 
 import HomeScreen from './src/Screens/HomeScreen';
-
-import CategoryForm from './src/Screens/Category/CategoryForm';
-import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
-import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
-
-import TransactionForm from './src/Screens/Transaction/TransactionForm';
-
 import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
 import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
+import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
+import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
+
+import CategoryForm from './src/Screens/Category/CategoryForm';
+import BudgetForm from './src/Screens/Budget/BudgetForm';
+import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+import BudgetEditScreen from './src/Screens/Budget/BudgetEditScreen';
 
 Sentry.init({
   enableInExpoDevelopment: true,
@@ -150,10 +150,12 @@ function App() {
           component={CategoryEditScreen}
         />
         <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
+        <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
         <Stack.Screen
           name={ROUTES.categoryBreakdown}
           component={CategoryBreakdownScreen}
         />
+        <Stack.Screen name={ROUTES.budgetEdit} component={BudgetEditScreen} />
         <Stack.Screen name={ROUTES.cashAccount} component={CashAccountScreen} />
         <Stack.Screen
           name={ROUTES.investmentAccount}

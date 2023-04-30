@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -8,14 +8,10 @@ import {
   BaseText,
   BaseButton,
   BaseInput,
-  BaseCurrencyInput,
   BaseToggle,
 } from '../../Components';
 
 import {
-  BUDGET_TYPE_MONTHLY,
-  BUDGET_TYPE_ANNUAL,
-  BUDGET_TYPES,
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
@@ -23,36 +19,23 @@ import {
 
 import { useCreateCategory } from '../../_shared/api/mutations/category';
 import { validateCategory } from '../../_shared/api/dao/category';
+import ROUTES from '../../_shared/constant/routes';
 
 const categoryTypes = [
-  {
-    label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-    value: TRANSACTION_TYPE_INCOME,
-  },
   {
     label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
     value: TRANSACTION_TYPE_EXPENSE,
   },
-];
-
-const budgetTypes = [
   {
-    label: 'None',
-    value: 0,
-  },
-  {
-    label: BUDGET_TYPES[BUDGET_TYPE_MONTHLY],
-    value: BUDGET_TYPE_MONTHLY,
-  },
-  {
-    label: BUDGET_TYPES[BUDGET_TYPE_ANNUAL],
-    value: BUDGET_TYPE_ANNUAL,
+    label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+    value: TRANSACTION_TYPE_INCOME,
   },
 ];
 
 const CategoryForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
   const [categoryForm, setCategoryForm] = useState(
     route.params?.category || {
@@ -69,35 +52,14 @@ const CategoryForm = ({ route }) => {
     setCategoryForm({ ...categoryForm, category_type: e.value });
   };
 
-  const navigation = useNavigation();
-
   const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
-
-  const [budgetForm, setBudgetForm] = useState(
-    route.params?.budget || {
-      amount: '',
-      budget_type: budgetTypes[0].value,
-    },
-  );
-
-  const budgetAmountRef = useRef(null);
-
-  useEffect(() => {
-    if (budgetForm.budget_type !== 0) {
-      budgetAmountRef.current.focus();
-    }
-  }, [budgetForm.budget_type]);
-
-  const onAmountChange = e => {
-    setBudgetForm({ ...budgetForm, amount: e });
-  };
-
-  const onBudgetTypeChange = e => {
-    setBudgetForm({ ...budgetForm, budget_type: e.value });
-  };
 
   const onFormSubmit = () => {
     createCategory.mutate(categoryForm);
+  };
+
+  const onAddBudget = () => {
+    navigation.navigate(ROUTES.budgetForm);
   };
 
   const isValidCategory = () => {
@@ -119,7 +81,8 @@ const CategoryForm = ({ route }) => {
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,
-      }}>
+      }}
+      bodyStyle={styles.screen}>
       <View style={styles.formBody}>
         <BaseInput
           label="Category Name"
@@ -134,28 +97,30 @@ const CategoryForm = ({ route }) => {
           value={categoryForm.category_type}
           onToggle={onCategoryTypeChange}
         />
-        <BaseToggle
-          label="Budget Type"
-          items={budgetTypes}
-          value={budgetForm.budget_type}
-          onToggle={onBudgetTypeChange}
-        />
-        {budgetForm.budget_type !== 0 && (
-          <BaseCurrencyInput
-            ref={budgetAmountRef}
-            label="Budget Amount"
-            value={budgetForm.amount}
-            onChangeText={onAmountChange}
+
+        <View style={styles.btnContainer}>
+          <BaseButton
+            title="Add budget"
+            size="lg"
+            type="outline"
+            width={200}
+            onPress={onAddBudget}
+            disabled={
+              !isValidCategory() ||
+              categoryForm.category_type === TRANSACTION_TYPE_INCOME
+            }
+            marginVertical={10}
           />
-        )}
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onFormSubmit}
-          loading={createCategory.isLoading}
-          disabled={!isValidCategory()}
-        />
+          <BaseButton
+            title="Save"
+            size="lg"
+            width={200}
+            onPress={onFormSubmit}
+            loading={createCategory.isLoading}
+            disabled={!isValidCategory()}
+            marginVertical={5}
+          />
+        </View>
       </View>
     </BaseScreen>
   );
@@ -163,9 +128,13 @@ const CategoryForm = ({ route }) => {
 
 const getStyles = _ => {
   return StyleSheet.create({
+    screen: {
+      justifyContent: 'space-between',
+    },
     formBody: {
       paddingVertical: 22,
     },
+    btnContainer: { marginVertical: 50 },
   });
 };
 

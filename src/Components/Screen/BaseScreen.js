@@ -79,6 +79,7 @@ const BaseScreen = ({
                 iconName="chevron-left"
                 iconType="entypo"
                 color={theme.colors.color4}
+                align="left"
               />
             )}
             {headerProps.leftComponent}
@@ -153,9 +154,9 @@ const getStyles = theme =>
       paddingBottom: 22,
     },
     leftComponentStyle: {
-      justifyContent: 'flex-start',
-      alignItems: 'center',
       flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
     },
     centerComponentStyle: {
       justifyContent: 'center',

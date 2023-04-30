@@ -1,39 +1,68 @@
-export const budgetOverviewData = {
-  date: '2023-03',
-  totalAmount: '123',
-  totalUsed: '12121',
-  monthly_budget: [
+export const monthlyBudgetInfo = {
+  cat_id: 1,
+  cat_name: 'Personal',
+  budget_type: 1,
+  budget_year: 2023,
+  currency: 'SGD',
+  default_budget: 1000,
+  budget_breakdown: [
     {
-      category: {
-        cat_id: 1,
-        cat_name: 'Food',
-      },
-      amount: '600',
-      used: '100',
-      ctime: 1673153014,
-      mtime: 1673153014,
+      month: 0,
+      budget: 500,
     },
     {
-      category: {
-        cat_id: 2,
-        cat_name: 'Clothes',
-      },
-      amount: '200',
-      used: '100',
-      ctime: 1673153014,
-      mtime: 1673153014,
+      month: 1,
+      budget: 500,
+    },
+    {
+      month: 2,
+      budget: 500,
+    },
+    {
+      month: 3,
+      budget: 500,
+    },
+    {
+      month: 4,
+      budget: 500,
+    },
+    {
+      month: 5,
+      budget: 500,
+    },
+    {
+      month: 6,
+      budget: 500,
+    },
+    {
+      month: 7,
+      budget: 500,
+    },
+    {
+      month: 8,
+      budget: 500,
+    },
+    {
+      month: 9,
+      budget: 500,
+    },
+    {
+      month: 10,
+      budget: 500,
+    },
+    {
+      month: 11,
+      budget: 500,
     },
   ],
-  annual_budget: [
-    {
-      category: {
-        cat_id: 4,
-        cat_name: 'Sports',
-      },
-      amount: '200',
-      used: '100',
-      ctime: 1673153014,
-      mtime: 1673153014,
-    },
-  ],
+};
+
+export const annualBudgetInfo = {
+  cat_id: 1,
+  cat_name: 'Personal',
+  budget_type: 2,
+  budget_year: 2023,
+  currency: 'SGD',
+  default_budget: 1000,
+  budget_breakdown: [],
 };

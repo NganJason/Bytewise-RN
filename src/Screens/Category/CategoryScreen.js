@@ -5,7 +5,7 @@ import { useTheme } from '@rneui/themed';
 
 import {
   BaseScreen,
-  MonthNavigator,
+  DateNavigator,
   BaseAccordion,
   BaseScrollView,
   Category,
@@ -56,7 +56,7 @@ const CategoryScreen = ({ navigation }) => {
       isLoading={categoryQuery.isLoading}
       headerProps={{
         allowBack: false,
-        centerComponent: <MonthNavigator />,
+        centerComponent: <DateNavigator />,
       }}
       fabProps={{
         show: true,
@@ -66,7 +66,7 @@ const CategoryScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
-      <BaseScrollView>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
         <BaseAccordion
           isExpanded={isIncomeExpanded}
           onPress={toggleMonthly}

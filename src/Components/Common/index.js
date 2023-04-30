@@ -1,13 +1,7 @@
 import DailyTransactions from './DailyTransactions';
-import MonthNavigator from './MonthNavigator';
+import DateNavigator from './DateNavigator';
 import AggrSummary from './AggrSummary';
 import Category from './Category';
 import BudgetUsage from './BudgetUsage';
 
-export {
-  DailyTransactions,
-  MonthNavigator,
-  Category,
-  AggrSummary,
-  BudgetUsage,
-};
+export { DailyTransactions, DateNavigator, Category, AggrSummary, BudgetUsage };

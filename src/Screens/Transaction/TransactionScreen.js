@@ -2,7 +2,7 @@ import { useTheme } from '@rneui/themed';
 
 import {
   BaseScreen,
-  MonthNavigator,
+  DateNavigator,
   DailyTransactions,
   AggrSummary,
   BaseScrollView,
@@ -26,7 +26,7 @@ const TransactionScreen = ({ navigation }) => {
       }
       headerProps={{
         allowBack: false,
-        centerComponent: <MonthNavigator />,
+        centerComponent: <DateNavigator />,
       }}
       fabProps={{
         show: true,
