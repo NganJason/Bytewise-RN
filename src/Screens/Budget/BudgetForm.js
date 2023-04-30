@@ -11,8 +11,12 @@ import {
 } from '../../Components';
 import Budget from '../../Components/Common/Budget';
 import { monthlyBudgetInfo } from '../../_shared/api/data/mock/budget';
-import { MONTHS, MONTHS_VALUE } from '../../_shared/constant/constant';
-import { getCurrMonth } from '../../_shared/util/date';
+import { MONTHS } from '../../_shared/constant/constant';
+import {
+  getCurrMonth,
+  getCurrYear,
+  isMonthValid,
+} from '../../_shared/util/date';
 import {
   getBudgetTypes,
   getDefaultMonthlyBudgetBreakdown,
@@ -63,13 +67,16 @@ const BudgetForm = () => {
     comps.push(
       <Budget
         key="default"
+        title="Default Budget"
+        year={getCurrYear()}
+        label="default"
         amount={default_budget}
-        onChange={onDefaultBudgetChange}
+        onValChange={onDefaultBudgetChange}
       />,
     );
 
     budget_breakdown.forEach(d => {
-      if (d.month > MONTHS_VALUE.Dec || d.month < MONTHS_VALUE.Jan) {
+      if (!isMonthValid(d.month)) {
         return;
       }
 
@@ -77,8 +84,11 @@ const BudgetForm = () => {
         <Budget
           key={d.month}
           title={MONTHS[d.month]}
+          year={getCurrYear()}
+          label={d.month}
           amount={d.budget}
           highlight={Number(d.month) === getCurrMonth()}
+          onValChange={onBudgetChange}
         />,
       );
     });
@@ -86,18 +96,37 @@ const BudgetForm = () => {
     return comps;
   };
 
-  const onDefaultBudgetChange = () => {};
+  const onDefaultBudgetChange = (_, e) => {
+    let currMonth = getCurrMonth();
+    let { budget_breakdown: breakdown = [] } = budgetForm;
+
+    let newBreakdown = breakdown.map(d => {
+      if (d.month > currMonth) {
+        d.budget = e;
+      }
+
+      return d;
+    });
+
+    setBudgetForm({
+      ...budgetForm,
+      default_budget: e,
+      budget_breakdown: newBreakdown,
+    });
+  };
 
   const onBudgetChange = (label, e) => {
     let { budget_breakdown: breakdown = [] } = budgetForm;
 
-    breakdown.forEach((b, idx) => {
-      if (b.month === Number(label)) {
-        breakdown[idx].budget = Number(e);
+    let newBreakdown = breakdown.map(d => {
+      if (d.month === Number(label)) {
+        d.budget = e;
       }
+
+      return d;
     });
 
-    setBudgetForm({ ...budgetForm, budget_breakdown: breakdown });
+    setBudgetForm({ ...budgetForm, budget_breakdown: newBreakdown });
   };
 
   return (
@@ -121,7 +150,6 @@ const BudgetForm = () => {
             onSelect={onBudgetTypeChange}
           />
         </BaseListItem>
-
         {renderBudgets()}
       </BaseScrollView>
 
