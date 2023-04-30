@@ -5,7 +5,6 @@ const ROUTES = {
   categoryForm: 'Category Form',
   categoryBreakdown: 'Category Breakdown',
   budgetForm: 'Budget Form',
-  budgetEdit: 'Budget Edit',
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
   asset: 'Asset',

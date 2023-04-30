@@ -37,7 +37,6 @@ import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
-import BudgetEditScreen from './src/Screens/Budget/BudgetEditScreen';
 
 Sentry.init({
   enableInExpoDevelopment: true,
@@ -155,7 +154,6 @@ function App() {
           name={ROUTES.categoryBreakdown}
           component={CategoryBreakdownScreen}
         />
-        <Stack.Screen name={ROUTES.budgetEdit} component={BudgetEditScreen} />
         <Stack.Screen name={ROUTES.cashAccount} component={CashAccountScreen} />
         <Stack.Screen
           name={ROUTES.investmentAccount}
