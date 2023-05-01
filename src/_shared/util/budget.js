@@ -13,15 +13,15 @@ export const getBudgetTypes = () => {
   return budgetTypes;
 };
 
-export const getDefaultMonthlyBudgetBreakdown = (cachedBreakdown = []) => {
-  if (cachedBreakdown.length > 0) {
-    return cachedBreakdown;
+export const getDefaultMonthlyBudgetBreakdown = (initialMonthlyBudget = []) => {
+  if (initialMonthlyBudget.length > 0) {
+    return initialMonthlyBudget;
   }
 
   let defaultBudgets = [];
   Object.keys(MONTHS).forEach(m => {
     defaultBudgets.push({
-      month: m,
+      month: Number(m),
       budget: 0,
     });
   });

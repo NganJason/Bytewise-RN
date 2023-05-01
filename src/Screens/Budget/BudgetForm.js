@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View } from 'react-native';
 import {
@@ -28,16 +28,41 @@ import {
 } from '../../_shared/api/apis/1_enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
 
-const BudgetForm = () => {
+const BudgetForm = ({ route }) => {
   const styles = getStyles();
   const navigation = useNavigation();
+  const {
+    categoryID = 0,
+    cachedBudget = null,
+    setCachedBudget = function () {},
+  } = route.params;
 
   const [budgetForm, setBudgetForm] = useState(monthlyBudgetInfo);
-  const [cachedBudget] = useState(monthlyBudgetInfo);
+  // To retain the original monthly budget
+  // in case user switch to annual budget then switch back to monthly budget
+  const [monthlyBudget, setMonthlyBudget] = useState(monthlyBudgetInfo);
+
+  useEffect(() => {
+    if (cachedBudget !== null) {
+      setBudgetForm(cachedBudget);
+      setMonthlyBudget(cachedBudget);
+      return;
+    }
+
+    if (categoryID === 0) {
+      let defaultBudget = {
+        budget_type: BUDGET_TYPE_MONTHLY,
+        budget_breakdown: getDefaultMonthlyBudgetBreakdown([]),
+      };
+      setBudgetForm(defaultBudget);
+      setMonthlyBudget(defaultBudget);
+    }
+  }, [cachedBudget, categoryID]);
 
   const onBudgetTypeChange = e => {
     let { budget_breakdown = [] } = budgetForm;
-    let { budget_breakdown: cached_breakdown = [] } = cachedBudget;
+    let { budget_breakdown: initialMonthlyBudgetBreakdown = [] } =
+      monthlyBudget;
 
     if (Number(e.value) === BUDGET_TYPE_ANNUAL) {
       budget_breakdown = [];
@@ -45,7 +70,9 @@ const BudgetForm = () => {
 
     if (Number(e.value) === BUDGET_TYPE_MONTHLY) {
       if (budget_breakdown.length === 0) {
-        budget_breakdown = getDefaultMonthlyBudgetBreakdown(cached_breakdown);
+        budget_breakdown = getDefaultMonthlyBudgetBreakdown(
+          initialMonthlyBudgetBreakdown,
+        );
       }
     }
 
@@ -56,7 +83,48 @@ const BudgetForm = () => {
     });
   };
 
+  const onDefaultBudgetChange = (_, e) => {
+    let currMonth = getCurrMonth();
+    let { budget_breakdown: breakdown = [] } = budgetForm;
+
+    let newBreakdown = breakdown.map(d => {
+      if (d.month >= currMonth) {
+        d.budget = e;
+      }
+
+      return d;
+    });
+
+    setBudgetForm({
+      ...budgetForm,
+      default_budget: e,
+      budget_breakdown: newBreakdown,
+    });
+  };
+
+  const onBudgetChange = (label, e) => {
+    let { budget_breakdown: breakdown = [] } = budgetForm;
+    let newBreakdown = breakdown.map(d => {
+      if (d.month === Number(label)) {
+        d.budget = e;
+      }
+
+      return d;
+    });
+
+    let newBudget = { ...budgetForm, budget_breakdown: newBreakdown };
+    if (budgetForm.budget_type === BUDGET_TYPE_MONTHLY) {
+      setMonthlyBudget(newBudget);
+    }
+
+    setBudgetForm(newBudget);
+  };
+
   const onSave = () => {
+    if (categoryID === 0) {
+      setCachedBudget(budgetForm);
+    }
+
     navigation.goBack();
   };
 
@@ -94,39 +162,6 @@ const BudgetForm = () => {
     });
 
     return comps;
-  };
-
-  const onDefaultBudgetChange = (_, e) => {
-    let currMonth = getCurrMonth();
-    let { budget_breakdown: breakdown = [] } = budgetForm;
-
-    let newBreakdown = breakdown.map(d => {
-      if (d.month > currMonth) {
-        d.budget = e;
-      }
-
-      return d;
-    });
-
-    setBudgetForm({
-      ...budgetForm,
-      default_budget: e,
-      budget_breakdown: newBreakdown,
-    });
-  };
-
-  const onBudgetChange = (label, e) => {
-    let { budget_breakdown: breakdown = [] } = budgetForm;
-
-    let newBreakdown = breakdown.map(d => {
-      if (d.month === Number(label)) {
-        d.budget = e;
-      }
-
-      return d;
-    });
-
-    setBudgetForm({ ...budgetForm, budget_breakdown: newBreakdown });
   };
 
   return (

@@ -38,6 +38,7 @@ const CategoryForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const [cachedBudget, setCachedBudget] = useState(null);
   const [categoryForm, setCategoryForm] = useState(
     route.params?.category || {
       category_name: '',
@@ -65,7 +66,10 @@ const CategoryForm = ({ route }) => {
   };
 
   const onAddBudget = () => {
-    navigation.navigate(ROUTES.budgetForm);
+    navigation.navigate(ROUTES.budgetForm, {
+      cachedBudget: cachedBudget,
+      setCachedBudget: setCachedBudget,
+    });
   };
 
   const isValidCategory = () => {
@@ -106,7 +110,7 @@ const CategoryForm = ({ route }) => {
 
         <View style={styles.btnContainer}>
           <BaseButton
-            title="Add budget"
+            title={cachedBudget === null ? 'Add Budget' : 'Edit Budget'}
             size="lg"
             type="outline"
             width={200}

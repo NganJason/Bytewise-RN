@@ -1,4 +1,5 @@
 export const monthlyBudgetInfo = {
+  budget_id: 1,
   cat_id: 1,
   cat_name: 'Personal',
   budget_type: 1,
@@ -58,6 +59,7 @@ export const monthlyBudgetInfo = {
 };
 
 export const annualBudgetInfo = {
+  budget_id: 1,
   cat_id: 1,
   cat_name: 'Personal',
   budget_type: 2,
