@@ -16,6 +16,10 @@ import {
 import { useGetCategories } from '../../_shared/api/query';
 
 import ROUTES from '../../_shared/constant/routes';
+import {
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+} from '../../_shared/api/apis/1_enum';
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -41,11 +45,16 @@ const CategoryScreen = ({ navigation }) => {
     setIsExpenseExpanded(!isExpenseExpanded);
   };
 
-  const renderCategories = (categories = [{ category_name: '' }]) => {
+  const renderCategories = (
+    categories = [{ category_name: '' }],
+    categoryType,
+  ) => {
     const comps = [];
 
     categories.forEach(category => {
-      comps.push(<Category category={category} amount="0" />);
+      if (category.category_type === categoryType) {
+        comps.push(<Category category={category} amount="0" />);
+      }
     });
 
     return comps;
@@ -77,7 +86,7 @@ const CategoryScreen = ({ navigation }) => {
             </View>
           }
           titleColor={theme.colors.color4}
-          items={renderCategories(categoryQuery.data)}
+          items={renderCategories(categoryQuery.data, TRANSACTION_TYPE_INCOME)}
         />
         <BaseAccordion
           isExpanded={isExpenseExpanded}
@@ -89,7 +98,7 @@ const CategoryScreen = ({ navigation }) => {
             </View>
           }
           titleColor={theme.colors.color4}
-          items={renderCategories(categoryQuery.data)}
+          items={renderCategories(categoryQuery.data, TRANSACTION_TYPE_EXPENSE)}
         />
       </BaseScrollView>
     </BaseScreen>
