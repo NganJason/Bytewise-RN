@@ -3,7 +3,7 @@ import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
-import { INVESTMENT_ACCOUNT } from '../../_shared/api/data/mock/investment_account';
+import { INVESTMENT_ACCOUNT } from '../../_shared/api/mock_data/investment_account';
 
 const InvestmentAccountScreen = ({ navigation }) => {
   const { theme } = useTheme();

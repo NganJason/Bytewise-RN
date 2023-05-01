@@ -10,3 +10,9 @@ export class UninitializedError extends AppError {
     super(message);
   }
 }
+
+export class CategoryError extends AppError {
+  constructor(message) {
+    super(message);
+  }
+}

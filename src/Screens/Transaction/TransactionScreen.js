@@ -8,7 +8,7 @@ import {
   BaseScrollView,
 } from '../../Components';
 
-import { TRANSACTIONS } from '../../_shared/api/data/mock/transaction';
+import { TRANSACTIONS } from '../../_shared/api/mock_data/transaction';
 import ROUTES from '../../_shared/constant/routes';
 
 const TransactionScreen = ({ navigation }) => {

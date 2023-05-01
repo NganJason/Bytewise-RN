@@ -19,11 +19,11 @@ import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
-} from '../../_shared/api/data/model';
+} from '../../_shared/api/apis/1_enum';
 
-import { CATEGORIES } from '../../_shared/api/data/mock/category';
+import { CATEGORIES } from '../../_shared/api/mock_data/category';
 
-import { ACCOUNTS } from '../../_shared/api/data/mock/account';
+import { ACCOUNTS } from '../../_shared/api/mock_data/account';
 
 import { DAYS } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';

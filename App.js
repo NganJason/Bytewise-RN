@@ -7,20 +7,7 @@ import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import {
-  FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_APP_ID,
-  FIREBASE_MEASUREMENT_ID,
-  SENTRY_DSN,
-} from '@env';
-import { initializeApp } from 'firebase/app';
-
-import { initCategoryDao } from './src/_shared/api/dao';
-import { initGlobalFirestore } from './src/_shared/api/storage/';
+import { SENTRY_DSN } from '@env';
 
 import { SplashScreen } from './src/Components';
 
@@ -37,22 +24,13 @@ import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+import { initBackend } from './backend/backend';
 
 Sentry.init({
   enableInExpoDevelopment: true,
   dsn: SENTRY_DSN,
   tracesSampleRate: 1.0,
 });
-
-const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
-  authDomain: FIREBASE_AUTH_DOMAIN,
-  projectId: FIREBASE_PROJECT_ID,
-  storageBucket: FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-  appId: FIREBASE_APP_ID,
-  measurementId: FIREBASE_MEASUREMENT_ID,
-};
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -104,15 +82,8 @@ function App() {
           require('./assets/icons/fonts/Nucleo.ttf'),
         );
 
-        // Init Firebase
-        const app = initializeApp(firebaseConfig);
-
         try {
-          // Init Firestore
-          initGlobalFirestore(app);
-
-          // Init Daos
-          initCategoryDao();
+          initBackend();
         } catch (err) {
           // TODO: Handle error
           console.log(err);

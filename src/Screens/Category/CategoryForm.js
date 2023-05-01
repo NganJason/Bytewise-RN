@@ -15,11 +15,12 @@ import {
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/data/model';
+} from '../../_shared/api/apis/1_enum';
 
 import { useCreateCategory } from '../../_shared/api/mutations/category';
-import { validateCategory } from '../../_shared/api/dao/category';
+import { validateCategory } from '../../_shared/validator';
 import ROUTES from '../../_shared/constant/routes';
+import { newCreateCategoryReq } from '../../_shared/api/apis/0_type';
 
 const categoryTypes = [
   {
@@ -55,7 +56,12 @@ const CategoryForm = ({ route }) => {
   const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
 
   const onFormSubmit = () => {
-    createCategory.mutate(categoryForm);
+    createCategory.mutate(
+      newCreateCategoryReq(
+        categoryForm.category_name,
+        categoryForm.category_type,
+      ),
+    );
   };
 
   const onAddBudget = () => {

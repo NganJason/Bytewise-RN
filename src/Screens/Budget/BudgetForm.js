@@ -10,7 +10,7 @@ import {
   DateNavigator,
 } from '../../Components';
 import Budget from '../../Components/Common/Budget';
-import { monthlyBudgetInfo } from '../../_shared/api/data/mock/budget';
+import { monthlyBudgetInfo } from '../../_shared/api/mock_data/budget';
 import { MONTHS } from '../../_shared/constant/constant';
 import {
   getCurrMonth,
@@ -25,7 +25,7 @@ import {
   BUDGET_TYPES,
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
-} from '../../_shared/api/data/model';
+} from '../../_shared/api/apis/1_enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
 
 const BudgetForm = () => {

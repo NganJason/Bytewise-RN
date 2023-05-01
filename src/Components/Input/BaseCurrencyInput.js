@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import BaseInput from './BaseInput';
 
-import { CURRENCY } from '../../_shared/api/data/mock/user';
+import { CURRENCY } from '../../_shared/api/mock_data/user';
 
 const BaseCurrencyInput = forwardRef(
   (

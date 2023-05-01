@@ -1,3 +1,4 @@
+import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
   addDoc,
@@ -6,10 +7,27 @@ import {
   doc,
   runTransaction,
 } from 'firebase/firestore';
+import { firebaseConfig } from '../../common/config';
 
-import { AppError, UninitializedError } from '../error';
+import { AppError, UninitializedError } from '../../util/error';
 
 var firestore;
+
+export const initGlobalFirestore = () => {
+  if (firestore !== undefined) {
+    return;
+  }
+
+  const app = initializeApp(firebaseConfig);
+  firestore = new Firestore(getFirestore(app));
+};
+
+export const getGlobalFirestore = () => {
+  if (firestore === undefined) {
+    throw new UninitializedError('firestore uninitialized');
+  }
+  return firestore;
+};
 
 class FirestoreError extends AppError {
   constructor(message) {
@@ -72,17 +90,3 @@ class FirestoreTx extends Firestore {
     }
   }
 }
-
-export const initGlobalFirestore = app => {
-  if (firestore !== undefined) {
-    return;
-  }
-  firestore = new Firestore(getFirestore(app));
-};
-
-export const getGlobalFirestore = () => {
-  if (firestore === undefined) {
-    throw new UninitializedError('firestore uninitialized');
-  }
-  return firestore;
-};
