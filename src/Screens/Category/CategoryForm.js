@@ -15,12 +15,12 @@ import {
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/apis/1_enum';
+} from '../../_shared/apis/1_enum';
 
-import { useCreateCategory } from '../../_shared/api/mutations/category';
+import { useCreateCategory } from '../../_shared/mutations/category';
 import { validateCategory } from '../../_shared/validator';
+import { newCreateCategoryReq } from '../../_shared/apis/0_type';
 import ROUTES from '../../_shared/constant/routes';
-import { newCreateCategoryReq } from '../../_shared/api/apis/0_type';
 
 const categoryTypes = [
   {
@@ -41,27 +41,24 @@ const CategoryForm = ({ route }) => {
   const [cachedBudget, setCachedBudget] = useState(null);
   const [categoryForm, setCategoryForm] = useState(
     route.params?.category || {
-      category_name: '',
-      category_type: categoryTypes[0].value,
+      cat_name: '',
+      cat_type: categoryTypes[0].value,
     },
   );
 
   const onCategoryNameChange = e => {
-    setCategoryForm({ ...categoryForm, category_name: e });
+    setCategoryForm({ ...categoryForm, cat_name: e });
   };
 
   const onCategoryTypeChange = e => {
-    setCategoryForm({ ...categoryForm, category_type: e.value });
+    setCategoryForm({ ...categoryForm, cat_type: e.value });
   };
 
   const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
 
   const onFormSubmit = () => {
     createCategory.mutate(
-      newCreateCategoryReq(
-        categoryForm.category_name,
-        categoryForm.category_type,
-      ),
+      newCreateCategoryReq(categoryForm.cat_name, categoryForm.cat_type),
     );
   };
 
@@ -96,7 +93,7 @@ const CategoryForm = ({ route }) => {
       <View style={styles.formBody}>
         <BaseInput
           label="Category Name"
-          value={categoryForm.category_name}
+          value={categoryForm.cat_name}
           onChangeText={onCategoryNameChange}
           clearButtonMode="always"
           autoFocus={true}
@@ -104,7 +101,7 @@ const CategoryForm = ({ route }) => {
         <BaseToggle
           label="Category Type"
           items={categoryTypes}
-          value={categoryForm.category_type}
+          value={categoryForm.cat_type}
           onToggle={onCategoryTypeChange}
         />
 
@@ -117,7 +114,7 @@ const CategoryForm = ({ route }) => {
             onPress={onAddBudget}
             disabled={
               !isValidCategory() ||
-              categoryForm.category_type === TRANSACTION_TYPE_INCOME
+              categoryForm.cat_type === TRANSACTION_TYPE_INCOME
             }
             marginVertical={10}
           />

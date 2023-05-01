@@ -5,7 +5,7 @@ import BaseLinearProgress from '../View/BaseLinearProgress';
 import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 
-import { BUDGET_TYPES } from '../../_shared/api/apis/1_enum';
+import { BUDGET_TYPES } from '../../_shared/apis/1_enum';
 
 const BudgetUsage = ({ budgetType = 1, budget = '0', used = '0' }) => {
   const { theme } = useTheme();

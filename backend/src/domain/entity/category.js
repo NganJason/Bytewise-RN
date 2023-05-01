@@ -7,17 +7,17 @@ export const newCategory = (cat_id, cat_name, cat_type) => {
 
 class Category {
   constructor(cat_id, cat_name, cat_type) {
-    this.category_id = cat_id;
-    this.category_name = cat_name;
-    this.category_type = cat_type;
+    this.cat_id = cat_id;
+    this.cat_name = cat_name;
+    this.cat_type = cat_type;
   }
 
   validate() {
-    if (this.category_name === '') {
+    if (this.cat_name === '') {
       throw new CategoryError('Category name cannot be empty');
     }
 
-    if (this.category_type === 0) {
+    if (this.cat_type === 0) {
       throw new CategoryError('Category type cannot be 0');
     }
   }

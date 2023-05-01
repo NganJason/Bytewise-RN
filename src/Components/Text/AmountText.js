@@ -3,7 +3,7 @@ import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
 
-import { CURRENCY } from '../../_shared/api/mock_data/user';
+import { CURRENCY } from '../../_shared/mock_data/user';
 
 const AmountText = ({
   children = 0,

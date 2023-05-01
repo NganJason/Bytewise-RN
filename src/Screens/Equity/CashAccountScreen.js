@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
-import { CASH_ACCOUNT } from '../../_shared/api/mock_data/cash_account';
+import { CASH_ACCOUNT } from '../../_shared/mock_data/cash_account';
 
 const CashAccountScreen = ({ navigation }) => {
   const { theme } = useTheme();
