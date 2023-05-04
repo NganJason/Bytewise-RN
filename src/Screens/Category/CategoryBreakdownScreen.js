@@ -13,7 +13,7 @@ import {
 
 import ROUTES from '../../_shared/constant/routes';
 
-import { TRANSACTIONS } from '../../_shared/api/mock_data/transaction';
+import { TRANSACTIONS } from '../../_shared/mock_data/transaction';
 import { useNavigation } from '@react-navigation/native';
 
 const CategoryBreakdownScreen = () => {

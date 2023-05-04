@@ -11,7 +11,7 @@ import {
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
-import { CATEGORIES } from '../../_shared/api/mock_data/category';
+import { CATEGORIES } from '../../_shared/mock_data/category';
 
 const CategoryEditScreen = () => {
   const { theme } = useTheme();

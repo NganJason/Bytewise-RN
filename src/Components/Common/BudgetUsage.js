@@ -5,8 +5,8 @@ import BaseLinearProgress from '../View/BaseLinearProgress';
 import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 
-import { BUDGET_TYPES } from '../../_shared/api/apis/1_enum';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BUDGET_TYPES } from '../../_shared/apis/1_enum';
 
 const BudgetUsage = ({
   budgetType = 1,

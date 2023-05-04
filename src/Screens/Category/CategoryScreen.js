@@ -13,13 +13,13 @@ import {
   AmountText,
 } from '../../Components';
 
-import { useGetCategories } from '../../_shared/api/query';
+import { useGetCategories } from '../../_shared/query';
 
 import ROUTES from '../../_shared/constant/routes';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/apis/1_enum';
+} from '../../_shared/apis/1_enum';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CategoryScreen = ({ navigation }) => {
@@ -46,14 +46,11 @@ const CategoryScreen = ({ navigation }) => {
     setIsExpenseExpanded(!isExpenseExpanded);
   };
 
-  const renderCategories = (
-    categories = [{ category_name: '' }],
-    categoryType,
-  ) => {
+  const renderCategories = (categories = [{ cat_name: '' }], categoryType) => {
     const comps = [];
 
     categories.forEach(category => {
-      if (category.category_type === categoryType) {
+      if (category.cat_type === categoryType) {
         comps.push(<Category category={category} amount="0" />);
       }
     });

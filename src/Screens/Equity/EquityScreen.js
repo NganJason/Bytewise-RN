@@ -3,7 +3,7 @@ import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 
 import { AmountText, BaseScreen, BaseText } from '../../Components';
 import EquityRow from './EquityRow';
-import { EQUITY } from '../../_shared/api/mock_data/equity';
+import { EQUITY } from '../../_shared/mock_data/equity';
 import { EQUITY_TYPE } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 

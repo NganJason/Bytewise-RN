@@ -2,12 +2,11 @@ import { newCategory } from '../domain/entity/category';
 
 export const toCategoryPo = categoryEntity => {
   return {
-    id: categoryEntity.category_id,
-    category_name: categoryEntity.category_name,
-    category_type: categoryEntity.category_type,
+    cat_name: categoryEntity.cat_name,
+    cat_type: categoryEntity.cat_type,
   };
 };
 
 export const toCategoryEntity = (id, categoryPo) => {
-  return newCategory(id, categoryPo.category_name, categoryPo.category_type);
+  return newCategory(id, categoryPo.cat_name, categoryPo.cat_type);
 };

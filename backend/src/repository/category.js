@@ -15,9 +15,7 @@ class CategoryRepo {
 
   async create(categoryEntity) {
     try {
-      await this.fs.withTx(async fsTx => {
-        await fsTx.insertOne(toCategoryPo(categoryEntity), this.collection);
-      });
+      await this.fs.insertOne(toCategoryPo(categoryEntity), this.collection);
     } catch (err) {
       throw new CategoryError(`Create category error ${err.message}`);
     }

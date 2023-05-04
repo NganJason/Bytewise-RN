@@ -7,7 +7,7 @@ import AmountText from '../Text/AmountText';
 
 import ROUTES from '../../_shared/constant/routes';
 
-const Category = ({ category: { category_name = '' }, amount = '' }) => {
+const Category = ({ category: { cat_name = '' }, amount = '' }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -18,13 +18,13 @@ const Category = ({ category: { category_name = '' }, amount = '' }) => {
       onPress={() => {
         navigation.navigate(ROUTES.categoryBreakdown, {
           budget: {
-            category: { category_name: category_name },
+            category: { cat_name: cat_name },
             amount: amount,
           },
         });
       }}>
       <View style={styles.textGroup}>
-        <BaseText h4>{category_name}</BaseText>
+        <BaseText h4>{cat_name}</BaseText>
         <AmountText h4 showColor={false}>
           {amount}
         </AmountText>
