@@ -11,12 +11,12 @@ import {
 } from '../../Components';
 import { BaseRow, BaseTabView } from '../../Components/View';
 import ROUTES from '../../_shared/constant/routes';
-import { allBudgets } from '../../_shared/api/mock_data/all_budgets';
+import { allBudgets } from '../../_shared/mock_data/all_budgets';
 import {
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/api/apis/1_enum';
+} from '../../_shared/apis/1_enum';
 
 const BudgetScreen = () => {
   const [budgets] = useState(allBudgets);
