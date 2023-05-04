@@ -13,6 +13,7 @@ import {
   BaseTabView,
   BaseText,
   TouchInput,
+  IconButton,
 } from '../../Components';
 
 import {
@@ -26,6 +27,7 @@ import { CATEGORIES } from '../../_shared/mock_data/category';
 import { ACCOUNTS } from '../../_shared/mock_data/account';
 
 import { DAYS } from '../../_shared/constant/constant';
+import { useNavigation } from '@react-navigation/native';
 import ROUTES from '../../_shared/constant/routes';
 
 // Initial date
@@ -40,6 +42,7 @@ const NOTE_SCROLL_HEIGHT = 300;
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
   const {
     id = 0,
@@ -141,6 +144,11 @@ const TransactionForm = ({ route }) => {
     toggleAccountModal();
   };
 
+  const onEditCategory = () => {
+    navigation.navigate(ROUTES.categoryEdit, { categoryType: transactionType });
+    toggleCategoryModal();
+  };
+
   return (
     <BaseScreen
       headerProps={{
@@ -226,7 +234,17 @@ const TransactionForm = ({ route }) => {
             onSelect={onCategoryChange}
             items={activeCategories}
             label="cat_name"
-            editRoute={ROUTES.categoryEdit}
+            headerItems={[
+              <IconButton
+                iconName="edit"
+                iconType="fontawesome"
+                type="clear"
+                buttonSize="sm"
+                color="grey"
+                style={styles.editBtn}
+                onPress={onEditCategory}
+              />,
+            ]}
           />
           <BaseInput
             label="Note"

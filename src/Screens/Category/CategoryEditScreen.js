@@ -12,11 +12,13 @@ import {
 
 import ROUTES from '../../_shared/constant/routes';
 import { CATEGORIES } from '../../_shared/mock_data/category';
+import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/1_enum';
 
-const CategoryEditScreen = () => {
+const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { params: { categoryType = TRANSACTION_TYPE_EXPENSE } = {} } = route;
 
   return (
     <BaseScreen
@@ -35,24 +37,29 @@ const CategoryEditScreen = () => {
         ),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {CATEGORIES.map((d, i) => (
-          <BaseListItem key={i} showDivider dividerMargin={6}>
-            <View style={styles.row}>
-              <BaseText h4>{d.cat_name}</BaseText>
-              <IconButton
-                iconSize={20}
-                iconName="edit"
-                iconType="entypo"
-                color={theme.colors.color5}
-                type="clear"
-                buttonSize="xs"
-                onPress={() => {
-                  navigation.navigate(ROUTES.categoryForm, { category: d });
-                }}
-              />
-            </View>
-          </BaseListItem>
-        ))}
+        {CATEGORIES.map((d, i) => {
+          if (d.cat_type !== categoryType) {
+            return;
+          }
+          return (
+            <BaseListItem key={i} showDivider dividerMargin={6}>
+              <View style={styles.row}>
+                <BaseText h4>{d.cat_name}</BaseText>
+                <IconButton
+                  iconSize={20}
+                  iconName="edit"
+                  iconType="entypo"
+                  color={theme.colors.color5}
+                  type="clear"
+                  buttonSize="xs"
+                  onPress={() => {
+                    navigation.navigate(ROUTES.categoryForm, { category: d });
+                  }}
+                />
+              </View>
+            </BaseListItem>
+          );
+        })}
       </BaseScrollView>
     </BaseScreen>
   );
