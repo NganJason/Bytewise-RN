@@ -6,6 +6,8 @@ import BaseLinearProgress from './BaseLinearProgress';
 import BaseToast from './BaseToast';
 import BaseScrollView from './BaseScrollView';
 import BaseListItem from './BaseListItem';
+import BaseRow from './BaseRow';
+import BaseOverlay from './BaseOverlay';
 
 export {
   BaseBottomSheet,
@@ -16,4 +18,6 @@ export {
   BaseToast,
   BaseScrollView,
   BaseListItem,
+  BaseRow,
+  BaseOverlay,
 };

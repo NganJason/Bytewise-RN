@@ -61,7 +61,7 @@ const getStyles = theme =>
       flexDirection: 'row',
       borderWidth: 2,
       borderColor: theme.colors.color1,
-      borderRadius: '20%',
+      borderRadius: '10%',
       alignSelf: 'flex-start',
       marginTop: 14,
     },
@@ -74,12 +74,12 @@ const getStyles = theme =>
       backgroundColor: theme.colors.color1,
     },
     leftSelected: {
-      borderTopLeftRadius: '20%',
-      borderBottomLeftRadius: '20%',
+      borderTopLeftRadius: '5%',
+      borderBottomLeftRadius: '5%',
     },
     rightSelected: {
-      borderTopRightRadius: '20%',
-      borderBottomRightRadius: '20%',
+      borderTopRightRadius: '5%',
+      borderBottomRightRadius: '5%',
     },
     selectedLabel: {
       color: theme.colors.white,

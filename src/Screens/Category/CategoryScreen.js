@@ -20,6 +20,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/api/apis/1_enum';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -75,6 +76,14 @@ const CategoryScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
+      <View style={styles.editBudget}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(ROUTES.budgetList)}>
+          <BaseText h4 style={{ color: theme.colors.color4 }}>
+            Manage budget
+          </BaseText>
+        </TouchableOpacity>
+      </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
         <BaseAccordion
           isExpanded={isIncomeExpanded}
@@ -109,6 +118,11 @@ export default CategoryScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
+    editBudget: {
+      width: '100%',
+      alignItems: 'flex-end',
+      marginVertical: 10,
+    },
     accordionTitle: {
       flexDirection: 'row',
       alignItems: 'center',

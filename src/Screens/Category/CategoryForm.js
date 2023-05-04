@@ -107,30 +107,15 @@ const CategoryForm = ({ route }) => {
           value={categoryForm.category_type}
           onToggle={onCategoryTypeChange}
         />
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title={cachedBudget === null ? 'Add Budget' : 'Edit Budget'}
-            size="lg"
-            type="outline"
-            width={200}
-            onPress={onAddBudget}
-            disabled={
-              !isValidCategory() ||
-              categoryForm.category_type === TRANSACTION_TYPE_INCOME
-            }
-            marginVertical={10}
-          />
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onFormSubmit}
-            loading={createCategory.isLoading}
-            disabled={!isValidCategory()}
-            marginVertical={5}
-          />
-        </View>
+        <BaseButton
+          title="Save"
+          size="lg"
+          width={200}
+          onPress={onFormSubmit}
+          loading={createCategory.isLoading}
+          disabled={!isValidCategory()}
+          marginVertical={40}
+        />
       </View>
     </BaseScreen>
   );
@@ -144,7 +129,9 @@ const getStyles = _ => {
     formBody: {
       paddingVertical: 22,
     },
-    btnContainer: { marginVertical: 50 },
+    btnContainer: {
+      marginVertical: 30,
+    },
   });
 };
 

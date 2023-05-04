@@ -101,7 +101,7 @@ const DailyTransactions = ({
             {DAYS[ts.getDay()]}
           </Chip>
         </View>
-        <AmountText showSymbol showColor style={styles.sumText}>
+        <AmountText showColor style={styles.sumText}>
           {computeAmountSum()}
         </AmountText>
       </View>
@@ -116,7 +116,7 @@ const DailyTransactions = ({
               dividerMargin={4}>
               <View style={styles.listItemContent}>
                 <BaseText
-                  h5
+                  h6
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
@@ -124,21 +124,25 @@ const DailyTransactions = ({
                 </BaseText>
                 <View style={styles.noteAccountWrapper}>
                   <BaseText
-                    h4
+                    h5
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {t.note}
                   </BaseText>
-                  <BaseText h5 numberOfLines={1} ellipsizeMode="tail">
+                  <BaseText
+                    h6
+                    style={styles.account}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {acc.acc_name}
                   </BaseText>
                 </View>
                 <AmountText
-                  h4
+                  h5
                   style={styles.amount}
                   numberOfLines={1}
-                  showSymbol
+                  showColor
                   ellipsizeMode="tail">
                   {renderTransactionAmount(t.amount, t.transaction_type)}
                 </AmountText>
@@ -194,6 +198,10 @@ const getStyles = theme =>
     },
     category: {
       flex: 1,
+      color: theme.colors.color5,
+    },
+    account: {
+      color: theme.colors.color5,
     },
     noteAccountWrapper: {
       flex: 2,

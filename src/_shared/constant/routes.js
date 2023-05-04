@@ -4,6 +4,7 @@ const ROUTES = {
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',
   categoryBreakdown: 'Category Breakdown',
+  budgetList: 'Budget List',
   budgetForm: 'Budget Form',
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',

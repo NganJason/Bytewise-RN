@@ -8,19 +8,28 @@ import {
   IconButton,
   BaseScrollView,
   BudgetUsage,
+  DateNavigator,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
 
 import { TRANSACTIONS } from '../../_shared/api/mock_data/transaction';
+import { useNavigation } from '@react-navigation/native';
 
-const CategoryBreakdownScreen = ({ navigation }) => {
+const CategoryBreakdownScreen = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
   return (
     <BaseScreen
-      subHeader={<BudgetUsage budget={'100'} used={'50'} />}
+      subHeader={
+        <BudgetUsage
+          budget={'100'}
+          used={'50'}
+          onPress={() => navigation.navigate(ROUTES.budgetForm)}
+        />
+      }
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -28,16 +37,16 @@ const CategoryBreakdownScreen = ({ navigation }) => {
             <BaseText h1 style={styles.categoryNameText}>
               Food
             </BaseText>
-            <BaseText caption h4>
-              Jan 2023
-            </BaseText>
+            <DateNavigator h3 />
           </>
         ),
         rightComponent: (
           <IconButton
+            buttonSize="xs"
+            type="clear"
             iconName="edit"
             iconType="fontawesome"
-            type="clear"
+            align="left"
             onPress={() => {
               navigation.navigate(ROUTES.categoryForm);
             }}

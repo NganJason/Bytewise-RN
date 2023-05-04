@@ -6,13 +6,19 @@ import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 
 import { BUDGET_TYPES } from '../../_shared/api/apis/1_enum';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const BudgetUsage = ({ budgetType = 1, budget = '0', used = '0' }) => {
+const BudgetUsage = ({
+  budgetType = 1,
+  budget = '0',
+  used = '0',
+  onPress = function () {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
-    <>
+    <TouchableOpacity onPress={onPress}>
       <View style={[styles.text, styles.topText]}>
         <BaseText h4>{`${BUDGET_TYPES[budgetType]}`} Budget</BaseText>
         <View style={styles.topRightText}>
@@ -26,7 +32,7 @@ const BudgetUsage = ({ budgetType = 1, budget = '0', used = '0' }) => {
         <BaseText> of </BaseText>
         <AmountText>{budget}</AmountText>
       </View>
-    </>
+    </TouchableOpacity>
   );
 };
 

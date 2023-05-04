@@ -163,9 +163,9 @@ const getStyles = theme =>
       alignItems: 'center',
     },
     rightComponentStyle: {
-      justifyContent: 'flex-end',
-      alignItems: 'center',
       flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-start',
     },
   });
 

@@ -12,8 +12,9 @@ const DateNavigator = ({
   startingDate = new Date(),
   onForward = function () {},
   onBackward = function () {},
-  month = true,
   year = false,
+  h2 = true,
+  h3 = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -61,7 +62,7 @@ const DateNavigator = ({
         onPress={moveBackward}
         color={theme.colors.grey2}
       />
-      <BaseText h2 style={styles.date}>
+      <BaseText h2={h3 ? false : h2} h3={h3} style={styles.date}>
         {renderDate()}
       </BaseText>
       <IconButton

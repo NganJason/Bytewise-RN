@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet } from 'react-native';
 import { AmountText, BaseText } from '../Text';
 import { useTheme } from '@rneui/themed';
-import { BaseListItem } from '../View';
+import { BaseOverlay, BaseRow } from '../View';
 import { BaseCurrencyInput } from '../Input';
 import { BaseButton } from '../Touch';
-import BaseBottomSheetModal from '../View/BaseBottomSheetModal';
 
 const Budget = ({
   title = 'Default Budget',
@@ -31,34 +29,29 @@ const Budget = ({
 
   return (
     <>
-      <BaseListItem showDivider={true}>
-        <TouchableOpacity style={styles.container} onPress={toggleBottomSheet}>
-          <View style={styles.textGroup}>
-            <BaseText h4 style={highlight && styles.highlightText}>
-              {title}
-            </BaseText>
-            <AmountText style={highlight && styles.highlightText}>
-              {amount}
-            </AmountText>
-          </View>
-        </TouchableOpacity>
-      </BaseListItem>
+      <BaseRow onPress={toggleBottomSheet}>
+        <BaseText h4 style={highlight && styles.highlightText}>
+          {title}
+        </BaseText>
+        <AmountText style={highlight && styles.highlightText}>
+          {amount}
+        </AmountText>
+      </BaseRow>
 
-      <BaseBottomSheetModal
+      <BaseOverlay
         isVisible={isBottomSheetVisible}
-        close={toggleBottomSheet}
-        headerProps={{
-          leftComponent: <BaseText h2>{`${title} ${year}`}</BaseText>,
-          leftComponentStyle: styles.bottomSheetHeader,
-        }}>
+        onBackdropPress={toggleBottomSheet}
+        onClose={toggleBottomSheet}>
+        <BaseText h3>{`${title} ${year}`}</BaseText>
         <BaseCurrencyInput value={amount} onChangeText={onBudgetChange} />
         <BaseButton
           title="Done"
           size="lg"
           width={200}
           onPress={toggleBottomSheet}
+          marginVertical={20}
         />
-      </BaseBottomSheetModal>
+      </BaseOverlay>
     </>
   );
 };

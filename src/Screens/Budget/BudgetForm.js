@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import {
   BaseButton,
   BaseListItem,
@@ -28,14 +28,12 @@ import {
 } from '../../_shared/api/apis/1_enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
 
+const windowWidth = Dimensions.get('window').width;
+
 const BudgetForm = ({ route }) => {
   const styles = getStyles();
   const navigation = useNavigation();
-  const {
-    categoryID = 0,
-    cachedBudget = null,
-    setCachedBudget = function () {},
-  } = route.params;
+  const { params: { budgetID = 0 } = {} } = route;
 
   const [budgetForm, setBudgetForm] = useState(monthlyBudgetInfo);
   // To retain the original monthly budget
@@ -43,13 +41,7 @@ const BudgetForm = ({ route }) => {
   const [monthlyBudget, setMonthlyBudget] = useState(monthlyBudgetInfo);
 
   useEffect(() => {
-    if (cachedBudget !== null) {
-      setBudgetForm(cachedBudget);
-      setMonthlyBudget(cachedBudget);
-      return;
-    }
-
-    if (categoryID === 0) {
+    if (budgetID === 0) {
       let defaultBudget = {
         budget_type: BUDGET_TYPE_MONTHLY,
         budget_breakdown: getDefaultMonthlyBudgetBreakdown([]),
@@ -57,7 +49,7 @@ const BudgetForm = ({ route }) => {
       setBudgetForm(defaultBudget);
       setMonthlyBudget(defaultBudget);
     }
-  }, [cachedBudget, categoryID]);
+  }, [budgetID]);
 
   const onBudgetTypeChange = e => {
     let { budget_breakdown = [] } = budgetForm;
@@ -121,10 +113,6 @@ const BudgetForm = ({ route }) => {
   };
 
   const onSave = () => {
-    if (categoryID === 0) {
-      setCachedBudget(budgetForm);
-    }
-
     navigation.goBack();
   };
 
@@ -193,14 +181,14 @@ const BudgetForm = ({ route }) => {
           title="Cancel"
           type="outline"
           size="lg"
-          width={200}
+          width={windowWidth / 2.5}
           marginVertical={10}
           onPress={() => navigation.goBack()}
         />
         <BaseButton
           title="Save"
           size="lg"
-          width={200}
+          width={windowWidth / 2.5}
           marginVertical={5}
           onPress={onSave}
         />
@@ -215,6 +203,9 @@ const getStyles = _ => {
       alignItems: 'center',
     },
     btnContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 20,
       marginBottom: 30,
     },
   });

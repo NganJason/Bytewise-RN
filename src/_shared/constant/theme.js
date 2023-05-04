@@ -6,10 +6,10 @@ const COLORS = {
   color2: '#E4F2ED', // light green
   color3: '#255171', // blue
   color4: '#6D6D6D', // grey
-  color5: '#B4B4B4', // light grey
+  color5: '#9BA4B5', // light grey
   color6: '#C7D1D6', // extra light grey
   black: '#252525',
-  red: '#800000',
+  red: '#CE5959',
   white: '#FFF',
   disabled: '#E3E6E8',
   error: '#F41A0F',
@@ -22,8 +22,8 @@ const FONT_SIZES = {
   h2: 20,
   h3: 18,
   h4: 16,
-  h5: 13,
-  h6: 10,
+  h5: 14,
+  h6: 12,
   body: 16,
   caption: 12,
 };
