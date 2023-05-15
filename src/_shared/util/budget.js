@@ -1,4 +1,4 @@
-import { BUDGET_TYPES } from '../apis/1_enum';
+import { BUDGET_TYPES } from '../apis/enum';
 import { MONTHS } from '../constant/constant';
 
 export const getBudgetTypes = () => {

@@ -25,7 +25,7 @@ import {
   BUDGET_TYPES,
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
-} from '../../_shared/apis/1_enum';
+} from '../../_shared/apis/enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
 
 const windowWidth = Dimensions.get('window').width;

@@ -12,7 +12,7 @@ import {
 
 import ROUTES from '../../_shared/constant/routes';
 import { CATEGORIES } from '../../_shared/mock_data/category';
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/1_enum';
+import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 
 const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();

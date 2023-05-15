@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
-import * as Sentry from 'sentry-expo';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-import { SENTRY_DSN } from '@env';
 
 import { SplashScreen } from './src/Components';
 
@@ -17,6 +14,7 @@ import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScree
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
+import BudgetScreen from './src/Screens/Budget/BudgetScreen';
 
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
@@ -24,14 +22,6 @@ import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
-import { initBackend } from './backend/backend';
-import BudgetScreen from './src/Screens/Budget/BudgetScreen';
-
-Sentry.init({
-  enableInExpoDevelopment: true,
-  dsn: SENTRY_DSN,
-  tracesSampleRate: 1.0,
-});
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -82,13 +72,6 @@ function App() {
           'Nucleo',
           require('./assets/icons/fonts/Nucleo.ttf'),
         );
-
-        try {
-          initBackend();
-        } catch (err) {
-          // TODO: Handle error
-          console.log(err);
-        }
 
         // TODO: REMOVE IN PROD
         // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN

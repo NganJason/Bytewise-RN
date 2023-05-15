@@ -19,7 +19,7 @@ import ROUTES from '../../_shared/constant/routes';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/1_enum';
+} from '../../_shared/apis/enum';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CategoryScreen = ({ navigation }) => {

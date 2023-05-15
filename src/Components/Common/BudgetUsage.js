@@ -6,7 +6,7 @@ import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { BUDGET_TYPES } from '../../_shared/apis/1_enum';
+import { BUDGET_TYPES } from '../../_shared/apis/enum';
 
 const BudgetUsage = ({
   budgetType = 1,

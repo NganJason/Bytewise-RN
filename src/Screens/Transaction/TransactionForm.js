@@ -20,7 +20,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
-} from '../../_shared/apis/1_enum';
+} from '../../_shared/apis/enum';
 
 import { CATEGORIES } from '../../_shared/mock_data/category';
 

@@ -9,7 +9,7 @@ import BaseListItem from '../View/BaseListItem';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/1_enum';
+} from '../../_shared/apis/enum';
 
 import { CATEGORIES } from '../../_shared/mock_data/category';
 import { ACCOUNTS } from '../../_shared/mock_data/account';

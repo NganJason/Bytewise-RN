@@ -16,7 +16,7 @@ import {
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/1_enum';
+} from '../../_shared/apis/enum';
 
 const BudgetScreen = () => {
   const [budgets] = useState(allBudgets);
