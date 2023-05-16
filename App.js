@@ -22,6 +22,9 @@ import TransactionForm from './src/Screens/Transaction/TransactionForm';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
+import { initAxios } from './src/_shared/apis/http';
+
+const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
@@ -72,6 +75,10 @@ function App() {
           'Nucleo',
           require('./assets/icons/fonts/Nucleo.ttf'),
         );
+
+        // Init axios
+        // TODO: Pass correct base url
+        initAxios({ baseURL: TEST_BASE_URL });
 
         // TODO: REMOVE IN PROD
         // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN

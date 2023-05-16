@@ -11,16 +11,15 @@ import {
   Category,
   BaseText,
   AmountText,
+  BaseButton,
 } from '../../Components';
 
-import { useGetCategories } from '../../_shared/query';
-
-import ROUTES from '../../_shared/constant/routes';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useGetCategories } from '../../_shared/query';
+import ROUTES from '../../_shared/constant/routes';
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -30,7 +29,7 @@ const CategoryScreen = ({ navigation }) => {
   const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
   const isFocused = useIsFocused();
 
-  const categoryQuery = useGetCategories();
+  const getCategoriesQuery = useGetCategories();
 
   useEffect(() => {
     // revert to default
@@ -38,19 +37,19 @@ const CategoryScreen = ({ navigation }) => {
     setIsExpenseExpanded(true);
   }, [isFocused]);
 
-  const toggleMonthly = () => {
+  const toggleIncome = () => {
     setIsIncomeExpanded(!isIncomeExpanded);
   };
 
-  const toggleAnnual = () => {
+  const toggleExpense = () => {
     setIsExpenseExpanded(!isExpenseExpanded);
   };
 
-  const renderCategories = (categories = [{ cat_name: '' }], categoryType) => {
+  const renderCategories = (categories = [], categoryType) => {
     const comps = [];
 
     categories.forEach(category => {
-      if (category.cat_type === categoryType) {
+      if (category.category_type === categoryType) {
         comps.push(<Category category={category} amount="0" />);
       }
     });
@@ -60,7 +59,12 @@ const CategoryScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
-      isLoading={categoryQuery.isLoading}
+      isLoading={getCategoriesQuery.isLoading}
+      errorToast={{
+        show: getCategoriesQuery.isError,
+        message1: getCategoriesQuery.error?.message,
+        onHide: getCategoriesQuery.reset,
+      }}
       headerProps={{
         allowBack: false,
         centerComponent: <DateNavigator />,
@@ -73,40 +77,49 @@ const CategoryScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.categoryForm),
       }}>
-      <View style={styles.editBudget}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(ROUTES.budgetList)}>
-          <BaseText h4 style={{ color: theme.colors.color4 }}>
-            Manage budget
-          </BaseText>
-        </TouchableOpacity>
-      </View>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
-        <BaseAccordion
-          isExpanded={isIncomeExpanded}
-          onPress={toggleMonthly}
-          title={
-            <View style={styles.accordionTitle}>
-              <BaseText h3>Income</BaseText>
-              <AmountText showColor>1000</AmountText>
-            </View>
-          }
-          titleColor={theme.colors.color4}
-          items={renderCategories(categoryQuery.data, TRANSACTION_TYPE_INCOME)}
-        />
-        <BaseAccordion
-          isExpanded={isExpenseExpanded}
-          onPress={toggleAnnual}
-          title={
-            <View style={styles.accordionTitle}>
-              <BaseText h3>Expense</BaseText>
-              <AmountText showColor>-1000</AmountText>
-            </View>
-          }
-          titleColor={theme.colors.color4}
-          items={renderCategories(categoryQuery.data, TRANSACTION_TYPE_EXPENSE)}
-        />
-      </BaseScrollView>
+      {!getCategoriesQuery.isLoading && (
+        <>
+          <View style={styles.editBudget}>
+            <BaseButton
+              onPress={() => navigation.navigate(ROUTES.budgetList)}
+              title="Manage Budget"
+              type="clear"
+            />
+          </View>
+          <BaseScrollView showsVerticalScrollIndicator={false}>
+            <BaseAccordion
+              isExpanded={isIncomeExpanded}
+              onPress={toggleIncome}
+              title={
+                <View style={styles.accordionTitle}>
+                  <BaseText h3>Income</BaseText>
+                  <AmountText showColor>1000</AmountText>
+                </View>
+              }
+              titleColor={theme.colors.color4}
+              items={renderCategories(
+                getCategoriesQuery.data?.categories,
+                TRANSACTION_TYPE_INCOME,
+              )}
+            />
+            <BaseAccordion
+              isExpanded={isExpenseExpanded}
+              onPress={toggleExpense}
+              title={
+                <View style={styles.accordionTitle}>
+                  <BaseText h3>Expense</BaseText>
+                  <AmountText showColor>-1000</AmountText>
+                </View>
+              }
+              titleColor={theme.colors.color4}
+              items={renderCategories(
+                getCategoriesQuery.data?.categories,
+                TRANSACTION_TYPE_EXPENSE,
+              )}
+            />
+          </BaseScrollView>
+        </>
+      )}
     </BaseScreen>
   );
 };
@@ -118,7 +131,7 @@ const getStyles = _ =>
     editBudget: {
       width: '100%',
       alignItems: 'flex-end',
-      marginVertical: 10,
+      //marginVertical: 10,
     },
     accordionTitle: {
       flexDirection: 'row',
