@@ -19,7 +19,6 @@ import {
 
 import { useCreateCategory } from '../../_shared/mutations/category';
 import { validateCategory } from '../../_shared/validator';
-import ROUTES from '../../_shared/constant/routes';
 
 const categoryTypes = [
   {
@@ -37,33 +36,24 @@ const CategoryForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const [cachedBudget, setCachedBudget] = useState(null);
-  const [categoryForm, setCategoryForm] = useState(
-    route.params?.category || {
-      cat_name: '',
-      cat_type: categoryTypes[0].value,
-    },
-  );
+  const [categoryForm, setCategoryForm] = useState({
+    category_name: route.params?.category?.category_name || '',
+    category_type:
+      route.params?.category?.category_type || categoryTypes[0].value,
+  });
 
   const onCategoryNameChange = e => {
-    setCategoryForm({ ...categoryForm, cat_name: e });
+    setCategoryForm({ ...categoryForm, category_name: e });
   };
 
   const onCategoryTypeChange = e => {
-    setCategoryForm({ ...categoryForm, cat_type: e.value });
+    setCategoryForm({ ...categoryForm, category_type: e.value });
   };
 
   const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
 
   const onFormSubmit = () => {
-    createCategory.mutate();
-  };
-
-  const onAddBudget = () => {
-    navigation.navigate(ROUTES.budgetForm, {
-      cachedBudget: cachedBudget,
-      setCachedBudget: setCachedBudget,
-    });
+    createCategory.mutate(categoryForm);
   };
 
   const isValidCategory = () => {
@@ -85,12 +75,11 @@ const CategoryForm = ({ route }) => {
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,
-      }}
-      bodyStyle={styles.screen}>
+      }}>
       <View style={styles.formBody}>
         <BaseInput
           label="Category Name"
-          value={categoryForm.cat_name}
+          value={categoryForm.category_name}
           onChangeText={onCategoryNameChange}
           clearButtonMode="always"
           autoFocus={true}
@@ -98,7 +87,7 @@ const CategoryForm = ({ route }) => {
         <BaseToggle
           label="Category Type"
           items={categoryTypes}
-          value={categoryForm.cat_type}
+          value={categoryForm.category_type}
           onToggle={onCategoryTypeChange}
         />
         <BaseButton
@@ -108,7 +97,6 @@ const CategoryForm = ({ route }) => {
           onPress={onFormSubmit}
           loading={createCategory.isLoading}
           disabled={!isValidCategory()}
-          marginVertical={40}
         />
       </View>
     </BaseScreen>
@@ -117,14 +105,8 @@ const CategoryForm = ({ route }) => {
 
 const getStyles = _ => {
   return StyleSheet.create({
-    screen: {
-      justifyContent: 'space-between',
-    },
     formBody: {
       paddingVertical: 22,
-    },
-    btnContainer: {
-      marginVertical: 30,
     },
   });
 };

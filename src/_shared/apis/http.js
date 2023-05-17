@@ -23,9 +23,9 @@ export const sendPostRequest = async (endpoint = '', body = {}) => {
     return data.body;
   } catch (e) {
     throw new AppError(
-      e.response.headers['request-id'], // request ID
-      e.response.data.error, // error message
-      e.response.data.code, // error code
+      e.response?.headers['request-id'], // request ID
+      e.response?.data.error, // error message
+      e.response?.data.code, // error code
     );
   }
 };

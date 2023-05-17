@@ -56,7 +56,10 @@ export default BaseToggle;
 
 const getStyles = theme =>
   StyleSheet.create({
-    container: {},
+    container: {
+      paddingHorizontal: 0,
+      marginBottom: 28,
+    },
     toggle: {
       flexDirection: 'row',
       borderWidth: 2,

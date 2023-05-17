@@ -79,11 +79,13 @@ const CategoryScreen = ({ navigation }) => {
       }}>
       {!getCategoriesQuery.isLoading && (
         <>
-          <View style={styles.editBudget}>
+          <View style={styles.buttonContainer}>
             <BaseButton
               onPress={() => navigation.navigate(ROUTES.budgetList)}
               title="Manage Budget"
               type="clear"
+              align="flex-end"
+              size="sm"
             />
           </View>
           <BaseScrollView showsVerticalScrollIndicator={false}>
@@ -128,15 +130,13 @@ export default CategoryScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
-    editBudget: {
-      width: '100%',
-      alignItems: 'flex-end',
-      //marginVertical: 10,
-    },
     accordionTitle: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       width: '100%',
+    },
+    buttonContainer: {
+      marginBottom: 10,
     },
   });

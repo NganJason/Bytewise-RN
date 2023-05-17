@@ -30,14 +30,6 @@ const BaseButton = ({
 
   const getButtonStyle = () => {
     switch (type) {
-      case 'solid':
-        return {
-          title: disabled
-            ? styles.solidDisabledButtonTextStyle
-            : styles.solidButtonTextStyle,
-          btn: {},
-          disabled: styles.solidDisabledButtonStyle,
-        };
       case 'outline':
         return {
           title: disabled
@@ -46,13 +38,21 @@ const BaseButton = ({
           btn: {},
           disabled: styles.outlineDisabledButtonStyle,
         };
-      default:
+      case 'clear':
         return {
           title: disabled
             ? styles.clearDisabledButtonTextStyle
             : styles.clearButtonTextStyle,
           btn: {},
           disabled: styles.clearDisabledButtonStyle,
+        };
+      default:
+        return {
+          title: disabled
+            ? styles.solidDisabledButtonTextStyle
+            : styles.solidButtonTextStyle,
+          btn: {},
+          disabled: styles.solidDisabledButtonStyle,
         };
     }
   };

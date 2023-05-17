@@ -10,7 +10,6 @@ import HideKeyboard from './HideKeyboard';
 
 const BaseScreen = ({
   children,
-  subHeader = null,
   fabProps = {
     show: false,
     placement: 'right',
@@ -106,7 +105,6 @@ const BaseScreen = ({
             <PacmanIndicator size={70} color={theme.colors.primary} />
           ) : (
             <>
-              {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
               {children}
               {fabProps.show && (
                 <FAB
@@ -149,9 +147,6 @@ const getStyles = theme =>
     },
     nonEmptyHeader: {
       paddingVertical: 22,
-    },
-    subHeader: {
-      paddingBottom: 22,
     },
     leftComponentStyle: {
       flexDirection: 'row',

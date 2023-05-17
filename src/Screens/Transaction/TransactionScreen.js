@@ -16,17 +16,19 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
-      subHeader={
-        <AggrSummary
-          aggrs={[
-            { label: 'Income', amount: '100' },
-            { label: 'Expense', amount: '-200' },
-          ]}
-        />
-      }
       headerProps={{
         allowBack: false,
-        centerComponent: <DateNavigator />,
+        centerComponent: (
+          <>
+            <DateNavigator />
+            <AggrSummary
+              aggrs={[
+                { label: 'Income', amount: '100' },
+                { label: 'Expense', amount: '-200' },
+              ]}
+            />
+          </>
+        ),
       }}
       fabProps={{
         show: true,
