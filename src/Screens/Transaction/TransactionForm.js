@@ -24,8 +24,6 @@ import {
 
 import { CATEGORIES } from '../../_shared/mock_data/category';
 
-import { ACCOUNTS } from '../../_shared/mock_data/account';
-
 import { DAYS } from '../../_shared/constant/constant';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from '../../_shared/constant/routes';
@@ -44,29 +42,14 @@ const TransactionForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const {
-    id = 0,
-    timestamp = TODAY.valueOf(),
-    amount = '',
-    note = '',
-    cat = {
-      cat_id: 0,
-      cat_name: '',
-    },
-    account = ACCOUNTS[0] || {
-      acc_id: 0,
-      acc_name: '',
-    },
-    transaction_type = TRANSACTION_TYPE_EXPENSE,
-  } = route.params?.transaction || {};
-
-  const [form, setForm] = useState({
-    timestamp: timestamp, // milli unix
-    amount: amount,
-    note: note,
-    cat: cat,
-    account: account,
-    transaction_type: transaction_type,
+  const transaction = route.params?.transaction || {};
+  const [transactionForm, setTransactionForm] = useState({
+    transaction_id: transaction.transaction_id || '',
+    transaction_time: transaction.transaction_time || TODAY.valueOf(),
+    transaction_type: transaction.transaction_type || TRANSACTION_TYPE_EXPENSE,
+    amount: transaction.amount || '',
+    category_id: transaction.category_id || 0,
+    note: transaction.note || '',
   });
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
@@ -74,37 +57,33 @@ const TransactionForm = ({ route }) => {
   // for rendering
   const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
 
-  const [transactionType, setTransactionType] = useState(transaction_type);
-
   const [activeCategories, setActiveCategories] = useState([]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
-
   const toggleCalendarModal = () => {
     setIsCalendarModalVisible(!isCalendarModalVisible);
   };
 
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-
   const toggleCategoryModal = () => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
-  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
-
-  const toggleAccountModal = () => {
-    setIsAccountModalVisible(!isAccountModalVisible);
-  };
-
   useEffect(() => {
     const getActiveCategories = () => {
-      let categories = CATEGORIES.filter(d => d.cat_type === transactionType);
+      let categories = CATEGORIES.filter(
+        d => d.cat_type === transactionForm.transaction_type,
+      );
       return categories;
     };
 
-    setForm(prev => ({ ...prev, transaction_type: transactionType, cat: {} }));
+    setTransactionForm(prev => ({
+      ...prev,
+      transaction_type: transactionForm.transaction_type,
+      cat: {},
+    }));
     setActiveCategories(getActiveCategories());
-  }, [transactionType]);
+  }, [transactionForm.transaction_type]);
 
   const formatTimestamp = ts => {
     const d = new Date(ts);
@@ -118,34 +97,29 @@ const TransactionForm = ({ route }) => {
   };
 
   const onNoteChange = e => {
-    setForm({ ...form, note: e });
+    setTransactionForm({ ...transactionForm, note: e });
   };
 
   const onAmountChange = e => {
-    setForm({ ...form, amount: e });
+    setTransactionForm({ ...transactionForm, amount: e });
   };
 
   const onTransactionTypeChange = e => {
-    setTransactionType(e);
+    setTransactionForm({ ...transactionForm, transaction_type: e });
   };
 
   const onTimestampChange = e => {
-    setForm({ ...form, timestamp: e });
+    setTransactionForm({ ...transactionForm, timestamp: e });
     toggleCalendarModal();
   };
 
   const onCategoryChange = e => {
-    setForm({ ...form, cat: e });
+    setTransactionForm({ ...transactionForm, cat: e });
     toggleCategoryModal();
   };
 
-  const onAccountChange = e => {
-    setForm({ ...form, account: e });
-    toggleAccountModal();
-  };
-
   const onEditCategory = () => {
-    navigation.navigate(ROUTES.categoryEdit, { categoryType: transactionType });
+    navigation.navigate(ROUTES.categoryEdit);
     toggleCategoryModal();
   };
 
@@ -154,13 +128,15 @@ const TransactionForm = ({ route }) => {
       headerProps={{
         allowBack: true,
         centerComponent: (
-          <BaseText h2>{TRANSACTION_TYPES[form.transaction_type]}</BaseText>
+          <BaseText h2>
+            {TRANSACTION_TYPES[transactionForm.transaction_type]}
+          </BaseText>
         ),
       }}>
       <>
         <BaseTabView
           onPress={index => onTransactionTypeChange(index + 1)}
-          selectedIndex={form.transaction_type - 1}
+          selectedIndex={transactionForm.transaction_type - 1}
           titles={[
             TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
             TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
@@ -175,7 +151,7 @@ const TransactionForm = ({ route }) => {
           contentContainerStyle={styles.formBody}>
           <TouchInput
             label="Date"
-            value={formatTimestamp(form.timestamp)}
+            value={formatTimestamp(transactionForm.timestamp)}
             onPress={toggleCalendarModal}
           />
           <Dialog
@@ -202,29 +178,16 @@ const TransactionForm = ({ route }) => {
               }}
             />
           </Dialog>
-          <TouchInput
-            label="Account"
-            value={form.account.acc_name}
-            onPress={toggleAccountModal}
-          />
-          <BaseBottomSheet
-            isVisible={isAccountModalVisible}
-            onBackdropPress={toggleAccountModal}
-            close={toggleAccountModal}
-            onSelect={onAccountChange}
-            items={ACCOUNTS}
-            label="acc_name"
-          />
           <BaseCurrencyInput
             label="Amount"
-            value={form.amount}
+            value={transactionForm.amount}
             onChangeText={onAmountChange}
-            autoFocus={id === 0}
+            autoFocus={transactionForm.transaction_id === ''}
             onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           />
           <TouchInput
             label="Category"
-            value={form.cat.cat_name}
+            value={transactionForm.cat.cat_name}
             onPress={toggleCategoryModal}
           />
           <BaseBottomSheet
@@ -248,7 +211,7 @@ const TransactionForm = ({ route }) => {
           />
           <BaseInput
             label="Note"
-            value={form.note}
+            value={transactionForm.note}
             onChangeText={onNoteChange}
             clearButtonMode="always"
             onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}

@@ -36,10 +36,10 @@ const CategoryForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const category = route.params?.category || {};
   const [categoryForm, setCategoryForm] = useState({
-    category_name: route.params?.category?.category_name || '',
-    category_type:
-      route.params?.category?.category_type || categoryTypes[0].value,
+    category_name: category.category_name || '',
+    category_type: category.category_type || categoryTypes[0].value,
   });
 
   const onCategoryNameChange = e => {
