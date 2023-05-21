@@ -20,3 +20,7 @@ export const isMonthValid = monthEnum => {
 
   return true;
 };
+
+export const toUnixSecondsFromMilli = ms => {
+  return Math.floor(ms / 1000);
+};

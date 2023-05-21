@@ -22,6 +22,7 @@ const BaseInput = forwardRef(
       onFocus = function () {},
       clearButtonMode = 'never', // IOS only
       pointerEvents = 'auto',
+      maxLength = null,
     },
     ref,
   ) => {
@@ -66,6 +67,7 @@ const BaseInput = forwardRef(
         inputStyle={styles.input}
         pointerEvents={pointerEvents}
         renderErrorMessage={false}
+        maxLength={maxLength}
       />
     );
   },

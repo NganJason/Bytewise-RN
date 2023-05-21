@@ -7,7 +7,7 @@ export const useCreateCategory = (opts = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ category_name = '', category_type = null } = {}) => {
+    mutationFn: async ({ category_name = '', category_type = 0 } = {}) => {
       await createCategory({
         category_name: category_name,
         category_type: category_type,

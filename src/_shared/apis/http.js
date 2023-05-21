@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export class AppError extends Error {
-  constructor(requestID, message, code) {
+  constructor({ requestID = '', message = '', code = 0 } = {}) {
     super(message);
     this.code = code;
     this.requestID = requestID;
@@ -22,10 +22,10 @@ export const sendPostRequest = async (endpoint = '', body = {}) => {
     const { data } = await axiosInstance.post(endpoint, body);
     return data.body;
   } catch (e) {
-    throw new AppError(
-      e.response?.headers['request-id'], // request ID
-      e.response?.data.error, // error message
-      e.response?.data.code, // error code
-    );
+    throw new AppError({
+      requestID: e.response?.headers['request-id'], // request ID
+      message: e.response?.data.error, // error message
+      code: e.response?.data.code, // error code
+    });
   }
 };

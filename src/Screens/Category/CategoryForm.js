@@ -18,7 +18,7 @@ import {
 } from '../../_shared/apis/enum';
 
 import { useCreateCategory } from '../../_shared/mutations/category';
-import { validateCategory } from '../../_shared/validator';
+import { validateCategory } from '../../_shared/apis/category';
 
 const categoryTypes = [
   {
@@ -50,10 +50,10 @@ const CategoryForm = ({ route }) => {
     setCategoryForm({ ...categoryForm, category_type: e.value });
   };
 
-  const createCategory = useCreateCategory({ onSuccess: navigation.goBack });
+  const saveCategory = useCreateCategory({ onSuccess: navigation.goBack });
 
   const onFormSubmit = () => {
-    createCategory.mutate(categoryForm);
+    saveCategory.mutate(categoryForm);
   };
 
   const isValidCategory = () => {
@@ -68,9 +68,9 @@ const CategoryForm = ({ route }) => {
   return (
     <BaseScreen
       errorToast={{
-        show: createCategory.isError,
-        message1: createCategory.error?.message,
-        onHide: createCategory.reset,
+        show: saveCategory.isError,
+        message1: saveCategory.error?.message,
+        onHide: saveCategory.reset,
       }}
       headerProps={{
         allowBack: true,
@@ -95,7 +95,7 @@ const CategoryForm = ({ route }) => {
           size="lg"
           width={200}
           onPress={onFormSubmit}
-          loading={createCategory.isLoading}
+          loading={saveCategory.isLoading}
           disabled={!isValidCategory()}
         />
       </View>
