@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import {
@@ -10,106 +9,66 @@ import {
   DateNavigator,
 } from '../../Components';
 import Budget from '../../Components/Common/Budget';
-import { monthlyBudgetInfo } from '../../_shared/mock_data/budget';
 import { MONTHS } from '../../_shared/constant/constant';
 import {
   getCurrMonth,
   getCurrYear,
   isMonthValid,
 } from '../../_shared/util/date';
-import {
-  getBudgetTypes,
-  getDefaultMonthlyBudgetBreakdown,
-} from '../../_shared/util/budget';
-import {
-  BUDGET_TYPES,
-  BUDGET_TYPE_ANNUAL,
-  BUDGET_TYPE_MONTHLY,
-} from '../../_shared/apis/enum';
+import { getBudgetTypes } from '../../_shared/util/budget';
+import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
+import { useGetAnnualBudgetBreakdown } from '../../_shared/query';
+import { useSetBudget } from '../../_shared/mutations';
 
 const windowWidth = Dimensions.get('window').width;
 
 const BudgetForm = ({ route }) => {
   const styles = getStyles();
   const navigation = useNavigation();
-  const { params: { budgetID = 0 } = {} } = route;
+  const { params: { category_id = '', category_name = '' } = {} } = route;
 
-  const [budgetForm, setBudgetForm] = useState(monthlyBudgetInfo);
-  // To retain the original monthly budget
-  // in case user switch to annual budget then switch back to monthly budget
-  const [monthlyBudget, setMonthlyBudget] = useState(monthlyBudgetInfo);
+  const setBudget = useSetBudget();
+  const getBudgetBreakdownQuery = useGetAnnualBudgetBreakdown({
+    category_id: category_id,
+    year: 2023,
+  });
 
-  useEffect(() => {
-    if (budgetID === 0) {
-      let defaultBudget = {
-        budget_type: BUDGET_TYPE_MONTHLY,
-        budget_breakdown: getDefaultMonthlyBudgetBreakdown([]),
-      };
-      setBudgetForm(defaultBudget);
-      setMonthlyBudget(defaultBudget);
-    }
-  }, [budgetID]);
+  const {
+    budget_type = 0,
+    default_budget = 0,
+    monthly_budgets = [],
+  } = getBudgetBreakdownQuery?.data?.annual_budget_breakdown || {};
 
-  const onBudgetTypeChange = e => {
-    let { budget_breakdown = [] } = budgetForm;
-    let { budget_breakdown: initialMonthlyBudgetBreakdown = [] } =
-      monthlyBudget;
-
-    if (Number(e.value) === BUDGET_TYPE_ANNUAL) {
-      budget_breakdown = [];
-    }
-
-    if (Number(e.value) === BUDGET_TYPE_MONTHLY) {
-      if (budget_breakdown.length === 0) {
-        budget_breakdown = getDefaultMonthlyBudgetBreakdown(
-          initialMonthlyBudgetBreakdown,
-        );
-      }
-    }
-
-    setBudgetForm({
-      ...budgetForm,
-      budget_type: e.value,
-      budget_breakdown: budget_breakdown,
+  const onBudgetTypeChange = budgetType => {
+    setBudget.mutate({
+      category_id: category_id,
+      year: 2023,
+      budget_config: {
+        budget_type: Number(budgetType),
+      },
     });
   };
 
-  const onDefaultBudgetChange = (_, e) => {
-    let currMonth = getCurrMonth();
-    let { budget_breakdown: breakdown = [] } = budgetForm;
-
-    let newBreakdown = breakdown.map(d => {
-      if (d.month >= currMonth) {
-        d.budget = e;
-      }
-
-      return d;
-    });
-
-    setBudgetForm({
-      ...budgetForm,
-      default_budget: e,
-      budget_breakdown: newBreakdown,
+  const onDefaultBudgetChange = (_, amount) => {
+    setBudget.mutate({
+      category_id: category_id,
+      year: 2023,
+      default_budget: {
+        budget_amount: Number(amount),
+      },
     });
   };
 
-  const onBudgetChange = (label, e) => {
-    let { budget_breakdown: breakdown = [] } = budgetForm;
-    let newBreakdown = breakdown.map(d => {
-      if (d.month === Number(label)) {
-        d.budget = e;
-      }
-
-      return d;
+  const onBudgetChange = (month, amount) => {
+    setBudget.mutate({
+      category_id: category_id,
+      year: 2023,
+      monthly_budget: {
+        month: month,
+        budget_amount: Number(amount),
+      },
     });
-
-    let newBudget = { ...budgetForm, budget_breakdown: newBreakdown };
-    if (budgetForm.budget_type === BUDGET_TYPE_MONTHLY) {
-      setMonthlyBudget(newBudget);
-    }
-
-    setBudgetForm(newBudget);
   };
 
   const onSave = () => {
@@ -117,9 +76,7 @@ const BudgetForm = ({ route }) => {
   };
 
   const renderBudgets = () => {
-    const { default_budget = 0, budget_breakdown = [] } = budgetForm;
     const comps = [];
-
     comps.push(
       <Budget
         key="default"
@@ -127,38 +84,47 @@ const BudgetForm = ({ route }) => {
         year={getCurrYear()}
         label="default"
         amount={default_budget}
-        onValChange={onDefaultBudgetChange}
+        onSubmit={onDefaultBudgetChange}
       />,
     );
 
-    budget_breakdown.forEach(d => {
-      if (!isMonthValid(d.month)) {
-        return;
-      }
+    if (budget_type === BUDGET_TYPE_MONTHLY) {
+      monthly_budgets.forEach(d => {
+        const { amount = 0, month = 0, year = 0 } = d;
+        if (!isMonthValid(month)) {
+          return;
+        }
 
-      comps.push(
-        <Budget
-          key={d.month}
-          title={MONTHS[d.month]}
-          year={getCurrYear()}
-          label={d.month}
-          amount={d.budget}
-          highlight={Number(d.month) === getCurrMonth()}
-          onValChange={onBudgetChange}
-        />,
-      );
-    });
+        comps.push(
+          <Budget
+            key={month}
+            title={MONTHS[month]}
+            year={year}
+            label={month}
+            amount={amount}
+            highlight={Number(d.month) === getCurrMonth()}
+            onSubmit={onBudgetChange}
+          />,
+        );
+      });
+    }
 
     return comps;
   };
 
   return (
     <BaseScreen
+      isLoading={getBudgetBreakdownQuery.isLoading || setBudget.isLoading}
+      errorToast={{
+        show: getBudgetBreakdownQuery.isError,
+        message1: getBudgetBreakdownQuery.error?.message,
+        onHide: getBudgetBreakdownQuery.reset,
+      }}
       headerProps={{
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Personal</BaseText>
+            <BaseText h2>{category_name}</BaseText>
             <DateNavigator year />
           </View>
         ),
@@ -167,10 +133,12 @@ const BudgetForm = ({ route }) => {
         <BaseListItem showDivider={true}>
           <TouchSelector
             title="Budget Type"
-            value={BUDGET_TYPES[budgetForm.budget_type]}
+            value={BUDGET_TYPES[budget_type]}
             label="name"
             items={getBudgetTypes()}
-            onSelect={onBudgetTypeChange}
+            onSelect={e => {
+              onBudgetTypeChange(e.value);
+            }}
           />
         </BaseListItem>
         {renderBudgets()}

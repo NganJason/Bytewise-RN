@@ -1,30 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { AmountText, BaseText } from '../Text';
 import { useTheme } from '@rneui/themed';
 import { BaseOverlay, BaseRow } from '../View';
 import { BaseCurrencyInput } from '../Input';
 import { BaseButton } from '../Touch';
+import { getCurrYear } from '../../_shared/util/date';
 
 const Budget = ({
   title = 'Default Budget',
-  year = 2023,
+  year = getCurrYear(),
   label = '',
   amount = 0,
   highlight = false,
-  onValChange = function () {},
+  onSubmit = function () {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const [budget, setBudget] = useState(amount);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
+  useEffect(() => {
+    setBudget(amount);
+  }, [amount]);
 
   const toggleBottomSheet = () => {
     setIsBottomSheetVisible(!isBottomSheetVisible);
   };
 
   const onBudgetChange = e => {
-    onValChange(label, e);
+    setBudget(e);
+  };
+
+  const onBtnPress = () => {
+    onSubmit(label, budget);
+    toggleBottomSheet();
   };
 
   return (
@@ -43,12 +54,12 @@ const Budget = ({
         onBackdropPress={toggleBottomSheet}
         onClose={toggleBottomSheet}>
         <BaseText h3>{`${title} ${year}`}</BaseText>
-        <BaseCurrencyInput value={amount} onChangeText={onBudgetChange} />
+        <BaseCurrencyInput value={budget} onChangeText={onBudgetChange} />
         <BaseButton
           title="Done"
           size="lg"
           width={200}
-          onPress={toggleBottomSheet}
+          onPress={onBtnPress}
           marginVertical={20}
         />
       </BaseOverlay>

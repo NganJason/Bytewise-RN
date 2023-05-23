@@ -11,40 +11,53 @@ import {
 } from '../../Components';
 import { BaseRow, BaseTabView } from '../../Components/View';
 import ROUTES from '../../_shared/constant/routes';
-import { allBudgets } from '../../_shared/mock_data/all_budgets';
 import {
   TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
+import { useGetCategoryBudgetsByMonth } from '../../_shared/query';
 
 const BudgetScreen = () => {
-  const [budgets] = useState(allBudgets);
-  const [selectedTab, setSelectedTab] = useState(0);
-
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+
+  const getBudgetsQuery = useGetCategoryBudgetsByMonth({
+    year: 2023,
+    month: 5,
+  });
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const onSelectTab = idx => {
     setSelectedTab(idx);
   };
 
-  const renderBudgets = () => {
-    return budgets.map(budget => {
-      if (budget.budget_type !== selectedTab + 1) {
+  const renderBudgets = (categoryBudgets = []) => {
+    return categoryBudgets.map(cb => {
+      const {
+        category_type = 0,
+        category_id = '',
+        category_name = '',
+      } = cb.category || {};
+
+      const { budget_amount = 0 } = cb.budget || {};
+
+      if (category_type !== selectedTab + 1) {
         return;
       }
+
       return (
         <BaseRow
-          key={budget.budget_id}
+          key={category_id}
           onPress={() =>
             navigation.navigate(ROUTES.budgetForm, {
-              budgetID: budget.budget_id,
+              category_id: category_id,
+              category_name: category_name,
             })
           }>
-          <BaseText>{budget.cat_name}</BaseText>
-          <AmountText>{budget.default_budget}</AmountText>
+          <BaseText>{category_name}</BaseText>
+          <AmountText>{budget_amount}</AmountText>
         </BaseRow>
       );
     });
@@ -52,12 +65,18 @@ const BudgetScreen = () => {
 
   return (
     <BaseScreen
+      isLoading={getBudgetsQuery.isLoading}
+      errorToast={{
+        show: getBudgetsQuery.isError,
+        message1: getBudgetsQuery.error?.message,
+        onHide: getBudgetsQuery.reset,
+      }}
       headerProps={{
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
             <BaseText h2>Budget</BaseText>
-            <DateNavigator year />
+            <DateNavigator />
           </View>
         ),
       }}>
@@ -70,7 +89,7 @@ const BudgetScreen = () => {
         ]}
       />
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {renderBudgets()}
+        {renderBudgets(getBudgetsQuery.data?.category_budgets)}
       </BaseScrollView>
     </BaseScreen>
   );
