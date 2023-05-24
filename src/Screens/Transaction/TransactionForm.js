@@ -26,15 +26,18 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { useGetCategories } from '../../_shared/query';
-import { useCreateTransaction } from '../../_shared/mutations';
+import {
+  useCreateTransaction,
+  useUpdateTransaction,
+} from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/apis/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 
 // Initial date
-const TODAY = new Date();
-const YEAR = `${getYear(TODAY)}`;
-const MONTH = `${getMonth(TODAY)}`.padStart(2, '0');
-const DATE = `${getDate(TODAY)}`.padStart(2, '0');
+// const TODAY = new Date();
+// const YEAR = `${getYear(TODAY)}`;
+// const MONTH = `${getMonth(TODAY)}`.padStart(2, '0');
+// const DATE = `${getDate(TODAY)}`.padStart(2, '0');
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -47,7 +50,7 @@ const TransactionForm = ({ route }) => {
   const transaction = route.params?.transaction || {};
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: transaction.transaction_id || '',
-    transaction_time: transaction.transaction_time || TODAY.valueOf(),
+    transaction_time: transaction.transaction_time || new Date().valueOf(),
     transaction_type: transaction.transaction_type || TRANSACTION_TYPE_EXPENSE,
     amount: transaction.amount || '',
     note: transaction.note || '',
@@ -61,8 +64,13 @@ const TransactionForm = ({ route }) => {
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
 
-  // for rendering
-  const [selectedDate, setSelectedDate] = useState(`${YEAR}-${MONTH}-${DATE}`);
+  const formatTimestampForCalendar = ts => {
+    const date = new Date(ts);
+    const year = `${getYear(date)}`;
+    const month = `${getMonth(date)}`.padStart(2, '0');
+    const day = `${getDate(date)}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {
@@ -88,7 +96,7 @@ const TransactionForm = ({ route }) => {
     },
   );
 
-  const formatTimestamp = ts => {
+  const renderTimestamp = ts => {
     const d = new Date(ts);
 
     const yyyy = getYear(d);
@@ -99,12 +107,22 @@ const TransactionForm = ({ route }) => {
     return `${date}/${mm}/${yyyy} (${day})`;
   };
 
-  const saveTransaction = useCreateTransaction({
+  const createTransaction = useCreateTransaction({
+    onSuccess: navigation.goBack,
+  });
+
+  const updateTransaction = useUpdateTransaction({
     onSuccess: navigation.goBack,
   });
 
   const onFormSubmit = () => {
-    saveTransaction.mutate({
+    let mutation;
+    if (transactionForm.transaction_id !== '') {
+      mutation = updateTransaction;
+    } else {
+      mutation = createTransaction;
+    }
+    mutation.mutate({
       ...transactionForm,
       category_id: transactionCategory.category_id,
     });
@@ -162,15 +180,27 @@ const TransactionForm = ({ route }) => {
       };
     }
 
-    if (saveTransaction.isError) {
+    if (createTransaction.isError) {
       return {
-        show: saveTransaction.isError,
-        message1: saveTransaction.error.message,
-        onHide: saveTransaction.reset,
+        show: createTransaction.isError,
+        message1: createTransaction.error.message,
+        onHide: createTransaction.reset,
+      };
+    }
+
+    if (updateTransaction.isError) {
+      return {
+        show: updateTransaction.isError,
+        message1: updateTransaction.error.message,
+        onHide: updateTransaction.reset,
       };
     }
 
     return {};
+  };
+
+  const isFormButtonLoading = () => {
+    return createTransaction.isLoading || updateTransaction.isLoading;
   };
 
   return (
@@ -203,7 +233,7 @@ const TransactionForm = ({ route }) => {
           contentContainerStyle={styles.formBody}>
           <TouchInput
             label="Date"
-            value={formatTimestamp(transactionForm.transaction_time)}
+            value={renderTimestamp(transactionForm.transaction_time)}
             onPress={toggleCalendarModal}
           />
           <Dialog
@@ -211,18 +241,22 @@ const TransactionForm = ({ route }) => {
             onBackdropPress={toggleCalendarModal}>
             <Calendar
               showSixWeeks
-              initialDate={selectedDate}
+              initialDate={formatTimestampForCalendar(
+                transactionForm.transaction_time,
+              )}
               hideExtraDays={false}
               onDayPress={obj => {
-                setSelectedDate(obj.dateString);
-                onTransactionTimeChange(obj.timestamp);
+                onTransactionTimeChange(
+                  new Date(obj.timestamp).setHours(0, 0, 0, 0),
+                );
               }}
               markedDates={{
-                [selectedDate]: {
-                  selected: true,
-                  disableTouchEvent: true,
-                  selectedColor: theme.colors.primary,
-                },
+                [formatTimestampForCalendar(transactionForm.transaction_time)]:
+                  {
+                    selected: true,
+                    disableTouchEvent: true,
+                    selectedColor: theme.colors.primary,
+                  },
               }}
               theme={{
                 todayTextColor: theme.colors.primary,
@@ -275,7 +309,7 @@ const TransactionForm = ({ route }) => {
             width={200}
             disabled={!isValidTransaction()}
             onPress={onFormSubmit}
-            loading={saveTransaction.isLoading}
+            loading={isFormButtonLoading()}
           />
         </KeyboardAwareScrollView>
       </>

@@ -13,7 +13,6 @@ export const useCreateCategory = (opts = {}) => {
         category_type: category_type,
       });
     },
-    ...opts,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.getCategories] });
       opts.onSuccess && opts.onSuccess();

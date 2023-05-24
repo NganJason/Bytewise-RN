@@ -28,6 +28,7 @@ export const validateTransaction = ({
 
 const CREATE_TRANSACTION = '/create_transaction';
 const GET_TRANSACTIONS = '/get_transactions';
+const UPDATE_TRANSACTION = '/update_transaction';
 
 export const getTransactions = async ({
   category_id = '',
@@ -67,6 +68,33 @@ export const createTransaction = async ({
 } = {}) => {
   try {
     const body = await sendPostRequest(CREATE_TRANSACTION, {
+      category_id: category_id,
+      amount: amount,
+      transaction_type: transaction_type,
+      transaction_time: transaction_time,
+      note: note,
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const updateTransaction = async ({
+  transaction_id = '',
+  category_id = '',
+  amount = '',
+  transaction_type = 0,
+  transaction_time = 0,
+  note = '',
+} = {}) => {
+  try {
+    const body = await sendPostRequest(UPDATE_TRANSACTION, {
+      transaction_id: transaction_id,
       category_id: category_id,
       amount: amount,
       transaction_type: transaction_type,

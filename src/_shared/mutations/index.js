@@ -1,5 +1,10 @@
 import { useCreateCategory } from './category';
-import { useCreateTransaction } from './transaction';
+import { useCreateTransaction, useUpdateTransaction } from './transaction';
 import { useSetBudget } from './budget';
 
-export { useCreateCategory, useCreateTransaction, useSetBudget };
+export {
+  useCreateCategory,
+  useCreateTransaction,
+  useUpdateTransaction,
+  useSetBudget,
+};
