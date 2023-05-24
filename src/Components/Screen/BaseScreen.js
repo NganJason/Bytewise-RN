@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { PacmanIndicator } from 'react-native-indicators';
 import { IconButton } from '../Touch';
 import { BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
+
+const WAIT_TIME_FOR_INDICATOR = 500;
 
 const BaseScreen = ({
   children,
@@ -24,12 +26,8 @@ const BaseScreen = ({
     leftComponent: null,
     centerComponent: null,
     rightComponent: null,
-    leftComponentStyle: {},
-    centerComponentStyle: {},
-    rightComponentStyle: {},
   },
   isLoading = false,
-  bodyStyle = {},
   errorToast = {
     show: false,
     message1: '',
@@ -42,8 +40,29 @@ const BaseScreen = ({
 
   const navigation = useNavigation();
 
-  const isEmptyHeader = () =>
-    headerProps.centerComponent === null && headerProps.rightComponent === null;
+  const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
+
+  useEffect(() => {
+    let timer = null;
+
+    if (isLoading) {
+      timer = setTimeout(() => {
+        // will only show indicator if isLoading takes too long to become false
+        setShowLoadingIndicator(true);
+      }, WAIT_TIME_FOR_INDICATOR);
+    } else {
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+      setShowLoadingIndicator(false);
+    }
+
+    return () => {
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isLoading]);
 
   useEffect(() => {
     if (errorToast.show) {
@@ -64,10 +83,7 @@ const BaseScreen = ({
   return (
     <>
       <Header
-        containerStyle={[
-          styles.header,
-          isEmptyHeader() ? styles.emptyHeader : styles.nonEmptyHeader,
-        ]}
+        containerStyle={styles.header}
         leftComponent={
           <>
             {headerProps.allowBack && (
@@ -86,24 +102,16 @@ const BaseScreen = ({
         }
         centerComponent={headerProps.centerComponent}
         rightComponent={headerProps.rightComponent}
-        leftContainerStyle={{
-          ...headerProps.leftComponentStyle,
-          ...styles.leftComponentStyle,
-        }}
-        centerContainerStyle={{
-          ...headerProps.centerComponentStyle,
-          ...styles.centerComponentStyle,
-        }}
-        rightContainerStyle={{
-          ...headerProps.rightComponentStyle,
-          ...styles.rightComponentStyle,
-        }}
+        leftContainerStyle={styles.leftComponentStyle}
+        centerContainerStyle={styles.centerComponentStyle}
+        rightContainerStyle={styles.rightComponentStyle}
       />
       <HideKeyboard>
-        <View style={{ ...styles.body, ...bodyStyle }}>
-          {isLoading ? (
+        <View style={styles.body}>
+          {showLoadingIndicator && (
             <PacmanIndicator size={70} color={theme.colors.primary} />
-          ) : (
+          )}
+          {!isLoading && (
             <>
               {children}
               {fabProps.show && (
@@ -140,12 +148,6 @@ const getStyles = theme =>
       backgroundColor: theme.colors.white,
       paddingHorizontal: 26,
       borderBottomWidth: 0,
-      paddingVertical: 0,
-    },
-    emptyHeader: {
-      paddingVertical: 0,
-    },
-    nonEmptyHeader: {
       paddingVertical: 22,
     },
     leftComponentStyle: {

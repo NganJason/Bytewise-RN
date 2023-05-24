@@ -5,11 +5,11 @@ import { useTheme } from '@rneui/themed';
 import { BaseOverlay, BaseRow } from '../View';
 import { BaseCurrencyInput } from '../Input';
 import { BaseButton } from '../Touch';
-import { getCurrYear } from '../../_shared/util/date';
+import { getYear } from '../../_shared/util/date';
 
 const Budget = ({
   title = 'Default Budget',
-  year = getCurrYear(),
+  year = getYear(),
   label = '',
   amount = 0,
   highlight = false,

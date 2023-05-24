@@ -10,11 +10,7 @@ import {
 } from '../../Components';
 import Budget from '../../Components/Common/Budget';
 import { MONTHS } from '../../_shared/constant/constant';
-import {
-  getCurrMonth,
-  getCurrYear,
-  isMonthValid,
-} from '../../_shared/util/date';
+import { getMonth, getYear, isMonthValid } from '../../_shared/util/date';
 import { getBudgetTypes } from '../../_shared/util/budget';
 import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
@@ -81,7 +77,7 @@ const BudgetForm = ({ route }) => {
       <Budget
         key="default"
         title="Default Budget"
-        year={getCurrYear()}
+        year={getYear()}
         label="default"
         amount={default_budget}
         onSubmit={onDefaultBudgetChange}
@@ -102,7 +98,7 @@ const BudgetForm = ({ route }) => {
             year={year}
             label={month}
             amount={amount}
-            highlight={Number(d.month) === getCurrMonth()}
+            highlight={Number(d.month) === getMonth()}
             onSubmit={onBudgetChange}
           />,
         );

@@ -16,28 +16,28 @@ const AmountText = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const getAmountAttr = () => {
-    let symbol = '';
-    let colorStyle = {};
+  let amount = Number(children);
 
-    if (children > 0) {
+  const getAmountAttr = () => {
+    if (amount > 0) {
       return { styles: showColor && styles.positive, symbol: '+' };
     }
-    if (children < 0) {
+
+    if (amount < 0) {
       return { styles: showColor && styles.negative, symbol: '-' };
     }
 
-    return { styles: colorStyle, symbol: symbol };
+    return { styles: {}, symbol: '' };
   };
 
   const renderAmountText = () => {
     let text = '';
-    let amount = children;
 
     // use symbol string to show negative
     if (amount < 0) {
-      amount *= -1;
+      amount = amount * -1;
     }
+    amount = amount.toFixed(2);
 
     // add currency
     text = `${CURRENCY} ${amount}`;

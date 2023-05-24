@@ -11,21 +11,23 @@ import {
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
 
-import { CATEGORIES } from '../../_shared/mock_data/category';
-import { ACCOUNTS } from '../../_shared/mock_data/account';
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
+import { getDate, getDay } from '../../_shared/util/date';
 
 const DailyTransactions = ({
   timestamp = 0,
   transactions = [
     {
-      id: 0,
+      transaction_id: '',
+      category: {
+        category_id: '',
+        category_name: '',
+      },
+      amount: '',
       note: '',
-      cat_id: 0,
-      acc_id: 0,
-      amount: 0,
-      transaction_type: TRANSACTION_TYPE_EXPENSE,
+      transaction_time: 0,
+      transaction_type: 0,
     },
   ],
 }) => {
@@ -41,10 +43,10 @@ const DailyTransactions = ({
     transactions.forEach(t => {
       switch (t.transaction_type) {
         case TRANSACTION_TYPE_EXPENSE:
-          sum -= t.amount;
+          sum -= Number(t.amount);
           return;
         case TRANSACTION_TYPE_INCOME:
-          sum += t.amount;
+          sum += Number(t.amount);
           return;
       }
     });
@@ -52,28 +54,16 @@ const DailyTransactions = ({
     return sum;
   };
 
-  // TODO: temporary
-  const getCategory = catID => {
-    const foundCat = CATEGORIES.find(cat => cat.cat_id === catID);
-    return foundCat;
-  };
-
-  // TODO: temporary
-  const getAccount = accID => {
-    return ACCOUNTS.find(acc => acc.acc_id === accID);
-  };
-
-  const navigateToForm = (t, cat, acc) => {
+  const navigateToForm = (t, c) => {
     navigation.navigate(ROUTES.transactionForm, {
       transaction: {
         id: t.id,
         timestamp: t.timestamp,
         amount: t.amount,
         note: t.note,
-        cat: cat,
-        account: acc,
         transaction_type: t.transaction_type,
       },
+      category: c,
     });
   };
 
@@ -91,14 +81,14 @@ const DailyTransactions = ({
       <View style={styles.row}>
         <View style={styles.titleItem}>
           <BaseText h2 style={styles.titleItemText}>
-            {`${ts.getDay()}`.padStart(2, '0')}
+            {`${getDate(ts)}`.padStart(2, '0')}
           </BaseText>
           <Chip
             radius={5}
             size="sm"
             containerStyle={styles.chip}
             titleStyle={styles.chipText}>
-            {DAYS[ts.getDay()]}
+            {DAYS[getDay(ts)]}
           </Chip>
         </View>
         <AmountText showColor style={styles.sumText}>
@@ -106,10 +96,10 @@ const DailyTransactions = ({
         </AmountText>
       </View>
       {transactions.map((t, i) => {
-        const cat = getCategory(t.cat_id);
-        const acc = getAccount(t.acc_id);
         return (
-          <TouchableOpacity key={i} onPress={() => navigateToForm(t, cat, acc)}>
+          <TouchableOpacity
+            key={i}
+            onPress={() => navigateToForm(t, t.category)}>
             <BaseListItem
               containerStyle={styles.listItem}
               showDivider
@@ -120,22 +110,15 @@ const DailyTransactions = ({
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {cat.cat_name}
+                  {t.category.category_name}
                 </BaseText>
-                <View style={styles.noteAccountWrapper}>
+                <View style={styles.noteWrapper}>
                   <BaseText
                     h5
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
                     {t.note}
-                  </BaseText>
-                  <BaseText
-                    h6
-                    style={styles.account}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {acc.acc_name}
                   </BaseText>
                 </View>
                 <AmountText
@@ -203,7 +186,7 @@ const getStyles = theme =>
     account: {
       color: theme.colors.color5,
     },
-    noteAccountWrapper: {
+    noteWrapper: {
       flex: 2,
       marginHorizontal: 10,
     },

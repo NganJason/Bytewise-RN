@@ -1,8 +1,14 @@
 import { ScrollView, Pressable } from 'react-native';
 
-const BaseScrollView = ({ children, showsVerticalScrollIndicator }) => {
+const BaseScrollView = ({
+  children,
+  showsVerticalScrollIndicator,
+  onScrollEndDrag,
+}) => {
   return (
-    <ScrollView showsVerticalScrollIndicator={showsVerticalScrollIndicator}>
+    <ScrollView
+      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      onScrollEndDrag={onScrollEndDrag}>
       <Pressable>{children}</Pressable>
     </ScrollView>
   );

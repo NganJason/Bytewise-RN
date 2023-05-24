@@ -28,13 +28,13 @@ import { DAYS } from '../../_shared/constant/constant';
 import { useGetCategories } from '../../_shared/query';
 import { useCreateTransaction } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/apis/transaction';
-import { toUnixSecondsFromMilli } from '../../_shared/util/date';
+import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 
 // Initial date
 const TODAY = new Date();
-const YEAR = `${TODAY.getFullYear()}`;
-const MONTH = `${TODAY.getMonth() + 1}`.padStart(2, '0');
-const DATE = `${TODAY.getDate()}`.padStart(2, '0');
+const YEAR = `${getYear(TODAY)}`;
+const MONTH = `${getMonth(TODAY)}`.padStart(2, '0');
+const DATE = `${getDate(TODAY)}`.padStart(2, '0');
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -44,13 +44,10 @@ const TransactionForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const getCategoriesQuery = useGetCategories();
-
   const transaction = route.params?.transaction || {};
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: transaction.transaction_id || '',
-    transaction_time:
-      transaction.transaction_time || toUnixSecondsFromMilli(TODAY.valueOf()),
+    transaction_time: transaction.transaction_time || TODAY.valueOf(),
     transaction_type: transaction.transaction_type || TRANSACTION_TYPE_EXPENSE,
     amount: transaction.amount || '',
     note: transaction.note || '',
@@ -77,19 +74,27 @@ const TransactionForm = ({ route }) => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
-  const filterCategories = () => {
-    return getCategoriesQuery.data?.categories.filter(
-      c => c.category_type === transactionForm.transaction_type,
-    );
-  };
+  const [categories, setCategories] = useState([]);
+
+  const getCategoriesQuery = useGetCategories(
+    {
+      category_type: transactionForm.transaction_type,
+    },
+    {
+      queryOnChange: [transactionForm.transaction_type],
+      onSuccess: function (data) {
+        setCategories(data.categories);
+      },
+    },
+  );
 
   const formatTimestamp = ts => {
     const d = new Date(ts);
 
-    const yyyy = d.getFullYear();
-    const mm = d.getMonth() + 1;
-    const date = d.getDate();
-    const day = DAYS[d.getDay()];
+    const yyyy = getYear(d);
+    const mm = getMonth(d);
+    const date = getDate(d);
+    const day = DAYS[getDay(d)];
 
     return `${date}/${mm}/${yyyy} (${day})`;
   };
@@ -133,7 +138,7 @@ const TransactionForm = ({ route }) => {
   const onTransactionTimeChange = e => {
     setTransactionForm({
       ...transactionForm,
-      transaction_time: toUnixSecondsFromMilli(e),
+      transaction_time: e,
     });
     toggleCalendarModal();
   };
@@ -180,102 +185,100 @@ const TransactionForm = ({ route }) => {
           </BaseText>
         ),
       }}>
-      {!getCategoriesQuery.isLoading && (
-        <>
-          <BaseTabView
-            onPress={index => onTransactionTypeChange(index + 1)}
-            selectedIndex={transactionForm.transaction_type - 1}
-            titles={[
-              TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+      <>
+        <BaseTabView
+          onPress={index => onTransactionTypeChange(index + 1)}
+          selectedIndex={transactionForm.transaction_type - 1}
+          titles={[
+            TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+            TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+          ]}
+        />
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps="always"
+          extraHeight={scrollHeight}
+          enableOnAndroid={true}
+          keyboardOpeningTime={0}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.formBody}>
+          <TouchInput
+            label="Date"
+            value={formatTimestamp(transactionForm.transaction_time)}
+            onPress={toggleCalendarModal}
+          />
+          <Dialog
+            isVisible={isCalendarModalVisible}
+            onBackdropPress={toggleCalendarModal}>
+            <Calendar
+              showSixWeeks
+              initialDate={selectedDate}
+              hideExtraDays={false}
+              onDayPress={obj => {
+                setSelectedDate(obj.dateString);
+                onTransactionTimeChange(obj.timestamp);
+              }}
+              markedDates={{
+                [selectedDate]: {
+                  selected: true,
+                  disableTouchEvent: true,
+                  selectedColor: theme.colors.primary,
+                },
+              }}
+              theme={{
+                todayTextColor: theme.colors.primary,
+                arrowColor: theme.colors.primary,
+              }}
+            />
+          </Dialog>
+          <BaseCurrencyInput
+            label="Amount"
+            value={transactionForm.amount}
+            onChangeText={onAmountChange}
+            autoFocus={transactionForm.transaction_id === ''}
+            onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
+          />
+          <TouchInput
+            label="Category"
+            value={transactionCategory.category_name}
+            onPress={toggleCategoryModal}
+          />
+          <BaseBottomSheet
+            isVisible={isCategoryModalVisible}
+            onBackdropPress={toggleCategoryModal}
+            close={toggleCategoryModal}
+            onSelect={onCategoryChange}
+            items={categories}
+            label="category_name"
+            headerItems={[
+              <IconButton
+                iconName="edit"
+                iconType="fontawesome"
+                type="clear"
+                buttonSize="sm"
+                color="grey"
+                style={styles.editBtn}
+                onPress={onEditCategory}
+              />,
             ]}
           />
-          <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
-            extraHeight={scrollHeight}
-            enableOnAndroid={true}
-            keyboardOpeningTime={0}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.formBody}>
-            <TouchInput
-              label="Date"
-              value={formatTimestamp(transactionForm.transaction_time)}
-              onPress={toggleCalendarModal}
-            />
-            <Dialog
-              isVisible={isCalendarModalVisible}
-              onBackdropPress={toggleCalendarModal}>
-              <Calendar
-                showSixWeeks
-                initialDate={selectedDate}
-                hideExtraDays={false}
-                onDayPress={obj => {
-                  setSelectedDate(obj.dateString);
-                  onTransactionTimeChange(obj.timestamp);
-                }}
-                markedDates={{
-                  [selectedDate]: {
-                    selected: true,
-                    disableTouchEvent: true,
-                    selectedColor: theme.colors.primary,
-                  },
-                }}
-                theme={{
-                  todayTextColor: theme.colors.primary,
-                  arrowColor: theme.colors.primary,
-                }}
-              />
-            </Dialog>
-            <BaseCurrencyInput
-              label="Amount"
-              value={transactionForm.amount}
-              onChangeText={onAmountChange}
-              autoFocus={transactionForm.transaction_id === ''}
-              onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
-            />
-            <TouchInput
-              label="Category"
-              value={transactionCategory.category_name}
-              onPress={toggleCategoryModal}
-            />
-            <BaseBottomSheet
-              isVisible={isCategoryModalVisible}
-              onBackdropPress={toggleCategoryModal}
-              close={toggleCategoryModal}
-              onSelect={onCategoryChange}
-              items={filterCategories()}
-              label="category_name"
-              headerItems={[
-                <IconButton
-                  iconName="edit"
-                  iconType="fontawesome"
-                  type="clear"
-                  buttonSize="sm"
-                  color="grey"
-                  style={styles.editBtn}
-                  onPress={onEditCategory}
-                />,
-              ]}
-            />
-            <BaseInput
-              label="Note"
-              value={transactionForm.note}
-              onChangeText={onNoteChange}
-              clearButtonMode="always"
-              onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
-              maxLength={120}
-            />
-            <BaseButton
-              title="Save"
-              size="lg"
-              width={200}
-              disabled={!isValidTransaction()}
-              onPress={onFormSubmit}
-              loading={saveTransaction.isLoading}
-            />
-          </KeyboardAwareScrollView>
-        </>
-      )}
+          <BaseInput
+            label="Note"
+            value={transactionForm.note}
+            onChangeText={onNoteChange}
+            clearButtonMode="always"
+            onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
+            maxLength={120}
+          />
+          <BaseButton
+            title="Save"
+            size="lg"
+            width={200}
+            disabled={!isValidTransaction()}
+            onPress={onFormSubmit}
+            loading={saveTransaction.isLoading}
+          />
+        </KeyboardAwareScrollView>
+      </>
     </BaseScreen>
   );
 };

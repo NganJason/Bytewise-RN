@@ -27,6 +27,36 @@ export const validateTransaction = ({
 };
 
 const CREATE_TRANSACTION = '/create_transaction';
+const GET_TRANSACTIONS = '/get_transactions';
+
+export const getTransactions = async ({
+  category_id = '',
+  transaction_type = 0,
+  transaction_time: { gte = 0, lte = 0 } = {},
+  paging: { limit = 500, page = 1 } = {},
+} = {}) => {
+  try {
+    const body = await sendPostRequest(GET_TRANSACTIONS, {
+      category_id: category_id,
+      transaction_type: transaction_type,
+      transaction_time: {
+        gte: gte,
+        lte: lte,
+      },
+      paging: {
+        limit: limit,
+        page: page,
+      },
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
 
 export const createTransaction = async ({
   category_id = '',

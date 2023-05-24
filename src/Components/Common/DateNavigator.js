@@ -5,7 +5,7 @@ import { useTheme } from '@rneui/themed';
 import BaseText from '../Text/BaseText';
 import IconButton from '../Touch/IconButton';
 
-import { moveMonth } from '../../_shared/util/date';
+import { moveMonth, getYear, getMonth } from '../../_shared/util/date';
 import { MONTHS } from '../../_shared/constant/constant';
 
 const DateNavigator = ({
@@ -23,11 +23,11 @@ const DateNavigator = ({
 
   const renderDate = () => {
     if (year) {
-      return `${date.getFullYear()}`;
+      return `${getYear(startingDate)}`;
     }
 
-    const monthStr = MONTHS[date.getMonth()];
-    return `${monthStr} ${date.getFullYear()}`;
+    const monthStr = MONTHS[getMonth(startingDate)];
+    return `${monthStr} ${getYear(startingDate)}`;
   };
 
   const moveForward = () => {
