@@ -1,7 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
-  BaseButton,
   BaseListItem,
   BaseScreen,
   BaseScrollView,
@@ -16,30 +14,38 @@ import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import TouchSelector from '../../Components/Input/TouchSelector';
 import { useGetAnnualBudgetBreakdown } from '../../_shared/query';
 import { useSetBudget } from '../../_shared/mutations';
-
-const windowWidth = Dimensions.get('window').width;
+import { useState } from 'react';
 
 const BudgetForm = ({ route }) => {
   const styles = getStyles();
-  const navigation = useNavigation();
   const { params: { category_id = '', category_name = '' } = {} } = route;
 
-  const setBudget = useSetBudget();
-  const getBudgetBreakdownQuery = useGetAnnualBudgetBreakdown({
-    category_id: category_id,
-    year: 2023,
-  });
+  const [activeDate, setActiveDate] = useState(new Date());
+  const onDateChange = e => {
+    setActiveDate(e);
+  };
 
+  const getBudgetBreakdownQuery = useGetAnnualBudgetBreakdown(
+    {
+      category_id: category_id,
+      year: getYear(activeDate),
+    },
+    {
+      queryOnChange: [activeDate],
+    },
+  );
   const {
     budget_type = 0,
     default_budget = 0,
     monthly_budgets = [],
   } = getBudgetBreakdownQuery?.data?.annual_budget_breakdown || {};
 
+  const setBudget = useSetBudget();
+
   const onBudgetTypeChange = budgetType => {
     setBudget.mutate({
       category_id: category_id,
-      year: 2023,
+      year: getYear(activeDate),
       budget_config: {
         budget_type: Number(budgetType),
       },
@@ -49,7 +55,7 @@ const BudgetForm = ({ route }) => {
   const onDefaultBudgetChange = (_, amount) => {
     setBudget.mutate({
       category_id: category_id,
-      year: 2023,
+      year: getYear(activeDate),
       default_budget: {
         budget_amount: Number(amount),
       },
@@ -59,16 +65,12 @@ const BudgetForm = ({ route }) => {
   const onBudgetChange = (month, amount) => {
     setBudget.mutate({
       category_id: category_id,
-      year: 2023,
+      year: getYear(activeDate),
       monthly_budget: {
         month: month,
         budget_amount: Number(amount),
       },
     });
-  };
-
-  const onSave = () => {
-    navigation.goBack();
   };
 
   const renderBudgets = () => {
@@ -77,7 +79,7 @@ const BudgetForm = ({ route }) => {
       <Budget
         key="default"
         title="Default Budget"
-        year={getYear()}
+        year={getYear(activeDate)}
         label="default"
         amount={default_budget}
         onSubmit={onDefaultBudgetChange}
@@ -98,7 +100,9 @@ const BudgetForm = ({ route }) => {
             year={year}
             label={month}
             amount={amount}
-            highlight={Number(d.month) === getMonth()}
+            highlight={
+              Number(d.year) === getYear() && Number(d.month) === getMonth()
+            }
             onSubmit={onBudgetChange}
           />,
         );
@@ -121,7 +125,12 @@ const BudgetForm = ({ route }) => {
         centerComponent: (
           <View style={styles.header}>
             <BaseText h2>{category_name}</BaseText>
-            <DateNavigator year />
+            <DateNavigator
+              year
+              startingDate={activeDate}
+              onForward={onDateChange}
+              onBackward={onDateChange}
+            />
           </View>
         ),
       }}>
@@ -139,24 +148,6 @@ const BudgetForm = ({ route }) => {
         </BaseListItem>
         {renderBudgets()}
       </BaseScrollView>
-
-      <View style={styles.btnContainer}>
-        <BaseButton
-          title="Cancel"
-          type="outline"
-          size="lg"
-          width={windowWidth / 2.5}
-          marginVertical={10}
-          onPress={() => navigation.goBack()}
-        />
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={windowWidth / 2.5}
-          marginVertical={5}
-          onPress={onSave}
-        />
-      </View>
     </BaseScreen>
   );
 };
@@ -165,12 +156,6 @@ const getStyles = _ => {
   return StyleSheet.create({
     header: {
       alignItems: 'center',
-    },
-    btnContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 20,
-      marginBottom: 30,
     },
   });
 };

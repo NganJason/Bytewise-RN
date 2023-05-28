@@ -25,7 +25,7 @@ export const useSetBudget = (opts = {}) => {
     ...opts,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.getAnnualBudgetBreakdown],
+        queryKey: [queryKeys.getBudgets],
       });
       opts.onSuccess && opts.onSuccess();
     },

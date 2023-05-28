@@ -56,7 +56,7 @@ const Budget = ({
         <BaseText h3>{`${title} ${year}`}</BaseText>
         <BaseCurrencyInput value={budget} onChangeText={onBudgetChange} />
         <BaseButton
-          title="Done"
+          title="Save"
           size="lg"
           width={200}
           onPress={onBtnPress}

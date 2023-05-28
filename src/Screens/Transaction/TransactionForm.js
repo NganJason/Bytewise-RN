@@ -32,6 +32,7 @@ import {
 } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/apis/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
+import { renderErrorsToast } from '../../_shared/util/toast';
 
 // Initial date
 // const TODAY = new Date();
@@ -171,34 +172,6 @@ const TransactionForm = ({ route }) => {
     toggleCategoryModal();
   };
 
-  const renderErrorToast = () => {
-    if (getCategoriesQuery.isError) {
-      return {
-        show: getCategoriesQuery.isError,
-        message1: getCategoriesQuery.error.message,
-        onHide: getCategoriesQuery.reset,
-      };
-    }
-
-    if (createTransaction.isError) {
-      return {
-        show: createTransaction.isError,
-        message1: createTransaction.error.message,
-        onHide: createTransaction.reset,
-      };
-    }
-
-    if (updateTransaction.isError) {
-      return {
-        show: updateTransaction.isError,
-        message1: updateTransaction.error.message,
-        onHide: updateTransaction.reset,
-      };
-    }
-
-    return {};
-  };
-
   const isFormButtonLoading = () => {
     return createTransaction.isLoading || updateTransaction.isLoading;
   };
@@ -206,7 +179,11 @@ const TransactionForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={getCategoriesQuery.isLoading}
-      errorToast={renderErrorToast()}
+      errorToast={renderErrorsToast([
+        getCategoriesQuery,
+        createTransaction,
+        updateTransaction,
+      ])}
       headerProps={{
         allowBack: true,
         centerComponent: (

@@ -16,6 +16,7 @@ import {
   getYear,
   getMonth,
 } from '../../_shared/util/date';
+import { renderErrorsToast } from '../../_shared/util/toast';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -67,22 +68,10 @@ const TransactionScreen = ({ navigation }) => {
     },
   );
 
-  const renderErrorToast = () => {
-    if (getTransactionsQuery.isError) {
-      return {
-        show: getTransactionsQuery.isError,
-        message1: getTransactionsQuery.error.message,
-        onHide: getTransactionsQuery.reset,
-      };
-    }
-
-    return {};
-  };
-
   return (
     <BaseScreen
       isLoading={getTransactionsQuery.isLoading}
-      errorToast={renderErrorToast()}
+      errorToast={renderErrorsToast([getTransactionsQuery])}
       headerProps={{
         allowBack: false,
         centerComponent: (

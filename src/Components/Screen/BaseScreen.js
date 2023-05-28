@@ -111,7 +111,7 @@ const BaseScreen = ({
           {showLoadingIndicator && (
             <PacmanIndicator size={70} color={theme.colors.primary} />
           )}
-          {!isLoading && (
+          {!showLoadingIndicator && (
             <>
               {children}
               {fabProps.show && (

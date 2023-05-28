@@ -23,11 +23,11 @@ const DateNavigator = ({
 
   const renderDate = () => {
     if (year) {
-      return `${getYear(startingDate)}`;
+      return `${getYear(date)}`;
     }
 
-    const monthStr = MONTHS[getMonth(startingDate)];
-    return `${monthStr} ${getYear(startingDate)}`;
+    const monthStr = MONTHS[getMonth(date)];
+    return `${monthStr} ${getYear(date)}`;
   };
 
   const moveForward = () => {
