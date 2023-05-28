@@ -1,20 +1,27 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { queryKeys } from '../query';
-import { createCategory } from '../apis/category';
+import { queryKeys } from '../query/keys';
+import { createCategory, updateCategory } from '../apis/category';
 
 export const useCreateCategory = (opts = {}) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({ category_name = '', category_type = 0 } = {}) => {
-      await createCategory({
-        category_name: category_name,
-        category_type: category_type,
-      });
-    },
+  return useMutation(createCategory, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.getCategories] });
+      queryClient.invalidateQueries([queryKeys.categories]);
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useUpdateCategory = (opts = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateCategory, {
+    onSuccess: ({ category = {} }) => {
+      const { category_id = '' } = category;
+      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.categories]);
+      queryClient.invalidateQueries([queryKeys.category, category_id]);
       opts.onSuccess && opts.onSuccess();
     },
   });

@@ -1,5 +1,7 @@
 export const queryKeys = {
-  getCategories: 'get_categories',
-  getTransactions: 'get_transactions',
-  getBudgets: 'get_budgets',
+  categories: 'categories',
+  transactions: 'transactions',
+  category: 'category',
+  transaction: 'transaction',
+  budgets: 'budgets',
 };

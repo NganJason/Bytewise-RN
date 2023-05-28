@@ -11,7 +11,7 @@ export const useGetCategoryBudgetsByMonth = (
 ) => {
   return useQuery({
     queryFn: () => getCategoryBudgetsByMonth({ year: year, month: month }),
-    queryKey: [queryKeys.getBudgets, ...(opts.queryOnChange || [])],
+    queryKey: [queryKeys.budgets, ...(opts.queryOnChange || [])],
     onSuccess: opts.onSuccess || function () {},
   });
 };
@@ -23,7 +23,7 @@ export const useGetAnnualBudgetBreakdown = (
   return useQuery({
     queryFn: () =>
       getAnnualBudgetBreakdown({ category_id: category_id, year: year }),
-    queryKey: [queryKeys.getBudgets, ...(opts.queryOnChange || [])],
+    queryKey: [queryKeys.budgets, ...(opts.queryOnChange || [])],
     onSuccess: opts.onSuccess || function () {},
   });
 };

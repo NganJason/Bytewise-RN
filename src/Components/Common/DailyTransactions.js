@@ -54,16 +54,9 @@ const DailyTransactions = ({
     return sum;
   };
 
-  const navigateToForm = (t, c) => {
+  const navigateToForm = t => {
     navigation.navigate(ROUTES.transactionForm, {
-      transaction: {
-        transaction_id: t.transaction_id,
-        transaction_time: t.transaction_time,
-        transaction_type: t.transaction_type,
-        amount: t.amount,
-        note: t.note,
-      },
-      category: c,
+      transaction_id: t.transaction_id,
     });
   };
 
@@ -97,9 +90,7 @@ const DailyTransactions = ({
       </View>
       {transactions.map((t, i) => {
         return (
-          <TouchableOpacity
-            key={i}
-            onPress={() => navigateToForm(t, t.category)}>
+          <TouchableOpacity key={i} onPress={() => navigateToForm(t)}>
             <BaseListItem
               containerStyle={styles.listItem}
               showDivider

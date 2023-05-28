@@ -25,7 +25,7 @@ import {
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
-import { useGetCategories } from '../../_shared/query';
+import { useGetCategories, useGetTransaction } from '../../_shared/query';
 import {
   useCreateTransaction,
   useUpdateTransaction,
@@ -33,12 +33,6 @@ import {
 import { validateTransaction } from '../../_shared/apis/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 import { renderErrorsToast } from '../../_shared/util/toast';
-
-// Initial date
-// const TODAY = new Date();
-// const YEAR = `${getYear(TODAY)}`;
-// const MONTH = `${getMonth(TODAY)}`.padStart(2, '0');
-// const DATE = `${getDate(TODAY)}`.padStart(2, '0');
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -48,20 +42,42 @@ const TransactionForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const transaction = route.params?.transaction || {};
   const [transactionForm, setTransactionForm] = useState({
-    transaction_id: transaction.transaction_id || '',
-    transaction_time: transaction.transaction_time || new Date().valueOf(),
-    transaction_type: transaction.transaction_type || TRANSACTION_TYPE_EXPENSE,
-    amount: transaction.amount || '',
-    note: transaction.note || '',
+    transaction_id: '',
+    transaction_time: new Date().valueOf(),
+    transaction_type: TRANSACTION_TYPE_EXPENSE,
+    amount: '',
+    note: '',
+    category: {
+      category_id: '',
+      category_name: '',
+    },
   });
 
-  const category = route.params?.category || {};
-  const [transactionCategory, setTransactionCategory] = useState({
-    category_id: category.category_id || 0,
-    category_name: category.category_name || '',
-  });
+  const transactionID = route.params?.transaction_id || '';
+
+  const isGetTransactionEnabled = () => transactionID !== '';
+
+  const getTransaction = useGetTransaction(
+    { transaction_id: transactionID },
+    {
+      onSuccess: data => {
+        const transaction = data.transaction || {};
+        setTransactionForm({
+          transaction_id: transaction.transaction_id,
+          transaction_time: transaction.transaction_time,
+          transaction_type: transaction.transaction_type,
+          amount: transaction.amount,
+          note: transaction.note,
+          category: {
+            category_id: transaction.category.category_id,
+            category_name: transaction.category.category_name,
+          },
+        });
+      },
+      enabled: isGetTransactionEnabled(),
+    },
+  );
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
 
@@ -85,12 +101,11 @@ const TransactionForm = ({ route }) => {
 
   const [categories, setCategories] = useState([]);
 
-  const getCategoriesQuery = useGetCategories(
+  const getCategories = useGetCategories(
     {
       category_type: transactionForm.transaction_type,
     },
     {
-      queryOnChange: [transactionForm.transaction_type],
       onSuccess: function (data) {
         setCategories(data.categories);
       },
@@ -125,7 +140,7 @@ const TransactionForm = ({ route }) => {
     }
     mutation.mutate({
       ...transactionForm,
-      category_id: transactionCategory.category_id,
+      category_id: transactionForm.category.category_id,
     });
   };
 
@@ -133,7 +148,7 @@ const TransactionForm = ({ route }) => {
     try {
       validateTransaction({
         ...transactionForm,
-        category_id: transactionCategory.category_id,
+        category_id: transactionForm.category.category_id,
       });
       return true;
     } catch {
@@ -150,8 +165,14 @@ const TransactionForm = ({ route }) => {
   };
 
   const onTransactionTypeChange = e => {
-    setTransactionForm({ ...transactionForm, transaction_type: e });
-    setTransactionCategory({});
+    setTransactionForm({
+      ...transactionForm,
+      transaction_type: e,
+      category: {
+        category_id: '',
+        category_name: '',
+      },
+    });
   };
 
   const onTransactionTimeChange = e => {
@@ -163,12 +184,20 @@ const TransactionForm = ({ route }) => {
   };
 
   const onCategoryChange = e => {
-    setTransactionCategory(e);
+    setTransactionForm({
+      ...transactionForm,
+      category: {
+        category_id: e.category_id,
+        category_name: e.category_name,
+      },
+    });
     toggleCategoryModal();
   };
 
   const onEditCategory = () => {
-    navigation.navigate(ROUTES.categoryEdit);
+    navigation.navigate(ROUTES.categoryEdit, {
+      category_type: transactionForm.transaction_type,
+    });
     toggleCategoryModal();
   };
 
@@ -176,11 +205,19 @@ const TransactionForm = ({ route }) => {
     return createTransaction.isLoading || updateTransaction.isLoading;
   };
 
+  const isFormLoading = () => {
+    return (
+      (isGetTransactionEnabled() && getTransaction.isLoading) ||
+      getCategories.isLoading
+    );
+  };
+
   return (
     <BaseScreen
-      isLoading={getCategoriesQuery.isLoading}
+      isLoading={isFormLoading()}
       errorToast={renderErrorsToast([
-        getCategoriesQuery,
+        getTransaction,
+        getCategories,
         createTransaction,
         updateTransaction,
       ])}
@@ -250,7 +287,7 @@ const TransactionForm = ({ route }) => {
           />
           <TouchInput
             label="Category"
-            value={transactionCategory.category_name}
+            value={transactionForm.category.category_name}
             onPress={toggleCategoryModal}
           />
           <BaseBottomSheet

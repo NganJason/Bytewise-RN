@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { IconButton } from '../Touch';
 import { BaseToast } from '../View';
@@ -107,12 +108,12 @@ const BaseScreen = ({
         rightContainerStyle={styles.rightComponentStyle}
       />
       <HideKeyboard>
-        <View style={styles.body}>
+        <>
           {showLoadingIndicator && (
             <PacmanIndicator size={70} color={theme.colors.primary} />
           )}
           {!showLoadingIndicator && (
-            <>
+            <Animated.View entering={FadeIn.duration(400)} style={styles.body}>
               {children}
               {fabProps.show && (
                 <FAB
@@ -128,9 +129,9 @@ const BaseScreen = ({
                   onPress={fabProps.onPress}
                 />
               )}
-            </>
+            </Animated.View>
           )}
-        </View>
+        </>
       </HideKeyboard>
       <BaseToast />
     </>
