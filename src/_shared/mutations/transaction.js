@@ -7,7 +7,7 @@ export const useCreateTransaction = (opts = {}) => {
 
   return useMutation(createTransaction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['transactions']);
+      queryClient.invalidateQueries([queryKeys.transactions]);
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -16,26 +16,11 @@ export const useCreateTransaction = (opts = {}) => {
 export const useUpdateTransaction = (opts = {}) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({
-      transaction_id = '',
-      category_id = '',
-      amount = '',
-      transaction_type = 0,
-      transaction_time = 0,
-      note = '',
-    } = {}) => {
-      await updateTransaction({
-        transaction_id: transaction_id,
-        category_id: category_id,
-        amount: amount,
-        transaction_type: transaction_type,
-        transaction_time: transaction_time,
-        note: note,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.getTransactions] });
+  return useMutation(updateTransaction, {
+    onSuccess: ({ transaction = {} }) => {
+      const { transaction_id = '' } = transaction;
+      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.transaction, transaction_id]);
       opts.onSuccess && opts.onSuccess();
     },
   });

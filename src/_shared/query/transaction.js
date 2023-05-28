@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTransactions, getTransaction } from '../apis/transaction';
+import { queryKeys } from './keys';
 
 export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
   return useQuery({
@@ -7,7 +8,7 @@ export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
       getTransaction({
         transaction_id: transaction_id,
       }),
-    queryKey: ['transactions', transaction_id],
+    queryKey: [queryKeys.transaction, transaction_id],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });
@@ -36,7 +37,7 @@ export const useGetTransactions = (
           page: page,
         },
       }),
-    queryKey: ['transactions', { gte: gte, lte: lte }],
+    queryKey: [queryKeys.transactions, { gte: gte, lte: lte }],
     onSuccess: opts.onSuccess || function () {},
   });
 };

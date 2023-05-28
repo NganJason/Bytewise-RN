@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
