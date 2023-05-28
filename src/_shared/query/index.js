@@ -4,7 +4,7 @@ import {
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,
 } from './budget';
-import { useGetTransactions } from './transaction';
+import { useGetTransactions, useGetTransaction } from './transaction';
 
 export {
   queryKeys,
@@ -12,4 +12,5 @@ export {
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,
   useGetTransactions,
+  useGetTransaction,
 };

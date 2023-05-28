@@ -17,7 +17,8 @@ import {
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
 
-import { useCreateCategory } from '../../_shared/mutations/category';
+import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
+import { useGetCategory } from '../../_shared/query/category';
 import { validateCategory } from '../../_shared/apis/category';
 
 const categoryTypes = [
@@ -36,11 +37,30 @@ const CategoryForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const category = route.params?.category || {};
   const [categoryForm, setCategoryForm] = useState({
-    category_name: category.category_name || '',
-    category_type: category.category_type || categoryTypes[0].value,
+    category_id: '',
+    category_name: '',
+    category_type: TRANSACTION_TYPE_EXPENSE,
   });
+
+  const categoryID = route.params?.category_id || '';
+
+  const isGetCategoryEnabled = () => categoryID !== '';
+
+  const getCategory = useGetCategory(
+    { category_id: categoryID },
+    {
+      onSuccess: data => {
+        const category = data.category || {};
+        setCategoryForm({
+          category_id: category.category_id,
+          category_name: category.category_name,
+          category_type: category.category_type,
+        });
+      },
+      enabled: isGetCategoryEnabled(),
+    },
+  );
 
   const onCategoryNameChange = e => {
     setCategoryForm({ ...categoryForm, category_name: e });
@@ -50,10 +70,21 @@ const CategoryForm = ({ route }) => {
     setCategoryForm({ ...categoryForm, category_type: e.value });
   };
 
-  const saveCategory = useCreateCategory({ onSuccess: navigation.goBack });
+  const createCategory = useCreateCategory({
+    onSuccess: navigation.goBack,
+  });
+
+  const updateCategory = useUpdateCategory({
+    onSuccess: navigation.goBack,
+  });
 
   const onFormSubmit = () => {
-    saveCategory.mutate(categoryForm);
+    if (categoryForm.category_id !== '') {
+      const { category_type: _, ...updateCategoryForm } = categoryForm;
+      updateCategory.mutate(updateCategoryForm);
+    } else {
+      createCategory.mutate(categoryForm);
+    }
   };
 
   const isValidCategory = () => {
@@ -65,13 +96,46 @@ const CategoryForm = ({ route }) => {
     }
   };
 
+  const renderErrorToast = () => {
+    if (getCategory.isError) {
+      return {
+        show: getCategory.isError,
+        message1: getCategory.error.message,
+        onHide: getCategory.reset,
+      };
+    }
+
+    if (createCategory.isError) {
+      return {
+        show: createCategory.isError,
+        message1: createCategory.error.message,
+        onHide: createCategory.reset,
+      };
+    }
+
+    if (updateCategory.isError) {
+      return {
+        show: updateCategory.isError,
+        message1: updateCategory.error.message,
+        onHide: updateCategory.reset,
+      };
+    }
+
+    return {};
+  };
+
+  const isFormButtonLoading = () => {
+    return createCategory.isLoading || updateCategory.isLoading;
+  };
+
+  const isFormLoading = () => {
+    return isGetCategoryEnabled() && getCategory.isLoading;
+  };
+
   return (
     <BaseScreen
-      errorToast={{
-        show: saveCategory.isError,
-        message1: saveCategory.error?.message,
-        onHide: saveCategory.reset,
-      }}
+      isLoading={isFormLoading()}
+      errorToast={renderErrorToast()}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,
@@ -84,18 +148,20 @@ const CategoryForm = ({ route }) => {
           clearButtonMode="always"
           autoFocus={true}
         />
-        <BaseToggle
-          label="Category Type"
-          items={categoryTypes}
-          value={categoryForm.category_type}
-          onToggle={onCategoryTypeChange}
-        />
+        {categoryForm.category_id === '' && (
+          <BaseToggle
+            label="Category Type"
+            items={categoryTypes}
+            value={categoryForm.category_type}
+            onToggle={onCategoryTypeChange}
+          />
+        )}
         <BaseButton
           title="Save"
           size="lg"
           width={200}
           onPress={onFormSubmit}
-          loading={saveCategory.isLoading}
+          loading={isFormButtonLoading()}
           disabled={!isValidCategory()}
         />
       </View>
