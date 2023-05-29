@@ -14,6 +14,7 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { useGetCategories } from '../../_shared/query';
+import { renderErrorsToast } from '../../_shared/util/toast';
 
 const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -36,22 +37,10 @@ const CategoryEditScreen = ({ route }) => {
     },
   );
 
-  const renderErrorToast = () => {
-    if (getCategoriesQuery.isError) {
-      return {
-        show: getCategoriesQuery.isError,
-        message1: getCategoriesQuery.error.message,
-        onHide: getCategoriesQuery.reset,
-      };
-    }
-
-    return {};
-  };
-
   return (
     <BaseScreen
       isLoading={getCategoriesQuery.isLoading}
-      errorToast={renderErrorToast()}
+      errorToast={renderErrorsToast([getCategoriesQuery])}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,

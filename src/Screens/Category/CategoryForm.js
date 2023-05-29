@@ -20,6 +20,7 @@ import {
 import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query/category';
 import { validateCategory } from '../../_shared/apis/category';
+import { renderErrorsToast } from '../../_shared/util/toast';
 
 const categoryTypes = [
   {
@@ -96,34 +97,6 @@ const CategoryForm = ({ route }) => {
     }
   };
 
-  const renderErrorToast = () => {
-    if (getCategory.isError) {
-      return {
-        show: getCategory.isError,
-        message1: getCategory.error.message,
-        onHide: getCategory.reset,
-      };
-    }
-
-    if (createCategory.isError) {
-      return {
-        show: createCategory.isError,
-        message1: createCategory.error.message,
-        onHide: createCategory.reset,
-      };
-    }
-
-    if (updateCategory.isError) {
-      return {
-        show: updateCategory.isError,
-        message1: updateCategory.error.message,
-        onHide: updateCategory.reset,
-      };
-    }
-
-    return {};
-  };
-
   const isFormButtonLoading = () => {
     return createCategory.isLoading || updateCategory.isLoading;
   };
@@ -135,7 +108,11 @@ const CategoryForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isFormLoading()}
-      errorToast={renderErrorToast()}
+      errorToast={renderErrorsToast([
+        getCategory,
+        createCategory,
+        updateCategory,
+      ])}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Category</BaseText>,

@@ -81,14 +81,12 @@ const TransactionScreen = ({ navigation }) => {
               onForward={onDateChange}
               onBackward={onDateChange}
             />
-            {!getTransactionsQuery.isLoading && (
-              <AggrSummary
-                aggrs={[
-                  { label: 'Income', amount: '100' },
-                  { label: 'Expense', amount: '-200' },
-                ]}
-              />
-            )}
+            <AggrSummary
+              aggrs={[
+                { label: 'Income', amount: '100' },
+                { label: 'Expense', amount: '-200' },
+              ]}
+            />
           </>
         ),
       }}

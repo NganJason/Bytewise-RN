@@ -20,6 +20,7 @@ import {
 } from '../../_shared/apis/enum';
 import { useGetCategories } from '../../_shared/query';
 import ROUTES from '../../_shared/constant/routes';
+import { renderErrorsToast } from '../../_shared/util/toast';
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -66,18 +67,6 @@ const CategoryScreen = ({ navigation }) => {
     return comps;
   };
 
-  const renderErrorToast = () => {
-    if (getCategories.isError) {
-      return {
-        show: getCategories.isError,
-        message1: getCategories.error.message,
-        onHide: getCategories.reset,
-      };
-    }
-
-    return {};
-  };
-
   const isScreenLoading = () => {
     return getCategories.isLoading;
   };
@@ -85,7 +74,7 @@ const CategoryScreen = ({ navigation }) => {
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
-      errorToast={renderErrorToast()}
+      errorToast={renderErrorsToast([getCategories])}
       headerProps={{
         allowBack: false,
         centerComponent: <DateNavigator />,

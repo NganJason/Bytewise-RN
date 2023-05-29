@@ -12,7 +12,7 @@ export const validateTransaction = ({
   transaction_type = 0,
   transaction_time = 0,
 } = {}) => {
-  if (category_id === 0) {
+  if (category_id === '') {
     throw new TransactionError({ message: 'Category ID cannot be 0' });
   }
   if (amount === '') {
