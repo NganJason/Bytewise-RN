@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -23,19 +22,7 @@ const CategoryEditScreen = ({ route }) => {
 
   const { category_type = TRANSACTION_TYPE_EXPENSE } = route.params || {};
 
-  const [categories, setCategories] = useState([]);
-
-  const getCategoriesQuery = useGetCategories(
-    {
-      category_type: category_type,
-    },
-    {
-      queryOnChange: [category_type],
-      onSuccess: function (data) {
-        setCategories(data.categories);
-      },
-    },
-  );
+  const getCategoriesQuery = useGetCategories({ category_type: category_type });
 
   return (
     <BaseScreen
@@ -56,7 +43,7 @@ const CategoryEditScreen = ({ route }) => {
         ),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {categories.map((category, i) => {
+        {getCategoriesQuery.data?.categories.map((category, i) => {
           return (
             <BaseListItem key={i} showDivider dividerMargin={6}>
               <View style={styles.row}>

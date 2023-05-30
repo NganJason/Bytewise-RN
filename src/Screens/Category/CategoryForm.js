@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -38,30 +38,28 @@ const CategoryForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const [categoryForm, setCategoryForm] = useState({
-    category_id: '',
-    category_name: '',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-  });
-
+  // decide if form is create or edit
   const categoryID = route.params?.category_id || '';
 
   const isGetCategoryEnabled = () => categoryID !== '';
 
   const getCategory = useGetCategory(
     { category_id: categoryID },
-    {
-      onSuccess: data => {
-        const category = data.category || {};
-        setCategoryForm({
-          category_id: category.category_id,
-          category_name: category.category_name,
-          category_type: category.category_type,
-        });
-      },
-      enabled: isGetCategoryEnabled(),
-    },
+    { enabled: isGetCategoryEnabled() },
   );
+
+  // initial form state
+  const [categoryForm, setCategoryForm] = useState({
+    category_id: '',
+    category_name: '',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  });
+
+  useEffect(() => {
+    if (getCategory.data) {
+      setCategoryForm(getCategory.data.category);
+    }
+  }, [getCategory.data]);
 
   const onCategoryNameChange = e => {
     setCategoryForm({ ...categoryForm, category_name: e });

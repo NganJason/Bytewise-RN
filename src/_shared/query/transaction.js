@@ -4,6 +4,7 @@ import { queryKeys } from './keys';
 
 export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
   return useQuery({
+    staleTime: Infinity,
     queryFn: () =>
       getTransaction({
         transaction_id: transaction_id,
@@ -24,6 +25,7 @@ export const useGetTransactions = (
   opts = {},
 ) => {
   return useQuery({
+    staleTime: Infinity,
     queryFn: () =>
       getTransactions({
         category_id: category_id,

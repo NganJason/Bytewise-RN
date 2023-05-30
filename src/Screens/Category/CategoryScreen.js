@@ -30,16 +30,7 @@ const CategoryScreen = ({ navigation }) => {
   const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
   const isFocused = useIsFocused();
 
-  const [categories, setCategories] = useState([]);
-
-  const getCategories = useGetCategories(
-    {},
-    {
-      onSuccess: function (data) {
-        setCategories(data.categories);
-      },
-    },
-  );
+  const getCategories = useGetCategories({});
 
   useEffect(() => {
     // revert to default
@@ -58,7 +49,7 @@ const CategoryScreen = ({ navigation }) => {
   const renderCategories = categoryType => {
     const comps = [];
 
-    categories.forEach(category => {
+    getCategories.data?.categories.forEach(category => {
       if (category.category_type === categoryType) {
         comps.push(<Category category={category} amount="0" />);
       }

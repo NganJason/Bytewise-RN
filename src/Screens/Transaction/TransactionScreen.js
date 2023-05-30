@@ -40,33 +40,26 @@ const TransactionScreen = ({ navigation }) => {
     );
   }, [activeDate]);
 
-  const [transactions, setTransactions] = useState({});
-
-  const getTransactionsQuery = useGetTransactions(
-    {
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
+  const getTransactionsQuery = useGetTransactions({
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
     },
-    {
-      queryOnChange: [timeRange],
-      onSuccess: function (data) {
-        const newTransactions = {};
-        data.transactions.forEach(t => {
-          // group by timestamp
-          const tt = new Date(t.transaction_time).setHours(0, 0, 0, 0);
-          newTransactions[tt] = [...(newTransactions[tt] || []), t];
-        });
-
-        setTransactions(newTransactions);
-      },
+    paging: {
+      limit: PAGING_LIMIT,
+      page: STARTING_PAGE,
     },
-  );
+  });
+
+  const renderTransactions = () => {
+    const transactions = {};
+    getTransactionsQuery.data?.transactions.forEach(t => {
+      // group by timestamp
+      const tt = new Date(t.transaction_time).setHours(0, 0, 0, 0);
+      transactions[tt] = [...(transactions[tt] || []), t];
+    });
+    return transactions;
+  };
 
   return (
     <BaseScreen
@@ -99,13 +92,13 @@ const TransactionScreen = ({ navigation }) => {
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {Object.keys(transactions)
+        {Object.keys(renderTransactions())
           .sort()
           .reverse()
           .map((tt, i) => (
             <DailyTransactions
               key={i}
-              transactions={transactions[tt]}
+              transactions={renderTransactions()[tt]}
               timestamp={Number(tt)}
             />
           ))}

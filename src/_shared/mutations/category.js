@@ -18,9 +18,12 @@ export const useUpdateCategory = (opts = {}) => {
 
   return useMutation(updateCategory, {
     onSuccess: ({ category = {} }) => {
-      const { category_id = '' } = category;
+      const { category_id = '', category_type = 0 } = category;
       queryClient.invalidateQueries([queryKeys.transactions]);
-      queryClient.invalidateQueries([queryKeys.categories]);
+      // refetch any transaction that has been fetched before, no way of knowing by category_id
+      queryClient.invalidateQueries([queryKeys.transaction]);
+      // can invalidate by category_type because category cannot change category_type
+      queryClient.invalidateQueries([queryKeys.categories, category_type]);
       queryClient.invalidateQueries([queryKeys.category, category_id]);
       opts.onSuccess && opts.onSuccess();
     },
