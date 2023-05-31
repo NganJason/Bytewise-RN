@@ -1,4 +1,6 @@
 const ROUTES = {
+  login: 'Login',
+  signup: 'signup',
   home: 'Home',
   category: 'Category',
   categoryEdit: 'Category Edit',

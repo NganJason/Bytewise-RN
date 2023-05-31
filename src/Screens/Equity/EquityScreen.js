@@ -1,17 +1,18 @@
 import { useTheme, Image } from '@rneui/themed';
-import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 
 import { AmountText, BaseScreen, BaseText } from '../../Components';
 import EquityRow from './EquityRow';
 import { EQUITY } from '../../_shared/mock_data/equity';
 import { EQUITY_TYPE } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import useDimension from '../../_shared/hooks/dimension';
 
 const heroImgPath = '../../../assets/images/asset_screen_hero.png';
 
 const EquityScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const screenWidth = Dimensions.get('window').width;
+  const { screenWidth } = useDimension();
   const styles = getStyles(theme, screenWidth);
 
   const parseAssetDataToEquityRow = asset => {

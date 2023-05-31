@@ -98,6 +98,14 @@ export const THEME = createTheme({
       fontSize: FONT_SIZES.caption,
       color: COLORS.color4,
     },
+    linkText: {
+      color: COLORS.color1,
+      textDecorationLine: 'underline',
+    },
+    buttonText: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h4,
+    },
   },
   borderBottom: {
     borderColor: COLORS.color5,

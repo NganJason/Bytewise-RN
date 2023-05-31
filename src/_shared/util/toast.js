@@ -1,7 +1,7 @@
-export const renderErrorsToast = (reactQueries = []) => {
-  for (let i = 0; i < reactQueries.length; i++) {
-    let errObj = renderErrorToast(reactQueries[i]);
-    const { isError } = errObj;
+export const renderErrorsToast = (queryErrors = []) => {
+  for (let i = 0; i < queryErrors.length; i++) {
+    let errObj = renderErrorToast(queryErrors[i]);
+    const { show: isError } = errObj;
     if (isError) {
       return errObj;
     }
@@ -10,9 +10,8 @@ export const renderErrorsToast = (reactQueries = []) => {
   return {};
 };
 
-export const renderErrorToast = (reactQuery = {}) => {
-  const { isError = false, error = {}, reset = function () {} } = reactQuery;
-
+export const renderErrorToast = (queryError = {}) => {
+  const { isError = false, error = {}, reset = function () {} } = queryError;
   if (isError) {
     return {
       show: isError,

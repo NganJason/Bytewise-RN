@@ -66,6 +66,7 @@ const BaseButton = ({
       loading={loading}
       disabled={disabled}
       disabledStyle={{
+        ...theme.fontStyles.buttonText,
         ...styles.commonDisabledButtonStyle,
         ...buttonStyle.disabled,
       }}
@@ -77,7 +78,7 @@ const BaseButton = ({
         width: getContainerWidth(),
         alignSelf: align,
       }}
-      titleStyle={buttonStyle.title}
+      titleStyle={{ ...theme.fontStyles.buttonText, ...buttonStyle.title }}
       size={size}
       title={title}
       icon={icon !== null && icon}

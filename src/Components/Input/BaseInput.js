@@ -20,6 +20,7 @@ const BaseInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
+      containerStyle = {},
       clearButtonMode = 'never', // IOS only
       pointerEvents = 'auto',
       maxLength = null,
@@ -62,7 +63,7 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={styles.container}
+        containerStyle={{ ...styles.container, ...containerStyle }}
         clearButtonMode={clearButtonMode}
         inputStyle={styles.input}
         pointerEvents={pointerEvents}
