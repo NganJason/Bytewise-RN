@@ -129,8 +129,8 @@ const BaseScreen = ({
           {showLoadingIndicator && (
             <PacmanIndicator size={70} color={theme.colors.primary} />
           )}
-          {!showLoadingIndicator && (
-            <Animated.View entering={FadeIn.duration(400)} style={styles.body}>
+          {!showLoadingIndicator && !isLoading && (
+            <Animated.View entering={FadeIn.duration(300)} style={styles.body}>
               {children}
               {fabProps.show && (
                 <FAB

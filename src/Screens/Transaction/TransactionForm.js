@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
@@ -42,6 +42,17 @@ const TransactionForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  // decide if form is create or edit
+  const transactionID = route.params?.transaction_id || '';
+
+  const isGetTransactionEnabled = () => transactionID !== '';
+
+  const getTransaction = useGetTransaction(
+    { transaction_id: transactionID },
+    { enabled: isGetTransactionEnabled() },
+  );
+
+  // initial form state
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: '',
     transaction_time: new Date().valueOf(),
@@ -54,30 +65,11 @@ const TransactionForm = ({ route }) => {
     },
   });
 
-  const transactionID = route.params?.transaction_id || '';
-
-  const isGetTransactionEnabled = () => transactionID !== '';
-
-  const getTransaction = useGetTransaction(
-    { transaction_id: transactionID },
-    {
-      onSuccess: data => {
-        const transaction = data.transaction || {};
-        setTransactionForm({
-          transaction_id: transaction.transaction_id,
-          transaction_time: transaction.transaction_time,
-          transaction_type: transaction.transaction_type,
-          amount: transaction.amount,
-          note: transaction.note,
-          category: {
-            category_id: transaction.category.category_id,
-            category_name: transaction.category.category_name,
-          },
-        });
-      },
-      enabled: isGetTransactionEnabled(),
-    },
-  );
+  useEffect(() => {
+    if (getTransaction.data) {
+      setTransactionForm(getTransaction.data.transaction);
+    }
+  }, [getTransaction.data]);
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
 
@@ -99,18 +91,9 @@ const TransactionForm = ({ route }) => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
   };
 
-  const [categories, setCategories] = useState([]);
-
-  const getCategories = useGetCategories(
-    {
-      category_type: transactionForm.transaction_type,
-    },
-    {
-      onSuccess: function (data) {
-        setCategories(data.categories);
-      },
-    },
-  );
+  const getCategories = useGetCategories({
+    category_type: transactionForm.transaction_type,
+  });
 
   const renderTimestamp = ts => {
     const d = new Date(ts);
@@ -295,7 +278,7 @@ const TransactionForm = ({ route }) => {
             onBackdropPress={toggleCategoryModal}
             close={toggleCategoryModal}
             onSelect={onCategoryChange}
-            items={categories}
+            items={getCategories.data?.categories}
             label="category_name"
             headerItems={[
               <IconButton
