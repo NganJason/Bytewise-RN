@@ -8,6 +8,7 @@ import BaseScrollView from './BaseScrollView';
 import BaseListItem from './BaseListItem';
 import BaseRow from './BaseRow';
 import BaseOverlay from './BaseOverlay';
+import BaseImage from './BaseImage';
 
 export {
   BaseBottomSheet,
@@ -20,4 +21,5 @@ export {
   BaseListItem,
   BaseRow,
   BaseOverlay,
+  BaseImage,
 };

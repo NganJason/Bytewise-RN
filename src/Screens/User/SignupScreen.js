@@ -1,4 +1,4 @@
-import { Icon, Image, useTheme } from '@rneui/themed';
+import { Icon, useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BaseButton, BaseInput, BaseScreen, BaseText } from '../../Components';
@@ -8,6 +8,7 @@ import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { BaseImage } from '../../Components/View';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
@@ -39,9 +40,12 @@ const SignupScreen = () => {
           <BaseText h2>Manage your finances today</BaseText>
         </View>
 
-        <View style={styles.imgContainer}>
-          <Image style={styles.heroImg} source={signupHero} />
-        </View>
+        <BaseImage
+          width={screenWidth * 0.8}
+          height={screenWidth * 0.6}
+          source={signupHero}
+          containerStyle={styles.img}
+        />
 
         <BaseInput
           placeholder="Username"
@@ -92,14 +96,8 @@ const getStyles = (theme, screenWidth, screenHeight) => {
       height: screenHeight * 0.8,
       paddingHorizontal: theme.spacing.xl,
     },
-    imgContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 30,
-    },
-    heroImg: {
-      width: screenWidth * 0.8,
-      height: screenWidth * 0.6,
+    img: {
+      alignSelf: 'center',
     },
     passwordInput: {
       marginBottom: 5,
