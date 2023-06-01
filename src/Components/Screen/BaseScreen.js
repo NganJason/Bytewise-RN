@@ -1,14 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { IconButton } from '../Touch';
 import { BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
-import { AuthContext } from '../../_shared/context/AuthContext';
 
 const WAIT_TIME_FOR_INDICATOR = 500;
 
@@ -40,25 +39,7 @@ const BaseScreen = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-
-  const { checkAuth, getCheckAuthError } = useContext(AuthContext);
-  const { isError: isAuthError, reset: resetAuth } = getCheckAuthError();
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
-
-  useEffect(() => {
-    checkAuth();
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (isAuthError) {
-      BaseToast.show({
-        type: 'error',
-        text1: 'Session expired. Please login again',
-        onHide: resetAuth,
-      });
-    }
-  }, [isAuthError, resetAuth]);
 
   useEffect(() => {
     let timer = null;

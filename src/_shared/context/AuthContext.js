@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import { useLogin, useSignup, useVerifyAuth } from '../mutations/user';
+import { useLogin, useSignup } from '../mutations/user';
 import { UserContext } from './UserContext';
 
 const AuthContext = createContext();
@@ -11,8 +11,6 @@ const AuthProvider = ({ children }) => {
 
   const signupMutation = useSignup();
   const { isLoading: isSignupLoading } = signupMutation;
-
-  const verifyAuthMutation = useVerifyAuth();
 
   const { updateUser } = useContext(UserContext);
   useEffect(() => {
@@ -38,17 +36,6 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const checkAuth = async () => {
-    verifyAuthMutation.mutateAsync(
-      {},
-      {
-        onError: () => {
-          logout();
-        },
-      },
-    );
-  };
-
   const handleUnauthenticate = () => {
     logout();
   };
@@ -69,14 +56,6 @@ const AuthProvider = ({ children }) => {
     };
   };
 
-  const getCheckAuthError = () => {
-    return {
-      isError: verifyAuthMutation.isError,
-      error: verifyAuthMutation.error,
-      reset: verifyAuthMutation.reset,
-    };
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -88,8 +67,6 @@ const AuthProvider = ({ children }) => {
         signup,
         isSignupLoading,
         getSignupError,
-        checkAuth,
-        getCheckAuthError,
         handleUnauthenticate,
       }}>
       {children}
