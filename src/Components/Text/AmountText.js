@@ -33,6 +33,8 @@ const AmountText = ({
   const renderAmountText = () => {
     let text = '';
 
+    const { symbol } = getAmountAttr();
+
     // use symbol string to show negative
     if (amount < 0) {
       amount = amount * -1;
@@ -44,7 +46,6 @@ const AmountText = ({
 
     // add + or -
     if (showSymbol) {
-      const { symbol } = getAmountAttr();
       text = `${symbol} ${text}`;
     }
 

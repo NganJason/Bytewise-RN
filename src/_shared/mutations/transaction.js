@@ -16,6 +16,10 @@ export const useCreateTransaction = (opts = {}) => {
         queryKeys.transactions,
         { gte: gte, lte: lte },
       ]);
+      queryClient.invalidateQueries([
+        queryKeys.transactionsAggr,
+        { gte: gte, lte: lte },
+      ]);
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -32,6 +36,10 @@ export const useUpdateTransaction = (opts = {}) => {
 
       queryClient.invalidateQueries([
         queryKeys.transactions,
+        { gte: gte, lte: lte },
+      ]);
+      queryClient.invalidateQueries([
+        queryKeys.transactionsAggr,
         { gte: gte, lte: lte },
       ]);
       queryClient.invalidateQueries([queryKeys.transaction, transaction_id]);

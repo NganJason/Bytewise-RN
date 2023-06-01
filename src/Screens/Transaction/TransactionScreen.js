@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '@rneui/themed';
+import { View, StyleSheet } from 'react-native';
 
 import {
   BaseScreen,
@@ -9,20 +10,26 @@ import {
   BaseScrollView,
 } from '../../Components';
 
-import ROUTES from '../../_shared/constant/routes';
-import { useGetTransactions } from '../../_shared/query';
 import {
   getUnixRangeOfMonth,
   getYear,
   getMonth,
 } from '../../_shared/util/date';
+import ROUTES from '../../_shared/constant/routes';
+import { useGetTransactions, useAggrTransactions } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import {
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+  TRANSACTION_TYPES,
+} from '../../_shared/apis/enum';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
 
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const [activeDate, setActiveDate] = useState(new Date());
 
@@ -61,10 +68,24 @@ const TransactionScreen = ({ navigation }) => {
     return transactions;
   };
 
+  const aggrTransactionsQuery = useAggrTransactions({
+    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
+    },
+  });
+
+  const isScreenLoading = () =>
+    getTransactionsQuery.isLoading && aggrTransactionsQuery.isLoading;
+
   return (
     <BaseScreen
-      isLoading={getTransactionsQuery.isLoading}
-      errorToast={renderErrorsToast([getTransactionsQuery])}
+      isLoading={isScreenLoading()}
+      errorToast={renderErrorsToast([
+        getTransactionsQuery,
+        aggrTransactionsQuery,
+      ])}
       headerProps={{
         allowBack: false,
         centerComponent: (
@@ -73,12 +94,6 @@ const TransactionScreen = ({ navigation }) => {
               startingDate={activeDate}
               onForward={onDateChange}
               onBackward={onDateChange}
-            />
-            <AggrSummary
-              aggrs={[
-                { label: 'Income', amount: '100' },
-                { label: 'Expense', amount: '-200' },
-              ]}
             />
           </>
         ),
@@ -92,19 +107,49 @@ const TransactionScreen = ({ navigation }) => {
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {Object.keys(renderTransactions())
-          .sort()
-          .reverse()
-          .map((tt, i) => (
-            <DailyTransactions
-              key={i}
-              transactions={renderTransactions()[tt]}
-              timestamp={Number(tt)}
+        <>
+          <View style={styles.aggrContainer}>
+            <AggrSummary
+              aggrs={[
+                {
+                  label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+                  amount:
+                    aggrTransactionsQuery.data?.results?.[
+                      String(TRANSACTION_TYPE_INCOME)
+                    ].sum || 0,
+                },
+                {
+                  label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+                  amount:
+                    -aggrTransactionsQuery.data?.results?.[
+                      String(TRANSACTION_TYPE_EXPENSE)
+                    ].sum || 0,
+                },
+              ]}
             />
-          ))}
+          </View>
+          {Object.keys(renderTransactions())
+            .sort()
+            .reverse()
+            .map((tt, i) => (
+              <DailyTransactions
+                key={i}
+                transactions={renderTransactions()[tt]}
+                timestamp={Number(tt)}
+              />
+            ))}
+        </>
       </BaseScrollView>
     </BaseScreen>
   );
+};
+
+const getStyles = _ => {
+  return StyleSheet.create({
+    aggrContainer: {
+      marginBottom: 22,
+    },
+  });
 };
 
 export default TransactionScreen;
