@@ -64,17 +64,19 @@ const BudgetScreen = () => {
       }
 
       return (
-        <BaseRow
-          key={category_id}
-          onPress={() =>
-            navigation.navigate(ROUTES.budgetForm, {
-              category_id: category_id,
-              category_name: category_name,
-            })
-          }>
-          <BaseText>{category_name}</BaseText>
-          <AmountText>{budget_amount}</AmountText>
-        </BaseRow>
+        <View style={styles.row}>
+          <BaseRow
+            key={category_id}
+            onPress={() =>
+              navigation.navigate(ROUTES.budgetForm, {
+                category_id: category_id,
+                category_name: category_name,
+              })
+            }>
+            <BaseText>{category_name}</BaseText>
+            <AmountText>{budget_amount}</AmountText>
+          </BaseRow>
+        </View>
       );
     });
   };
@@ -93,17 +95,17 @@ const BudgetScreen = () => {
               onForward={onDateChange}
               onBackward={onDateChange}
             />
-            <BaseTabView
-              onPress={onSelectTab}
-              selectedIndex={selectedTab}
-              titles={[
-                TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-                TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              ]}
-            />
           </View>
         ),
       }}>
+      <BaseTabView
+        onPress={onSelectTab}
+        selectedIndex={selectedTab}
+        titles={[
+          TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+          TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+        ]}
+      />
       <BaseScrollView showsVerticalScrollIndicator={false}>
         {renderBudgets(getBudgetsQuery.data?.category_budgets)}
       </BaseScrollView>
@@ -115,6 +117,9 @@ const getStyles = _ => {
   return StyleSheet.create({
     header: {
       alignItems: 'center',
+    },
+    row: {
+      marginTop: 5,
     },
   });
 };

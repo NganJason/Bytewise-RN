@@ -4,7 +4,6 @@ import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import CategoryScreen from './Category/CategoryScreen';
-import EquityScreen from './Equity/EquityScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
 
 import ROUTES from '../_shared/constant/routes';
@@ -26,9 +25,6 @@ const HomeScreen = () => {
         break;
       case ROUTES.transaction:
         iconName = 'icon-transaction';
-        break;
-      case ROUTES.asset:
-        iconName = 'icon-asset';
         break;
     }
     return (
@@ -55,7 +51,6 @@ const HomeScreen = () => {
       })}>
       <Tab.Screen name={ROUTES.category} component={CategoryScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
-      <Tab.Screen name={ROUTES.asset} component={EquityScreen} />
     </Tab.Navigator>
   );
 };
