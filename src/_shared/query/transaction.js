@@ -24,9 +24,11 @@ export const useAggrTransactions = (
       }),
     queryKey: [
       queryKeys.transactionsAggr,
-      { gte, lte },
-      category_ids,
-      transaction_types,
+      {
+        transaction_time: { gte, lte },
+        category_ids,
+        transaction_types,
+      },
     ],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
@@ -64,7 +66,12 @@ export const useGetTransactions = (
         transaction_time: { gte, lte },
         paging: { limit, page },
       }),
-    queryKey: [queryKeys.transactions, { gte: gte, lte: lte }],
+    queryKey: [
+      queryKeys.transactions,
+      {
+        transaction_time: { gte: gte, lte: lte },
+      },
+    ],
     onSuccess: opts.onSuccess || function () {},
   });
 };

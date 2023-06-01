@@ -25,9 +25,7 @@ const Category = ({ category: { category_name = '' }, amount = '' }) => {
       }}>
       <View style={styles.textGroup}>
         <BaseText h4>{category_name}</BaseText>
-        <AmountText h4 showColor={false}>
-          {amount}
-        </AmountText>
+        <AmountText h4>{amount}</AmountText>
       </View>
     </TouchableOpacity>
   );

@@ -12,14 +12,18 @@ export const useCreateTransaction = (opts = {}) => {
       const d = new Date(transaction_time);
       const [gte, lte] = getUnixRangeOfMonth(getYear(d), getMonth(d));
 
+      // refetch all transactions in the same time range
       queryClient.invalidateQueries([
         queryKeys.transactions,
-        { gte: gte, lte: lte },
+        { transaction_time: { gte: gte, lte: lte } },
       ]);
+
+      // recompute aggregations with new transaction amount
       queryClient.invalidateQueries([
         queryKeys.transactionsAggr,
-        { gte: gte, lte: lte },
+        { transaction_time: { gte: gte, lte: lte } },
       ]);
+
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -34,15 +38,21 @@ export const useUpdateTransaction = (opts = {}) => {
       const d = new Date(transaction_time);
       const [gte, lte] = getUnixRangeOfMonth(getYear(d), getMonth(d));
 
+      // refetch all transactions in the same time range
       queryClient.invalidateQueries([
         queryKeys.transactions,
-        { gte: gte, lte: lte },
+        { transaction_time: { gte: gte, lte: lte } },
       ]);
+
+      // recompute aggregations as transaction amount may have changed
       queryClient.invalidateQueries([
         queryKeys.transactionsAggr,
-        { gte: gte, lte: lte },
+        { transaction_time: { gte: gte, lte: lte } },
       ]);
+
+      // refetch any single transaction record
       queryClient.invalidateQueries([queryKeys.transaction, transaction_id]);
+
       opts.onSuccess && opts.onSuccess();
     },
   });

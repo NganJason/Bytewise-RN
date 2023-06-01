@@ -89,13 +89,11 @@ const TransactionScreen = ({ navigation }) => {
       headerProps={{
         allowBack: false,
         centerComponent: (
-          <>
-            <DateNavigator
-              startingDate={activeDate}
-              onForward={onDateChange}
-              onBackward={onDateChange}
-            />
-          </>
+          <DateNavigator
+            startingDate={activeDate}
+            onForward={onDateChange}
+            onBackward={onDateChange}
+          />
         ),
       }}
       fabProps={{
@@ -106,39 +104,37 @@ const TransactionScreen = ({ navigation }) => {
         color: theme.colors.primary,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
+      <View style={styles.aggrContainer}>
+        <AggrSummary
+          aggrs={[
+            {
+              label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+              amount:
+                aggrTransactionsQuery.data?.results?.[
+                  String(TRANSACTION_TYPE_INCOME)
+                ].sum || 0,
+            },
+            {
+              label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+              amount:
+                -aggrTransactionsQuery.data?.results?.[
+                  String(TRANSACTION_TYPE_EXPENSE)
+                ].sum || 0,
+            },
+          ]}
+        />
+      </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        <>
-          <View style={styles.aggrContainer}>
-            <AggrSummary
-              aggrs={[
-                {
-                  label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-                  amount:
-                    aggrTransactionsQuery.data?.results?.[
-                      String(TRANSACTION_TYPE_INCOME)
-                    ].sum || 0,
-                },
-                {
-                  label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-                  amount:
-                    -aggrTransactionsQuery.data?.results?.[
-                      String(TRANSACTION_TYPE_EXPENSE)
-                    ].sum || 0,
-                },
-              ]}
+        {Object.keys(renderTransactions())
+          .sort()
+          .reverse()
+          .map((tt, i) => (
+            <DailyTransactions
+              key={i}
+              transactions={renderTransactions()[tt]}
+              timestamp={Number(tt)}
             />
-          </View>
-          {Object.keys(renderTransactions())
-            .sort()
-            .reverse()
-            .map((tt, i) => (
-              <DailyTransactions
-                key={i}
-                transactions={renderTransactions()[tt]}
-                timestamp={Number(tt)}
-              />
-            ))}
-        </>
+          ))}
       </BaseScrollView>
     </BaseScreen>
   );

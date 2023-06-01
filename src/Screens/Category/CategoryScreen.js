@@ -17,20 +17,43 @@ import {
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
+  TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useGetCategories } from '../../_shared/query';
+import {
+  getUnixRangeOfMonth,
+  getYear,
+  getMonth,
+} from '../../_shared/util/date';
 import ROUTES from '../../_shared/constant/routes';
+import { useGetCategories } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { useAggrTransactions } from '../../_shared/query';
 
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const [activeDate, setActiveDate] = useState(new Date());
+
+  const onDateChange = e => {
+    setActiveDate(e);
+  };
+
+  const [timeRange, setTimeRange] = useState(
+    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+  );
+
+  useEffect(() => {
+    setTimeRange(
+      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+    );
+  }, [activeDate]);
+
   const [isIncomeExpanded, setIsIncomeExpanded] = useState(false);
   const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
   const isFocused = useIsFocused();
 
-  const getCategories = useGetCategories({});
+  const getCategoriesQuery = useGetCategories({});
 
   useEffect(() => {
     // revert to default
@@ -49,26 +72,64 @@ const CategoryScreen = ({ navigation }) => {
   const renderCategories = categoryType => {
     const comps = [];
 
-    getCategories.data?.categories.forEach(category => {
+    getCategoriesQuery.data?.categories.forEach(category => {
       if (category.category_type === categoryType) {
-        comps.push(<Category category={category} amount="0" />);
+        const sum =
+          aggrTransactionsByCategoryQuery.data?.results?.[category.category_id]
+            ?.sum;
+        comps.push(<Category category={category} amount={sum} />);
       }
     });
 
     return comps;
   };
 
+  const aggrTransactionsByTypeQuery = useAggrTransactions({
+    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
+    },
+  });
+
+  const aggrTransactionsByCategoryQuery = useAggrTransactions(
+    {
+      category_ids: getCategoriesQuery.data?.categories.map(
+        category => category.category_id,
+      ),
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+    },
+    { enabled: !getCategoriesQuery.isLoading && !getCategoriesQuery.isError },
+  );
+
   const isScreenLoading = () => {
-    return getCategories.isLoading;
+    return (
+      getCategoriesQuery.isLoading ||
+      aggrTransactionsByTypeQuery.isLoading ||
+      aggrTransactionsByCategoryQuery.isLoading
+    );
   };
 
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
-      errorToast={renderErrorsToast([getCategories])}
+      errorToast={renderErrorsToast([
+        getCategoriesQuery,
+        aggrTransactionsByTypeQuery,
+        aggrTransactionsByCategoryQuery,
+      ])}
       headerProps={{
         allowBack: false,
-        centerComponent: <DateNavigator />,
+        centerComponent: (
+          <DateNavigator
+            startingDate={activeDate}
+            onForward={onDateChange}
+            onBackward={onDateChange}
+          />
+        ),
       }}
       fabProps={{
         show: true,
@@ -94,8 +155,14 @@ const CategoryScreen = ({ navigation }) => {
             onPress={toggleIncome}
             title={
               <View style={styles.accordionTitle}>
-                <BaseText h3>Income</BaseText>
-                <AmountText showColor>1000</AmountText>
+                <BaseText h3>
+                  {TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME]}
+                </BaseText>
+                <AmountText showColor>
+                  {aggrTransactionsByTypeQuery.data?.results?.[
+                    String(TRANSACTION_TYPE_INCOME)
+                  ].sum || 0}
+                </AmountText>
               </View>
             }
             titleColor={theme.colors.color4}
@@ -106,8 +173,14 @@ const CategoryScreen = ({ navigation }) => {
             onPress={toggleExpense}
             title={
               <View style={styles.accordionTitle}>
-                <BaseText h3>Expense</BaseText>
-                <AmountText showColor>-1000</AmountText>
+                <BaseText h3>
+                  {TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE]}
+                </BaseText>
+                <AmountText showColor>
+                  {-aggrTransactionsByTypeQuery.data?.results?.[
+                    String(TRANSACTION_TYPE_EXPENSE)
+                  ].sum || 0}
+                </AmountText>
               </View>
             }
             titleColor={theme.colors.color4}
