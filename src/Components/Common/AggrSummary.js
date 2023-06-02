@@ -20,7 +20,7 @@ const AggrSummary = ({ aggrs = [] }) => {
               <BaseText h4 center style={styles.label}>
                 {aggr.label}:
               </BaseText>
-              <AmountText h4 showColor showSymbol>
+              <AmountText h4 showColor>
                 {aggr.amount}
               </AmountText>
             </Col>

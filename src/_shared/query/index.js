@@ -1,5 +1,5 @@
 import { queryKeys } from './keys';
-import { useGetCategories } from './category';
+import { useGetCategories, useGetCategory } from './category';
 import {
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,
@@ -12,6 +12,7 @@ import {
 
 export {
   queryKeys,
+  useGetCategory,
   useGetCategories,
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,

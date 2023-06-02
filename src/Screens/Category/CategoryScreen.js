@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import {
@@ -8,7 +7,6 @@ import {
   DateNavigator,
   BaseAccordion,
   BaseScrollView,
-  Category,
   BaseText,
   AmountText,
   BaseButton,
@@ -29,37 +27,22 @@ import { useGetCategories } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
 import { useAggrTransactions } from '../../_shared/query';
 
+const TODAY = new Date();
+
 const CategoryScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const [activeDate, setActiveDate] = useState(new Date());
-
-  const onDateChange = e => {
-    setActiveDate(e);
-  };
+  const [activeDate, setActiveDate] = useState(TODAY);
 
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
 
-  useEffect(() => {
-    setTimeRange(
-      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-    );
-  }, [activeDate]);
-
   const [isIncomeExpanded, setIsIncomeExpanded] = useState(false);
   const [isExpenseExpanded, setIsExpenseExpanded] = useState(true);
-  const isFocused = useIsFocused();
 
   const getCategoriesQuery = useGetCategories({});
-
-  useEffect(() => {
-    // revert to default
-    setIsIncomeExpanded(false);
-    setIsExpenseExpanded(true);
-  }, [isFocused]);
 
   const toggleIncome = () => {
     setIsIncomeExpanded(!isIncomeExpanded);
@@ -77,7 +60,22 @@ const CategoryScreen = ({ navigation }) => {
         const sum =
           aggrTransactionsByCategoryQuery.data?.results?.[category.category_id]
             ?.sum;
-        comps.push(<Category category={category} amount={sum} />);
+
+        comps.push(
+          <TouchableOpacity
+            style={styles.categoryContainer}
+            onPress={() => {
+              navigation.navigate(ROUTES.categoryBreakdown, {
+                category_id: category.category_id,
+                active_timestamp: activeDate.valueOf(), // pass unix as date object is not serializable
+              });
+            }}>
+            <View style={styles.categoryTextGroup}>
+              <BaseText h4>{category.category_name}</BaseText>
+              <AmountText h4>{sum}</AmountText>
+            </View>
+          </TouchableOpacity>,
+        );
       }
     });
 
@@ -105,6 +103,11 @@ const CategoryScreen = ({ navigation }) => {
     { enabled: !getCategoriesQuery.isLoading && !getCategoriesQuery.isError },
   );
 
+  const onDateMove = newDate => {
+    setActiveDate(newDate);
+    setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
+  };
+
   const isScreenLoading = () => {
     return (
       getCategoriesQuery.isLoading ||
@@ -126,8 +129,8 @@ const CategoryScreen = ({ navigation }) => {
         centerComponent: (
           <DateNavigator
             startingDate={activeDate}
-            onForward={onDateChange}
-            onBackward={onDateChange}
+            onForward={onDateMove}
+            onBackward={onDateMove}
           />
         ),
       }}
@@ -204,5 +207,12 @@ const getStyles = _ =>
     },
     buttonContainer: {
       marginBottom: 10,
+    },
+    categoryContainer: {
+      width: '100%',
+    },
+    categoryTextGroup: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
   });

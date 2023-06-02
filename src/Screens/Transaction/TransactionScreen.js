@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTheme } from '@rneui/themed';
 import { View, StyleSheet } from 'react-native';
 
@@ -18,6 +18,7 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { useGetTransactions, useAggrTransactions } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
@@ -27,25 +28,17 @@ import {
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
 
+const TODAY = new Date();
+
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const [activeDate, setActiveDate] = useState(new Date());
-
-  const onDateChange = e => {
-    setActiveDate(e);
-  };
+  const [activeDate, setActiveDate] = useState(TODAY);
 
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
-
-  useEffect(() => {
-    setTimeRange(
-      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-    );
-  }, [activeDate]);
 
   const getTransactionsQuery = useGetTransactions({
     transaction_time: {
@@ -58,15 +51,8 @@ const TransactionScreen = ({ navigation }) => {
     },
   });
 
-  const renderTransactions = () => {
-    const transactions = {};
-    getTransactionsQuery.data?.transactions.forEach(t => {
-      // group by timestamp
-      const tt = new Date(t.transaction_time).setHours(0, 0, 0, 0);
-      transactions[tt] = [...(transactions[tt] || []), t];
-    });
-    return transactions;
-  };
+  const { transactionTimes = [], transactionGroups = {} } =
+    groupTransactionsByDate(getTransactionsQuery.data?.transactions);
 
   const aggrTransactionsQuery = useAggrTransactions({
     transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
@@ -75,6 +61,11 @@ const TransactionScreen = ({ navigation }) => {
       lte: timeRange[1],
     },
   });
+
+  const onDateMove = newDate => {
+    setActiveDate(newDate);
+    setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
+  };
 
   const isScreenLoading = () =>
     getTransactionsQuery.isLoading && aggrTransactionsQuery.isLoading;
@@ -91,8 +82,8 @@ const TransactionScreen = ({ navigation }) => {
         centerComponent: (
           <DateNavigator
             startingDate={activeDate}
-            onForward={onDateChange}
-            onBackward={onDateChange}
+            onForward={onDateMove}
+            onBackward={onDateMove}
           />
         ),
       }}
@@ -112,29 +103,26 @@ const TransactionScreen = ({ navigation }) => {
               amount:
                 aggrTransactionsQuery.data?.results?.[
                   String(TRANSACTION_TYPE_INCOME)
-                ].sum || 0,
+                ]?.sum || 0,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
               amount:
                 -aggrTransactionsQuery.data?.results?.[
                   String(TRANSACTION_TYPE_EXPENSE)
-                ].sum || 0,
+                ]?.sum || 0,
             },
           ]}
         />
       </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {Object.keys(renderTransactions())
-          .sort()
-          .reverse()
-          .map((tt, i) => (
-            <DailyTransactions
-              key={i}
-              transactions={renderTransactions()[tt]}
-              timestamp={Number(tt)}
-            />
-          ))}
+        {transactionTimes.map((tt, i) => (
+          <DailyTransactions
+            key={i}
+            transactions={transactionGroups[tt]}
+            timestamp={tt}
+          />
+        ))}
       </BaseScrollView>
     </BaseScreen>
   );

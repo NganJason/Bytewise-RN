@@ -69,7 +69,8 @@ export const useGetTransactions = (
     queryKey: [
       queryKeys.transactions,
       {
-        transaction_time: { gte: gte, lte: lte },
+        category_id: category_id,
+        transaction_time: { gte, lte },
       },
     ],
     onSuccess: opts.onSuccess || function () {},

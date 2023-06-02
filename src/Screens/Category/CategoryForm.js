@@ -18,7 +18,7 @@ import {
 } from '../../_shared/apis/enum';
 
 import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
-import { useGetCategory } from '../../_shared/query/category';
+import { useGetCategory } from '../../_shared/query';
 import { validateCategory } from '../../_shared/apis/category';
 import { renderErrorsToast } from '../../_shared/util/toast';
 
@@ -99,9 +99,7 @@ const CategoryForm = ({ route }) => {
     return createCategory.isLoading || updateCategory.isLoading;
   };
 
-  const isFormLoading = () => {
-    return isGetCategoryEnabled() && getCategory.isLoading;
-  };
+  const isFormLoading = () => isGetCategoryEnabled() && getCategory.isLoading;
 
   return (
     <BaseScreen
