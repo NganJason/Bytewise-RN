@@ -2,13 +2,13 @@ import { useContext, useState } from 'react';
 import { Divider, Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
-import { LinkText } from '../../Components/Text';
 import {
   BaseButton,
   BaseInput,
   BaseScreen,
   BaseText,
   BaseImage,
+  LinkText,
 } from '../../Components';
 
 import { loginHero } from '../../_shared/constant/asset';
@@ -53,7 +53,6 @@ const LoginScreen = () => {
             width={screenWidth * 0.8}
             height={screenWidth * 0.6}
             source={loginHero}
-            containerStyle={styles.img}
           />
         </View>
 
@@ -83,7 +82,7 @@ const LoginScreen = () => {
 
         <View>
           <BaseButton
-            title="Login"
+            title="Log In"
             size="lg"
             width={200}
             onPress={onLogin}
@@ -105,16 +104,12 @@ const LoginScreen = () => {
 const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     titleSpacing: {
-      marginBottom: 10,
+      marginBottom: 14,
     },
     screen: {
       justifyContent: 'center',
       rowGap: theme.spacing.md,
       height: screenHeight * 0.8,
-    },
-    img: {
-      alignSelf: 'center',
-      backgroundColor: 'red',
     },
     divider: {
       marginVertical: 24,

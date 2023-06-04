@@ -11,7 +11,7 @@ import {
 import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
 
 // Text
-import { BaseText, AmountText } from './Text';
+import { BaseText, AmountText, LinkText } from './Text';
 
 // Touch
 import { BaseButton, IconButton } from './Touch';
@@ -65,4 +65,5 @@ export {
   BudgetUsage,
   BaseToggle,
   BaseImage,
+  LinkText,
 };

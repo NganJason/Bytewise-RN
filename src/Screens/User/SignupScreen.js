@@ -1,19 +1,26 @@
-import { Icon, useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BaseButton, BaseInput, BaseScreen, BaseText } from '../../Components';
+import { Icon, useTheme, Divider } from '@rneui/themed';
+
+import {
+  BaseButton,
+  BaseInput,
+  BaseScreen,
+  BaseText,
+  BaseImage,
+  LinkText,
+} from '../../Components';
+
 import { signupHero } from '../../_shared/constant/asset';
-import { LinkText } from '../../Components/Text';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
-import { BaseImage } from '../../Components/View';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
   const { screenWidth, screenHeight } = useDimension();
-  const styles = getStyles(theme, screenWidth, screenHeight);
+  const styles = getStyles(theme, screenHeight);
   const { signup, isSignupLoading, getSignupError } = useContext(AuthContext);
 
   const [username, setUsername] = useState('');
@@ -34,76 +41,86 @@ const SignupScreen = () => {
     <BaseScreen errorToast={renderErrorsToast([getSignupError()])}>
       <View style={styles.screen}>
         <View>
-          <BaseText h2 style={{ color: theme.colors.color1 }}>
+          <BaseText
+            h1
+            style={{ color: theme.colors.color1, ...styles.titleSpacing }}>
             Join us!
           </BaseText>
-          <BaseText h2>Manage your finances today</BaseText>
+          <BaseText h3 style={styles.titleSpacing}>
+            Achieve your financial goals
+          </BaseText>
+          <BaseImage
+            width={screenWidth * 0.8}
+            height={screenWidth * 0.6}
+            source={signupHero}
+          />
         </View>
 
-        <BaseImage
-          width={screenWidth * 0.8}
-          height={screenWidth * 0.6}
-          source={signupHero}
-          containerStyle={styles.img}
-        />
+        <View>
+          <BaseInput
+            placeholder="Username"
+            leftIcon={
+              <Icon
+                name="email-outline"
+                type="material-community"
+                color={theme.colors.color5}
+              />
+            }
+            value={username}
+            onChangeText={onUsernameChange}
+          />
+          <BaseInput
+            placeholder="Password"
+            leftIcon={
+              <Icon name="lock" type="feather" color={theme.colors.color5} />
+            }
+            value={password}
+            onChangeText={onPasswordChange}
+            secureTextEntry
+          />
+        </View>
 
-        <BaseInput
-          placeholder="Username"
-          leftIcon={
-            <Icon
-              name="email-outline"
-              type="material-community"
-              color={theme.colors.color5}
-            />
-          }
-          value={username}
-          onChangeText={onUsernameChange}
-        />
-        <BaseInput
-          placeholder="Password"
-          leftIcon={
-            <Icon name="lock" type="feather" color={theme.colors.color5} />
-          }
-          value={password}
-          onChangeText={onPasswordChange}
-          containerStyle={styles.passwordInput}
-        />
-        <LinkText h4 route={ROUTES.login}>
-          Login here
-        </LinkText>
-
-        <View style={styles.buttonContainer}>
+        <View>
           <BaseButton
-            title="Signup"
+            title="Sign Up"
             size="lg"
             width={200}
             onPress={onSignup}
             loading={isSignupLoading}
           />
+          <Divider style={styles.divider} />
+          <View style={styles.signUpCtaContainer}>
+            <BaseText>Already a user? </BaseText>
+            <LinkText h4 route={ROUTES.login}>
+              Log in now
+            </LinkText>
+          </View>
         </View>
       </View>
     </BaseScreen>
   );
 };
 
-const getStyles = (theme, screenWidth, screenHeight) => {
+const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
+    titleSpacing: {
+      marginBottom: 14,
+    },
     screen: {
-      flexDirection: 'column',
       justifyContent: 'center',
       rowGap: theme.spacing.md,
-
       height: screenHeight * 0.8,
-      paddingHorizontal: theme.spacing.xl,
     },
     img: {
       alignSelf: 'center',
+      backgroundColor: 'red',
     },
-    passwordInput: {
-      marginBottom: 5,
+    divider: {
+      marginVertical: 24,
     },
-    buttonContainer: {
-      marginTop: 30,
+    signUpCtaContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
     },
   });
 };
