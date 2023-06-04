@@ -26,6 +26,7 @@ import {
   BaseToast,
   BaseScrollView,
   BaseListItem,
+  BaseImage,
 } from './View';
 
 // Common
@@ -63,4 +64,5 @@ export {
   BaseListItem,
   BudgetUsage,
   BaseToggle,
+  BaseImage,
 };

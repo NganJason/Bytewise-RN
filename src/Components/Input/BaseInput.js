@@ -24,6 +24,7 @@ const BaseInput = forwardRef(
       clearButtonMode = 'never', // IOS only
       pointerEvents = 'auto',
       maxLength = null,
+      secureTextEntry = false,
     },
     ref,
   ) => {
@@ -69,6 +70,7 @@ const BaseInput = forwardRef(
         pointerEvents={pointerEvents}
         renderErrorMessage={false}
         maxLength={maxLength}
+        secureTextEntry={secureTextEntry}
       />
     );
   },
