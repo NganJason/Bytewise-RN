@@ -26,7 +26,6 @@ import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import { initAxios } from './src/_shared/apis/http';
 import { AuthContext, AuthProvider } from './src/_shared/context/AuthContext';
-import { UserProvider } from './src/_shared/context/UserContext';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
@@ -162,11 +161,9 @@ function Main() {
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <UserProvider>
-        <AuthProvider>
-          <Main />
-        </AuthProvider>
-      </UserProvider>
+      <AuthProvider>
+        <Main />
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

@@ -1,36 +1,37 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import { useLogin, useSignup } from '../mutations/user';
-import { UserContext } from './UserContext';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const loginMutation = useLogin();
-  const { data: user, isLoading: isLoginLoading } = loginMutation;
-  const isLogin = !!user;
+  const { isLoading: isLoginLoading } = loginMutation;
+  const [isLogin, setIsLogin] = useState(false);
 
   const signupMutation = useSignup();
   const { isLoading: isSignupLoading } = signupMutation;
 
-  const { updateUser } = useContext(UserContext);
-  useEffect(() => {
-    updateUser(user);
-  }, [updateUser, user]);
-
   const login = async ({ email = '', password = '' }) => {
-    loginMutation.mutateAsync({ email: email, password: password });
+    loginMutation.mutateAsync(
+      { email: email, password: password },
+      {
+        onSuccess: () => {
+          setIsLogin(true);
+        },
+      },
+    );
   };
 
   const logout = () => {
-    loginMutation.reset();
+    setIsLogin(false);
   };
 
   const signup = async ({ email = '', password = '' }) => {
     signupMutation.mutateAsync(
       { email: email, password: password },
       {
-        onSuccess: signupUser => {
-          loginMutation.mutate(signupUser);
+        onSuccess: () => {
+          setIsLogin(true);
         },
       },
     );
