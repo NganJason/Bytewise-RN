@@ -3,5 +3,6 @@ export const queryKeys = {
   transactions: 'transactions',
   category: 'category',
   transaction: 'transaction',
+  transactionsAggr: 'transactions_aggr',
   budgets: 'budgets',
 };

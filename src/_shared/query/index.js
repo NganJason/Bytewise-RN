@@ -1,16 +1,22 @@
 import { queryKeys } from './keys';
-import { useGetCategories } from './category';
+import { useGetCategories, useGetCategory } from './category';
 import {
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,
 } from './budget';
-import { useGetTransactions, useGetTransaction } from './transaction';
+import {
+  useGetTransactions,
+  useGetTransaction,
+  useAggrTransactions,
+} from './transaction';
 
 export {
   queryKeys,
+  useGetCategory,
   useGetCategories,
   useGetCategoryBudgetsByMonth,
   useGetAnnualBudgetBreakdown,
   useGetTransactions,
   useGetTransaction,
+  useAggrTransactions,
 };

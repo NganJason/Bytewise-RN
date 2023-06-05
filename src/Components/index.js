@@ -11,7 +11,7 @@ import {
 import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
 
 // Text
-import { BaseText, AmountText } from './Text';
+import { BaseText, AmountText, LinkText } from './Text';
 
 // Touch
 import { BaseButton, IconButton } from './Touch';
@@ -26,6 +26,7 @@ import {
   BaseToast,
   BaseScrollView,
   BaseListItem,
+  BaseImage,
 } from './View';
 
 // Common
@@ -63,4 +64,6 @@ export {
   BaseListItem,
   BudgetUsage,
   BaseToggle,
+  BaseImage,
+  LinkText,
 };

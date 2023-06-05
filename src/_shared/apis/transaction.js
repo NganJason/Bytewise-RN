@@ -30,6 +30,28 @@ const CREATE_TRANSACTION = '/create_transaction';
 const GET_TRANSACTIONS = '/get_transactions';
 const UPDATE_TRANSACTION = '/update_transaction';
 const GET_TRANSACTION = '/get_transaction';
+const AGGR_TRANSACTIONS = '/aggr_transactions';
+
+export const aggrTransactions = async ({
+  category_ids = [],
+  transaction_types = [],
+  transaction_time: { gte = 0, lte = 0 } = {},
+} = {}) => {
+  try {
+    const body = await sendPostRequest(AGGR_TRANSACTIONS, {
+      category_ids: category_ids,
+      transaction_types: transaction_types,
+      transaction_time: { gte, lte },
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
 
 export const getTransaction = async ({ transaction_id = '' } = {}) => {
   try {
@@ -56,10 +78,7 @@ export const getTransactions = async ({
     const body = await sendPostRequest(GET_TRANSACTIONS, {
       category_id: category_id,
       transaction_type: transaction_type,
-      transaction_time: {
-        gte: gte,
-        lte: lte,
-      },
+      transaction_time: { gte, lte },
       paging: {
         limit: limit,
         page: page,

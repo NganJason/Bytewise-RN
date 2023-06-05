@@ -16,9 +16,7 @@ const AmountText = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  let amount = Number(children);
-
-  const getAmountAttr = () => {
+  const getAmountAttr = amount => {
     if (amount > 0) {
       return { styles: showColor && styles.positive, symbol: '+' };
     }
@@ -33,18 +31,19 @@ const AmountText = ({
   const renderAmountText = () => {
     let text = '';
 
+    const { symbol } = getAmountAttr(children);
+
     // use symbol string to show negative
-    if (amount < 0) {
-      amount = amount * -1;
+    if (children < 0) {
+      children = children * -1;
     }
-    amount = amount.toFixed(2);
+    const amount = children.toFixed(2);
 
     // add currency
     text = `${CURRENCY} ${amount}`;
 
     // add + or -
     if (showSymbol) {
-      const { symbol } = getAmountAttr();
       text = `${symbol} ${text}`;
     }
 
@@ -54,7 +53,7 @@ const AmountText = ({
   return (
     <BaseText
       center={center}
-      style={{ ...getAmountAttr()?.styles, ...style }}
+      style={{ ...getAmountAttr(children)?.styles, ...style }}
       numberOfLines={1}
       {...props}>
       {renderAmountText()}
