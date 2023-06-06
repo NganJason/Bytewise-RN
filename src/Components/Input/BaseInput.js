@@ -25,6 +25,7 @@ const BaseInput = forwardRef(
       pointerEvents = 'auto',
       maxLength = null,
       secureTextEntry = false,
+      errorMessage = '',
     },
     ref,
   ) => {
@@ -71,6 +72,7 @@ const BaseInput = forwardRef(
         renderErrorMessage={false}
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
+        errorMessage={errorMessage}
       />
     );
   },
@@ -93,10 +95,10 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 28,
+      marginBottom: 14,
     },
     inputContainer: {
-      paddingVertical: 6,
-      paddingHorizontal: 4,
+      paddingVertical: 4,
+      paddingHorizontal: 2,
     },
   });

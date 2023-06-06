@@ -1,6 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Divider, Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import {
   BaseButton,
@@ -11,35 +12,64 @@ import {
   LinkText,
 } from '../../Components';
 
-import { loginHero } from '../../_shared/constant/asset';
-import { AuthContext } from '../../_shared/context/AuthContext';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
+import { loginHero } from '../../_shared/constant/asset';
+import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { validateUser } from '../../_shared/apis/user';
 
 const LoginScreen = () => {
   const { theme } = useTheme();
-  const { screenWidth, screenHeight } = useDimension();
-  const styles = getStyles(theme, screenHeight);
+  const { screenWidth } = useDimension();
+  const styles = getStyles(theme);
+
+  const [formErrors, setFormErrors] = useState({});
+
+  const [formInputsTouched, setFormInputsTouched] = useState({
+    username: false,
+    password: false,
+  });
+
+  const [logInForm, setUserForm] = useState({
+    username: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    setFormErrors(validateUser(logInForm));
+  }, [formInputsTouched, logInForm]);
+
+  const onUsernameChange = e => {
+    setUserForm({ ...logInForm, username: e });
+  };
+
+  const onUsernameBlur = () => {
+    setFormInputsTouched({ ...formInputsTouched, username: true });
+  };
+
+  const onPasswordChange = e => {
+    setUserForm({ ...logInForm, password: e });
+  };
+
+  const onPasswordBlur = () => {
+    setFormInputsTouched({ ...formInputsTouched, password: true });
+  };
+
   const { login, isLoginLoading, getLoginError } = useContext(AuthContext);
 
-  const [username, setUsername] = useState('');
-  const onUsernameChange = e => {
-    setUsername(e);
-  };
-
-  const [password, setPassword] = useState('');
-  const onPasswordChange = e => {
-    setPassword(e);
-  };
-
   const onLogin = () => {
-    login({ username: username, password: password });
+    login(logInForm);
   };
 
   return (
     <BaseScreen errorToast={renderErrorsToast([getLoginError()])}>
-      <View style={styles.screen}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        enableOnAndroid={true}
+        keyboardOpeningTime={0}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.screen}>
         <View>
           <BaseText
             h1
@@ -47,11 +77,11 @@ const LoginScreen = () => {
             Pocketeer
           </BaseText>
           <BaseText h3 style={styles.titleSpacing}>
-            A personal financial companion
+            Your personal financial companion
           </BaseText>
           <BaseImage
-            width={screenWidth * 0.8}
-            height={screenWidth * 0.6}
+            width={screenWidth * 0.7}
+            height={screenWidth * 0.5}
             source={loginHero}
           />
         </View>
@@ -66,17 +96,22 @@ const LoginScreen = () => {
                 color={theme.colors.color5}
               />
             }
-            value={username}
+            value={logInForm.username}
             onChangeText={onUsernameChange}
+            maxLength={60}
+            onBlur={onUsernameBlur}
+            errorMessage={formInputsTouched.username && formErrors.username}
           />
           <BaseInput
             placeholder="Password"
             leftIcon={
               <Icon name="lock" type="feather" color={theme.colors.color5} />
             }
-            value={password}
+            value={logInForm.password}
             onChangeText={onPasswordChange}
             secureTextEntry
+            onBlur={onPasswordBlur}
+            errorMessage={formInputsTouched.password && formErrors.password}
           />
         </View>
 
@@ -87,6 +122,7 @@ const LoginScreen = () => {
             width={200}
             onPress={onLogin}
             loading={isLoginLoading}
+            disabled={Object.keys(formErrors).length !== 0}
           />
           <Divider style={styles.divider} />
           <View style={styles.signUpCtaContainer}>
@@ -96,20 +132,21 @@ const LoginScreen = () => {
             </LinkText>
           </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </BaseScreen>
   );
 };
 
-const getStyles = (theme, screenHeight) => {
+const getStyles = theme => {
   return StyleSheet.create({
     titleSpacing: {
       marginBottom: 14,
     },
     screen: {
       justifyContent: 'center',
-      rowGap: theme.spacing.md,
-      height: screenHeight * 0.8,
+      rowGap: theme.spacing.xs,
+      paddingVertical: 20,
+      height: '100%',
     },
     divider: {
       marginVertical: 24,

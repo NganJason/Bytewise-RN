@@ -79,10 +79,16 @@ const BaseScreen = ({
     errorToast.onHide,
   ]);
 
+  const isEmptyHeader = () =>
+    !headerProps.allowBack &&
+    !headerProps.centerComponent &&
+    !headerProps.leftComponent &&
+    !headerProps.rightComponent;
+
   return (
     <>
       <Header
-        containerStyle={styles.header}
+        containerStyle={[styles.header, isEmptyHeader() && styles.emptyHeader]}
         leftComponent={
           <>
             {headerProps.allowBack && (
@@ -148,6 +154,9 @@ const getStyles = theme =>
       paddingHorizontal: 26,
       borderBottomWidth: 0,
       paddingVertical: 22,
+    },
+    emptyHeader: {
+      paddingVertical: 0,
     },
     leftComponentStyle: {
       flexDirection: 'row',

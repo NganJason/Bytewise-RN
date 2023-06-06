@@ -6,22 +6,34 @@ export class UserError extends AppError {
   }
 }
 
-const LOGIN_USER = '/login_user';
-const SIGNUP_USER = '/signup_user';
+export const validateUser = ({ username = '', password = '' } = {}) => {
+  const errors = {};
 
-export const loginUser = async ({ email = '', password = '' }) => {
+  if (username === '') {
+    errors.username = 'Username cannot be empty';
+  } else if (username.length > 60) {
+    errors.username = 'Username cannot be more than 60 characters';
+  }
+
+  if (password === '') {
+    errors.password = 'Password cannot be empty';
+  } else if (password.length < 8) {
+    errors.password = 'Password must have at least 8 characters';
+  }
+
+  return errors;
+};
+
+const LOG_IN = '/log_in';
+const SIGN_UP = '/sign_up';
+
+export const logIn = async ({ username = '', password = '' }) => {
   try {
-    // const body = await sendPostRequest(LOGIN_USER, {
-    //   email: email,
-    //   password: password,
-    // });
-
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const user = { email: 'test' };
-        resolve(user);
-      }, 1000);
+    const body = await sendPostRequest(LOG_IN, {
+      username: username,
+      password: password,
     });
+    return body;
   } catch (e) {
     throw new UserError({
       requestID: e.requestID,
@@ -31,19 +43,13 @@ export const loginUser = async ({ email = '', password = '' }) => {
   }
 };
 
-export const signupUser = async ({ email = '', password = '' }) => {
+export const signUp = async ({ username = '', password = '' }) => {
   try {
-    // const body = await sendPostRequest(SIGNUP_USER, {
-    //   email: email,
-    //   password: password,
-    // });
-
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const user = { email: 'test' };
-        resolve(user);
-      }, 1000);
+    const body = await sendPostRequest(SIGN_UP, {
+      username: username,
+      password: password,
     });
+    return body;
   } catch (e) {
     throw new UserError({
       requestID: e.requestID,

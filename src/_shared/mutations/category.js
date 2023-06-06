@@ -21,6 +21,7 @@ export const useUpdateCategory = (opts = {}) => {
   return useMutation(updateCategory, {
     onSuccess: ({ category = {} }) => {
       const { category_id = '' } = category;
+
       // category may change name, transaction records need to be reflected
       queryClient.invalidateQueries([queryKeys.transactions]);
 
