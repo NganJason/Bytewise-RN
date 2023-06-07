@@ -27,7 +27,7 @@ export const validateUser = ({ username = '', password = '' } = {}) => {
 const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
 
-export const logIn = async ({ username = '', password = '' }) => {
+export const login = async ({ username = '', password = '' }) => {
   try {
     const body = await sendPostRequest(LOG_IN, {
       username: username,
@@ -43,7 +43,7 @@ export const logIn = async ({ username = '', password = '' }) => {
   }
 };
 
-export const signUp = async ({ username = '', password = '' }) => {
+export const signup = async ({ username = '', password = '' }) => {
   try {
     const body = await sendPostRequest(SIGN_UP, {
       username: username,

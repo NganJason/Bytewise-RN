@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
-
 import HomeScreen from './src/Screens/HomeScreen';
 import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
 import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
@@ -17,7 +16,6 @@ import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
 import BudgetScreen from './src/Screens/Budget/BudgetScreen';
 import LoginScreen from './src/Screens/User/LoginScreen';
 import SignupScreen from './src/Screens/User/SignupScreen';
-
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
@@ -32,11 +30,22 @@ const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 const Stack = createStackNavigator();
 const queryClient = new QueryClient();
 
+const WAIT_TIME_FOR_SPLASH_SCREEN = 500;
+
 function Main() {
+  const { isLogin, handleUnauthenticate, accessToken } =
+    useContext(AuthContext);
+
   const [isAppReady, setIsAppReady] = useState(false);
-  const { isLogin, handleUnauthenticate } = useContext(AuthContext);
+  const [showSplashScreen, setShowSplashScreen] = useState(false);
+
+  useEffect(() => {}, [accessToken]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplashScreen(true);
+    }, WAIT_TIME_FOR_SPLASH_SCREEN);
+
     async function init() {
       try {
         await Font.loadAsync(
@@ -85,68 +94,80 @@ function Main() {
         initAxios({
           baseURL: TEST_BASE_URL,
           unauthenticateHandler: handleUnauthenticate,
+          accessToken: accessToken,
         });
-
-        // TODO: REMOVE IN PROD
-        // USED TO MOCK SLOW LOAD TO SEE SPLASH SCREEN
-        await new Promise(resolve => setTimeout(resolve, 2000));
       } catch (err) {
+        // TODO: Handle error
         console.log(err);
       } finally {
+        clearTimeout(timer);
+        setShowSplashScreen(false);
         setIsAppReady(true);
       }
     }
 
     init();
-  }, [handleUnauthenticate]);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [handleUnauthenticate, accessToken]);
 
   const render = () => {
-    if (!isAppReady) {
+    if (showSplashScreen) {
       return <SplashScreen />;
     }
-    return (
-      <Stack.Navigator
-        initialRouteName={ROUTES.home}
-        screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-        {isLogin ? (
-          <>
-            <Stack.Screen name={ROUTES.home} component={HomeScreen} />
-            <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
-            <Stack.Screen name={ROUTES.budgetList} component={BudgetScreen} />
-            <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
-            <Stack.Screen
-              name={ROUTES.transactionForm}
-              component={TransactionForm}
-            />
-            <Stack.Screen
-              name={ROUTES.categoryEdit}
-              component={CategoryEditScreen}
-            />
-            <Stack.Screen
-              name={ROUTES.categoryBreakdown}
-              component={CategoryBreakdownScreen}
-            />
-            <Stack.Screen
-              name={ROUTES.cashAccount}
-              component={CashAccountScreen}
-            />
-            <Stack.Screen
-              name={ROUTES.investmentAccount}
-              component={InvestmentAccountScreen}
-            />
-            <Stack.Screen
-              name={ROUTES.investmentLotBreakdown}
-              component={InvestmentLotBreakdownScreen}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name={ROUTES.login} component={LoginScreen} />
-            <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    );
+
+    if (isAppReady && !showSplashScreen) {
+      return (
+        <Stack.Navigator
+          initialRouteName={ROUTES.home}
+          screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+          {isLogin ? (
+            <>
+              <Stack.Screen name={ROUTES.home} component={HomeScreen} />
+              <Stack.Screen
+                name={ROUTES.categoryForm}
+                component={CategoryForm}
+              />
+              <Stack.Screen name={ROUTES.budgetList} component={BudgetScreen} />
+              <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
+              <Stack.Screen
+                name={ROUTES.transactionForm}
+                component={TransactionForm}
+              />
+              <Stack.Screen
+                name={ROUTES.categoryEdit}
+                component={CategoryEditScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.categoryBreakdown}
+                component={CategoryBreakdownScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.cashAccount}
+                component={CashAccountScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.investmentAccount}
+                component={InvestmentAccountScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.investmentLotBreakdown}
+                component={InvestmentLotBreakdownScreen}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name={ROUTES.login} component={LoginScreen} />
+              <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      );
+    }
+
+    return <></>;
   };
 
   return (

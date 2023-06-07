@@ -31,17 +31,17 @@ const LoginScreen = () => {
     password: false,
   });
 
-  const [logInForm, setUserForm] = useState({
-    username: '',
-    password: '',
+  const [loginForm, setUserForm] = useState({
+    username: 'Jon',
+    password: 'Hello123',
   });
 
   useEffect(() => {
-    setFormErrors(validateUser(logInForm));
-  }, [formInputsTouched, logInForm]);
+    setFormErrors(validateUser(loginForm));
+  }, [formInputsTouched, loginForm]);
 
   const onUsernameChange = e => {
-    setUserForm({ ...logInForm, username: e });
+    setUserForm({ ...loginForm, username: e });
   };
 
   const onUsernameBlur = () => {
@@ -49,7 +49,7 @@ const LoginScreen = () => {
   };
 
   const onPasswordChange = e => {
-    setUserForm({ ...logInForm, password: e });
+    setUserForm({ ...loginForm, password: e });
   };
 
   const onPasswordBlur = () => {
@@ -59,7 +59,7 @@ const LoginScreen = () => {
   const { login, isLoginLoading, getLoginError } = useContext(AuthContext);
 
   const onLogin = () => {
-    login(logInForm);
+    login(loginForm);
   };
 
   return (
@@ -96,7 +96,7 @@ const LoginScreen = () => {
                 color={theme.colors.color5}
               />
             }
-            value={logInForm.username}
+            value={loginForm.username}
             onChangeText={onUsernameChange}
             maxLength={60}
             onBlur={onUsernameBlur}
@@ -107,7 +107,7 @@ const LoginScreen = () => {
             leftIcon={
               <Icon name="lock" type="feather" color={theme.colors.color5} />
             }
-            value={logInForm.password}
+            value={loginForm.password}
             onChangeText={onPasswordChange}
             secureTextEntry
             onBlur={onPasswordBlur}
