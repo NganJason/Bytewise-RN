@@ -1,10 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
 import {
   getTransactions,
   getTransaction,
   aggrTransactions,
 } from '../apis/transaction';
-import { queryKeys } from './keys';
+import { queryKeys, useQueryWrapper } from './keys';
 
 export const useAggrTransactions = (
   {
@@ -14,7 +13,7 @@ export const useAggrTransactions = (
   } = {},
   opts = {},
 ) => {
-  return useQuery({
+  return useQueryWrapper({
     staleTime: Infinity,
     queryFn: () =>
       aggrTransactions({
@@ -36,7 +35,7 @@ export const useAggrTransactions = (
 };
 
 export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
-  return useQuery({
+  return useQueryWrapper({
     staleTime: Infinity,
     queryFn: () =>
       getTransaction({
@@ -57,7 +56,7 @@ export const useGetTransactions = (
   } = {},
   opts = {},
 ) => {
-  return useQuery({
+  return useQueryWrapper({
     staleTime: Infinity,
     queryFn: () =>
       getTransactions({

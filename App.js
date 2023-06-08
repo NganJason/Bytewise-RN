@@ -33,13 +33,10 @@ const queryClient = new QueryClient();
 const WAIT_TIME_FOR_SPLASH_SCREEN = 500;
 
 function Main() {
-  const { isLogin, handleUnauthenticate, accessToken } =
-    useContext(AuthContext);
+  const { isLogin } = useContext(AuthContext);
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [showSplashScreen, setShowSplashScreen] = useState(false);
-
-  useEffect(() => {}, [accessToken]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -88,14 +85,6 @@ function Main() {
           'Nucleo',
           require('./assets/icons/fonts/Nucleo.ttf'),
         );
-
-        // Init axios
-        // TODO: Pass correct base url
-        initAxios({
-          baseURL: TEST_BASE_URL,
-          unauthenticateHandler: handleUnauthenticate,
-          accessToken: accessToken,
-        });
       } catch (err) {
         // TODO: Handle error
         console.log(err);
@@ -111,7 +100,7 @@ function Main() {
     return () => {
       clearTimeout(timer);
     };
-  }, [handleUnauthenticate, accessToken]);
+  }, []);
 
   const render = () => {
     if (showSplashScreen) {
@@ -180,6 +169,10 @@ function Main() {
 }
 
 const App = () => {
+  initAxios({
+    baseURL: TEST_BASE_URL,
+  });
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

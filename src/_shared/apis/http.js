@@ -10,18 +10,42 @@ export class AppError extends Error {
 }
 
 var axiosInstance;
-var handleUnauthenticate = function () {};
 
-export const initAxios = ({
-  baseURL = '',
-  unauthenticateHandler = function () {},
-} = {}) => {
+export const initAxios = ({ baseURL = '' } = {}) => {
   axiosInstance = axios.create({
     baseURL: baseURL,
     timeout: 5000, // 5s
   });
+};
 
-  handleUnauthenticate = unauthenticateHandler;
+export const setAxiosAccessToken = (accessToken = '') => {
+  if (axiosInstance !== null) {
+    axiosInstance.interceptors.request.use(config => {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      return config;
+    });
+  }
+};
+
+export const setAxiosResponseInterceptors = ({ on401 }) => {
+  if (axiosInstance != null) {
+    axiosInstance.interceptors.response.use(
+      response => {
+        return response;
+      },
+      error => {
+        if (error.response) {
+          if (
+            error.response.status === ErrCode.Unauthorized &&
+            on401 !== null
+          ) {
+            on401();
+          }
+        }
+        return Promise.reject(error);
+      },
+    );
+  }
 };
 
 export const sendPostRequest = async (endpoint = '', body = {}) => {
@@ -29,10 +53,6 @@ export const sendPostRequest = async (endpoint = '', body = {}) => {
     const { data } = await axiosInstance.post(endpoint, body);
     return data.body;
   } catch (e) {
-    if (e.response && e.response.status === ErrCode.unauthenticate) {
-      handleUnauthenticate();
-    }
-
     throw new AppError({
       requestID: e.response?.headers['request-id'], // request ID
       message: e.response?.data.error, // error message

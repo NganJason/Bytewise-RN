@@ -45,11 +45,9 @@ const TransactionForm = ({ route }) => {
   // decide if form is create or edit
   const transactionID = route.params?.transaction_id || '';
 
-  const isGetTransactionEnabled = () => transactionID !== '';
-
   const getTransaction = useGetTransaction(
     { transaction_id: transactionID },
-    { enabled: isGetTransactionEnabled() },
+    { enabled: transactionID !== '' },
   );
 
   // initial form state
@@ -189,10 +187,7 @@ const TransactionForm = ({ route }) => {
   };
 
   const isFormLoading = () => {
-    return (
-      (isGetTransactionEnabled() && getTransaction.isLoading) ||
-      getCategories.isLoading
-    );
+    return getTransaction.isLoading || getCategories.isLoading;
   };
 
   return (

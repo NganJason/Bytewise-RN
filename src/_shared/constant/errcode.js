@@ -1,3 +1,3 @@
 export const ErrCode = {
-  unauthenticate: 403,
+  Unauthorized: 401,
 };

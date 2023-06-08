@@ -55,7 +55,7 @@ const CategoryScreen = ({ navigation }) => {
   const renderCategories = categoryType => {
     const comps = [];
 
-    getCategoriesQuery.data?.categories.forEach(category => {
+    getCategoriesQuery.data?.categories?.forEach(category => {
       if (category.category_type === categoryType) {
         const sum =
           aggrTransactionsByCategoryQuery.data?.results?.[category.category_id]
@@ -92,7 +92,7 @@ const CategoryScreen = ({ navigation }) => {
 
   const aggrTransactionsByCategoryQuery = useAggrTransactions(
     {
-      category_ids: getCategoriesQuery.data?.categories.map(
+      category_ids: getCategoriesQuery.data?.categories?.map(
         category => category.category_id,
       ),
       transaction_time: {
@@ -100,7 +100,13 @@ const CategoryScreen = ({ navigation }) => {
         lte: timeRange[1],
       },
     },
-    { enabled: !getCategoriesQuery.isLoading && !getCategoriesQuery.isError },
+    {
+      enabled:
+        (!getCategoriesQuery.isLoading &&
+          !getCategoriesQuery.isError &&
+          getCategoriesQuery.data?.categories?.length !== 0) ||
+        false,
+    },
   );
 
   const onDateMove = newDate => {
@@ -164,7 +170,7 @@ const CategoryScreen = ({ navigation }) => {
                 <AmountText showColor>
                   {aggrTransactionsByTypeQuery.data?.results?.[
                     String(TRANSACTION_TYPE_INCOME)
-                  ].sum || 0}
+                  ]?.sum || 0}
                 </AmountText>
               </View>
             }
@@ -182,7 +188,7 @@ const CategoryScreen = ({ navigation }) => {
                 <AmountText showColor>
                   {-aggrTransactionsByTypeQuery.data?.results?.[
                     String(TRANSACTION_TYPE_EXPENSE)
-                  ].sum || 0}
+                  ]?.sum || 0}
                 </AmountText>
               </View>
             }

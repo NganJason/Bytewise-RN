@@ -40,11 +40,9 @@ const CategoryForm = ({ route }) => {
   // decide if form is create or edit
   const categoryID = route.params?.category_id || '';
 
-  const isGetCategoryEnabled = () => categoryID !== '';
-
   const getCategory = useGetCategory(
     { category_id: categoryID },
-    { enabled: isGetCategoryEnabled() },
+    { enabled: categoryID !== '' },
   );
 
   // initial form state
@@ -98,7 +96,7 @@ const CategoryForm = ({ route }) => {
     return createCategory.isLoading || updateCategory.isLoading;
   };
 
-  const isFormLoading = () => isGetCategoryEnabled() && getCategory.isLoading;
+  const isFormLoading = () => getCategory.isLoading;
 
   return (
     <BaseScreen

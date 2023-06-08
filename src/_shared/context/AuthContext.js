@@ -3,9 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useLogin, useSignup } from '../mutations/user';
 import { UserError } from '../apis/user';
+import {
+  setAxiosAccessToken,
+  setAxiosResponseInterceptors,
+} from '../apis/http';
 
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
-
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -16,23 +19,6 @@ const AuthProvider = ({ children }) => {
   const { isLoading: isSignupLoading } = signupMutation;
 
   const [isLogin, setIsLogin] = useState(false);
-  const [accessToken, setAccessToken] = useState('');
-
-  useEffect(() => {
-    async function getToken() {
-      try {
-        const at = await AsyncStorage.getItem(ACCESS_TOKEN);
-        if (at !== null) {
-          setAccessToken(at);
-          setIsLogin(true);
-        }
-      } catch {
-        throw new UserError('get access token error');
-      }
-    }
-
-    getToken();
-  }, []);
 
   const login = ({ username = '', password = '' }) => {
     // no-op if already logged in
@@ -46,8 +32,7 @@ const AuthProvider = ({ children }) => {
         onSuccess: async data => {
           try {
             await AsyncStorage.setItem(ACCESS_TOKEN, data.access_token);
-            setIsLogin(true);
-            setAccessToken(data.access_token);
+            onLoginSuccess(data.access_token);
           } catch {
             throw new UserError('set access token error');
           }
@@ -56,25 +41,43 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const logout = async () => {
-    setIsLogin(false);
-    // ignore error
-    await AsyncStorage.removeItem(ACCESS_TOKEN);
-  };
-
   const signup = ({ username = '', password = '' }) => {
-    signupMutation.mutateAsync(
-      { username, password: password },
+    signupMutation.mutate(
+      { username, password },
       {
         onSuccess: () => {
-          setIsLogin(true);
+          login({ username, password });
         },
       },
     );
   };
 
-  const handleUnauthenticate = async () => {
-    await logout();
+  const logout = async () => {
+    // ignore error
+    await AsyncStorage.removeItem(ACCESS_TOKEN);
+    setIsLogin(false);
+  };
+
+  useEffect(() => {
+    async function getToken() {
+      try {
+        const at = await AsyncStorage.getItem(ACCESS_TOKEN);
+        if (at !== null) {
+          onLoginSuccess(at);
+        }
+      } catch {
+        throw new UserError('get access token error');
+      }
+    }
+
+    getToken();
+
+    setAxiosResponseInterceptors({ on401: logout });
+  }, []);
+
+  const onLoginSuccess = (accessToken = '') => {
+    setIsLogin(true);
+    setAxiosAccessToken(accessToken);
   };
 
   const getLoginError = () => {
@@ -104,8 +107,6 @@ const AuthProvider = ({ children }) => {
         signup,
         isSignupLoading,
         getSignupError,
-        accessToken,
-        handleUnauthenticate,
       }}>
       {children}
     </AuthContext.Provider>
