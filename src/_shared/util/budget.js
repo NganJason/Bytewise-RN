@@ -6,7 +6,7 @@ export const getBudgetTypes = () => {
   for (const budget_enum in BUDGET_TYPES) {
     budgetTypes.push({
       name: BUDGET_TYPES[budget_enum],
-      value: budget_enum,
+      value: Number(budget_enum),
     });
   }
 

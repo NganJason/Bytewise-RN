@@ -6,6 +6,7 @@ export const queryKeys = {
   category: 'category',
   transaction: 'transaction',
   transactionsAggr: 'transactions_aggr',
+  budget: 'budget',
   budgets: 'budgets',
 };
 

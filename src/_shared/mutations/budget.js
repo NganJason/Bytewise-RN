@@ -8,18 +8,22 @@ export const useSetBudget = (opts = {}) => {
 
   return useMutation({
     mutationFn: async ({
-      category_id = '',
-      year = 0,
-      default_budget = null,
-      monthly_budget = null,
-      budget_config = null,
+      budget_id = null,
+      budget_name = '',
+      budget_type = 0,
+      budget_amount = '0',
+      category_ids = [],
+      range_start_date = '',
+      range_end_date = '',
     } = {}) => {
       await setBudget({
-        category_id: category_id,
-        year: year,
-        default_budget: default_budget,
-        monthly_budget: monthly_budget,
-        budget_config: budget_config,
+        budget_id: budget_id,
+        budget_name: budget_name,
+        budget_type: budget_type,
+        budget_amount: budget_amount,
+        category_ids: category_ids,
+        range_start_date: range_start_date,
+        range_end_date: range_end_date,
       });
     },
     ...opts,

@@ -61,7 +61,7 @@ export const THEME = createTheme({
     h1: {
       fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h1,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
     h2: {
       fontFamily: FONT_FAMILY.semiBold,

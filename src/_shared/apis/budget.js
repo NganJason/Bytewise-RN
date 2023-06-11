@@ -6,15 +6,38 @@ export class BudgetError extends AppError {
   }
 }
 
-const GET_CATEGORY_BUDGETS_BY_MONTH = '/get_category_budgets_by_month';
-const GET_ANNUAL_BUDGET_BREAKDOWN = '/get_annual_budget_breakdown';
-const SET_BUDGET = '/set_budget';
+export const validateBudget = ({
+  budget_name = '',
+  budget_amount = 0,
+  category_ids = [],
+  from_date = new Date(),
+  to_date = new Date(),
+} = {}) => {
+  if (budget_name === '') {
+    throw new BudgetError({ message: 'Budget name cannot be empty' });
+  }
+  if (budget_amount === 0) {
+    throw new BudgetError({ message: 'Budget amount cannot be 0' });
+  }
+  if (category_ids.length === 0) {
+    throw new BudgetError({ message: 'Categories cannot be empty' });
+  }
+  if (to_date < from_date) {
+    throw new BudgetError({
+      message: 'To date cannot be smaller than from date',
+    });
+  }
+};
 
-export const getCategoryBudgetsByMonth = async ({ year = 0, month = 0 }) => {
+const SET_BUDGET = '/set_budget';
+const GET_BUDGET = '/get_budget';
+const GET_BUDGETS = '/get_budgets';
+
+export const getBudget = async ({ budget_id = '', date = '' } = {}) => {
   try {
-    const body = await sendPostRequest(GET_CATEGORY_BUDGETS_BY_MONTH, {
-      year: year,
-      month: month,
+    const body = await sendPostRequest(GET_BUDGET, {
+      budget_id: budget_id,
+      date: date,
     });
     return body;
   } catch (e) {
@@ -26,14 +49,10 @@ export const getCategoryBudgetsByMonth = async ({ year = 0, month = 0 }) => {
   }
 };
 
-export const getAnnualBudgetBreakdown = async ({
-  category_id = '',
-  year = 0,
-}) => {
+export const getBudgets = async ({ date = '' } = {}) => {
   try {
-    const body = await sendPostRequest(GET_ANNUAL_BUDGET_BREAKDOWN, {
-      category_id: category_id,
-      year: year,
+    const body = await sendPostRequest(GET_BUDGETS, {
+      date: date,
     });
     return body;
   } catch (e) {
@@ -46,19 +65,23 @@ export const getAnnualBudgetBreakdown = async ({
 };
 
 export const setBudget = async ({
-  category_id = '',
-  year = 0,
-  default_budget = null,
-  monthly_budget = null,
-  budget_config = null,
+  budget_id = null,
+  budget_name = '',
+  budget_type = 0,
+  budget_amount = '0',
+  category_ids = [],
+  range_start_date = '',
+  range_end_date = '',
 } = {}) => {
   try {
     const body = await sendPostRequest(SET_BUDGET, {
-      category_id: category_id,
-      year: year,
-      default_budget: default_budget,
-      monthly_budget: monthly_budget,
-      budget_config: budget_config,
+      budget_id: budget_id,
+      budget_name: budget_name,
+      budget_type: budget_type,
+      budget_amount: budget_amount,
+      category_ids: category_ids,
+      range_start_date: range_start_date,
+      range_end_date: range_end_date,
     });
     return body;
   } catch (e) {
