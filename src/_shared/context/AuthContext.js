@@ -6,6 +6,7 @@ import { UserError } from '../apis/user';
 import {
   setAxiosAccessToken,
   setAxiosResponseInterceptors,
+  unsetAxiosAccessToken,
 } from '../apis/http';
 
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
@@ -21,11 +22,6 @@ const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
 
   const login = ({ username = '', password = '' }) => {
-    // no-op if already logged in
-    if (isLogin) {
-      return;
-    }
-
     loginMutation.mutate(
       { username, password },
       {
@@ -55,6 +51,7 @@ const AuthProvider = ({ children }) => {
   const logout = async () => {
     // ignore error
     await AsyncStorage.removeItem(ACCESS_TOKEN);
+    unsetAxiosAccessToken();
     setIsLogin(false);
   };
 
