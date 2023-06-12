@@ -43,10 +43,10 @@ const DailyTransactions = ({
     transactions.forEach(t => {
       switch (t.transaction_type) {
         case TRANSACTION_TYPE_EXPENSE:
-          sum -= t.amount;
+          sum -= Number(t.amount);
           return;
         case TRANSACTION_TYPE_INCOME:
-          sum += t.amount;
+          sum += Number(t.amount);
           return;
       }
     });

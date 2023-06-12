@@ -43,7 +43,7 @@ const CategoryEditScreen = ({ route }) => {
         ),
       }}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {getCategoriesQuery.data?.categories.map((category, i) => {
+        {getCategoriesQuery.data?.categories?.map((category, i) => {
           return (
             <BaseListItem key={i} showDivider dividerMargin={6}>
               <View style={styles.row}>

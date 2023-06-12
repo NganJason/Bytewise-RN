@@ -20,10 +20,13 @@ export const initAxios = ({ baseURL = '' } = {}) => {
 
 export const setAxiosAccessToken = (accessToken = '') => {
   if (axiosInstance !== null) {
-    axiosInstance.interceptors.request.use(config => {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      return config;
-    });
+    axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  }
+};
+
+export const unsetAxiosAccessToken = () => {
+  if (axiosInstance !== null) {
+    delete axiosInstance.defaults.headers.common.Authorization;
   }
 };
 

@@ -31,12 +31,15 @@ const AmountText = ({
   const renderAmountText = () => {
     let text = '';
 
+    children = Number(children);
+
     const { symbol } = getAmountAttr(children);
 
     // use symbol string to show negative
     if (children < 0) {
       children = children * -1;
     }
+
     const amount = children.toFixed(2);
 
     // add currency
