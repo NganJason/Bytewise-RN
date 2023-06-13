@@ -14,7 +14,6 @@ export const useAggrTransactions = (
   opts = {},
 ) => {
   return useQueryWrapper({
-    staleTime: Infinity,
     queryFn: () =>
       aggrTransactions({
         category_ids: category_ids,
@@ -36,7 +35,6 @@ export const useAggrTransactions = (
 
 export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
   return useQueryWrapper({
-    staleTime: Infinity,
     queryFn: () =>
       getTransaction({
         transaction_id: transaction_id,
@@ -57,7 +55,6 @@ export const useGetTransactions = (
   opts = {},
 ) => {
   return useQueryWrapper({
-    staleTime: Infinity,
     queryFn: () =>
       getTransactions({
         category_id: category_id,
