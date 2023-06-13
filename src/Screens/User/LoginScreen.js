@@ -31,7 +31,7 @@ const LoginScreen = () => {
     password: false,
   });
 
-  const [loginForm, setUserForm] = useState({
+  const [loginForm, setLoginForm] = useState({
     username: 'Jon',
     password: 'Hello123',
   });
@@ -41,7 +41,7 @@ const LoginScreen = () => {
   }, [formInputsTouched, loginForm]);
 
   const onUsernameChange = e => {
-    setUserForm({ ...loginForm, username: e });
+    setLoginForm({ ...loginForm, username: e });
   };
 
   const onUsernameBlur = () => {
@@ -49,7 +49,7 @@ const LoginScreen = () => {
   };
 
   const onPasswordChange = e => {
-    setUserForm({ ...loginForm, password: e });
+    setLoginForm({ ...loginForm, password: e });
   };
 
   const onPasswordBlur = () => {
@@ -125,7 +125,7 @@ const LoginScreen = () => {
             disabled={Object.keys(formErrors).length !== 0}
           />
           <Divider style={styles.divider} />
-          <View style={styles.signUpCtaContainer}>
+          <View style={styles.loginCtaContainer}>
             <BaseText>Not a user? </BaseText>
             <LinkText h4 route={ROUTES.signup}>
               Sign up now
@@ -151,7 +151,7 @@ const getStyles = theme => {
     divider: {
       marginVertical: 24,
     },
-    signUpCtaContainer: {
+    loginCtaContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
     },
