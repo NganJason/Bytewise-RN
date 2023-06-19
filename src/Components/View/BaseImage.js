@@ -13,7 +13,7 @@ const BaseImage = ({
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
-      style={{ alignSelf: align, width, height }}>
+      style={{ alignSelf: align, width: width, height: height }}>
       <Image source={source} style={styles.img} />
     </Animated.View>
   );

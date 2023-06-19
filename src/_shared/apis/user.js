@@ -26,6 +26,7 @@ export const validateUser = ({ username = '', password = '' } = {}) => {
 
 const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
+const GET_USER = '/get_user';
 
 export const login = async ({ username = '', password = '' }) => {
   try {
@@ -49,6 +50,19 @@ export const signup = async ({ username = '', password = '' }) => {
       username: username,
       password: password,
     });
+    return body;
+  } catch (e) {
+    throw new UserError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const body = await sendPostRequest(GET_USER, {});
     return body;
   } catch (e) {
     throw new UserError({

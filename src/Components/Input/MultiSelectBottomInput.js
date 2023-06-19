@@ -13,6 +13,8 @@ const MultiSelectBottomInput = ({
   items = [], // [{id: '', name: ''}]
   initialSelected = [],
   onChange = function () {},
+  renderEmptyItems = function (toggleModal) {},
+  ...props
 }) => {
   const { screenHeight } = useDimension();
   const { theme } = useTheme();
@@ -34,6 +36,10 @@ const MultiSelectBottomInput = ({
   };
 
   const isSelectAll = () => {
+    if (items.length === 0) {
+      return false;
+    }
+
     return selected.length === items.length;
   };
 
@@ -83,12 +89,21 @@ const MultiSelectBottomInput = ({
       );
     });
 
+    if (rows.length === 0) {
+      return renderEmptyItems(toggleModal);
+    }
+
     return rows;
   };
 
   return (
     <>
-      <TouchInput label={label} value={renderInput()} onPress={toggleModal} />
+      <TouchInput
+        label={label}
+        value={renderInput()}
+        onPress={toggleModal}
+        {...props}
+      />
       <BottomSheet
         fullScreen={true}
         scrollViewProps={{
@@ -102,18 +117,18 @@ const MultiSelectBottomInput = ({
               title="Done"
               type="clear"
               align="flex-end"
-              size="sm"
+              size="md"
               onPress={onDone}
             />
             <BaseButton
               title={isSelectAll() ? 'Deselect All' : 'Select All'}
               type="clear"
               align="flex-end"
-              size="sm"
+              size="md"
               onPress={onSelectAll}
             />
           </View>
-          <View>{renderRows()}</View>
+          <View style={styles.body}>{renderRows()}</View>
         </View>
       </BottomSheet>
     </>
@@ -124,15 +139,19 @@ const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
     container: {
       minHeight: screenHeight * 0.8,
-      backgroundColor: 'white',
+      backgroundColor: theme.colors.white,
       borderRadius: 15,
-      paddingVertical: theme.spacing.md,
+      paddingTop: theme.spacing.md,
+      paddingBottom: theme.spacing.xl,
       paddingHorizontal: theme.spacing.lg,
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginTop: theme.spacing.md,
+    },
+    body: {
+      flex: 1,
     },
     row: {
       marginVertical: theme.spacing.md,

@@ -17,7 +17,7 @@ const BaseDivider = ({ orientation = HORIZONTAL, margin = 0, width = 1 }) => {
   return (
     <Divider
       orientation={orientation}
-      color={theme.colors.color6}
+      color={theme.colors.color9}
       style={styles.divider}
       width={width}
     />

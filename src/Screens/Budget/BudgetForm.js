@@ -27,6 +27,9 @@ import { useSetBudget } from '../../_shared/mutations';
 import { getDateString } from '../../_shared/util/date';
 import { useGetCategories } from '../../_shared/query';
 import { useGetBudget } from '../../_shared/query/budget';
+import EmptyContent from '../../Components/Common/EmptyContent';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
+import ROUTES from '../../_shared/constant/routes';
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -130,10 +133,6 @@ const BudgetForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, to_date: e });
   };
 
-  const onCancel = () => {
-    navigation.goBack();
-  };
-
   const onSave = () => {
     setBudget.mutate({
       budget_id: budgetID === '' ? null : budgetID,
@@ -221,6 +220,13 @@ const BudgetForm = ({ route }) => {
             getBudget?.data?.category_budget?.categories,
           )}
           onChange={onCategoriesChange}
+          renderEmptyItems={closeModal => (
+            <EmptyContent
+              item={EmptyContentConfig.category}
+              route={ROUTES.categoryForm}
+              onRedirect={closeModal}
+            />
+          )}
         />
 
         <BaseCurrencyInput
@@ -263,16 +269,6 @@ const BudgetForm = ({ route }) => {
               }
             />
           </View>
-        </View>
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Cancel"
-            type="outline"
-            size="lg"
-            width={200}
-            onPress={onCancel}
-          />
         </View>
 
         <View style={styles.btnContainer}>

@@ -15,7 +15,7 @@ const BaseTabView = ({
       value={selectedIndex}
       onChange={onPress}
       disableIndicator
-      titleStyle={{ color: theme.colors.primary }}>
+      titleStyle={{ ...theme.fontStyles.h3, color: theme.colors.color5 }}>
       {titles.map((title, i) => (
         <Tab.Item
           key={i}

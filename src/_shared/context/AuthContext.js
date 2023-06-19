@@ -49,9 +49,9 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    unsetAxiosAccessToken();
     // ignore error
     await AsyncStorage.removeItem(ACCESS_TOKEN);
-    unsetAxiosAccessToken();
     setIsLogin(false);
   };
 
@@ -73,8 +73,8 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const onLoginSuccess = (accessToken = '') => {
-    setIsLogin(true);
     setAxiosAccessToken(accessToken);
+    setIsLogin(true);
   };
 
   const getLoginError = () => {

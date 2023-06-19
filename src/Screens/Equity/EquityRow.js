@@ -42,7 +42,7 @@ const EquityRow = ({ navigation, data }) => {
               <Icon
                 name="chevron-right"
                 type="entypo"
-                color={theme.colors.color5}
+                color={theme.colors.color6}
               />
             ) : (
               <></>
@@ -76,7 +76,7 @@ const EquityRow = ({ navigation, data }) => {
               <Icon
                 name="chevron-down"
                 type="entypo"
-                color={theme.colors.color5}
+                color={theme.colors.color6}
               />
             )}
           </View>

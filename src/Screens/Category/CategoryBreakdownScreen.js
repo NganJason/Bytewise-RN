@@ -10,6 +10,7 @@ import {
   BaseScrollView,
   DateNavigator,
   AggrSummary,
+  BaseDivider,
 } from '../../Components';
 
 import {
@@ -29,6 +30,8 @@ import {
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { renderErrorsToast } from '../../_shared/util/toast';
 import ROUTES from '../../_shared/constant/routes';
+import { EmptyContent } from '../../Components/Common';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -105,6 +108,31 @@ const CategoryBreakdownScreen = ({ route }) => {
     return [];
   };
 
+  const renderRows = () => {
+    let rows = [];
+
+    transactionTimes.map((tt, i) =>
+      rows.push(
+        <DailyTransactions
+          key={i}
+          transactions={transactionGroups[tt]}
+          timestamp={tt}
+        />,
+      ),
+    );
+
+    if (rows.length === 0 && !getTransactionsQuery.isLoading) {
+      return (
+        <EmptyContent
+          item={EmptyContentConfig.transaction}
+          route={ROUTES.transactionForm}
+        />
+      );
+    }
+
+    return rows;
+  };
+
   const isScreenLoading = () =>
     getCategory.isLoading ||
     getTransactionsQuery.isLoading ||
@@ -122,7 +150,7 @@ const CategoryBreakdownScreen = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <>
-            <BaseText h1 style={styles.categoryNameText}>
+            <BaseText h2 style={styles.categoryNameText}>
               {getCategory.data?.category.category_name}
             </BaseText>
             <DateNavigator
@@ -147,17 +175,12 @@ const CategoryBreakdownScreen = ({ route }) => {
           />
         ),
       }}>
-      <View style={styles.aggrContainer}>
+      <View>
         <AggrSummary aggrs={renderAggrSummaryByType()} />
       </View>
+      <BaseDivider margin={30} />
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {transactionTimes.map((tt, i) => (
-          <DailyTransactions
-            key={i}
-            transactions={transactionGroups[tt]}
-            timestamp={tt}
-          />
-        ))}
+        {renderRows()}
       </BaseScrollView>
     </BaseScreen>
   );
@@ -165,12 +188,8 @@ const CategoryBreakdownScreen = ({ route }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    aggrContainer: {
-      marginBottom: 22,
-    },
     categoryNameText: {
       marginBottom: 4,
-      color: theme.colors.color1,
     },
   });
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { PacmanIndicator } from 'react-native-indicators';
@@ -13,6 +13,7 @@ const WAIT_TIME_FOR_INDICATOR = 500;
 
 const BaseScreen = ({
   children,
+  backgroundColor = '#FFF',
   fabProps = {
     show: false,
     placement: 'right',
@@ -24,11 +25,13 @@ const BaseScreen = ({
   },
   headerProps = {
     allowBack: false,
+    allowDrawer: false,
     leftComponent: null,
     centerComponent: null,
     rightComponent: null,
   },
   isLoading = false,
+  enablePadding = true,
   errorToast = {
     show: false,
     message1: '',
@@ -85,26 +88,47 @@ const BaseScreen = ({
     !headerProps.leftComponent &&
     !headerProps.rightComponent;
 
+  const getLeftComponent = () => {
+    if (headerProps.allowDrawer) {
+      return (
+        <View>
+          <IconButton
+            buttonSize="sm"
+            type="clear"
+            onPress={() => navigation.openDrawer()}
+            iconName="menu"
+            iconType="entypo"
+            color={theme.colors.color8}
+            align="left"
+          />
+        </View>
+      );
+    } else if (headerProps.allowBack) {
+      return (
+        <IconButton
+          buttonSize="xs"
+          type="clear"
+          onPress={() => navigation.goBack()}
+          iconName="arrow-left"
+          iconType="feather"
+          color={theme.colors.color8}
+          align="left"
+        />
+      );
+    }
+
+    return headerProps.leftComponent;
+  };
+
   return (
     <>
       <Header
-        containerStyle={[styles.header, isEmptyHeader() && styles.emptyHeader]}
-        leftComponent={
-          <>
-            {headerProps.allowBack && (
-              <IconButton
-                buttonSize="xs"
-                type="clear"
-                onPress={() => navigation.goBack()}
-                iconName="chevron-left"
-                iconType="entypo"
-                color={theme.colors.color4}
-                align="left"
-              />
-            )}
-            {headerProps.leftComponent}
-          </>
-        }
+        containerStyle={[
+          styles.header,
+          isEmptyHeader() && styles.emptyHeader,
+          { backgroundColor: backgroundColor },
+        ]}
+        leftComponent={getLeftComponent()}
         centerComponent={headerProps.centerComponent}
         rightComponent={headerProps.rightComponent}
         leftContainerStyle={styles.leftComponentStyle}
@@ -113,27 +137,34 @@ const BaseScreen = ({
       />
       <HideKeyboard>
         <>
-          {showLoadingIndicator && (
-            <PacmanIndicator size={70} color={theme.colors.primary} />
-          )}
-          {!showLoadingIndicator && !isLoading && (
-            <Animated.View entering={FadeIn.duration(300)} style={styles.body}>
-              {children}
-              {fabProps.show && (
-                <FAB
-                  placement={fabProps.placement}
-                  icon={
-                    <Icon
-                      name={fabProps.iconName}
-                      color={fabProps.iconColor}
-                      type={fabProps.iconType}
-                    />
-                  }
-                  color={fabProps.color}
-                  onPress={fabProps.onPress}
+          <View
+            style={{ ...styles.container, backgroundColor: backgroundColor }}>
+            {showLoadingIndicator && (
+              <PacmanIndicator size={70} color={theme.colors.primary} />
+            )}
+            {!showLoadingIndicator && !isLoading && (
+              <Animated.View
+                entering={FadeIn.duration(300)}
+                style={[styles.body, enablePadding && styles.paddingHori]}>
+                {children}
+              </Animated.View>
+            )}
+          </View>
+          {fabProps.show && (
+            <FAB
+              placement={fabProps.placement}
+              size={'medium'}
+              icon={
+                <Icon
+                  name={fabProps.iconName}
+                  color={fabProps.iconColor}
+                  type={fabProps.iconType}
                 />
-              )}
-            </Animated.View>
+              }
+              color={fabProps.color}
+              onPress={fabProps.onPress}
+              style={styles.fab}
+            />
           )}
         </>
       </HideKeyboard>
@@ -144,10 +175,15 @@ const BaseScreen = ({
 
 const getStyles = theme =>
   StyleSheet.create({
+    container: {
+      minHeight: '100%',
+    },
     body: {
-      paddingHorizontal: 26,
-      height: '100%',
+      minHeight: '100%',
       flex: 1,
+    },
+    paddingHori: {
+      paddingHorizontal: 26,
     },
     header: {
       backgroundColor: theme.colors.white,
@@ -171,6 +207,17 @@ const getStyles = theme =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'flex-start',
+    },
+    fab: {
+      backgroundColor: theme.colors.color1, // not the real backgroundColor, set to prevent warning
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 1,
+        height: 1,
+      },
+      shadowOpacity: 0.4,
+      shadowRadius: 3,
+      elevation: 4,
     },
   });
 

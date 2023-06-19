@@ -21,6 +21,7 @@ const BaseInput = forwardRef(
       onBlur = function () {},
       onFocus = function () {},
       containerStyle = {},
+      labelStyle = {},
       clearButtonMode = 'never', // IOS only
       pointerEvents = 'auto',
       maxLength = null,
@@ -51,7 +52,13 @@ const BaseInput = forwardRef(
         onChangeText={onChangeText}
         onBlur={handleBlur}
         placeholder={placeholder}
-        label={label !== '' && <BaseText h3>{label}</BaseText>}
+        label={
+          label !== '' && (
+            <BaseText h4 style={labelStyle}>
+              {label}
+            </BaseText>
+          )
+        }
         value={value}
         selectionColor={theme.colors.primary}
         onFocus={handleFocus}
@@ -83,19 +90,20 @@ export default BaseInput;
 const getStyles = theme =>
   StyleSheet.create({
     focused: {
-      borderBottomColor: theme.colors.primary,
+      borderBottomColor: theme.colors.color1,
       borderBottomWidth: 1,
     },
     blur: {
-      borderBottomColor: theme.colors.color5,
+      borderBottomColor: theme.colors.color8,
       borderBottomWidth: 1,
     },
     input: {
-      ...theme.fontStyles.h4,
+      ...theme.fontStyles.text2,
+      color: theme.colors.color6,
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 20,
+      marginBottom: 36,
     },
     inputContainer: {
       paddingVertical: 4,

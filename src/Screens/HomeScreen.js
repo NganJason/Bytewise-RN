@@ -60,12 +60,20 @@ export default HomeScreen;
 const getStyles = theme =>
   StyleSheet.create({
     tabBarIcon: {
-      marginTop: theme.spacing.md,
+      marginTop: theme.spacing.lg,
       height: '100%',
     },
-    tabBarLabel: { ...theme.fontStyles.caption },
+    tabBarLabel: { ...theme.fontStyles.text5, color: theme.colors.color7 },
     tabBar: {
-      borderTopColor: theme.colors.grey4,
+      borderTopColor: theme.colors.color9,
       backgroundColor: theme.colors.white,
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 1,
+        height: -1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 3,
     },
   });

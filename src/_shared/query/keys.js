@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 export const queryKeys = {
+  user: 'user',
   categories: 'categories',
   transactions: 'transactions',
   category: 'category',

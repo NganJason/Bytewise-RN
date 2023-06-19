@@ -9,6 +9,8 @@ import BaseListItem from './BaseListItem';
 import BaseRow from './BaseRow';
 import BaseOverlay from './BaseOverlay';
 import BaseImage from './BaseImage';
+import BaseChip from './BaseChip';
+import BaseTabView2 from './BaseTabView2';
 
 export {
   BaseBottomSheet,
@@ -22,4 +24,6 @@ export {
   BaseRow,
   BaseOverlay,
   BaseImage,
+  BaseChip,
+  BaseTabView2,
 };

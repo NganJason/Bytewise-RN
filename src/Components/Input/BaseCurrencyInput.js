@@ -13,6 +13,7 @@ const BaseCurrencyInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       autoFocus = false,
+      ...props
     },
     ref,
   ) => {
@@ -42,6 +43,7 @@ const BaseCurrencyInput = forwardRef(
         onChangeText={handleChangeText}
         keyboardType="numeric"
         autoFocus={autoFocus}
+        {...props}
       />
     );
   },

@@ -17,12 +17,10 @@ const AggrSummary = ({ aggrs = [] }) => {
         {aggrs.map((aggr, i) => (
           <React.Fragment key={i}>
             <Col style={styles.aggr}>
-              <BaseText h4 center style={styles.label}>
+              <BaseText text3 center style={styles.label}>
                 {aggr.label}:
               </BaseText>
-              <AmountText h4 showColor>
-                {aggr.amount}
-              </AmountText>
+              <AmountText text5>{aggr.amount}</AmountText>
             </Col>
             {i < aggrs.length - 1 && <BaseDivider orientation="vertical" />}
           </React.Fragment>

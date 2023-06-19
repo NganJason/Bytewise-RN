@@ -7,10 +7,14 @@ const BaseText = ({
   h2 = false,
   h3 = false,
   h4 = false,
-  h5 = false,
-  h6 = false,
-  p = true,
-  caption = false,
+  text1 = false,
+  text2 = false,
+  text3 = false,
+  text4 = false,
+  text5 = false,
+  btn1 = false,
+  btn2 = false,
+  btn3 = false,
   children = '',
   adjustsFontSizeToFit = false,
   numberOfLines = 0,
@@ -24,21 +28,34 @@ const BaseText = ({
   const getTextCommonStyles = () => {
     switch (true) {
       case h1:
-        return styles.h1Style;
+        return theme.fontStyles.h1;
       case h2:
-        return styles.h2Style;
+        return theme.fontStyles.h2;
       case h3:
-        return styles.h3Style;
+        return theme.fontStyles.h3;
       case h4:
-        return styles.h4Style;
-      case h5:
-        return styles.h5Style;
-      case h6:
-        return styles.h6Style;
-      case caption:
-        return styles.captionStyle;
-      case p:
-        return styles.pStyle;
+        return theme.fontStyles.h4;
+
+      case text1:
+        return theme.fontStyles.text1;
+      case text2:
+        return theme.fontStyles.text2;
+      case text3:
+        return theme.fontStyles.text3;
+      case text4:
+        return theme.fontStyles.text4;
+      case text5:
+        return theme.fontStyles.text5;
+
+      case btn1:
+        return styles.btn1Style;
+      case btn2:
+        return styles.btn2Style;
+      case btn3:
+        return styles.btn3Style;
+
+      default:
+        return theme.fontStyles.text3;
     }
   };
 
@@ -63,14 +80,6 @@ export default BaseText;
 
 const getStyles = theme =>
   StyleSheet.create({
-    h1Style: theme.fontStyles.h1,
-    h2Style: theme.fontStyles.h2,
-    h3Style: theme.fontStyles.h3,
-    h4Style: theme.fontStyles.h4,
-    h5Style: theme.fontStyles.h5,
-    h6Style: theme.fontStyles.h6,
-    pStyle: theme.fontStyles.p,
-    captionStyle: theme.fontStyles.caption,
     center: {
       width: '100%',
       textAlign: 'center',

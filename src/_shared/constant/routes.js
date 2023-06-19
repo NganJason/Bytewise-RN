@@ -1,6 +1,7 @@
 const ROUTES = {
   login: 'Login',
-  signup: 'signup',
+  signup: 'Signup',
+  homeWithDrawer: 'Home with drawer',
   home: 'Home',
   category: 'Category',
   categoryEdit: 'Category Edit',

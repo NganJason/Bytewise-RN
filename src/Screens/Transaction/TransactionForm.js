@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -14,7 +14,6 @@ import {
   BaseTabView,
   BaseText,
   TouchInput,
-  IconButton,
 } from '../../Components';
 
 import {
@@ -24,7 +23,7 @@ import {
 } from '../../_shared/apis/enum';
 
 import ROUTES from '../../_shared/constant/routes';
-import { DAYS } from '../../_shared/constant/constant';
+import { DAYS, EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetCategories, useGetTransaction } from '../../_shared/query';
 import {
   useCreateTransaction,
@@ -33,6 +32,7 @@ import {
 import { validateTransaction } from '../../_shared/apis/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { EmptyContent } from '../../Components/Common';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -201,21 +201,19 @@ const TransactionForm = ({ route }) => {
       ])}
       headerProps={{
         allowBack: true,
-        centerComponent: (
-          <BaseText h2>
-            {TRANSACTION_TYPES[transactionForm.transaction_type]}
-          </BaseText>
-        ),
+        centerComponent: <BaseText h2>Transaction</BaseText>,
       }}>
       <>
-        <BaseTabView
-          onPress={index => onTransactionTypeChange(index + 1)}
-          selectedIndex={transactionForm.transaction_type - 1}
-          titles={[
-            TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-            TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-          ]}
-        />
+        <View style={styles.tabContainer}>
+          <BaseTabView
+            onPress={index => onTransactionTypeChange(index + 1)}
+            selectedIndex={transactionForm.transaction_type - 1}
+            titles={[
+              TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+              TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+            ]}
+          />
+        </View>
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="always"
           extraHeight={scrollHeight}
@@ -275,17 +273,24 @@ const TransactionForm = ({ route }) => {
             onSelect={onCategoryChange}
             items={getCategories.data?.categories}
             label="category_name"
-            headerItems={[
-              <IconButton
-                iconName="edit"
-                iconType="fontawesome"
-                type="clear"
-                buttonSize="sm"
-                color="grey"
-                style={styles.editBtn}
-                onPress={onEditCategory}
-              />,
-            ]}
+            headerProps={{
+              leftComponent: (
+                <BaseButton
+                  title="Edit"
+                  type="clear"
+                  align="flex-end"
+                  size="md"
+                  onPress={onEditCategory}
+                />
+              ),
+            }}
+            renderEmptyItems={() => (
+              <EmptyContent
+                item={EmptyContentConfig.category}
+                route={ROUTES.categoryForm}
+                onRedirect={toggleCategoryModal}
+              />
+            )}
           />
           <BaseInput
             label="Note"
@@ -313,6 +318,9 @@ export default TransactionForm;
 
 const getStyles = _ =>
   StyleSheet.create({
+    tabContainer: {
+      marginBottom: 10,
+    },
     formBody: {
       paddingVertical: 22,
     },

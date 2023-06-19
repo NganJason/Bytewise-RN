@@ -13,6 +13,7 @@ const IconButton = ({
   iconSize = 28,
   color = THEME.colors.color4,
   align = 'center',
+  buttonStyle = {},
 }) => {
   return (
     <BaseButton
@@ -20,6 +21,7 @@ const IconButton = ({
       type={type}
       onPress={onPress}
       align={align}
+      buttonStyle={buttonStyle}
       icon={
         <Icon name={iconName} type={iconType} size={iconSize} color={color} />
       }

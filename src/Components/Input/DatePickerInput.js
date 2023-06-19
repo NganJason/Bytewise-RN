@@ -65,14 +65,14 @@ const DatePickerInput = ({
               title="Cancel"
               type="clear"
               align="flex-end"
-              size="sm"
+              size="md"
               onPress={onCancel}
             />
             <BaseButton
               title="Done"
               type="clear"
               align="flex-end"
-              size="sm"
+              size="md"
               onPress={onDone}
             />
           </View>

@@ -5,15 +5,22 @@ import { useNavigation } from '@react-navigation/native';
 import {
   BaseScreen,
   BaseText,
-  IconButton,
   BaseScrollView,
-  BaseListItem,
+  BaseButton,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
+import {
+  TRANSACTION_TYPES,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+} from '../../_shared/apis/enum';
 import { useGetCategories } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import EmptyContent from '../../Components/Common/EmptyContent';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { BaseRow, BaseTabView } from '../../Components/View';
+import { useState } from 'react';
 
 const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -22,7 +29,43 @@ const CategoryEditScreen = ({ route }) => {
 
   const { category_type = TRANSACTION_TYPE_EXPENSE } = route.params || {};
 
-  const getCategoriesQuery = useGetCategories({ category_type: category_type });
+  const getCategoriesQuery = useGetCategories({});
+
+  const [categoryType, setCategoryType] = useState(category_type);
+  const onCategoryTypeChange = type => {
+    setCategoryType(type);
+  };
+
+  const renderRows = () => {
+    let rows = [];
+
+    getCategoriesQuery.data?.categories?.map((category, i) => {
+      if (category.category_type === categoryType) {
+        rows.push(
+          <BaseRow
+            key={i}
+            onPress={() => {
+              navigation.navigate(ROUTES.categoryForm, {
+                category_id: category.category_id,
+              });
+            }}>
+            <BaseText text2>{category.category_name}</BaseText>
+          </BaseRow>,
+        );
+      }
+    });
+
+    if (rows.length === 0 && !getCategoriesQuery.isLoading) {
+      return (
+        <EmptyContent
+          item={EmptyContentConfig.category}
+          route={ROUTES.categoryForm}
+        />
+      );
+    }
+
+    return rows;
+  };
 
   return (
     <BaseScreen
@@ -30,41 +73,27 @@ const CategoryEditScreen = ({ route }) => {
       errorToast={renderErrorsToast([getCategoriesQuery])}
       headerProps={{
         allowBack: true,
-        centerComponent: <BaseText h2>Category</BaseText>,
-        rightComponent: (
-          <IconButton
-            iconName="add"
-            type="clear"
-            buttonSize="sm"
-            onPress={() => {
-              navigation.navigate(ROUTES.categoryForm);
-            }}
-          />
-        ),
+        centerComponent: <BaseText h2>Categories</BaseText>,
       }}>
+      <BaseTabView
+        onPress={idx => onCategoryTypeChange(idx + 1)}
+        selectedIndex={categoryType - 1}
+        titles={[
+          TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+          TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+        ]}
+      />
+      <View style={styles.buttonContainer}>
+        <BaseButton
+          title="Add category"
+          type="secondary"
+          align="flex-end"
+          size="sm"
+          onPress={() => navigation.navigate(ROUTES.categoryForm)}
+        />
+      </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {getCategoriesQuery.data?.categories?.map((category, i) => {
-          return (
-            <BaseListItem key={i} showDivider dividerMargin={6}>
-              <View style={styles.row}>
-                <BaseText h4>{category.category_name}</BaseText>
-                <IconButton
-                  iconSize={20}
-                  iconName="edit"
-                  iconType="entypo"
-                  color={theme.colors.color5}
-                  type="clear"
-                  buttonSize="xs"
-                  onPress={() => {
-                    navigation.navigate(ROUTES.categoryForm, {
-                      category_id: category.category_id,
-                    });
-                  }}
-                />
-              </View>
-            </BaseListItem>
-          );
-        })}
+        {renderRows()}
       </BaseScrollView>
     </BaseScreen>
   );
@@ -76,6 +105,9 @@ const getStyles = _ => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: '100%',
+    },
+    buttonContainer: {
+      marginVertical: 14,
     },
   });
 };

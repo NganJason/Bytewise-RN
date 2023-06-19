@@ -14,6 +14,7 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { getDate, getDay } from '../../_shared/util/date';
+import { BaseChip } from '../View';
 
 const DailyTransactions = ({
   timestamp = 0,
@@ -73,16 +74,10 @@ const DailyTransactions = ({
     <View style={styles.body}>
       <View style={styles.row}>
         <View style={styles.titleItem}>
-          <BaseText h2 style={styles.titleItemText}>
+          <BaseText text1 style={styles.titleItemText}>
             {`${getDate(ts)}`.padStart(2, '0')}
           </BaseText>
-          <Chip
-            radius={5}
-            size="sm"
-            containerStyle={styles.chip}
-            titleStyle={styles.chipText}>
-            {DAYS[getDay(ts)]}
-          </Chip>
+          <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
         </View>
         <AmountText showColor style={styles.sumText}>
           {computeAmountSum()}
@@ -97,7 +92,7 @@ const DailyTransactions = ({
               dividerMargin={4}>
               <View style={styles.listItemContent}>
                 <BaseText
-                  h6
+                  text5
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
@@ -105,7 +100,7 @@ const DailyTransactions = ({
                 </BaseText>
                 <View style={styles.noteWrapper}>
                   <BaseText
-                    h5
+                    text3
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
@@ -113,10 +108,10 @@ const DailyTransactions = ({
                   </BaseText>
                 </View>
                 <AmountText
-                  h5
+                  text5
                   style={styles.amount}
                   numberOfLines={1}
-                  showColor
+                  showSymbol
                   ellipsizeMode="tail">
                   {renderTransactionAmount(t.amount, t.transaction_type)}
                 </AmountText>
@@ -134,7 +129,7 @@ export default DailyTransactions;
 const getStyles = theme =>
   StyleSheet.create({
     body: {
-      marginBottom: 18,
+      marginBottom: 26,
     },
     row: {
       flexDirection: 'row',
@@ -150,18 +145,10 @@ const getStyles = theme =>
     titleItemText: {
       fontWeight: 'bold',
     },
-    chip: {
-      marginLeft: 10,
-    },
-    chipText: {
-      fontSize: 10,
-      fontWeight: 'bold',
-    },
     sumText: {
       flex: 1,
       textAlign: 'right',
-      fontFamily: theme.fontStyles.h4.fontFamily,
-      fontSize: theme.fontStyles.h4.fontSize,
+      ...theme.fontStyles.text3,
     },
     listItem: {
       paddingHorizontal: 0,
@@ -172,10 +159,10 @@ const getStyles = theme =>
     },
     category: {
       flex: 1,
-      color: theme.colors.color5,
+      color: theme.colors.color6,
     },
     account: {
-      color: theme.colors.color5,
+      color: theme.colors.color6,
     },
     noteWrapper: {
       flex: 2,
@@ -187,7 +174,6 @@ const getStyles = theme =>
     amount: {
       flex: 1,
       textAlign: 'right',
-      fontFamily: theme.fontStyles.h4.fontFamily,
-      fontSize: theme.fontStyles.h4.fontSize,
+      ...theme.fontStyles.text3,
     },
   });
