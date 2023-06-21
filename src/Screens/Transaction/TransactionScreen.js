@@ -87,10 +87,12 @@ const TransactionScreen = ({ navigation }) => {
 
     if (rows.length === 0 && !getTransactionsQuery.isLoading) {
       return (
-        <EmptyContent
-          item={EmptyContentConfig.transaction}
-          route={ROUTES.transactionForm}
-        />
+        <View style={styles.emptyContent}>
+          <EmptyContent
+            item={EmptyContentConfig.transaction}
+            route={ROUTES.transactionForm}
+          />
+        </View>
       );
     }
 
@@ -156,6 +158,9 @@ const TransactionScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
+    emptyContent: {
+      marginTop: '30%',
+    },
     aggrContainer: {
       marginBottom: 22,
     },

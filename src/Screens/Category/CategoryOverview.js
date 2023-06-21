@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import {
-  BaseScreen,
-  DateNavigator,
   BaseScrollView,
   BaseText,
   AmountText,
-  BaseButton,
   BaseTabView,
 } from '../../Components';
 
@@ -24,29 +21,31 @@ import {
 } from '../../_shared/util/date';
 import ROUTES from '../../_shared/constant/routes';
 import { useGetCategories } from '../../_shared/query';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import { useAggrTransactions } from '../../_shared/query';
 import { capitalizeWords } from '../../_shared/util/string';
 import { BaseRow } from '../../Components/View';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { useNavigation } from '@react-navigation/native';
 
-const TODAY = new Date();
-
-const CategoryScreen = ({ navigation }) => {
+const CategoryOverview = ({ activeDate = new Date() }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
-  const [activeDate, setActiveDate] = useState(TODAY);
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
+  useEffect(() => {
+    setTimeRange(
+      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+    );
+  }, [activeDate]);
 
   const [categoryType, setCategoryType] = useState(TRANSACTION_TYPE_EXPENSE);
   const onCategoryTypeChange = type => {
     setCategoryType(type);
   };
-
   const getCategoriesQuery = useGetCategories({});
 
   const renderRows = () => {
@@ -77,10 +76,12 @@ const CategoryScreen = ({ navigation }) => {
 
     if (rows.length === 0 && !getCategoriesQuery.isLoading) {
       return (
-        <EmptyContent
-          item={EmptyContentConfig.category}
-          route={ROUTES.categoryForm}
-        />
+        <View style={styles.emptyContent}>
+          <EmptyContent
+            item={EmptyContentConfig.category}
+            route={ROUTES.categoryForm}
+          />
+        </View>
       );
     }
 
@@ -114,11 +115,7 @@ const CategoryScreen = ({ navigation }) => {
     },
   );
 
-  const onDateMove = newDate => {
-    setActiveDate(newDate);
-    setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
-  };
-
+  // TODO: Add back later
   const isScreenLoading = () => {
     return (
       getCategoriesQuery.isLoading ||
@@ -128,56 +125,34 @@ const CategoryScreen = ({ navigation }) => {
   };
 
   return (
-    <BaseScreen
-      isLoading={isScreenLoading()}
-      errorToast={renderErrorsToast([
-        getCategoriesQuery,
-        aggrTransactionsByTypeQuery,
-        aggrTransactionsByCategoryQuery,
-      ])}
-      headerProps={{
-        allowBack: false,
-        allowDrawer: true,
-        centerComponent: (
-          <DateNavigator
-            startingDate={activeDate}
-            onForward={onDateMove}
-            onBackward={onDateMove}
-          />
-        ),
-      }}
-      fabProps={{
-        show: true,
-        placement: 'right',
-        iconName: 'plus',
-        iconType: 'entypo',
-        iconColor: theme.colors.white,
-        color: theme.colors.color1,
-        onPress: () => navigation.navigate(ROUTES.categoryForm),
-      }}>
-      <>
-        <View style={styles.tabContainer}>
-          <BaseTabView
-            onPress={idx => onCategoryTypeChange(idx + 1)}
-            selectedIndex={categoryType - 1}
-            titles={[
-              TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-            ]}
-          />
-        </View>
-        <BaseScrollView showsVerticalScrollIndicator={false}>
-          {renderRows()}
-        </BaseScrollView>
-      </>
-    </BaseScreen>
+    <View style={styles.screen}>
+      <View style={styles.tabContainer}>
+        <BaseTabView
+          onPress={idx => onCategoryTypeChange(idx + 1)}
+          selectedIndex={categoryType - 1}
+          titles={[
+            TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
+            TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
+          ]}
+        />
+      </View>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
+        {renderRows()}
+      </BaseScrollView>
+    </View>
   );
 };
 
-export default CategoryScreen;
+export default CategoryOverview;
 
 const getStyles = _ =>
   StyleSheet.create({
+    emptyContent: {
+      marginTop: '30%',
+    },
+    screen: {
+      height: '100%',
+    },
     tabContainer: {
       marginBottom: 14,
     },

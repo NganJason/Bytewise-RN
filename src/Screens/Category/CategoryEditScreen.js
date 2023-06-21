@@ -57,10 +57,12 @@ const CategoryEditScreen = ({ route }) => {
 
     if (rows.length === 0 && !getCategoriesQuery.isLoading) {
       return (
-        <EmptyContent
-          item={EmptyContentConfig.category}
-          route={ROUTES.categoryForm}
-        />
+        <View style={styles.emptyContent}>
+          <EmptyContent
+            item={EmptyContentConfig.category}
+            route={ROUTES.categoryForm}
+          />
+        </View>
       );
     }
 
@@ -101,6 +103,9 @@ const CategoryEditScreen = ({ route }) => {
 
 const getStyles = _ => {
   return StyleSheet.create({
+    emptyContent: {
+      marginTop: '30%',
+    },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',

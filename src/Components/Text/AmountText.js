@@ -11,6 +11,7 @@ const AmountText = ({
   showSymbol = false,
   center = false,
   style = {},
+  decimal = 2,
   ...props
 }) => {
   const { theme } = useTheme();
@@ -40,7 +41,7 @@ const AmountText = ({
       children = children * -1;
     }
 
-    const amount = children.toFixed(2);
+    const amount = children.toFixed(decimal);
 
     // add currency
     text = `${CURRENCY} ${amount}`;

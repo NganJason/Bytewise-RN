@@ -50,7 +50,7 @@ export const EmptyContentConfig = {
     text: 'No monthly budget yet',
     image: sapiens2,
   },
-  yearlyBudget: {
+  annualBudget: {
     text: 'No annual budget yet',
     image: sapiens1,
   },

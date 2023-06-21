@@ -79,7 +79,7 @@ const BudgetScreen = () => {
           item={
             type === BUDGET_TYPE_MONTHLY
               ? EmptyContentConfig.monthlyBudget
-              : EmptyContentConfig.yearlyBudget
+              : EmptyContentConfig.annualBudget
           }
           route={ROUTES.budgetForm}
         />
@@ -138,7 +138,6 @@ const BudgetScreen = () => {
           <View style={styles.title}>
             <BaseText h3>Monthly</BaseText>
           </View>
-
           {renderRows(BUDGET_TYPE_MONTHLY)}
         </View>
 

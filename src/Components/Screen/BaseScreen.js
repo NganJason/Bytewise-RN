@@ -122,19 +122,18 @@ const BaseScreen = ({
 
   return (
     <>
-      <Header
-        containerStyle={[
-          styles.header,
-          isEmptyHeader() && styles.emptyHeader,
-          { backgroundColor: backgroundColor },
-        ]}
-        leftComponent={getLeftComponent()}
-        centerComponent={headerProps.centerComponent}
-        rightComponent={headerProps.rightComponent}
-        leftContainerStyle={styles.leftComponentStyle}
-        centerContainerStyle={styles.centerComponentStyle}
-        rightContainerStyle={styles.rightComponentStyle}
-      />
+      {!isEmptyHeader() && (
+        <Header
+          containerStyle={[styles.header, { backgroundColor: backgroundColor }]}
+          leftComponent={getLeftComponent()}
+          centerComponent={headerProps.centerComponent}
+          rightComponent={headerProps.rightComponent}
+          leftContainerStyle={styles.leftComponentStyle}
+          centerContainerStyle={styles.centerComponentStyle}
+          rightContainerStyle={styles.rightComponentStyle}
+        />
+      )}
+
       <HideKeyboard>
         <>
           <View

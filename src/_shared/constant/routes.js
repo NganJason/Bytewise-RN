@@ -3,7 +3,7 @@ const ROUTES = {
   signup: 'Signup',
   homeWithDrawer: 'Home with drawer',
   home: 'Home',
-  category: 'Category',
+  overview: 'Overview',
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',
   categoryBreakdown: 'Category Breakdown',

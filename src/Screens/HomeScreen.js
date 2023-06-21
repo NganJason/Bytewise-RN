@@ -3,12 +3,12 @@ import { useTheme } from '@rneui/themed';
 import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
-import CategoryScreen from './Category/CategoryScreen';
 import TransactionScreen from './Transaction/TransactionScreen';
 
 import ROUTES from '../_shared/constant/routes';
 
 import glyphMap from '../../assets/icons/unicodesMap.json';
+import OverviewScreen from './Overview/OverviewScreen';
 
 const Tab = createBottomTabNavigator();
 const Icon = createIconSet(glyphMap, 'Nucleo');
@@ -20,7 +20,7 @@ const HomeScreen = () => {
   const renderTabIcon = (routeName, { color, size }) => {
     let iconName;
     switch (routeName) {
-      case ROUTES.category:
+      case ROUTES.overview:
         iconName = 'icon-budget';
         break;
       case ROUTES.transaction:
@@ -49,7 +49,7 @@ const HomeScreen = () => {
         tabBarIcon: ({ _, color, size }) =>
           renderTabIcon(route.name, { color, size }),
       })}>
-      <Tab.Screen name={ROUTES.category} component={CategoryScreen} />
+      <Tab.Screen name={ROUTES.overview} component={OverviewScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
     </Tab.Navigator>
   );

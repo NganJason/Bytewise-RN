@@ -15,7 +15,7 @@ const COLORS = {
 
   veryLightBlue: '#F3F7FB',
 
-  red: '#CE3535',
+  red: '#EA6F7C',
   white: '#FFF',
 
   disabled: '#E3E6E8',

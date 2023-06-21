@@ -65,80 +65,84 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
-      enableOnAndroid={true}
-      keyboardOpeningTime={0}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.screen}>
-      <View>
+    <BaseScreen errorToast={renderErrorsToast([getLoginError()])}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        enableOnAndroid={true}
+        keyboardOpeningTime={0}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.screen}>
         <View>
-          <BaseText h2 style={styles.title}>
-            Pocketeer
-          </BaseText>
-          <BaseText h4 style={styles.tagline}>
-            Your personal financial companion
-          </BaseText>
-          <BaseImage
-            width={screenWidth * 0.7}
-            height={screenWidth * 0.6}
-            source={loginHero}
-          />
-        </View>
-
-        <View>
-          <BaseInput
-            placeholder="Username"
-            leftIcon={
-              <Icon
-                name="email-outline"
-                type="material-community"
-                color={theme.colors.color8}
-              />
-            }
-            value={loginForm.username}
-            onChangeText={onUsernameChange}
-            maxLength={60}
-            onBlur={onUsernameBlur}
-            errorMessage={formInputsTouched.username && formErrors.username}
-            containerStyle={styles.input}
-          />
-          <BaseInput
-            placeholder="Password"
-            leftIcon={
-              <Icon name="lock" type="feather" color={theme.colors.color8} />
-            }
-            value={loginForm.password}
-            onChangeText={onPasswordChange}
-            secureTextEntry
-            onBlur={onPasswordBlur}
-            errorMessage={formInputsTouched.password && formErrors.password}
-            containerStyle={styles.input}
-          />
-        </View>
-
-        <View>
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Log In"
-              size="lg"
-              width={200}
-              onPress={onLogin}
-              loading={isLoginLoading}
-              disabled={Object.keys(formErrors).length !== 0}
+          <View>
+            <BaseText h2 style={styles.title}>
+              Pocketeer
+            </BaseText>
+            <BaseText h4 style={styles.tagline}>
+              Your personal financial companion
+            </BaseText>
+            <BaseImage
+              width={screenWidth * 0.7}
+              height={screenWidth * 0.6}
+              source={loginHero}
             />
           </View>
-          <View style={styles.signUpContainer}>
-            <BaseText style={{ color: theme.colors.color7 }} text2>
-              Not a user?{' '}
-            </BaseText>
-            <LinkText text2 onPress={() => navigation.navigate(ROUTES.signup)}>
-              Sign up now
-            </LinkText>
+
+          <View>
+            <BaseInput
+              placeholder="Username"
+              leftIcon={
+                <Icon
+                  name="email-outline"
+                  type="material-community"
+                  color={theme.colors.color8}
+                />
+              }
+              value={loginForm.username}
+              onChangeText={onUsernameChange}
+              maxLength={60}
+              onBlur={onUsernameBlur}
+              errorMessage={formInputsTouched.username && formErrors.username}
+              containerStyle={styles.input}
+            />
+            <BaseInput
+              placeholder="Password"
+              leftIcon={
+                <Icon name="lock" type="feather" color={theme.colors.color8} />
+              }
+              value={loginForm.password}
+              onChangeText={onPasswordChange}
+              secureTextEntry
+              onBlur={onPasswordBlur}
+              errorMessage={formInputsTouched.password && formErrors.password}
+              containerStyle={styles.input}
+            />
+          </View>
+
+          <View>
+            <View style={styles.btnContainer}>
+              <BaseButton
+                title="Log In"
+                size="lg"
+                width={200}
+                onPress={onLogin}
+                loading={isLoginLoading}
+                disabled={Object.keys(formErrors).length !== 0}
+              />
+            </View>
+            <View style={styles.signUpContainer}>
+              <BaseText style={{ color: theme.colors.color7 }} text2>
+                Not a user?{' '}
+              </BaseText>
+              <LinkText
+                text2
+                onPress={() => navigation.navigate(ROUTES.signup)}>
+                Sign up now
+              </LinkText>
+            </View>
           </View>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </BaseScreen>
   );
 };
 
@@ -147,7 +151,6 @@ const getStyles = theme => {
     screen: {
       justifyContent: 'center',
       height: '100%',
-      paddingHorizontal: theme.spacing.xl,
     },
     title: {
       marginBottom: 6,

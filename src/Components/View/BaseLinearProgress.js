@@ -5,11 +5,18 @@ const BaseLinearProgress = ({ value = 0 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const getColor = () => {
+    if (value >= 1) {
+      return theme.colors.red;
+    }
+    return theme.colors.color2;
+  };
+
   return (
     <LinearProgress
       style={styles.progressBar}
-      trackColor={theme.colors.color2}
-      color={theme.colors.color1}
+      trackColor={theme.colors.color9}
+      color={getColor()}
       value={value}
     />
   );
@@ -20,6 +27,7 @@ export default BaseLinearProgress;
 const getStyles = _ =>
   StyleSheet.create({
     progressBar: {
-      height: 6,
+      height: 2.5,
+      borderRadius: 10,
     },
   });
