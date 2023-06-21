@@ -80,6 +80,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   };
 
   return (
+    // TODO extract baseScreen loading feature
     <View style={styles.screen}>
       <BaseScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>

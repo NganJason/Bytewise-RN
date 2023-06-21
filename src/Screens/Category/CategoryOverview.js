@@ -125,6 +125,7 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
   };
 
   return (
+    // TODO extract baseScreen loading feature
     <View style={styles.screen}>
       <View style={styles.tabContainer}>
         <BaseTabView
