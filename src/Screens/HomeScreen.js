@@ -9,6 +9,7 @@ import ROUTES from '../_shared/constant/routes';
 
 import glyphMap from '../../assets/icons/unicodesMap.json';
 import OverviewScreen from './Overview/OverviewScreen';
+import AccountScreen from './Account/AccountScreen';
 
 const Tab = createBottomTabNavigator();
 const Icon = createIconSet(glyphMap, 'Nucleo');
@@ -26,10 +27,14 @@ const HomeScreen = () => {
       case ROUTES.transaction:
         iconName = 'icon-transaction';
         break;
+      case ROUTES.account:
+        iconName = 'icon-transaction';
+        break;
     }
     return (
       <Icon
         name={iconName}
+        type={'feather'}
         color={color}
         size={size}
         style={styles.tabBarIcon}
@@ -51,6 +56,7 @@ const HomeScreen = () => {
       })}>
       <Tab.Screen name={ROUTES.overview} component={OverviewScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
+      <Tab.Screen name={ROUTES.account} component={AccountScreen} />
     </Tab.Navigator>
   );
 };

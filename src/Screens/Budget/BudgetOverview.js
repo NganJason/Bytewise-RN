@@ -1,7 +1,8 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { BaseScrollView, BaseText } from '../../Components';
+import { BaseText } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
+import { BaseLoadableView } from '../../Components/View';
 import {
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
@@ -80,9 +81,8 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   };
 
   return (
-    // TODO extract baseScreen loading feature
     <View style={styles.screen}>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
+      <BaseLoadableView scrollable={true}>
         <View style={styles.container}>
           <View style={styles.title}>
             <BaseText h3>Monthly</BaseText>
@@ -96,7 +96,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
           </View>
           {renderRows(BUDGET_TYPE_ANNUAL)}
         </View>
-      </BaseScrollView>
+      </BaseLoadableView>
     </View>
   );
 };

@@ -11,6 +11,7 @@ const ROUTES = {
   budgetForm: 'Budget Form',
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
+  account: 'Account',
   asset: 'Asset',
   assetAccount: 'Asset Account',
   investmentAccount: 'Investment Account',

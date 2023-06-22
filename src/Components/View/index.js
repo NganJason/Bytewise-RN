@@ -11,6 +11,7 @@ import BaseOverlay from './BaseOverlay';
 import BaseImage from './BaseImage';
 import BaseChip from './BaseChip';
 import BaseScrollableTab from './BaseScrollableTab';
+import BaseLoadableView from './BaseLoadableView';
 
 export {
   BaseBottomSheet,
@@ -26,4 +27,5 @@ export {
   BaseImage,
   BaseChip,
   BaseScrollableTab,
+  BaseLoadableView,
 };

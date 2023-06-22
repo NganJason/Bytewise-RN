@@ -41,10 +41,11 @@ const AmountText = ({
       children = children * -1;
     }
 
-    const amount = children.toFixed(decimal);
+    const amount = Number(children.toFixed(decimal));
+    const amountStr = amount.toLocaleString();
 
     // add currency
-    text = `${CURRENCY} ${amount}`;
+    text = `${CURRENCY} ${amountStr}`;
 
     // add + or -
     if (showSymbol) {

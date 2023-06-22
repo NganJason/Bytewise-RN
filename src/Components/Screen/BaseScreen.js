@@ -1,15 +1,10 @@
-import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { PacmanIndicator } from 'react-native-indicators';
-import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { IconButton } from '../Touch';
-import { BaseToast } from '../View';
+import { BaseLoadableView, BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
-
-const WAIT_TIME_FOR_INDICATOR = 500;
 
 const BaseScreen = ({
   children,
@@ -30,6 +25,7 @@ const BaseScreen = ({
     centerComponent: null,
     rightComponent: null,
   },
+  allowLoadable = true,
   isLoading = false,
   enablePadding = true,
   errorToast = {
@@ -42,45 +38,6 @@ const BaseScreen = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
-
-  useEffect(() => {
-    let timer = null;
-
-    if (isLoading) {
-      timer = setTimeout(() => {
-        // will only show indicator if isLoading takes too long to become false
-        setShowLoadingIndicator(true);
-      }, WAIT_TIME_FOR_INDICATOR);
-    } else {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-      setShowLoadingIndicator(false);
-    }
-
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (errorToast.show) {
-      BaseToast.show({
-        type: 'error',
-        text1: errorToast.message1,
-        text2: errorToast.message2,
-        onHide: errorToast.onHide,
-      });
-    }
-  }, [
-    errorToast.show,
-    errorToast.message1,
-    errorToast.message2,
-    errorToast.onHide,
-  ]);
 
   const isEmptyHeader = () =>
     !headerProps.allowBack &&
@@ -136,19 +93,24 @@ const BaseScreen = ({
 
       <HideKeyboard>
         <>
-          <View
-            style={{ ...styles.container, backgroundColor: backgroundColor }}>
-            {showLoadingIndicator && (
-              <PacmanIndicator size={70} color={theme.colors.primary} />
-            )}
-            {!showLoadingIndicator && !isLoading && (
-              <Animated.View
-                entering={FadeIn.duration(300)}
-                style={[styles.body, enablePadding && styles.paddingHori]}>
-                {children}
-              </Animated.View>
-            )}
-          </View>
+          {allowLoadable ? (
+            <BaseLoadableView
+              isLoading={isLoading}
+              containerStyle={[
+                enablePadding && styles.paddingHori,
+                { backgroundColor: backgroundColor },
+              ]}>
+              {children}
+            </BaseLoadableView>
+          ) : (
+            <View
+              style={[
+                enablePadding && styles.paddingHori,
+                { backgroundColor: backgroundColor },
+              ]}>
+              {children}
+            </View>
+          )}
           {fabProps.show && (
             <FAB
               placement={fabProps.placement}

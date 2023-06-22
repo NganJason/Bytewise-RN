@@ -2,12 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-import {
-  BaseScrollView,
-  BaseText,
-  AmountText,
-  BaseTabView,
-} from '../../Components';
+import { BaseText, AmountText, BaseTabView } from '../../Components';
 
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -23,7 +18,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
 import { capitalizeWords } from '../../_shared/util/string';
-import { BaseRow } from '../../Components/View';
+import { BaseLoadableView, BaseRow } from '../../Components/View';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useNavigation } from '@react-navigation/native';
@@ -125,7 +120,6 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
   };
 
   return (
-    // TODO extract baseScreen loading feature
     <View style={styles.screen}>
       <View style={styles.tabContainer}>
         <BaseTabView
@@ -137,9 +131,9 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
           ]}
         />
       </View>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
+      <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
         {renderRows()}
-      </BaseScrollView>
+      </BaseLoadableView>
     </View>
   );
 };

@@ -56,6 +56,7 @@ const OverviewScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
+      allowLoadable={false}
       headerProps={{
         allowBack: false,
         allowDrawer: true,

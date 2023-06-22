@@ -7,7 +7,6 @@ import {
   DateNavigator,
   DailyTransactions,
   AggrSummary,
-  BaseScrollView,
 } from '../../Components';
 
 import {
@@ -26,6 +25,7 @@ import {
 } from '../../_shared/apis/enum';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { BaseLoadableView } from '../../Components/View';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -102,6 +102,7 @@ const TransactionScreen = ({ navigation }) => {
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
+      allowLoadable={false}
       backgroundColor={theme.colors.color10}
       enablePadding={false}
       errorToast={renderErrorsToast([
@@ -148,9 +149,7 @@ const TransactionScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.body}>
-        <BaseScrollView showsVerticalScrollIndicator={false}>
-          {renderRows()}
-        </BaseScrollView>
+        <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
       </View>
     </BaseScreen>
   );
