@@ -39,6 +39,9 @@ const CategoryForm = ({ route }) => {
 
   // decide if form is create or edit
   const categoryID = route.params?.category_id || '';
+  const isAddCategory = () => {
+    return categoryID === '';
+  };
 
   const getCategory = useGetCategory(
     { category_id: categoryID },
@@ -108,7 +111,11 @@ const CategoryForm = ({ route }) => {
       ])}
       headerProps={{
         allowBack: true,
-        centerComponent: <BaseText h2>Category</BaseText>,
+        centerComponent: (
+          <BaseText h2>
+            {isAddCategory() ? 'Add category' : 'Edit category'}
+          </BaseText>
+        ),
       }}>
       <View style={styles.formBody}>
         <BaseInput
@@ -126,23 +133,29 @@ const CategoryForm = ({ route }) => {
             onToggle={onCategoryTypeChange}
           />
         )}
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onFormSubmit}
-          loading={isFormButtonLoading()}
-          disabled={!isValidCategory()}
-        />
+        <View style={styles.btnContainer}>
+          <BaseButton
+            title="Save"
+            size="lg"
+            width={200}
+            onPress={onFormSubmit}
+            loading={isFormButtonLoading()}
+            disabled={!isValidCategory()}
+          />
+        </View>
       </View>
     </BaseScreen>
   );
 };
 
-const getStyles = _ => {
+const getStyles = theme => {
   return StyleSheet.create({
     formBody: {
       paddingVertical: 22,
+    },
+    btnContainer: {
+      marginTop: theme.spacing.lg,
+      marginBottom: theme.spacing.md,
     },
   });
 };

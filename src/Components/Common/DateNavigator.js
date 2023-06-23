@@ -13,8 +13,6 @@ const DateNavigator = ({
   onForward = function () {},
   onBackward = function () {},
   year = false,
-  h2 = true,
-  h3 = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -60,16 +58,16 @@ const DateNavigator = ({
         iconName="chevron-left"
         type="entypo"
         onPress={moveBackward}
-        color={theme.colors.grey2}
+        color={theme.colors.color8}
       />
-      <BaseText h2={h3 ? false : h2} h3={h3} style={styles.date}>
+      <BaseText h3 style={styles.date}>
         {renderDate()}
       </BaseText>
       <IconButton
         iconName="chevron-right"
         type="entypo"
         onPress={moveForward}
-        color={theme.colors.grey2}
+        color={theme.colors.color8}
       />
     </View>
   );
@@ -84,7 +82,7 @@ const getStyles = theme =>
       alignItems: 'center',
     },
     date: {
-      color: theme.colors.primary,
+      color: theme.colors.color6,
       width: 100,
       textAlign: 'center',
     },

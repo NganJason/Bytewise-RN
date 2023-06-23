@@ -33,7 +33,7 @@ const TouchSelector = ({
             <Icon
               name="chevron-right"
               type="entypo"
-              color={theme.colors.color5}
+              color={theme.colors.color6}
             />
             <BaseText h4>{title}</BaseText>
           </View>
@@ -55,7 +55,7 @@ const TouchSelector = ({
   );
 };
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     container: {
       width: '100%',

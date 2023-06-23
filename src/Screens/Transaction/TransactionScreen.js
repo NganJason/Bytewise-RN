@@ -24,6 +24,8 @@ import {
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
+import { EmptyContent } from '../../Components/Common';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -70,9 +72,38 @@ const TransactionScreen = ({ navigation }) => {
   const isScreenLoading = () =>
     getTransactionsQuery.isLoading && aggrTransactionsQuery.isLoading;
 
+  const renderRows = () => {
+    let rows = [];
+
+    transactionTimes.map((tt, i) =>
+      rows.push(
+        <DailyTransactions
+          key={i}
+          transactions={transactionGroups[tt]}
+          timestamp={tt}
+        />,
+      ),
+    );
+
+    if (rows.length === 0 && !getTransactionsQuery.isLoading) {
+      return (
+        <View style={styles.emptyContent}>
+          <EmptyContent
+            item={EmptyContentConfig.transaction}
+            route={ROUTES.transactionForm}
+          />
+        </View>
+      );
+    }
+
+    return rows;
+  };
+
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
+      backgroundColor={theme.colors.color10}
+      enablePadding={false}
       errorToast={renderErrorsToast([
         getTransactionsQuery,
         aggrTransactionsQuery,
@@ -90,9 +121,10 @@ const TransactionScreen = ({ navigation }) => {
       fabProps={{
         show: true,
         placement: 'right',
-        iconName: 'add',
+        iconName: 'plus',
+        iconType: 'entypo',
         iconColor: theme.colors.white,
-        color: theme.colors.primary,
+        color: theme.colors.color1,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
       <View style={styles.aggrContainer}>
@@ -115,23 +147,36 @@ const TransactionScreen = ({ navigation }) => {
           ]}
         />
       </View>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
-        {transactionTimes.map((tt, i) => (
-          <DailyTransactions
-            key={i}
-            transactions={transactionGroups[tt]}
-            timestamp={tt}
-          />
-        ))}
-      </BaseScrollView>
+      <View style={styles.body}>
+        <BaseScrollView showsVerticalScrollIndicator={false}>
+          {renderRows()}
+        </BaseScrollView>
+      </View>
     </BaseScreen>
   );
 };
 
-const getStyles = _ => {
+const getStyles = theme => {
   return StyleSheet.create({
+    emptyContent: {
+      marginTop: '30%',
+    },
     aggrContainer: {
       marginBottom: 22,
+    },
+    body: {
+      height: '100%',
+      padding: theme.spacing.xl,
+      backgroundColor: theme.colors.white,
+      borderRadius: 20,
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 2,
+        height: -5,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 10,
+      elevation: 10,
     },
   });
 };

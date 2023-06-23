@@ -1,7 +1,6 @@
-import { useContext, useState, useEffect } from 'react';
-import { Icon, useTheme, Divider } from '@rneui/themed';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Icon, useTheme } from '@rneui/themed';
 
 import {
   BaseButton,
@@ -17,6 +16,8 @@ import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useNavigation } from '@react-navigation/native';
 import { validateUser } from '../../_shared/apis/user';
 
 const SignupScreen = () => {
@@ -57,6 +58,7 @@ const SignupScreen = () => {
   };
 
   const { signup, isSignupLoading, getSignupError } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   const onSignup = () => {
     signup(signupForm);
@@ -71,16 +73,14 @@ const SignupScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.screen}>
         <View>
-          <BaseText
-            h1
-            style={{ color: theme.colors.color1, ...styles.titleSpacing }}>
-            Join us!
+          <BaseText h2 style={styles.title}>
+            Join us
           </BaseText>
-          <BaseText h3 style={styles.titleSpacing}>
+          <BaseText h4 style={styles.tagline}>
             Achieve your financial goals
           </BaseText>
           <BaseImage
-            width={screenWidth * 0.8}
+            width={screenWidth * 0.7}
             height={screenWidth * 0.6}
             source={signupHero}
           />
@@ -93,7 +93,7 @@ const SignupScreen = () => {
               <Icon
                 name="email-outline"
                 type="material-community"
-                color={theme.colors.color5}
+                color={theme.colors.color8}
               />
             }
             value={signupForm.username}
@@ -101,32 +101,37 @@ const SignupScreen = () => {
             maxLength={60}
             onBlur={onUsernameBlur}
             errorMessage={formInputsTouched.username && formErrors.username}
+            containerStyle={styles.input}
           />
           <BaseInput
             placeholder="Password"
             leftIcon={
-              <Icon name="lock" type="feather" color={theme.colors.color5} />
+              <Icon name="lock" type="feather" color={theme.colors.color8} />
             }
             value={signupForm.password}
             onChangeText={onPasswordChange}
             secureTextEntry
             onBlur={onPasswordBlur}
             errorMessage={formInputsTouched.password && formErrors.password}
+            containerStyle={styles.input}
           />
         </View>
 
         <View>
-          <BaseButton
-            title="Sign Up"
-            size="lg"
-            width={200}
-            onPress={onSignup}
-            loading={isSignupLoading}
-          />
-          <Divider style={styles.divider} />
-          <View style={styles.signupCtaContainer}>
-            <BaseText>Already a user? </BaseText>
-            <LinkText h4 route={ROUTES.login}>
+          <View style={styles.btnContainer}>
+            <BaseButton
+              title="Sign Up"
+              size="lg"
+              width={200}
+              onPress={onSignup}
+              loading={isSignupLoading}
+            />
+          </View>
+          <View style={styles.signUpContainer}>
+            <BaseText style={{ color: theme.colors.color7 }} text2>
+              Already a user?{' '}
+            </BaseText>
+            <LinkText text2 onPress={() => navigation.navigate(ROUTES.login)}>
               Log in now
             </LinkText>
           </View>
@@ -138,19 +143,23 @@ const SignupScreen = () => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    titleSpacing: {
-      marginBottom: 14,
-    },
     screen: {
       justifyContent: 'center',
-      rowGap: theme.spacing.xs,
-      paddingVertical: 20,
       height: '100%',
     },
-    divider: {
-      marginVertical: 24,
+    title: {
+      marginBottom: 6,
+      color: theme.colors.color1,
     },
-    signupCtaContainer: {
+    tagline: {
+      marginBottom: 6,
+      color: theme.colors.color7,
+    },
+    input: {
+      marginBottom: 20,
+    },
+    btnContainer: { marginVertical: 20 },
+    signUpContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
     },

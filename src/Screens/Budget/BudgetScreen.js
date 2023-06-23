@@ -1,95 +1,121 @@
-import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
+  BaseButton,
   BaseScreen,
   BaseScrollView,
   BaseText,
   DateNavigator,
 } from '../../Components';
-import { BaseRow, BaseTabView } from '../../Components/View';
-import ROUTES from '../../_shared/constant/routes';
+import { EmptyContent } from '../../Components/Common';
+import { BaseDivider, BaseRow } from '../../Components/View';
+
 import {
-  TRANSACTION_TYPES,
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
+  BUDGET_TYPE_ANNUAL,
+  BUDGET_TYPE_MONTHLY,
 } from '../../_shared/apis/enum';
-import { useGetCategoryBudgetsByMonth } from '../../_shared/query';
-import { getMonth, getYear } from '../../_shared/util/date';
-import { renderErrorsToast } from '../../_shared/util/toast';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
+import ROUTES from '../../_shared/constant/routes';
+import { useGetBudgets } from '../../_shared/query/budget';
+import { getDateString, getYear, getMonth } from '../../_shared/util/date';
+import { capitalizeWords } from '../../_shared/util/string';
 
 const BudgetScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-
-  const [selectedTab, setSelectedTab] = useState(0);
-  const onSelectTab = idx => {
-    setSelectedTab(idx);
-  };
 
   const [activeDate, setActiveDate] = useState(new Date());
   const onDateChange = e => {
     setActiveDate(e);
   };
 
-  const getBudgetsQuery = useGetCategoryBudgetsByMonth(
-    {
-      year: getYear(activeDate),
-      month: getMonth(activeDate),
-    },
-    {
-      queryOnChange: [activeDate],
-    },
-  );
+  const getBudgets = useGetBudgets({
+    date: getDateString(activeDate),
+  });
 
-  const renderBudgets = (categoryBudgets = []) => {
-    categoryBudgets.sort((a, b) =>
-      a.category.category_name.localeCompare(b.category.category_name),
-    );
+  const onAddBugdet = () => {
+    navigation.navigate(ROUTES.budgetForm);
+  };
 
-    return categoryBudgets.map(cb => {
-      const {
-        category_type = 0,
-        category_id = '',
-        category_name = '',
-      } = cb.category || {};
+  const renderRows = (type = BUDGET_TYPE_MONTHLY) => {
+    let budgets = getBudgets?.data?.budgets || [];
+    let rows = [];
 
-      const { budget_amount = 0 } = cb.budget || {};
+    budgets.map(budget => {
+      if (budget.budget_type === type) {
+        let amount = getBudgetAmountFromBreakdown(
+          activeDate,
+          budget.budget_breakdowns,
+          budget.budget_type,
+        );
 
-      if (category_type !== selectedTab + 1) {
-        return;
-      }
+        if (amount === 0) {
+          return;
+        }
 
-      return (
-        <View style={styles.row}>
+        rows.push(
           <BaseRow
-            key={category_id}
-            onPress={() =>
+            key={budget.budget_id}
+            onPress={() => {
               navigation.navigate(ROUTES.budgetForm, {
-                category_id: category_id,
-                category_name: category_name,
-              })
-            }>
-            <BaseText>{category_name}</BaseText>
-            <AmountText>{budget_amount}</AmountText>
-          </BaseRow>
-        </View>
-      );
+                budget_id: budget.budget_id,
+                target_date_string: getDateString(activeDate),
+              });
+            }}>
+            <BaseText text3>{capitalizeWords(budget.budget_name)}</BaseText>
+            <AmountText text3>{amount}</AmountText>
+          </BaseRow>,
+        );
+      }
     });
+
+    if (rows.length === 0 && !getBudgets.isLoading) {
+      return (
+        <EmptyContent
+          item={
+            type === BUDGET_TYPE_MONTHLY
+              ? EmptyContentConfig.monthlyBudget
+              : EmptyContentConfig.annualBudget
+          }
+          route={ROUTES.budgetForm}
+        />
+      );
+    }
+
+    return rows;
+  };
+
+  const isMonthlyBudgetEmpty = () => {
+    let budgets = getBudgets?.data?.budgets || [];
+    for (let i = 0; i < budgets.length; i++) {
+      if (budgets[i].budget_type === BUDGET_TYPE_MONTHLY) {
+        let amount = getBudgetAmountFromBreakdown(
+          activeDate,
+          budgets[i].budget_breakdowns,
+          budgets[i].budget_type,
+        );
+
+        if (amount !== 0) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   };
 
   return (
     <BaseScreen
-      isLoading={getBudgetsQuery.isLoading}
-      errorToast={renderErrorsToast([getBudgetsQuery])}
+      isLoading={getBudgets.isLoading}
       headerProps={{
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Budget</BaseText>
+            <BaseText h2>Budgets</BaseText>
             <DateNavigator
               startingDate={activeDate}
               onForward={onDateChange}
@@ -98,30 +124,76 @@ const BudgetScreen = () => {
           </View>
         ),
       }}>
-      <BaseTabView
-        onPress={onSelectTab}
-        selectedIndex={selectedTab}
-        titles={[
-          TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-          TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-        ]}
-      />
+      <View style={styles.buttonContainer}>
+        <BaseButton
+          title="Add budget"
+          type="secondary"
+          align="flex-end"
+          size="sm"
+          onPress={onAddBugdet}
+        />
+      </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {renderBudgets(getBudgetsQuery.data?.category_budgets)}
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <BaseText h3>Monthly</BaseText>
+          </View>
+          {renderRows(BUDGET_TYPE_MONTHLY)}
+        </View>
+
+        {isMonthlyBudgetEmpty() && <BaseDivider margin={theme.spacing.md} />}
+
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <BaseText h3>Annual</BaseText>
+          </View>
+          {renderRows(BUDGET_TYPE_ANNUAL)}
+        </View>
       </BaseScrollView>
     </BaseScreen>
   );
 };
 
-const getStyles = _ => {
+const getStyles = theme => {
   return StyleSheet.create({
     header: {
       alignItems: 'center',
     },
-    row: {
-      marginTop: 5,
+    buttonContainer: {
+      marginBottom: 10,
+    },
+    container: {
+      marginBottom: theme.spacing.xl,
+      minHeight: '35%',
+    },
+    title: {
+      marginVertical: theme.spacing.md,
     },
   });
 };
 
 export default BudgetScreen;
+
+const getBudgetAmountFromBreakdown = (
+  activeDate = new Date(),
+  breakdowns = [],
+  budgetType = BUDGET_TYPE_MONTHLY,
+) => {
+  let amount = 0;
+  let year = getYear(activeDate);
+  let month = getMonth(activeDate);
+
+  breakdowns.map(val => {
+    if (budgetType === BUDGET_TYPE_MONTHLY) {
+      if (val.year === year && val.month === month) {
+        amount = val.amount;
+      }
+    } else {
+      if (val.year === year) {
+        amount = val.amount;
+      }
+    }
+  });
+
+  return amount;
+};

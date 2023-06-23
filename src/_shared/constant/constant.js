@@ -1,3 +1,5 @@
+import { paper, sapiens1, sapiens2 } from './asset';
+
 export const MONTHS = {
   1: 'Jan',
   2: 'Feb',
@@ -41,4 +43,23 @@ export const DAYS = {
 export const EQUITY_TYPE = {
   asset: 1,
   debt: 2,
+};
+
+export const EmptyContentConfig = {
+  monthlyBudget: {
+    text: 'No monthly budget yet',
+    image: sapiens2,
+  },
+  annualBudget: {
+    text: 'No annual budget yet',
+    image: sapiens1,
+  },
+  category: {
+    text: 'No category yet',
+    image: paper,
+  },
+  transaction: {
+    text: 'No transaction yet',
+    image: paper,
+  },
 };

@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { Divider, Icon, useTheme } from '@rneui/themed';
+import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -18,11 +18,13 @@ import { loginHero } from '../../_shared/constant/asset';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
 import { validateUser } from '../../_shared/apis/user';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const { theme } = useTheme();
   const { screenWidth } = useDimension();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
 
   const [formErrors, setFormErrors] = useState({});
 
@@ -71,65 +73,72 @@ const LoginScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.screen}>
         <View>
-          <BaseText
-            h1
-            style={{ color: theme.colors.color1, ...styles.titleSpacing }}>
-            Pocketeer
-          </BaseText>
-          <BaseText h3 style={styles.titleSpacing}>
-            Your personal financial companion
-          </BaseText>
-          <BaseImage
-            width={screenWidth * 0.7}
-            height={screenWidth * 0.5}
-            source={loginHero}
-          />
-        </View>
+          <View>
+            <BaseText h2 style={styles.title}>
+              Pocketeer
+            </BaseText>
+            <BaseText h4 style={styles.tagline}>
+              Your personal financial companion
+            </BaseText>
+            <BaseImage
+              width={screenWidth * 0.7}
+              height={screenWidth * 0.6}
+              source={loginHero}
+            />
+          </View>
 
-        <View>
-          <BaseInput
-            placeholder="Username"
-            leftIcon={
-              <Icon
-                name="email-outline"
-                type="material-community"
-                color={theme.colors.color5}
+          <View>
+            <BaseInput
+              placeholder="Username"
+              leftIcon={
+                <Icon
+                  name="email-outline"
+                  type="material-community"
+                  color={theme.colors.color8}
+                />
+              }
+              value={loginForm.username}
+              onChangeText={onUsernameChange}
+              maxLength={60}
+              onBlur={onUsernameBlur}
+              errorMessage={formInputsTouched.username && formErrors.username}
+              containerStyle={styles.input}
+            />
+            <BaseInput
+              placeholder="Password"
+              leftIcon={
+                <Icon name="lock" type="feather" color={theme.colors.color8} />
+              }
+              value={loginForm.password}
+              onChangeText={onPasswordChange}
+              secureTextEntry
+              onBlur={onPasswordBlur}
+              errorMessage={formInputsTouched.password && formErrors.password}
+              containerStyle={styles.input}
+            />
+          </View>
+
+          <View>
+            <View style={styles.btnContainer}>
+              <BaseButton
+                title="Log In"
+                size="lg"
+                width={200}
+                onPress={onLogin}
+                loading={isLoginLoading}
+                disabled={Object.keys(formErrors).length !== 0}
               />
-            }
-            value={loginForm.username}
-            onChangeText={onUsernameChange}
-            maxLength={60}
-            onBlur={onUsernameBlur}
-            errorMessage={formInputsTouched.username && formErrors.username}
-          />
-          <BaseInput
-            placeholder="Password"
-            leftIcon={
-              <Icon name="lock" type="feather" color={theme.colors.color5} />
-            }
-            value={loginForm.password}
-            onChangeText={onPasswordChange}
-            secureTextEntry
-            onBlur={onPasswordBlur}
-            errorMessage={formInputsTouched.password && formErrors.password}
-          />
-        </View>
-
-        <View>
-          <BaseButton
-            title="Log In"
-            size="lg"
-            width={200}
-            onPress={onLogin}
-            loading={isLoginLoading}
-            disabled={Object.keys(formErrors).length !== 0}
-          />
-          <Divider style={styles.divider} />
-          <View style={styles.loginCtaContainer}>
-            <BaseText>Not a user? </BaseText>
-            <LinkText h4 route={ROUTES.signup}>
-              Sign up now
-            </LinkText>
+            </View>
+            <View style={styles.signUpContainer}>
+              <BaseText style={{ color: theme.colors.color7 }} text2>
+                Not a user?{' '}
+              </BaseText>
+              <LinkText
+                text2
+                onPress={() => navigation.navigate(ROUTES.signup)}>
+                Sign up now
+              </LinkText>
+            </View>
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -139,19 +148,23 @@ const LoginScreen = () => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    titleSpacing: {
-      marginBottom: 14,
-    },
     screen: {
       justifyContent: 'center',
-      rowGap: theme.spacing.xs,
-      paddingVertical: 20,
       height: '100%',
     },
-    divider: {
-      marginVertical: 24,
+    title: {
+      marginBottom: 6,
+      color: theme.colors.color1,
     },
-    loginCtaContainer: {
+    tagline: {
+      marginBottom: 6,
+      color: theme.colors.color7,
+    },
+    input: {
+      marginBottom: 20,
+    },
+    btnContainer: { marginVertical: 20 },
+    signUpContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
     },

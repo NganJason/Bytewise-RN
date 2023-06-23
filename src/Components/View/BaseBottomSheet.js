@@ -1,11 +1,11 @@
 import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
-import { BottomSheet, useTheme, ListItem } from '@rneui/themed';
+import { StyleSheet, View } from 'react-native';
+import { BottomSheet, useTheme } from '@rneui/themed';
 
 import { BaseText } from '../Text';
-import { IconButton } from '../Touch';
-
-const { height: WINDOW_HEIGHT } = Dimensions.get('window');
+import { BaseButton } from '../Touch';
+import useDimension from '../../_shared/hooks/dimension';
+import BaseRow from './BaseRow';
 
 const BaseBottomSheet = ({
   isVisible = false,
@@ -14,73 +14,94 @@ const BaseBottomSheet = ({
   onBackdropPress = function () {},
   onSelect = function () {},
   close = function () {},
-  headerItems = [],
+  renderEmptyItems = function () {},
+  headerProps = {
+    leftComponent: null,
+  },
 }) => {
+  const { screenHeight } = useDimension();
   const { theme } = useTheme();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, screenHeight);
 
-  const renderHeader = () => {
-    headerItems.push(
-      <IconButton
-        iconName="cross"
-        iconType="entypo"
-        type="clear"
-        buttonSize="sm"
-        color="grey"
-        onPress={close}
-      />,
+  const getHeaderJustify = () => {
+    if (headerProps.leftComponent) {
+      return {
+        justifyContent: 'space-between',
+      };
+    }
+
+    return {
+      justifyContent: 'flex-end',
+    };
+  };
+
+  const renderRows = () => {
+    let rows = [];
+
+    items.map((item, i) =>
+      rows.push(
+        <View key={i} style={styles.row}>
+          <BaseRow onPress={() => onSelect(item)} dividerMargin={5}>
+            <BaseText text2>{item[label]}</BaseText>
+          </BaseRow>
+        </View>,
+      ),
     );
 
-    return headerItems.map((item, idx) => (
-      <React.Fragment key={idx}>{item}</React.Fragment>
-    ));
+    if (rows.length === 0) {
+      return renderEmptyItems();
+    }
+
+    return rows;
   };
 
   return (
     <BottomSheet
       fullScreen={true}
-      scrollViewProps={{ style: { maxHeight: WINDOW_HEIGHT / 2 } }}
+      scrollViewProps={{
+        showsVerticalScrollIndicator: false,
+      }}
       isVisible={isVisible}
       onBackdropPress={onBackdropPress}>
-      <>
-        <ListItem>
-          <ListItem.Content style={styles.closeBtnWrapper}>
-            {renderHeader()}
-          </ListItem.Content>
-        </ListItem>
-        {items.map((item, i) => (
-          <ListItem
-            key={i}
-            onPress={() => onSelect(item)}
-            containerStyle={styles.modalItem}>
-            <ListItem.Content key={i}>
-              <ListItem.Title>
-                <BaseText>{item[label]}</BaseText>
-              </ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-        <ListItem>
-          <ListItem.Content />
-        </ListItem>
-      </>
+      <View style={styles.container}>
+        <View style={{ ...styles.header, ...getHeaderJustify() }}>
+          {headerProps.leftComponent && headerProps.leftComponent}
+          <BaseButton
+            title="Done"
+            type="clear"
+            align="flex-end"
+            size="md"
+            onPress={close}
+          />
+        </View>
+        <View style={styles.body}>{renderRows()}</View>
+      </View>
     </BottomSheet>
   );
 };
 
 export default BaseBottomSheet;
 
-const getStyles = _ =>
+const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
-    closeBtnWrapper: {
+    container: {
+      minHeight: screenHeight * 0.3,
+      backgroundColor: theme.colors.white,
+      borderRadius: 15,
+      paddingTop: theme.spacing.md,
+      paddingBottom: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.lg,
+    },
+    header: {
       flexDirection: 'row',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.md,
     },
-    editBtn: {
-      marginHorizontal: 18,
+    body: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.lg,
     },
-    modalItem: {
-      paddingHorizontal: 24,
-      paddingVertical: 16,
+    row: {
+      marginVertical: theme.spacing.md,
     },
   });

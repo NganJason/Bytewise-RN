@@ -29,7 +29,7 @@ const BaseToggle = ({
 
   return (
     <View style={styles.container}>
-      <BaseText h3>{label}</BaseText>
+      <BaseText h4>{label}</BaseText>
       <View style={styles.toggle}>
         {items.map((item, i) => (
           <TouchableOpacity key={i} onPress={() => onToggle(item)}>
@@ -41,7 +41,7 @@ const BaseToggle = ({
                   ...getSpecialSelectedStyles(i),
                 },
               ]}>
-              <BaseText style={isSelected(item) && styles.selectedLabel}>
+              <BaseText text3 style={isSelected(item) && styles.selectedLabel}>
                 {item.label}
               </BaseText>
             </View>

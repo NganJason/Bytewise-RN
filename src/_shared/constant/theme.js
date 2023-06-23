@@ -2,15 +2,22 @@ import { createTheme } from '@rneui/themed';
 import { DefaultTheme } from '@react-navigation/native';
 
 const COLORS = {
-  color1: '#00754A', // green
-  color2: '#E4F2ED', // light green
-  color3: '#255171', // blue
-  color4: '#6D6D6D', // grey
-  color5: '#9BA4B5', // light grey
-  color6: '#C7D1D6', // extra light grey
-  black: '#252525',
-  red: '#CE5959',
+  green: '#00754A',
+  mediumGreen: '#00B749',
+  regularGreen: '#D8FBDD',
+  lightGreen: '#EEFAFA',
+  darkGreen: '#18473F',
+
+  black: '#1D1A1B',
+  mediumGrey: '#575757',
+  regularGrey: '#A0A0A0',
+  lightGrey: '#E5E3E3',
+
+  veryLightBlue: '#F3F7FB',
+
+  red: '#EA6F7C',
   white: '#FFF',
+
   disabled: '#E3E6E8',
   error: '#F41A0F',
   success: '#52C41A',
@@ -18,14 +25,13 @@ const COLORS = {
 };
 
 const FONT_SIZES = {
-  h1: 22,
-  h2: 20,
-  h3: 18,
-  h4: 16,
-  h5: 14,
-  h6: 12,
-  body: 16,
-  caption: 12,
+  h1: 28,
+  h2: 22,
+  h3: 20,
+  h4: 18,
+  h5: 17,
+  h6: 15,
+  h7: 13,
 };
 
 const FONT_FAMILY = {
@@ -40,75 +46,105 @@ export const THEME = createTheme({
   colors: {
     ...DefaultTheme.colors,
     background: COLORS.white,
-    text: COLORS.grey4,
-    primary: COLORS.color1,
-    secondary: COLORS.color2,
-    color1: COLORS.color1,
-    color2: COLORS.color2,
-    color3: COLORS.color3,
-    color4: COLORS.color4,
-    color5: COLORS.color5,
-    color6: COLORS.color6,
-    error: COLORS.error,
-    success: COLORS.success,
-    warning: COLORS.warning,
-    inactive: COLORS.color5,
+    text: COLORS.black,
+    primary: COLORS.green,
+    secondary: COLORS.mediumGreen,
+
+    color1: COLORS.green,
+    color2: COLORS.mediumGreen,
+    color3: COLORS.regularGreen,
+    color4: COLORS.lightGreen,
+    color5: COLORS.darkGreen,
+
+    color6: COLORS.black,
+    color7: COLORS.mediumGrey,
+    color8: COLORS.regularGrey,
+    color9: COLORS.lightGrey,
+
+    color10: COLORS.veryLightBlue,
+
     red: COLORS.red,
     white: COLORS.white,
     black: COLORS.black,
+
+    error: COLORS.error,
+    success: COLORS.success,
+    warning: COLORS.warning,
+    inactive: COLORS.color6,
   },
   fontStyles: {
+    // Header
     h1: {
       fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h1,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
     h2: {
       fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h2,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
     h3: {
       fontFamily: FONT_FAMILY.semiBold,
       fontSize: FONT_SIZES.h3,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
     h4: {
       fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h4,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
-    h5: {
+
+    // Text
+    text1: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h4,
+      color: COLORS.black,
+    },
+    text2: {
       fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h5,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
-    h6: {
+    text3: {
       fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h6,
-      color: COLORS.color4,
+      color: COLORS.black,
     },
-    p: {
-      fontFamily: FONT_FAMILY.regular,
-      fontSize: FONT_SIZES.body,
-      color: COLORS.color4,
+    text4: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h7,
+      color: COLORS.black,
     },
-    caption: {
-      fontFamily: FONT_FAMILY.regular,
-      fontSize: FONT_SIZES.caption,
-      color: COLORS.color4,
+    text5: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h7,
+      color: COLORS.black,
+    },
+
+    // Button
+    btn1: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h4,
+      color: COLORS.black,
+    },
+    btn2: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h5,
+      color: COLORS.black,
+    },
+    btn3: {
+      fontFamily: FONT_FAMILY.semiBold,
+      fontSize: FONT_SIZES.h6,
+      color: COLORS.black,
     },
     linkText: {
-      color: COLORS.color1,
+      color: COLORS.green,
       textDecorationLine: 'underline',
-    },
-    buttonText: {
-      fontFamily: FONT_FAMILY.medium,
-      fontSize: FONT_SIZES.h4,
     },
   },
   borderBottom: {
-    borderColor: COLORS.color5,
+    borderColor: COLORS.regularGrey,
     borderBottomWidth: 0.4,
   },
   spacing: {

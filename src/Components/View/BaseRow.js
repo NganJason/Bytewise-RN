@@ -4,18 +4,24 @@ import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import BaseListItem from './BaseListItem';
 
-const BaseRow = ({ disabled = false, onPress = function () {}, children }) => {
+const BaseRow = ({
+  disabled = false,
+  onPress = function () {},
+  children,
+  dividerMargin = 10,
+  showDivider = true,
+}) => {
   const styles = getStyles();
 
   return (
-    <BaseListItem showDivider={true}>
-      <TouchableOpacity
-        style={styles.container}
-        onPress={onPress}
-        disabled={disabled}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      disabled={disabled}>
+      <BaseListItem showDivider={showDivider} dividerMargin={dividerMargin}>
         <View style={styles.textGroup}>{children}</View>
-      </TouchableOpacity>
-    </BaseListItem>
+      </BaseListItem>
+    </TouchableOpacity>
   );
 };
 

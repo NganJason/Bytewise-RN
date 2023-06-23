@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import * as Font from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -13,21 +14,23 @@ import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScree
 import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
-import BudgetScreen from './src/Screens/Budget/BudgetScreen';
 import LoginScreen from './src/Screens/User/LoginScreen';
 import SignupScreen from './src/Screens/User/SignupScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
-import BudgetForm from './src/Screens/Budget/BudgetForm';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
+import { CustomDrawer } from './src/Components/Common';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import { initAxios } from './src/_shared/apis/http';
 import { AuthContext, AuthProvider } from './src/_shared/context/AuthContext';
+import BudgetScreen from './src/Screens/Budget/BudgetScreen';
+import BudgetForm from './src/Screens/Budget/BudgetForm';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 const queryClient = new QueryClient();
 
 const WAIT_TIME_FOR_SPLASH_SCREEN = 500;
@@ -110,11 +113,14 @@ function Main() {
     if (isAppReady && !showSplashScreen) {
       return (
         <Stack.Navigator
-          initialRouteName={ROUTES.home}
+          initialRouteName={ROUTES.homeWithDrawer}
           screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
           {isLogin ? (
             <>
-              <Stack.Screen name={ROUTES.home} component={HomeScreen} />
+              <Stack.Screen
+                name={ROUTES.homeWithDrawer}
+                component={HomeWithDrawer}
+              />
               <Stack.Screen
                 name={ROUTES.categoryForm}
                 component={CategoryForm}
@@ -181,5 +187,17 @@ const App = () => {
     </QueryClientProvider>
   );
 };
+
+const HomeWithDrawer = () => (
+  <Drawer.Navigator
+    screenOptions={{
+      swipeEnabled: false,
+      headerShown: false,
+      drawerPosition: 'left',
+    }}
+    drawerContent={CustomDrawer}>
+    <Drawer.Screen name={ROUTES.home} component={HomeScreen} />
+  </Drawer.Navigator>
+);
 
 export default App;
