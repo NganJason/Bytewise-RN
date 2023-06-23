@@ -111,6 +111,7 @@ const TransactionScreen = ({ navigation }) => {
       ])}
       headerProps={{
         allowBack: false,
+        allowDrawer: true,
         centerComponent: (
           <DateNavigator
             startingDate={activeDate}
@@ -164,7 +165,7 @@ const getStyles = theme => {
       marginBottom: 22,
     },
     body: {
-      height: '100%',
+      minHeight: '100%',
       padding: theme.spacing.xl,
       backgroundColor: theme.colors.white,
       borderRadius: 20,

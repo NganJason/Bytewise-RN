@@ -39,13 +39,15 @@ const BaseLoadableView = ({
   }, [isLoading]);
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles.body}>
       {showLoadingIndicator && (
         <PacmanIndicator size={70} color={theme.colors.primary} />
       )}
 
       {!showLoadingIndicator && !isLoading && (
-        <Animated.View entering={FadeIn.duration(300)} style={containerStyle}>
+        <Animated.View
+          entering={FadeIn.duration(300)}
+          style={[styles.container, containerStyle]}>
           {scrollable ? (
             <BaseScrollView showsVerticalScrollIndicator={false}>
               {children}
@@ -61,7 +63,8 @@ const BaseLoadableView = ({
 
 const getStyles = _ =>
   StyleSheet.create({
-    mainContainer: { minHeight: '100%' },
+    body: { minHeight: '100%' },
+    container: { flex: 1 },
   });
 
 export default BaseLoadableView;

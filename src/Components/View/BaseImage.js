@@ -7,13 +7,19 @@ const BaseImage = ({
   height = 0,
   source = null,
   align = 'center',
+  containerStyle = {},
 }) => {
   const styles = getStyles();
 
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
-      style={{ alignSelf: align, width: width, height: height }}>
+      style={{
+        alignSelf: align,
+        width: width,
+        height: height,
+        ...containerStyle,
+      }}>
       <Image source={source} style={styles.img} />
     </Animated.View>
   );

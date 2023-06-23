@@ -40,11 +40,6 @@ export const DAYS = {
   6: 'Sat',
 };
 
-export const EQUITY_TYPE = {
-  asset: 1,
-  debt: 2,
-};
-
 export const EmptyContentConfig = {
   monthlyBudget: {
     text: 'No monthly budget yet',
@@ -60,6 +55,14 @@ export const EmptyContentConfig = {
   },
   transaction: {
     text: 'No transaction yet',
+    image: paper,
+  },
+  asset: {
+    text: 'No assets yet',
+    image: paper,
+  },
+  liability: {
+    text: 'No liabilities yet',
     image: paper,
   },
 };

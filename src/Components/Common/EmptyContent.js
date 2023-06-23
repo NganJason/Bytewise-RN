@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { emptyContent } from '../../_shared/constant/asset';
+import { paper } from '../../_shared/constant/asset';
 import useDimension from '../../_shared/hooks/dimension';
 import { BaseText, LinkText } from '../Text';
 import { BaseImage } from '../View';
@@ -9,7 +9,7 @@ import { BaseImage } from '../View';
 const EmptyContent = ({
   item = {
     text: 'No data',
-    image: emptyContent,
+    image: paper,
   },
   route = '',
   onRedirect = function () {},

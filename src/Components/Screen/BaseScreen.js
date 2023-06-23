@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { IconButton } from '../Touch';
 import { BaseLoadableView, BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
+import { useEffect } from 'react';
 
 const BaseScreen = ({
   children,
@@ -38,6 +39,22 @@ const BaseScreen = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (errorToast.show) {
+      BaseToast.show({
+        type: 'error',
+        text1: errorToast.message1,
+        text2: errorToast.message2,
+        onHide: errorToast.onHide,
+      });
+    }
+  }, [
+    errorToast.show,
+    errorToast.message1,
+    errorToast.message2,
+    errorToast.onHide,
+  ]);
 
   const isEmptyHeader = () =>
     !headerProps.allowBack &&

@@ -3,7 +3,7 @@ import { DefaultTheme } from '@react-navigation/native';
 
 const COLORS = {
   green: '#00754A',
-  mediumGreen: '#00B749',
+  mediumGreen: '#2BCD73',
   regularGreen: '#D8FBDD',
   lightGreen: '#EEFAFA',
   darkGreen: '#18473F',
@@ -16,7 +16,7 @@ const COLORS = {
   veryLightBlue: '#F3F7FB',
 
   red: '#EA6F7C',
-  white: '#FFF',
+  white: '#FFFFFF',
 
   disabled: '#E3E6E8',
   error: '#F41A0F',
