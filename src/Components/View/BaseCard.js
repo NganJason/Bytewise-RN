@@ -1,15 +1,23 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const BaseCard = ({ color = '#FFF', children, onPress = null }) => {
+const BaseCard = ({
+  color = '#FFF',
+  children,
+  onPress = null,
+  containerStyle = {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
-    <TouchableWithoutFeedback disabled={onPress === null} onPress={onPress}>
-      <View style={{ ...styles.card, backgroundColor: color }}>{children}</View>
-    </TouchableWithoutFeedback>
+    <TouchableOpacity disabled={onPress === null} onPress={onPress}>
+      <View
+        style={{ ...styles.card, backgroundColor: color, ...containerStyle }}>
+        {children}
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -22,11 +30,12 @@ const getStyles = theme =>
       paddingHorizontal: 12,
       shadowColor: theme.colors.black,
       shadowOffset: {
-        width: 2,
-        height: 2,
+        width: 0,
+        height: 3,
       },
-      shadowOpacity: 0.2,
-      shadowRadius: 2,
+      shadowOpacity: 0.18,
+      shadowRadius: 4.59,
+      elevation: 5,
     },
   });
 

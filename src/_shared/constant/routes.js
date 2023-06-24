@@ -12,6 +12,7 @@ const ROUTES = {
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
   account: 'Account',
+  accountSelection: 'Account Selection',
   asset: 'Asset',
   assetAccount: 'Asset Account',
   investmentAccount: 'Investment Account',

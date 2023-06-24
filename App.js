@@ -26,6 +26,7 @@ import { initAxios } from './src/_shared/apis/http';
 import { AuthContext, AuthProvider } from './src/_shared/context/AuthContext';
 import BudgetScreen from './src/Screens/Budget/BudgetScreen';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
+import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
@@ -150,6 +151,10 @@ function Main() {
               <Stack.Screen
                 name={ROUTES.investmentLotBreakdown}
                 component={InvestmentLotBreakdownScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.accountSelection}
+                component={AccountSelectionScreen}
               />
             </>
           ) : (

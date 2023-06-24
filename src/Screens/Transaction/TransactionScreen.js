@@ -103,7 +103,7 @@ const TransactionScreen = ({ navigation }) => {
     <BaseScreen
       isLoading={isScreenLoading()}
       allowLoadable={false}
-      backgroundColor={theme.colors.color10}
+      backgroundColor={theme.colors.color11}
       enablePadding={false}
       errorToast={renderErrorsToast([
         getTransactionsQuery,

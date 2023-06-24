@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
@@ -63,6 +64,7 @@ const AccountScreen = () => {
   const { theme } = useTheme();
   const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme, screenWidth, screenHeight);
+  const navigation = useNavigation();
 
   const computeSum = (equityType = EQUITY_TYPE_ASSET) => {
     let sum = 0;
@@ -136,6 +138,9 @@ const AccountScreen = () => {
                 iconStyle={styles.icon}
               />
             }
+            onPress={() => {
+              navigation.navigate(ROUTES.accountSelection);
+            }}
           />
         </View>
         <BaseImage source={loginHero} containerStyle={styles.image} />
@@ -143,7 +148,7 @@ const AccountScreen = () => {
 
       <View style={styles.body}>
         <BaseLoadableView scrollable={true}>
-          <View style={styles.container}>
+          <View>
             <BaseRow showDivider={false} disabled={true}>
               <BaseText h3>Assets</BaseText>
               <AmountText text3>{computeSum(EQUITY_TYPE_ASSET)}</AmountText>
@@ -151,7 +156,7 @@ const AccountScreen = () => {
             {renderContent(EQUITY_TYPE_ASSET)}
           </View>
 
-          <View style={styles.container}>
+          <View>
             <BaseRow showDivider={false} disabled={true}>
               <BaseText h3>Liabilities</BaseText>
               <AmountText text3>{computeSum(EQUITY_TYPE_LIABILITY)}</AmountText>
@@ -173,7 +178,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       flexDirection: 'row',
       justifyContent: 'left',
       alignItems: 'center',
-      backgroundColor: theme.colors.color10,
+      backgroundColor: theme.colors.color11,
     },
     image: {
       width: screenHeight * 0.26,

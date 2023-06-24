@@ -6,6 +6,7 @@ const BaseGrid = ({
   itemDimension = 120,
   spacing = 20,
   renderItem = function (item) {},
+  containerStyle = {},
 }) => {
   const styles = getStyles();
 
@@ -13,7 +14,7 @@ const BaseGrid = ({
     <SimpleGrid
       itemDimension={itemDimension}
       data={items}
-      style={{ ...styles.gridView, margin: -1 * spacing }}
+      style={{ ...styles.gridView, margin: -1 * spacing, ...containerStyle }}
       spacing={spacing}
       renderItem={({ item }) => {
         return renderItem(item);
