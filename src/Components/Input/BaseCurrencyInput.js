@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 
 import BaseInput from './BaseInput';
 
@@ -8,7 +8,7 @@ const BaseCurrencyInput = forwardRef(
   (
     {
       label = '',
-      value = '',
+      value = 0,
       placeholder = '',
       onChangeText = function () {},
       onBlur = function () {},
@@ -17,20 +17,37 @@ const BaseCurrencyInput = forwardRef(
     },
     ref,
   ) => {
+    const [inputStr, setInputStr] = useState(value);
+
     const formatAmount = () => {
-      if (value !== '') {
-        return `${CURRENCY} ${value}`;
-      }
+      return `${CURRENCY} ${inputStr}`;
     };
 
     const handleChangeText = e => {
-      const arr = e.split(' ');
-      // remove currency symbol
-      if (arr.length === 2) {
-        onChangeText(arr[1]);
-        return;
+      e = e.replace(CURRENCY, '');
+      e = e.replace(' ', '');
+      e = removeAlphabets(e);
+
+      onChangeText(Number(e));
+      setInputStr(e);
+    };
+
+    const onFocus = () => {
+      if (Number(inputStr) === 0) {
+        setInputStr('');
       }
-      onChangeText(e);
+    };
+
+    const onBlurHandler = () => {
+      if (inputStr === '') {
+        setInputStr('0');
+      }
+      onBlur();
+    };
+
+    const removeAlphabets = input => {
+      let val = input.replace(/[^\d]/g, '');
+      return val;
     };
 
     return (
@@ -39,7 +56,8 @@ const BaseCurrencyInput = forwardRef(
         label={label}
         value={formatAmount()}
         placeholder={placeholder}
-        onBlur={onBlur}
+        onBlur={onBlurHandler}
+        onFocus={onFocus}
         onChangeText={handleChangeText}
         keyboardType="numeric"
         autoFocus={autoFocus}

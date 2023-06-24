@@ -37,6 +37,10 @@ const BudgetForm = ({ route }) => {
   const navigation = useNavigation();
 
   const budgetID = route.params?.budget_id || '';
+  const isAddBudget = () => {
+    return budgetID === '';
+  };
+
   const targetDateString = route.params?.target_date_string || '';
   const targetDate = useMemo(() => {
     if (targetDateString !== '') {
@@ -154,10 +158,6 @@ const BudgetForm = ({ route }) => {
     } catch (e) {
       return false;
     }
-  };
-
-  const isAddBudget = () => {
-    return budgetID === '';
   };
 
   const isFormLoading = () => {

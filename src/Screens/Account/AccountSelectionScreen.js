@@ -4,14 +4,29 @@ import { StyleSheet, View } from 'react-native';
 import { BaseScreen, BaseText } from '../../Components';
 import { BaseCard, BaseGrid, BaseScrollView } from '../../Components/View';
 import {
+  ACCOUNT_TYPES,
+  ACCOUNT_TYPE_BANK_ACCOUNT,
+  ACCOUNT_TYPE_CASH,
+  ACCOUNT_TYPE_CREDIT_CARD,
+  ACCOUNT_TYPE_INVESTMENT,
+  ACCOUNT_TYPE_LOAN,
+  ACCOUNT_TYPE_MORTGAGE,
   EQUITY_TYPE_ASSET,
   EQUITY_TYPE_LIABILITY,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { capitalizeWords } from '../../_shared/util/string';
 
-const assets = ['cash', 'bank account', 'investment'];
-const liabilities = ['credit card', 'loan', 'mortgage'];
+const assets = [
+  ACCOUNT_TYPE_CASH,
+  ACCOUNT_TYPE_BANK_ACCOUNT,
+  ACCOUNT_TYPE_INVESTMENT,
+];
+const liabilities = [
+  ACCOUNT_TYPE_CREDIT_CARD,
+  ACCOUNT_TYPE_LOAN,
+  ACCOUNT_TYPE_MORTGAGE,
+];
 
 const AccountSelectionScreen = () => {
   const { theme } = useTheme();
@@ -35,7 +50,7 @@ const AccountSelectionScreen = () => {
           <BaseCard
             key={item.account_id}
             onPress={() => {
-              navigation.navigate(ROUTES.account);
+              navigation.navigate(ROUTES.accountForm, { account_type: item });
             }}
             color={
               type === EQUITY_TYPE_ASSET
@@ -51,7 +66,7 @@ const AccountSelectionScreen = () => {
                     ? theme.colors.color10
                     : theme.colors.color12,
               }}>
-              {capitalizeWords(item)}
+              {capitalizeWords(ACCOUNT_TYPES[item])}
             </BaseText>
           </BaseCard>
         )}
