@@ -56,7 +56,7 @@ const BaseButton = ({
           title: disabled
             ? styles.clearDisabledButtonTextStyle
             : styles.clearButtonTextStyle,
-          btn: {},
+          btn: styles.clearButtonStyle,
           disabled: styles.clearDisabledButtonStyle,
         };
       case 'secondary':
@@ -138,6 +138,9 @@ const getStyles = theme =>
       color: theme.colors.red,
     },
 
+    clearButtonStyle: {
+      paddingHorizontal: 0,
+    },
     clearDisabledButtonStyle: {
       backgroundColor: theme.colors.white,
     },

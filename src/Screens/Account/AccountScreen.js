@@ -95,7 +95,11 @@ const AccountScreen = () => {
         renderItem={item => (
           <BaseCard
             key={item.account_id}
-            onPress={function () {}}
+            onPress={() => {
+              navigation.navigate(ROUTES.accountBreakdown, {
+                account_id: item.account_id,
+              });
+            }}
             color={
               equityType === EQUITY_TYPE_ASSET
                 ? theme.colors.color2

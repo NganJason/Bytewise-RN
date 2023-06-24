@@ -28,6 +28,7 @@ import BudgetScreen from './src/Screens/Budget/BudgetScreen';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
 import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 import AccountForm from './src/Screens/Account/AccountForm';
+import AccountBreakdownScreen from './src/Screens/Account/AccountBreakdownScreen';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
@@ -158,6 +159,10 @@ function Main() {
                 component={AccountSelectionScreen}
               />
               <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
+              <Stack.Screen
+                name={ROUTES.accountBreakdown}
+                component={AccountBreakdownScreen}
+              />
             </>
           ) : (
             <>
