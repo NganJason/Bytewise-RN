@@ -8,7 +8,7 @@ import {
 } from './Input';
 
 // Screen
-import { BaseScreen, HideKeyboard, SplashScreen } from './Screen';
+import { BaseScreen, BaseScreen2, HideKeyboard, SplashScreen } from './Screen';
 
 // Text
 import { BaseText, AmountText, LinkText } from './Text';
@@ -52,6 +52,7 @@ export {
   HideKeyboard,
   SplashScreen,
   BaseScreen,
+  BaseScreen2,
   DailyTransactions,
   AmountText,
   BaseBottomSheet,

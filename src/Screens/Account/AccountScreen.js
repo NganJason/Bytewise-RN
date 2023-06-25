@@ -1,15 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AmountText, BaseButton, BaseScreen, BaseText } from '../../Components';
-import { EmptyContent } from '../../Components/Common';
 import {
-  BaseCard,
-  BaseGrid,
-  BaseImage,
-  BaseLoadableView,
-  BaseRow,
-} from '../../Components/View';
+  AmountText,
+  BaseButton,
+  BaseScreen2,
+  BaseText,
+} from '../../Components';
+import { EmptyContent } from '../../Components/Common';
+import { BaseCard, BaseGrid, BaseImage, BaseRow } from '../../Components/View';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
@@ -134,9 +132,9 @@ const AccountScreen = () => {
     });
   };
 
-  return (
-    <BaseScreen enablePadding={false}>
-      <SafeAreaView style={styles.header}>
+  const getHeader = () => {
+    return (
+      <>
         <View style={styles.title}>
           <BaseText h1>Accounts</BaseText>
           <AmountText style={styles.titleText} h2 decimal={0}>
@@ -161,64 +159,48 @@ const AccountScreen = () => {
           />
         </View>
         <BaseImage source={loginHero} containerStyle={styles.image} />
-      </SafeAreaView>
+      </>
+    );
+  };
 
-      <View style={styles.body}>
-        <BaseLoadableView scrollable={true}>
-          <View>
-            <BaseRow showDivider={false} disabled={true}>
-              <BaseText h3>Assets</BaseText>
-              <AmountText text3>{computeSum(EQUITY_TYPE_ASSET)}</AmountText>
-            </BaseRow>
-            {renderContent(EQUITY_TYPE_ASSET)}
-          </View>
+  return (
+    <BaseScreen2
+      headerProps={{
+        component: getHeader(),
+        allowDrawer: true,
+      }}>
+      <>
+        <View>
+          <BaseRow showDivider={false} disabled={true}>
+            <BaseText h3>Assets</BaseText>
+            <AmountText text3>{computeSum(EQUITY_TYPE_ASSET)}</AmountText>
+          </BaseRow>
+          {renderContent(EQUITY_TYPE_ASSET)}
+        </View>
 
-          <View>
-            <BaseRow showDivider={false} disabled={true}>
-              <BaseText h3>Liabilities</BaseText>
-              <AmountText text3>{computeSum(EQUITY_TYPE_LIABILITY)}</AmountText>
-            </BaseRow>
-            {renderContent(EQUITY_TYPE_LIABILITY)}
-          </View>
-        </BaseLoadableView>
-      </View>
-    </BaseScreen>
+        <View>
+          <BaseRow showDivider={false} disabled={true}>
+            <BaseText h3>Liabilities</BaseText>
+            <AmountText text3>{computeSum(EQUITY_TYPE_LIABILITY)}</AmountText>
+          </BaseRow>
+          {renderContent(EQUITY_TYPE_LIABILITY)}
+        </View>
+      </>
+    </BaseScreen2>
   );
 };
 
 const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
-    header: {
-      minHeight: screenHeight * 0.25,
-      marginTop: theme.spacing.lg,
-      paddingHorizontal: 26,
-      flexDirection: 'row',
-      justifyContent: 'left',
-      alignItems: 'center',
-      backgroundColor: theme.colors.color11,
-    },
     image: {
       width: screenHeight * 0.26,
       height: screenHeight * 0.26,
       position: 'absolute',
-      right: screenWidth * -0.1,
+      right: screenWidth * -0.2,
     },
     titleText: {
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.sm,
-    },
-    body: {
-      paddingVertical: theme.spacing.md,
-      paddingHorizontal: 26,
-      backgroundColor: theme.colors.white,
-      shadowColor: theme.colors.black,
-      shadowOffset: {
-        width: 2,
-        height: -5,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 10,
-      elevation: 10,
     },
     cardAmountText: {
       marginTop: 16,

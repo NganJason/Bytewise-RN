@@ -1,12 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   AmountText,
   BaseButton,
   BaseImage,
-  BaseScreen,
+  BaseScreen2,
   BaseText,
 } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
@@ -46,9 +45,9 @@ const InvestmentBreakdownScreen = ({ route }) => {
     return rows;
   };
 
-  return (
-    <BaseScreen enablePadding={false}>
-      <SafeAreaView style={styles.header}>
+  const getHeader = () => {
+    return (
+      <>
         <View style={styles.title}>
           <BaseText h1>Stocks</BaseText>
           <AmountText style={styles.titleText} h2 decimal={0}>
@@ -57,9 +56,18 @@ const InvestmentBreakdownScreen = ({ route }) => {
           <BaseText text4>Investment</BaseText>
         </View>
         <BaseImage source={graph} containerStyle={styles.image} />
-      </SafeAreaView>
+      </>
+    );
+  };
 
-      <View style={styles.body}>
+  return (
+    <BaseScreen2
+      headerProps={{
+        component: getHeader(),
+        allowBack: true,
+        backgroundColor: theme.colors.color13,
+      }}>
+      <>
         <BaseText h3>Holdings</BaseText>
         <BaseButton
           title="Add holdings"
@@ -80,44 +88,22 @@ const InvestmentBreakdownScreen = ({ route }) => {
           }}
         />
         <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
-      </View>
-    </BaseScreen>
+      </>
+    </BaseScreen2>
   );
 };
 
 const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
-    header: {
-      minHeight: screenHeight * 0.25,
-      marginTop: theme.spacing.lg,
-      paddingHorizontal: 26,
-      flexDirection: 'row',
-      justifyContent: 'left',
-      alignItems: 'center',
-      backgroundColor: theme.colors.color13,
-    },
     image: {
       width: screenHeight * 0.2,
       height: screenHeight * 0.18,
       position: 'absolute',
-      right: screenWidth * -0.05,
+      right: screenWidth * -0.12,
     },
     titleText: {
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.sm,
-    },
-    body: {
-      paddingVertical: theme.spacing.xl,
-      paddingHorizontal: 26,
-      backgroundColor: theme.colors.white,
-      shadowColor: theme.colors.black,
-      shadowOffset: {
-        width: 2,
-        height: -5,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 10,
-      elevation: 10,
     },
     emptyContent: {
       marginTop: '30%',

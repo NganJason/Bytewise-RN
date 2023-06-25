@@ -1,7 +1,6 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AmountText, BaseImage, BaseScreen, BaseText } from '../../Components';
+import { AmountText, BaseImage, BaseScreen2, BaseText } from '../../Components';
 import {
   DailyTransactions,
   DateNavigator,
@@ -71,9 +70,9 @@ const AccountBreakdownScreen = ({ route }) => {
     return rows;
   };
 
-  return (
-    <BaseScreen enablePadding={false}>
-      <SafeAreaView style={styles.header}>
+  const getHeader = () => {
+    return (
+      <>
         <View style={styles.title}>
           <BaseText h1>OCBC</BaseText>
           <AmountText style={styles.titleText} h2 decimal={0}>
@@ -82,34 +81,34 @@ const AccountBreakdownScreen = ({ route }) => {
           <BaseText text4>Saving Account</BaseText>
         </View>
         <BaseImage source={coin} containerStyle={styles.image} />
-      </SafeAreaView>
+      </>
+    );
+  };
 
-      <View style={styles.body}>
+  return (
+    <BaseScreen2
+      headerProps={{
+        component: getHeader(),
+        allowBack: true,
+        backgroundColor: theme.colors.color4,
+      }}>
+      <>
         <View style={styles.dataNavigator}>
           <DateNavigator />
         </View>
         <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
-      </View>
-    </BaseScreen>
+      </>
+    </BaseScreen2>
   );
 };
 
 const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
-    header: {
-      minHeight: screenHeight * 0.25,
-      marginTop: theme.spacing.lg,
-      paddingHorizontal: 26,
-      flexDirection: 'row',
-      justifyContent: 'left',
-      alignItems: 'center',
-      backgroundColor: theme.colors.color4,
-    },
     image: {
       width: screenHeight * 0.2,
       height: screenHeight * 0.18,
       position: 'absolute',
-      right: screenWidth * -0.1,
+      right: screenWidth * -0.15,
     },
     titleText: {
       marginVertical: theme.spacing.md,
@@ -117,19 +116,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     dataNavigator: {
       alignItems: 'center',
       marginBottom: theme.spacing.lg,
-    },
-    body: {
-      paddingVertical: theme.spacing.md,
-      paddingHorizontal: 26,
-      backgroundColor: theme.colors.white,
-      shadowColor: theme.colors.black,
-      shadowOffset: {
-        width: 2,
-        height: -5,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 10,
-      elevation: 10,
     },
     emptyContent: {
       marginTop: '30%',
