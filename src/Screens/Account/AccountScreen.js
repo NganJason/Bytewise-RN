@@ -12,6 +12,8 @@ import {
 } from '../../Components/View';
 import {
   ACCOUNT_TYPES,
+  ACCOUNT_TYPE_BANK_ACCOUNT,
+  ACCOUNT_TYPE_INVESTMENT,
   EQUITY_TYPE_ASSET,
   EQUITY_TYPE_LIABILITY,
 } from '../../_shared/apis/enum';
@@ -96,9 +98,7 @@ const AccountScreen = () => {
           <BaseCard
             key={item.account_id}
             onPress={() => {
-              navigation.navigate(ROUTES.accountBreakdown, {
-                account_id: item.account_id,
-              });
+              onAccountPress(item);
             }}
             color={
               equityType === EQUITY_TYPE_ASSET
@@ -120,6 +120,20 @@ const AccountScreen = () => {
     );
   };
 
+  const onAccountPress = account => {
+    const { account_id = '', account_type = ACCOUNT_TYPE_BANK_ACCOUNT } =
+      account;
+
+    let route = ROUTES.accountBreakdown;
+    if (account_type === ACCOUNT_TYPE_INVESTMENT) {
+      route = ROUTES.investmentBreakdown;
+    }
+
+    navigation.navigate(route, {
+      account_id: account_id,
+    });
+  };
+
   return (
     <BaseScreen enablePadding={false}>
       <SafeAreaView style={styles.header}>
@@ -139,7 +153,6 @@ const AccountScreen = () => {
                 type="feather"
                 color={theme.colors.color1}
                 size={13}
-                iconStyle={styles.icon}
               />
             }
             onPress={() => {
@@ -191,10 +204,8 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       right: screenWidth * -0.1,
     },
     titleText: {
-      marginVertical: theme.spacing.md,
-    },
-    icon: {
-      marginRight: theme.spacing.sm,
+      marginTop: theme.spacing.lg,
+      marginBottom: theme.spacing.sm,
     },
     body: {
       paddingVertical: theme.spacing.md,

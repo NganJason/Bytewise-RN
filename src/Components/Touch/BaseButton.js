@@ -1,5 +1,5 @@
 import { Button, useTheme } from '@rneui/themed';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 const BaseButton = ({
   type = 'solid',
@@ -101,7 +101,7 @@ const BaseButton = ({
       titleStyle={{ ...getTextStyle(), ...buttonStyle.title }}
       size={size}
       title={title}
-      icon={icon !== null && icon}
+      icon={icon !== null && <View style={styles.icon}>{icon}</View>}
       onPress={onPress}
     />
   );
@@ -163,4 +163,8 @@ const getStyles = theme =>
       color: theme.colors.color6,
     },
     secondaryDisabledButtonTextStyle: {},
+
+    icon: {
+      marginRight: theme.spacing.sm,
+    },
   });
