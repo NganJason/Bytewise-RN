@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,6 +23,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
   const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme, screenWidth, screenHeight);
+  const navigation = useNavigation();
 
   const account_id = route.params?.account_id || '';
 
@@ -73,7 +75,9 @@ const InvestmentBreakdownScreen = ({ route }) => {
               iconStyle={styles.icon}
             />
           }
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate(ROUTES.investmentForm);
+          }}
         />
         <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
       </View>

@@ -21,6 +21,7 @@ const ROUTES = {
   accountForm: 'Account Form',
   accountBreakdown: 'Account Breakdown',
   investmentBreakdown: 'Investment Breakdown',
+  investmentForm: 'Investment Form',
 
   asset: 'Asset',
   assetAccount: 'Asset Account',

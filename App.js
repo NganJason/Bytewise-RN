@@ -30,6 +30,7 @@ import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen
 import AccountForm from './src/Screens/Account/AccountForm';
 import AccountBreakdownScreen from './src/Screens/Account/AccountBreakdownScreen';
 import InvestmentBreakdownScreen from './src/Screens/Account/InvestmentBreakdownScreen';
+import InvestmentForm from './src/Screens/Account/InvestmentForm';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
@@ -167,6 +168,10 @@ function Main() {
               <Stack.Screen
                 name={ROUTES.investmentBreakdown}
                 component={InvestmentBreakdownScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.investmentForm}
+                component={InvestmentForm}
               />
             </>
           ) : (
