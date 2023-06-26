@@ -7,7 +7,7 @@ const BaseLinearProgress = ({ value = 0 }) => {
 
   const getColor = () => {
     if (value >= 1) {
-      return theme.colors.red;
+      return theme.colors.lightRed;
     }
     return theme.colors.color2;
   };

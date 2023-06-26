@@ -15,7 +15,7 @@ const InvestmentAccountScreen = ({ navigation }) => {
         color: theme.colors.color1,
       };
     }
-    return { color: theme.colors.red };
+    return { color: theme.colors.regularRed };
   };
 
   return (

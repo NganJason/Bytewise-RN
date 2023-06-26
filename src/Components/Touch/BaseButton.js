@@ -122,7 +122,7 @@ const getStyles = theme =>
       backgroundColor: theme.colors.color8,
     },
     solidDisabledButtonTextStyle: {
-      color: theme.colors.red,
+      color: theme.colors.regularRed,
     },
     solidButtonTextStyle: {
       color: theme.colors.white,
@@ -135,7 +135,7 @@ const getStyles = theme =>
       color: theme.colors.color1,
     },
     outlineDisabledButtonTextStyle: {
-      color: theme.colors.red,
+      color: theme.colors.regularRed,
     },
 
     clearButtonStyle: {
@@ -148,7 +148,7 @@ const getStyles = theme =>
       color: theme.colors.color1,
     },
     clearDisabledButtonTextStyle: {
-      color: theme.colors.red,
+      color: theme.colors.regularRed,
     },
 
     secondaryButtonStyle: {

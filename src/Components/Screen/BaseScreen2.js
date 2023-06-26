@@ -26,8 +26,6 @@ const BaseScreen2 = ({
     color: '',
     onPress: function () {},
   },
-  allowLoadable = true,
-  isLoading = false,
   errorToast = {
     show: false,
     message1: '',
@@ -102,15 +100,7 @@ const BaseScreen2 = ({
           </>
         </SafeAreaView>
 
-        <View style={styles.body}>
-          {allowLoadable ? (
-            <BaseLoadableView isLoading={isLoading} scrollable={true}>
-              {children}
-            </BaseLoadableView>
-          ) : (
-            <BaseScrollView>{children}</BaseScrollView>
-          )}
-        </View>
+        <View style={styles.body}>{children}</View>
 
         {fabProps.show && (
           <FAB

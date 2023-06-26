@@ -11,8 +11,6 @@ import {
   BaseText,
 } from '../../Components';
 
-import ROUTES from '../../_shared/constant/routes';
-
 const InvestmentForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -32,7 +30,7 @@ const InvestmentForm = ({ route }) => {
   };
 
   const onSave = () => {
-    navigation.navigate(ROUTES.account);
+    navigation.goBack();
   };
 
   return (

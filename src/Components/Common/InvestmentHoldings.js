@@ -1,6 +1,6 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { AmountText, BaseText } from '../Text';
+import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseRow } from '../View';
 
 const InvestmentHoldings = () => {
@@ -10,19 +10,32 @@ const InvestmentHoldings = () => {
     <View style={styles.body}>
       <BaseRow>
         <View>
-          <BaseText text3>VTI</BaseText>
+          <BaseText text3 style={styles.rowText}>
+            VTI
+          </BaseText>
           <BaseText text5>12 units</BaseText>
         </View>
 
-        <View>
-          <AmountText text3>3000</AmountText>
-          <BaseText text5>-200</BaseText>
+        <View style={styles.amount}>
+          <AmountText text3 style={styles.rowText}>
+            3000
+          </AmountText>
+
+          <EarningText currVal={3000} initialVal={3200} text5 />
         </View>
       </BaseRow>
     </View>
   );
 };
 
-const getStyles = theme => StyleSheet.create({});
+const getStyles = theme =>
+  StyleSheet.create({
+    rowText: {
+      marginBottom: 4,
+    },
+    amount: {
+      alignItems: 'flex-end',
+    },
+  });
 
 export default InvestmentHoldings;

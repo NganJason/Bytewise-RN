@@ -12,6 +12,7 @@ const AmountText = ({
   center = false,
   style = {},
   decimal = 2,
+  suffix = '',
   ...props
 }) => {
   const { theme } = useTheme();
@@ -31,23 +32,16 @@ const AmountText = ({
 
   const renderAmountText = () => {
     let text = '';
-
     children = Number(children);
-
     const { symbol } = getAmountAttr(children);
 
     // use symbol string to show negative
-    if (children < 0) {
-      children = children * -1;
-    }
+    children = Math.abs(children);
 
     const amount = Number(children.toFixed(decimal));
     const amountStr = amount.toLocaleString();
 
-    // add currency
-    text = `${CURRENCY} ${amountStr}`;
-
-    // add + or -
+    text = `${CURRENCY} ${amountStr} ${suffix}`;
     if (showSymbol) {
       text = `${symbol} ${text}`;
     }
@@ -74,6 +68,6 @@ const getStyles = theme =>
       color: theme.colors.color1,
     },
     negative: {
-      color: theme.colors.red,
+      color: theme.colors.regularRed,
     },
   });

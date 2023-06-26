@@ -7,7 +7,13 @@ import {
   BaseText,
 } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
-import { BaseCard, BaseGrid, BaseImage, BaseRow } from '../../Components/View';
+import {
+  BaseCard,
+  BaseGrid,
+  BaseImage,
+  BaseLoadableView,
+  BaseRow,
+} from '../../Components/View';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
@@ -101,7 +107,7 @@ const AccountScreen = () => {
             color={
               equityType === EQUITY_TYPE_ASSET
                 ? theme.colors.color2
-                : theme.colors.red
+                : theme.colors.lightRed
             }>
             <BaseText text3 style={{ color: theme.colors.white }}>
               {capitalizeWords(item.account_name)}
@@ -169,7 +175,7 @@ const AccountScreen = () => {
         component: getHeader(),
         allowDrawer: true,
       }}>
-      <>
+      <BaseLoadableView scrollable={true}>
         <View>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
@@ -185,7 +191,7 @@ const AccountScreen = () => {
           </BaseRow>
           {renderContent(EQUITY_TYPE_LIABILITY)}
         </View>
-      </>
+      </BaseLoadableView>
     </BaseScreen2>
   );
 };

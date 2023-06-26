@@ -67,7 +67,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
         allowBack: true,
         backgroundColor: theme.colors.color13,
       }}>
-      <>
+      <View style={styles.body}>
         <BaseText h3>Holdings</BaseText>
         <BaseButton
           title="Add holdings"
@@ -88,7 +88,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
           }}
         />
         <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
-      </>
+      </View>
     </BaseScreen2>
   );
 };
@@ -100,6 +100,9 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       height: screenHeight * 0.18,
       position: 'absolute',
       right: screenWidth * -0.12,
+    },
+    body: {
+      paddingVertical: theme.spacing.lg,
     },
     titleText: {
       marginTop: theme.spacing.lg,
