@@ -10,6 +10,7 @@ import {
 } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
 import InvestmentHoldings from '../../Components/Common/InvestmentHoldings';
+import { EarningText } from '../../Components/Text';
 import { BaseLoadableView } from '../../Components/View';
 import { graph } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
@@ -53,6 +54,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
           <AmountText style={styles.titleText} h2 decimal={0}>
             21000
           </AmountText>
+          <EarningText currVal={3300} initialVal={3000} text5 />
           <BaseText text4>Investment</BaseText>
         </View>
         <BaseImage source={graph} containerStyle={styles.image} />
