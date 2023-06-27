@@ -5,30 +5,33 @@ import ROUTES from '../../_shared/constant/routes';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseRow } from '../View';
 
-const InvestmentHoldings = () => {
+const InvestmentBreakdown = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
   return (
-    <View style={styles.body}>
+    <View>
       <BaseRow
         onPress={() => {
           navigation.navigate(ROUTES.holdingBreakdown);
         }}>
         <View>
-          <BaseText text3 style={styles.rowText}>
-            VTI
+          <BaseText text3>VTI</BaseText>
+          <BaseText text5 style={styles.subRow}>
+            12 units
           </BaseText>
-          <BaseText text5>12 units</BaseText>
         </View>
 
-        <View style={styles.amount}>
-          <AmountText text3 style={styles.rowText}>
-            3000
-          </AmountText>
+        <View style={styles.rightContainer}>
+          <AmountText text3>3000</AmountText>
 
-          <EarningText currVal={3000} initialVal={3200} text5 />
+          <EarningText
+            currVal={3000}
+            initialVal={3200}
+            text5
+            style={styles.subRow}
+          />
         </View>
       </BaseRow>
     </View>
@@ -37,12 +40,13 @@ const InvestmentHoldings = () => {
 
 const getStyles = theme =>
   StyleSheet.create({
-    rowText: {
-      marginBottom: 4,
+    subRow: {
+      marginTop: 4,
+      color: theme.colors.color8,
     },
-    amount: {
+    rightContainer: {
       alignItems: 'flex-end',
     },
   });
 
-export default InvestmentHoldings;
+export default InvestmentBreakdown;

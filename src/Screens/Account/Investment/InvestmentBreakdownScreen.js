@@ -13,7 +13,7 @@ import {
   EarningText,
   BaseLoadableView,
   EmptyContent,
-  InvestmentHoldings,
+  InvestmentBreakdown,
 } from '../../../Components';
 import { graph } from '../../../_shared/constant/asset';
 
@@ -30,7 +30,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const renderRows = () => {
     let rows = [];
 
-    rows.push(<InvestmentHoldings key={account_id} />);
+    rows.push(<InvestmentBreakdown key={account_id} />);
 
     if (rows.length === 0) {
       return (

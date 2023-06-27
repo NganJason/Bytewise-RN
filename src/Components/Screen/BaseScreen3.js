@@ -29,7 +29,7 @@ const BaseScreen3 = ({
   const calculateContentMarginTop = () => {
     const floatingHeaderMinHeight = screenHeight * 0.2;
 
-    let extraMarginTop = (screenHeight * 0.14) / 2;
+    let extraMarginTop = (screenHeight * 0.18) / 2;
     if (floatingHeaderHeight > floatingHeaderMinHeight) {
       extraMarginTop += floatingHeaderHeight - floatingHeaderMinHeight;
     }
@@ -47,7 +47,7 @@ const BaseScreen3 = ({
           </>
         </SafeAreaView>
         <View
-          style={[styles.floatingHeader, { minHeight: floatingHeaderHeight }]}
+          style={[styles.floatingHeader, { minHeight: '25%' }]}
           onLayout={event =>
             onFloatingHeaderResize(event.nativeEvent.layout.height)
           }>

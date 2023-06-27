@@ -44,7 +44,7 @@ import {
   Category,
   BudgetUsage,
   EmptyContent,
-  InvestmentHoldings,
+  InvestmentBreakdown,
 } from './Common';
 
 export {
@@ -80,5 +80,5 @@ export {
   LinkText,
   EarningText,
   EmptyContent,
-  InvestmentHoldings,
+  InvestmentBreakdown,
 };
