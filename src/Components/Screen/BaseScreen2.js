@@ -1,13 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
 
-import { BaseLoadableView, BaseScrollView, BaseToast } from '../View';
+import { BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useDimension from '../../_shared/hooks/dimension';
-import { IconButton } from '../Touch';
+import { BackIcon, DrawerIcon } from '../Common/Icon';
 
 const BaseScreen2 = ({
   children,
@@ -36,7 +35,6 @@ const BaseScreen2 = ({
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
-  const navigation = useNavigation();
   const { backgroundColor = '#F3F7FB' } = headerProps;
 
   useEffect(() => {
@@ -55,36 +53,6 @@ const BaseScreen2 = ({
     errorToast.onHide,
   ]);
 
-  const getDrawerIcon = () => {
-    return (
-      <View>
-        <IconButton
-          buttonSize="sm"
-          type="clear"
-          onPress={() => navigation.openDrawer()}
-          iconName="menu"
-          iconType="entypo"
-          color={theme.colors.color8}
-          align="left"
-        />
-      </View>
-    );
-  };
-
-  const getBackIcon = () => {
-    return (
-      <IconButton
-        buttonSize="xs"
-        type="clear"
-        onPress={() => navigation.goBack()}
-        iconName="arrow-left"
-        iconType="feather"
-        color={theme.colors.color8}
-        align="left"
-      />
-    );
-  };
-
   return (
     <HideKeyboard>
       <>
@@ -94,8 +62,8 @@ const BaseScreen2 = ({
             backgroundColor: backgroundColor,
           }}>
           <>
-            {headerProps.allowDrawer && getDrawerIcon()}
-            {headerProps.allowBack && getBackIcon()}
+            {headerProps.allowDrawer && <DrawerIcon />}
+            {headerProps.allowBack && <BackIcon />}
             <View style={styles.headerContent}>{headerProps.component}</View>
           </>
         </SafeAreaView>
@@ -129,6 +97,7 @@ const getStyles = (theme, screenHeight) =>
     header: {
       minHeight: screenHeight * 0.25,
       paddingHorizontal: 26,
+      paddingBottom: 20,
     },
     headerContent: {
       marginTop: theme.spacing.lg,
@@ -138,6 +107,7 @@ const getStyles = (theme, screenHeight) =>
       alignItems: 'center',
     },
     body: {
+      minHeight: '100%',
       paddingVertical: theme.spacing.md,
       paddingHorizontal: 26,
       backgroundColor: theme.colors.white,

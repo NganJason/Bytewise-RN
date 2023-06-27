@@ -29,8 +29,9 @@ import BudgetForm from './src/Screens/Budget/BudgetForm';
 import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 import AccountForm from './src/Screens/Account/AccountForm';
 import AccountBreakdownScreen from './src/Screens/Account/AccountBreakdownScreen';
-import InvestmentBreakdownScreen from './src/Screens/Account/InvestmentBreakdownScreen';
-import InvestmentForm from './src/Screens/Account/InvestmentForm';
+import InvestmentBreakdownScreen from './src/Screens/Account/Investment/InvestmentBreakdownScreen';
+import InvestmentForm from './src/Screens/Account/Investment/InvestmentForm';
+import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
 
 const TEST_BASE_URL = 'http://localhost:9090/api/v1';
 
@@ -172,6 +173,10 @@ function Main() {
               <Stack.Screen
                 name={ROUTES.investmentForm}
                 component={InvestmentForm}
+              />
+              <Stack.Screen
+                name={ROUTES.holdingBreakdown}
+                component={HoldingBreakdownScreen}
               />
             </>
           ) : (

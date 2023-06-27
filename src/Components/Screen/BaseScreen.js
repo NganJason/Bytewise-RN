@@ -1,11 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Icon, FAB, Header } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
-
-import { IconButton } from '../Touch';
 import { BaseLoadableView, BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
+import { BackIcon, DrawerIcon } from '../Common/Icon';
 
 const BaseScreen = ({
   children,
@@ -38,7 +36,6 @@ const BaseScreen = ({
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const navigation = useNavigation();
 
   useEffect(() => {
     if (errorToast.show) {
@@ -64,31 +61,9 @@ const BaseScreen = ({
 
   const getLeftComponent = () => {
     if (headerProps.allowDrawer) {
-      return (
-        <View>
-          <IconButton
-            buttonSize="sm"
-            type="clear"
-            onPress={() => navigation.openDrawer()}
-            iconName="menu"
-            iconType="entypo"
-            color={theme.colors.color8}
-            align="left"
-          />
-        </View>
-      );
+      return <DrawerIcon />;
     } else if (headerProps.allowBack) {
-      return (
-        <IconButton
-          buttonSize="xs"
-          type="clear"
-          onPress={() => navigation.goBack()}
-          iconName="arrow-left"
-          iconType="feather"
-          color={theme.colors.color8}
-          align="left"
-        />
-      );
+      return <BackIcon />;
     }
 
     return headerProps.leftComponent;

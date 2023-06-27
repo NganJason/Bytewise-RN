@@ -1,14 +1,21 @@
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
+import ROUTES from '../../_shared/constant/routes';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseRow } from '../View';
 
 const InvestmentHoldings = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const navigation = useNavigation();
+
   return (
     <View style={styles.body}>
-      <BaseRow>
+      <BaseRow
+        onPress={() => {
+          navigation.navigate(ROUTES.holdingBreakdown);
+        }}>
         <View>
           <BaseText text3 style={styles.rowText}>
             VTI

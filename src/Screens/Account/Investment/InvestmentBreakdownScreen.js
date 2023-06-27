@@ -1,21 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
+import useDimension from '../../../_shared/hooks/dimension';
+import { EmptyContentConfig } from '../../../_shared/constant/constant';
+import ROUTES from '../../../_shared/constant/routes';
 import {
   AmountText,
-  BaseButton,
   BaseImage,
-  BaseScreen2,
   BaseText,
-} from '../../Components';
-import { EmptyContent } from '../../Components/Common';
-import InvestmentHoldings from '../../Components/Common/InvestmentHoldings';
-import { EarningText } from '../../Components/Text';
-import { BaseLoadableView } from '../../Components/View';
-import { graph } from '../../_shared/constant/asset';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
-import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+  BaseButton,
+  BaseScreen2,
+  EarningText,
+  BaseLoadableView,
+  EmptyContent,
+  InvestmentHoldings,
+} from '../../../Components';
+import { graph } from '../../../_shared/constant/asset';
 
 const mockData = [];
 

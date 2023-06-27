@@ -9,7 +9,7 @@ import {
   BaseInput,
   BaseScreen,
   BaseText,
-} from '../../Components';
+} from '../../../Components';
 
 const InvestmentForm = ({ route }) => {
   const { theme } = useTheme();
@@ -39,7 +39,7 @@ const InvestmentForm = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Add holdings</BaseText>
+            <BaseText h2>Add holding</BaseText>
           </View>
         ),
       }}>
