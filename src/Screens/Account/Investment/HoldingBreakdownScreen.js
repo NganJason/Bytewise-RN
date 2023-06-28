@@ -10,10 +10,42 @@ import {
   AmountText,
   EarningText,
   BaseButton,
+  HoldingBreakdown,
 } from '../../../Components';
-import HoldingBreakdown from '../../../Components/Common/HoldingBreakdown';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import ROUTES from '../../../_shared/constant/routes';
+
+const mockData = {
+  holding_id: '1',
+  symbol: 'VTI',
+  amount: 21000,
+  cost: 20000,
+  unit: 10.3184,
+  wac: 23.09,
+  breakdown: [
+    {
+      share_id: '1',
+      unit: 140,
+      date: '12-06-2023',
+      amount: 3000,
+      cost_per_unit: 20,
+    },
+    {
+      share_id: '2',
+      unit: 52.3,
+      date: '27-04-2023',
+      amount: 1000,
+      cost_per_unit: 22,
+    },
+    {
+      share_id: '3',
+      unit: 31.7,
+      date: '03-04-2023',
+      amount: 500,
+      cost_per_unit: 15,
+    },
+  ],
+};
 
 const HoldingBreakdownScreen = ({}) => {
   const { theme } = useTheme();
@@ -22,8 +54,12 @@ const HoldingBreakdownScreen = ({}) => {
 
   const renderRows = () => {
     let rows = [];
+    let { breakdown = [] } = mockData || {};
 
-    rows.push(<HoldingBreakdown key={1} />);
+    breakdown.map(d => {
+      rows.push(<HoldingBreakdown key={d.share_id} share={d} />);
+    });
+
     if (rows.length === 0) {
       return (
         <View style={styles.emptyContent}>
@@ -38,44 +74,54 @@ const HoldingBreakdownScreen = ({}) => {
     return rows;
   };
 
-  const getHeader = () => {
+  const renderHeader = () => {
     return (
-      <View style={styles.header}>
-        <BaseText h1>VTI</BaseText>
-        <BaseText text5>Current value</BaseText>
-        <AmountText style={styles.titleText} h2 decimal={0}>
-          21000
+      <>
+        <BaseText h1>{mockData.symbol.toUpperCase()}</BaseText>
+        <BaseText text5 margin={{ top: 8, bottom: 4 }}>
+          Current value
+        </BaseText>
+        <AmountText
+          style={styles.titleText}
+          h2
+          decimal={0}
+          margin={{ bottom: 8 }}>
+          {mockData.amount}
         </AmountText>
 
         <View style={styles.headerRow}>
           <BaseText text5>Invested amount</BaseText>
-          <AmountText text5>21000</AmountText>
+          <AmountText text5>{mockData.cost}</AmountText>
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Profit/Loss</BaseText>
-          <EarningText currVal={3300} initialVal={3000} text5 />
+          <EarningText
+            currVal={mockData.amount}
+            initialVal={mockData.cost}
+            text5
+          />
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Quantity</BaseText>
-          <BaseText text5>10.3184</BaseText>
+          <BaseText text5>{mockData.unit}</BaseText>
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>WAC</BaseText>
-          <AmountText text5>23.09</AmountText>
+          <AmountText text5>{mockData.wac}</AmountText>
         </View>
-      </View>
+      </>
     );
   };
 
   return (
-    <BaseScreen3 headerProps={{ allowBack: true, component: getHeader() }}>
+    <BaseScreen3 headerProps={{ allowBack: true, component: renderHeader() }}>
       <>
         <BaseText h3>History</BaseText>
         <BaseButton
-          title="Add holdings"
+          title="Add holding"
           type="clear"
           align="flex-start"
           size="sm"
@@ -105,7 +151,6 @@ const getStyles = theme =>
       justifyContent: 'space-between',
       marginVertical: theme.spacing.xs,
     },
-    header: { padding: theme.spacing.xl },
   });
 
 export default HoldingBreakdownScreen;

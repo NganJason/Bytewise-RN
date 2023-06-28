@@ -1,8 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { BaseScreen, BaseText } from '../../Components';
-import { BaseCard, BaseGrid, BaseScrollView } from '../../Components/View';
+import {
+  BaseScreen,
+  BaseText,
+  BaseCard,
+  BaseGrid,
+  BaseScrollView,
+} from '../../Components';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
@@ -12,17 +17,17 @@ import {
   ACCOUNT_TYPE_LOAN,
   ACCOUNT_TYPE_MORTGAGE,
   EQUITY_TYPE_ASSET,
-  EQUITY_TYPE_LIABILITY,
+  EQUITY_TYPE_DEBT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 
 const assets = [
   ACCOUNT_TYPE_CASH,
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
 ];
-const liabilities = [
+const debts = [
   ACCOUNT_TYPE_CREDIT_CARD,
   ACCOUNT_TYPE_LOAN,
   ACCOUNT_TYPE_MORTGAGE,
@@ -38,7 +43,7 @@ const AccountSelectionScreen = () => {
     if (type === EQUITY_TYPE_ASSET) {
       items = assets;
     } else {
-      items = liabilities;
+      items = debts;
     }
 
     return (
@@ -59,14 +64,13 @@ const AccountSelectionScreen = () => {
             }>
             <BaseText
               text3
-              style={{
-                ...styles.cardText,
-                color:
-                  type === EQUITY_TYPE_ASSET
-                    ? theme.colors.color10
-                    : theme.colors.color12,
-              }}>
-              {capitalizeWords(ACCOUNT_TYPES[item])}
+              margin={{ vertical: 10 }}
+              color={
+                type === EQUITY_TYPE_ASSET
+                  ? theme.colors.color10
+                  : theme.colors.color12
+              }>
+              {capitalize(ACCOUNT_TYPES[item])}
             </BaseText>
           </BaseCard>
         )}
@@ -80,7 +84,7 @@ const AccountSelectionScreen = () => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Add Account</BaseText>
+            <BaseText h2>Add account</BaseText>
           </View>
         ),
       }}>
@@ -91,8 +95,8 @@ const AccountSelectionScreen = () => {
         </View>
 
         <View>
-          <BaseText h3>Liabilities</BaseText>
-          {renderContent(EQUITY_TYPE_LIABILITY)}
+          <BaseText h3>Debts</BaseText>
+          {renderContent(EQUITY_TYPE_DEBT)}
         </View>
       </BaseScrollView>
     </BaseScreen>
@@ -103,9 +107,6 @@ const getStyles = theme => {
   return StyleSheet.create({
     grid: {
       marginTop: 0,
-    },
-    cardText: {
-      marginVertical: 10,
     },
   });
 };

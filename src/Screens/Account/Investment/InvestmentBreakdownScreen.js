@@ -3,6 +3,7 @@ import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import useDimension from '../../../_shared/hooks/dimension';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
+import { graph } from '../../../_shared/constant/asset';
 import ROUTES from '../../../_shared/constant/routes';
 import {
   AmountText,
@@ -13,11 +14,39 @@ import {
   EarningText,
   BaseLoadableView,
   EmptyContent,
-  InvestmentBreakdown,
+  InvestmentHolding,
 } from '../../../Components';
-import { graph } from '../../../_shared/constant/asset';
+import { capitalize } from '../../../_shared/util/string';
 
-const mockData = [];
+const mockData = {
+  account_id: '1',
+  account_name: 'stocks',
+  amount: 21000,
+  cost: 19000,
+  holdings: [
+    {
+      holding_id: '1',
+      symbol: 'AAPL',
+      amount: 2000,
+      cost: 2100,
+      unit: 10,
+    },
+    {
+      holding_id: '2',
+      symbol: 'MSFT',
+      amount: 1800,
+      cost: 1300,
+      unit: 21.5,
+    },
+    {
+      holding_id: '3',
+      symbol: 'VTI',
+      amount: 12000,
+      cost: 11000,
+      unit: 43.5,
+    },
+  ],
+};
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -29,8 +58,11 @@ const InvestmentBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     let rows = [];
+    const { holdings } = mockData || {};
 
-    rows.push(<InvestmentBreakdown key={account_id} />);
+    holdings.map(d => {
+      rows.push(<InvestmentHolding key={d.holding_id} holding={d} />);
+    });
 
     if (rows.length === 0) {
       return (
@@ -46,15 +78,24 @@ const InvestmentBreakdownScreen = ({ route }) => {
     return rows;
   };
 
-  const getHeader = () => {
+  const renderHeader = () => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1>Stocks</BaseText>
-          <AmountText style={styles.titleText} h2 decimal={0}>
-            21000
+          <BaseText h1>{capitalize(mockData.account_name)}</BaseText>
+          <AmountText
+            style={styles.titleText}
+            h2
+            decimal={0}
+            margin={{ top: 8 }}>
+            {mockData.amount}
           </AmountText>
-          <EarningText currVal={3300} initialVal={3000} text5 />
+          <EarningText
+            currVal={mockData.amount}
+            initialVal={mockData.cost}
+            text5
+            margin={{ vertical: 2 }}
+          />
           <BaseText text4>Investment</BaseText>
         </View>
         <BaseImage source={graph} containerStyle={styles.image} />
@@ -65,14 +106,14 @@ const InvestmentBreakdownScreen = ({ route }) => {
   return (
     <BaseScreen2
       headerProps={{
-        component: getHeader(),
+        component: renderHeader(),
         allowBack: true,
         backgroundColor: theme.colors.color13,
       }}>
       <View style={styles.body}>
         <BaseText h3>Holdings</BaseText>
         <BaseButton
-          title="Add holdings"
+          title="Add holding"
           type="clear"
           align="flex-start"
           size="sm"
@@ -105,10 +146,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     },
     body: {
       paddingVertical: theme.spacing.lg,
-    },
-    titleText: {
-      marginTop: theme.spacing.lg,
-      marginBottom: theme.spacing.sm,
     },
     emptyContent: {
       marginTop: '30%',

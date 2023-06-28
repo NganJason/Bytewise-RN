@@ -1,12 +1,16 @@
 import { useTheme } from '@rneui/themed';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { AmountText, BaseImage, BaseScreen2, BaseText } from '../../Components';
 import {
+  AmountText,
+  BaseImage,
+  BaseScreen2,
+  BaseText,
   DailyTransactions,
   DateNavigator,
   EmptyContent,
-} from '../../Components/Common';
-import { BaseLoadableView } from '../../Components/View';
+  BaseLoadableView,
+} from '../../Components';
 import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { coin } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
@@ -45,6 +49,11 @@ const AccountBreakdownScreen = ({ route }) => {
 
   const account_id = route.params?.account_id || '';
 
+  const [activeDate, setActiveDate] = useState(new Date());
+  const onDateMove = newDate => {
+    setActiveDate(newDate);
+  };
+
   const renderRows = () => {
     let rows = [];
 
@@ -70,12 +79,12 @@ const AccountBreakdownScreen = ({ route }) => {
     return rows;
   };
 
-  const getHeader = () => {
+  const renderHeader = () => {
     return (
       <>
         <View style={styles.title}>
           <BaseText h1>OCBC</BaseText>
-          <AmountText style={styles.titleText} h2 decimal={0}>
+          <AmountText h2 decimal={0} margin={{ top: 8, bottom: 6 }}>
             21000
           </AmountText>
           <BaseText text4>Saving Account</BaseText>
@@ -88,13 +97,17 @@ const AccountBreakdownScreen = ({ route }) => {
   return (
     <BaseScreen2
       headerProps={{
-        component: getHeader(),
+        component: renderHeader(),
         allowBack: true,
         backgroundColor: theme.colors.color4,
       }}>
       <>
         <View style={styles.dataNavigator}>
-          <DateNavigator />
+          <DateNavigator
+            startingDate={activeDate}
+            onForward={onDateMove}
+            onBackward={onDateMove}
+          />
         </View>
         <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
       </>
@@ -109,9 +122,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       height: screenHeight * 0.18,
       position: 'absolute',
       right: screenWidth * -0.15,
-    },
-    titleText: {
-      marginVertical: theme.spacing.md,
     },
     dataNavigator: {
       alignItems: 'center',

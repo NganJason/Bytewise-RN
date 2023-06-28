@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useTheme } from '@rneui/themed';
 import { View, StyleSheet } from 'react-native';
-
 import {
   BaseScreen,
   DateNavigator,
   DailyTransactions,
   AggrSummary,
+  EmptyContent,
+  BaseLoadableView,
 } from '../../Components';
-
 import {
   getUnixRangeOfMonth,
   getYear,
@@ -23,9 +23,7 @@ import {
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { BaseLoadableView } from '../../Components/View';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;

@@ -6,20 +6,26 @@ import useDimension from '../../_shared/hooks/dimension';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 import HideKeyboard from './HideKeyboard';
 
+const headerPercentage = 0.25;
+const floatingHeaderPercentage = 0.2;
+
 const BaseScreen3 = ({
   headerProps = {
     component: null,
     allowBack: false,
     allowDrawer: false,
+    backgroundColor: '#F3F7FB',
   },
   children,
 }) => {
   const { theme } = useTheme();
   const { screenHeight, screenWidth } = useDimension();
   const styles = getStyles(theme, screenHeight, screenWidth);
+  const floatingHeaderMinHeight = screenHeight * floatingHeaderPercentage;
+  const { backgroundColor: headerColor = '#F3F7FB' } = headerProps || {};
 
   const [floatingHeaderHeight, setFloatingHeaderHeight] = useState(
-    screenHeight * 0.2,
+    floatingHeaderMinHeight,
   );
 
   const onFloatingHeaderResize = newHeight => {
@@ -27,27 +33,22 @@ const BaseScreen3 = ({
   };
 
   const calculateContentMarginTop = () => {
-    const floatingHeaderMinHeight = screenHeight * 0.2;
-
-    let extraMarginTop = (screenHeight * 0.18) / 2;
-    if (floatingHeaderHeight > floatingHeaderMinHeight) {
-      extraMarginTop += floatingHeaderHeight - floatingHeaderMinHeight;
-    }
-
-    return extraMarginTop;
+    let marginTop = floatingHeaderMinHeight / 2;
+    marginTop += floatingHeaderHeight - floatingHeaderMinHeight;
+    return marginTop;
   };
 
   return (
     <HideKeyboard>
       <>
-        <SafeAreaView style={styles.header}>
+        <SafeAreaView style={[styles.header, { backgroundColor: headerColor }]}>
           <>
             {headerProps.allowDrawer && <DrawerIcon />}
             {headerProps.allowBack && <BackIcon />}
           </>
         </SafeAreaView>
         <View
-          style={[styles.floatingHeader, { minHeight: '25%' }]}
+          style={styles.floatingHeader}
           onLayout={event =>
             onFloatingHeaderResize(event.nativeEvent.layout.height)
           }>
@@ -70,15 +71,15 @@ const BaseScreen3 = ({
 const getStyles = (theme, screenHeight, screenWidth) =>
   StyleSheet.create({
     header: {
-      minHeight: screenHeight * 0.25,
+      minHeight: screenHeight * headerPercentage,
       paddingHorizontal: 26,
-      backgroundColor: theme.colors.veryLightBlue,
     },
     floatingHeader: {
-      minHeight: screenHeight * 0.2,
+      minHeight: screenHeight * floatingHeaderPercentage,
       width: screenWidth * 0.9,
+      padding: 16,
       position: 'absolute',
-      top: '12.5%',
+      top: `${(headerPercentage / 2) * 100}%`,
       left: (screenWidth - screenWidth * 0.9) / 2,
       backgroundColor: theme.colors.white,
       shadowColor: theme.colors.black,
@@ -89,7 +90,7 @@ const getStyles = (theme, screenHeight, screenWidth) =>
       shadowOpacity: 0.25,
       shadowRadius: 10,
       elevation: 10,
-      zIndex: 30,
+      zIndex: 2,
       borderRadius: 12,
     },
     body: {
@@ -106,7 +107,6 @@ const getStyles = (theme, screenHeight, screenWidth) =>
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
-      zIndex: 1,
     },
     content: {
       flex: 1,

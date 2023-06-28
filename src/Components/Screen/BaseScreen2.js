@@ -97,10 +97,10 @@ const getStyles = (theme, screenHeight) =>
     header: {
       minHeight: screenHeight * 0.25,
       paddingHorizontal: 26,
-      paddingBottom: 20,
+      paddingBottom: 22,
     },
     headerContent: {
-      marginTop: theme.spacing.lg,
+      marginTop: theme.spacing.md,
       paddingHorizontal: 24,
       flexDirection: 'row',
       justifyContent: 'left',

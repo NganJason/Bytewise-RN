@@ -20,6 +20,8 @@ const BaseText = ({
   numberOfLines = 0,
   ellipsizeMode = 'tail',
   center = false,
+  margin = { top: 0, bottom: 0, left: 0, right: 0, vertical: 0, horizontal: 0 },
+  color = '#1D1A1B',
   style = {},
 }) => {
   const { theme } = useTheme();
@@ -59,6 +61,26 @@ const BaseText = ({
     }
   };
 
+  // top, bottom, left, right take precedence over vertical and horizontal
+  const getMargin = () => {
+    let m = {};
+    if (margin.top !== undefined || margin.bottom !== undefined) {
+      m.marginTop = margin.top;
+      m.marginBottom = margin.bottom;
+    } else {
+      m.marginVertical = margin.vertical;
+    }
+
+    if (margin.left !== undefined || margin.right !== undefined) {
+      m.marginLeft = margin.left;
+      m.marginRight = margin.right;
+    } else {
+      m.marginHorizontal = margin.horizontal;
+    }
+
+    return m;
+  };
+
   const commonTextStyles = getTextCommonStyles();
 
   return (
@@ -66,6 +88,8 @@ const BaseText = ({
       style={{
         ...commonTextStyles,
         ...(center && styles.center),
+        ...getMargin(),
+        ...{ color: color },
         ...style,
       }}
       adjustsFontSizeToFit={adjustsFontSizeToFit}

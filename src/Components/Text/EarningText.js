@@ -6,7 +6,10 @@ const EarningText = ({ currVal = 0, initialVal = 0, ...props }) => {
   };
 
   const getEarningPercentage = () => {
-    let percentage = (currVal - initialVal) / initialVal;
+    let percentage = getEarning() / initialVal;
+    if (isNaN(percentage)) {
+      return 0;
+    }
     return percentage.toFixed(2);
   };
 

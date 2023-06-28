@@ -5,7 +5,7 @@ import useDimension from '../../_shared/hooks/dimension';
 import { BaseButton } from '../Touch';
 import BaseCheckbox from './BaseCheckbox';
 import TouchInput from './TouchInput';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 import { BaseDivider } from '../View';
 
 const MultiSelectBottomInput = ({
@@ -66,7 +66,7 @@ const MultiSelectBottomInput = ({
   const renderInput = () => {
     let allNames = [];
     selected.map(val => {
-      allNames.push(capitalizeWords(val.name));
+      allNames.push(capitalize(val.name));
     });
 
     return allNames.join(', ');
@@ -79,7 +79,7 @@ const MultiSelectBottomInput = ({
       rows.push(
         <View key={idx} style={styles.row}>
           <BaseCheckbox
-            title={capitalizeWords(item.name)}
+            title={capitalize(item.name)}
             value={item}
             onPress={onSelect}
             checked={isSelected(item)}

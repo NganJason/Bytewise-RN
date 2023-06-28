@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { useGetUser } from '../../_shared/query/user';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
 
@@ -75,7 +75,7 @@ const CustomDrawer = () => {
     <View style={styles.screen}>
       <DrawerContentScrollView>
         <View>
-          <BaseText h2>{capitalizeWords(getUsername())}</BaseText>
+          <BaseText h2>{capitalize(getUsername())}</BaseText>
         </View>
         <BaseDivider margin={30} />
 

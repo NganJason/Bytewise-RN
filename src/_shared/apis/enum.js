@@ -31,9 +31,9 @@ export const ACCOUNT_TYPES = {
 };
 
 export const EQUITY_TYPE_ASSET = 1;
-export const EQUITY_TYPE_LIABILITY = 2;
+export const EQUITY_TYPE_DEBT = 2;
 
 export const EQUITY_TYPES = {
   [EQUITY_TYPE_ASSET]: 'Asset',
-  [EQUITY_TYPE_LIABILITY]: 'Liability',
+  [EQUITY_TYPE_DEBT]: 'debt',
 };

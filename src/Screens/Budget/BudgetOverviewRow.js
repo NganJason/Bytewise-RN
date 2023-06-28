@@ -6,7 +6,7 @@ import {
   BaseLinearProgress,
   BaseText,
 } from '../../Components';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 
 const BudgetOverviewRow = ({ budget }) => {
   const { theme } = useTheme();
@@ -17,7 +17,7 @@ const BudgetOverviewRow = ({ budget }) => {
   return (
     <View key={budget_id} style={styles.row}>
       <View style={styles.rowInfo}>
-        <BaseText text3>{capitalizeWords(budget_name)}</BaseText>
+        <BaseText text3>{capitalize(budget_name)}</BaseText>
 
         <View style={styles.aggr}>
           <AmountText text4 decimal={0} style={{ color: theme.colors.color7 }}>

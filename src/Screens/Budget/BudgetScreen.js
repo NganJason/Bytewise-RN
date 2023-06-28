@@ -21,7 +21,7 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useGetBudgets } from '../../_shared/query/budget';
 import { getDateString, getYear, getMonth } from '../../_shared/util/date';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 
 const BudgetScreen = () => {
   const { theme } = useTheme();
@@ -66,7 +66,7 @@ const BudgetScreen = () => {
                 target_date_string: getDateString(activeDate),
               });
             }}>
-            <BaseText text3>{capitalizeWords(budget.budget_name)}</BaseText>
+            <BaseText text3>{capitalize(budget.budget_name)}</BaseText>
             <AmountText text3>{amount}</AmountText>
           </BaseRow>,
         );

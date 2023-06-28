@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
@@ -46,8 +46,8 @@ const AccountForm = ({ route }) => {
   };
 
   const onAccountTypeChange = e => {
-    toggleAccountTypeModal();
     setAccountForm({ ...accountForm, account_type: e.value });
+    toggleAccountTypeModal();
   };
 
   const onBalanceChange = e => {

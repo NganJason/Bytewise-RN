@@ -34,6 +34,9 @@ import {
   BaseListItem,
   BaseImage,
   BaseLoadableView,
+  BaseGrid,
+  BaseCard,
+  BaseRow,
 } from './View';
 
 // Common
@@ -44,7 +47,8 @@ import {
   Category,
   BudgetUsage,
   EmptyContent,
-  InvestmentBreakdown,
+  InvestmentHolding,
+  HoldingBreakdown,
 } from './Common';
 
 export {
@@ -68,6 +72,9 @@ export {
   BaseBottomSheet,
   BaseTabView,
   BaseLoadableView,
+  BaseGrid,
+  BaseCard,
+  BaseRow,
   DateNavigator,
   BaseLinearProgress,
   BaseToast,
@@ -80,5 +87,6 @@ export {
   LinkText,
   EarningText,
   EmptyContent,
-  InvestmentBreakdown,
+  InvestmentHolding,
+  HoldingBreakdown,
 };

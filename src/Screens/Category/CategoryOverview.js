@@ -17,7 +17,7 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 import { BaseLoadableView, BaseRow } from '../../Components/View';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
@@ -62,7 +62,7 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
                 active_timestamp: activeDate.valueOf(), // pass unix as date object is not serializable
               });
             }}>
-            <BaseText text3>{capitalizeWords(category.category_name)}</BaseText>
+            <BaseText text3>{capitalize(category.category_name)}</BaseText>
             <AmountText text3>{sum}</AmountText>
           </BaseRow>,
         );

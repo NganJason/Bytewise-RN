@@ -15,7 +15,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { getDate, getDay } from '../../_shared/util/date';
 import { BaseChip } from '../View';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 
 const DailyTransactions = ({
   timestamp = 0,
@@ -97,7 +97,7 @@ const DailyTransactions = ({
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {capitalizeWords(t.category.category_name)}
+                  {capitalize(t.category.category_name)}
                 </BaseText>
                 <View style={styles.noteWrapper}>
                   <BaseText
@@ -105,7 +105,7 @@ const DailyTransactions = ({
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {capitalizeWords(t.note)}
+                    {capitalize(t.note)}
                   </BaseText>
                 </View>
                 <AmountText

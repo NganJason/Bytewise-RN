@@ -65,8 +65,8 @@ export const EmptyContentConfig = {
     text: 'No assets yet',
     image: paper,
   },
-  liability: {
-    text: 'No liabilities yet',
+  debt: {
+    text: 'No debts yet',
     image: paper,
   },
 };

@@ -9,9 +9,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
-import CashAccountScreen from './src/Screens/Equity/CashAccountScreen';
-import InvestmentAccountScreen from './src/Screens/Equity/InvestmentAccountScreen';
-import InvestmentLotBreakdownScreen from './src/Screens/Equity/InvestmentLotBreakdownScreen';
 import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
 import LoginScreen from './src/Screens/User/LoginScreen';
@@ -146,18 +143,6 @@ function Main() {
                 component={CategoryBreakdownScreen}
               />
               <Stack.Screen
-                name={ROUTES.cashAccount}
-                component={CashAccountScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.investmentAccount}
-                component={InvestmentAccountScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.investmentLotBreakdown}
-                component={InvestmentLotBreakdownScreen}
-              />
-              <Stack.Screen
                 name={ROUTES.accountSelection}
                 component={AccountSelectionScreen}
               />
@@ -167,7 +152,7 @@ function Main() {
                 component={AccountBreakdownScreen}
               />
               <Stack.Screen
-                name={ROUTES.investmentBreakdown}
+                name={ROUTES.InvestmentHolding}
                 component={InvestmentBreakdownScreen}
               />
               <Stack.Screen

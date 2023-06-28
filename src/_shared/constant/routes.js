@@ -20,15 +20,9 @@ const ROUTES = {
   accountSelection: 'Account Selection',
   accountForm: 'Account Form',
   accountBreakdown: 'Account Breakdown',
-  investmentBreakdown: 'Investment Breakdown',
+  InvestmentHolding: 'Investment Breakdown',
   investmentForm: 'Investment Form',
   holdingBreakdown: 'Holding Breakdown',
-
-  asset: 'Asset',
-  assetAccount: 'Asset Account',
-  investmentAccount: 'Investment Account',
-  cashAccount: 'Cash Account',
-  investmentLotBreakdown: 'Investment Lot Breakdown',
 };
 
 export default ROUTES;

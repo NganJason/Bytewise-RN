@@ -15,6 +15,10 @@ const InvestmentForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const shareID = route.params?.share_id || '';
+  const isAddHolding = () => {
+    return shareID === '';
+  };
 
   const [investmentForm, setInvestmentForm] = useState({
     ticker_symbol: '',
@@ -39,7 +43,9 @@ const InvestmentForm = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Add holding</BaseText>
+            <BaseText h2>
+              {isAddHolding() ? 'Add holding' : 'Edit holding'}
+            </BaseText>
           </View>
         ),
       }}>

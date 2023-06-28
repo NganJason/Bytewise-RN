@@ -2,7 +2,7 @@ import { Icon } from '@rneui/base';
 import { useTheme } from '@rneui/themed';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 import { BaseText } from '../Text';
 
 const BaseScrollableTab = ({
@@ -46,7 +46,7 @@ const BaseScrollableTab = ({
                 ? styles.activeTabText
                 : styles.tabText
             }>
-            {capitalizeWords(tab.name)}
+            {capitalize(tab.name)}
           </BaseText>
         </TouchableOpacity>,
       );

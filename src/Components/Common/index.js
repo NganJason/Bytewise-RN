@@ -4,7 +4,8 @@ import AggrSummary from './AggrSummary';
 import BudgetUsage from './BudgetUsage';
 import EmptyContent from './EmptyContent';
 import CustomDrawer from './CustomDrawer';
-import InvestmentBreakdown from './InvestmentBreakdown';
+import InvestmentHolding from './InvestmentHolding';
+import HoldingBreakdown from './HoldingBreakdown';
 
 export {
   DailyTransactions,
@@ -13,5 +14,6 @@ export {
   BudgetUsage,
   EmptyContent,
   CustomDrawer,
-  InvestmentBreakdown,
+  InvestmentHolding,
+  HoldingBreakdown,
 };

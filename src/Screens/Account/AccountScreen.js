@@ -5,27 +5,25 @@ import {
   BaseButton,
   BaseScreen2,
   BaseText,
-} from '../../Components';
-import { EmptyContent } from '../../Components/Common';
-import {
+  EmptyContent,
   BaseCard,
   BaseGrid,
   BaseImage,
   BaseLoadableView,
   BaseRow,
-} from '../../Components/View';
+} from '../../Components';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
   EQUITY_TYPE_ASSET,
-  EQUITY_TYPE_LIABILITY,
+  EQUITY_TYPE_DEBT,
 } from '../../_shared/apis/enum';
 import { loginHero } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
-import { capitalizeWords } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util/string';
 const { View, StyleSheet } = require('react-native');
 
 const MockData = [
@@ -72,7 +70,14 @@ const AccountScreen = () => {
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
 
-  const computeSum = (equityType = EQUITY_TYPE_ASSET) => {
+  const computeSum = () => {
+    let assets = computeEquitySum(EQUITY_TYPE_ASSET);
+    let debts = computeEquitySum(EQUITY_TYPE_DEBT);
+
+    return assets - debts;
+  };
+
+  const computeEquitySum = (equityType = EQUITY_TYPE_ASSET) => {
     let sum = 0;
     MockData.map(d => {
       if (d.equity_type === equityType) {
@@ -80,6 +85,20 @@ const AccountScreen = () => {
       }
     });
     return sum;
+  };
+
+  const onAccountPress = account => {
+    const { account_id = '', account_type = ACCOUNT_TYPE_BANK_ACCOUNT } =
+      account;
+
+    let route = ROUTES.accountBreakdown;
+    if (account_type === ACCOUNT_TYPE_INVESTMENT) {
+      route = ROUTES.InvestmentHolding;
+    }
+
+    navigation.navigate(route, {
+      account_id: account_id,
+    });
   };
 
   const renderContent = (equityType = EQUITY_TYPE_ASSET) => {
@@ -109,14 +128,17 @@ const AccountScreen = () => {
                 ? theme.colors.color2
                 : theme.colors.lightRed
             }>
-            <BaseText text3 style={{ color: theme.colors.white }}>
-              {capitalizeWords(item.account_name)}
+            <BaseText text3 color={theme.colors.white}>
+              {capitalize(item.account_name)}
             </BaseText>
-            <AmountText text2 style={styles.cardAmountText}>
+            <AmountText
+              text2
+              color={theme.colors.white}
+              margin={{ top: 16, bottom: 4 }}>
               {item.amount}
             </AmountText>
-            <BaseText text4 style={{ color: theme.colors.white }}>
-              {capitalizeWords(ACCOUNT_TYPES[item.account_type])}
+            <BaseText text4 color={theme.colors.white}>
+              {capitalize(ACCOUNT_TYPES[item.account_type])}
             </BaseText>
           </BaseCard>
         )}
@@ -124,27 +146,13 @@ const AccountScreen = () => {
     );
   };
 
-  const onAccountPress = account => {
-    const { account_id = '', account_type = ACCOUNT_TYPE_BANK_ACCOUNT } =
-      account;
-
-    let route = ROUTES.accountBreakdown;
-    if (account_type === ACCOUNT_TYPE_INVESTMENT) {
-      route = ROUTES.investmentBreakdown;
-    }
-
-    navigation.navigate(route, {
-      account_id: account_id,
-    });
-  };
-
-  const getHeader = () => {
+  const renderHeader = () => {
     return (
       <>
         <View style={styles.title}>
           <BaseText h1>Accounts</BaseText>
-          <AmountText style={styles.titleText} h2 decimal={0}>
-            21000
+          <AmountText h2 decimal={0} margin={{ top: 8, bottom: 2 }}>
+            {computeSum()}
           </AmountText>
           <BaseButton
             title="Add account"
@@ -172,46 +180,37 @@ const AccountScreen = () => {
   return (
     <BaseScreen2
       headerProps={{
-        component: getHeader(),
+        component: renderHeader(),
         allowDrawer: true,
       }}>
       <BaseLoadableView scrollable={true}>
         <View>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
-            <AmountText text3>{computeSum(EQUITY_TYPE_ASSET)}</AmountText>
+            <AmountText text3>{computeEquitySum(EQUITY_TYPE_ASSET)}</AmountText>
           </BaseRow>
           {renderContent(EQUITY_TYPE_ASSET)}
         </View>
 
         <View>
           <BaseRow showDivider={false} disabled={true}>
-            <BaseText h3>Liabilities</BaseText>
-            <AmountText text3>{computeSum(EQUITY_TYPE_LIABILITY)}</AmountText>
+            <BaseText h3>Debts</BaseText>
+            <AmountText text3>{computeEquitySum(EQUITY_TYPE_DEBT)}</AmountText>
           </BaseRow>
-          {renderContent(EQUITY_TYPE_LIABILITY)}
+          {renderContent(EQUITY_TYPE_DEBT)}
         </View>
       </BaseLoadableView>
     </BaseScreen2>
   );
 };
 
-const getStyles = (theme, screenWidth, screenHeight) =>
+const getStyles = (_, screenWidth, screenHeight) =>
   StyleSheet.create({
     image: {
       width: screenHeight * 0.26,
       height: screenHeight * 0.26,
       position: 'absolute',
       right: screenWidth * -0.2,
-    },
-    titleText: {
-      marginTop: theme.spacing.lg,
-      marginBottom: theme.spacing.sm,
-    },
-    cardAmountText: {
-      marginTop: 16,
-      marginBottom: 4,
-      color: theme.colors.white,
     },
   });
 
