@@ -23,6 +23,7 @@ const InvestmentForm = ({ route }) => {
   const [investmentForm, setInvestmentForm] = useState({
     ticker_symbol: '',
     cost_per_unit: 0,
+    num_unit: 0,
   });
 
   const onTickerSymbolChange = e => {
@@ -31,6 +32,10 @@ const InvestmentForm = ({ route }) => {
 
   const onCostPerUnitChange = e => {
     setInvestmentForm({ ...investmentForm, cost_per_unit: e });
+  };
+
+  const onNumUnitChange = e => {
+    setInvestmentForm({ ...investmentForm, num_unit: e });
   };
 
   const onSave = () => {
@@ -71,9 +76,9 @@ const InvestmentForm = ({ route }) => {
 
         <BaseInput
           label="Number of unit"
-          value={investmentForm.ticker_symbol}
+          value={String(investmentForm.num_unit)}
           keyboardType="numeric"
-          onChangeText={onTickerSymbolChange}
+          onChangeText={onNumUnitChange}
           clearButtonMode="always"
           maxLength={120}
         />

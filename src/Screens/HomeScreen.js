@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useTheme } from '@rneui/themed';
+import { Icon, useTheme } from '@rneui/themed';
 import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
@@ -7,12 +7,10 @@ import TransactionScreen from './Transaction/TransactionScreen';
 
 import ROUTES from '../_shared/constant/routes';
 
-import glyphMap from '../../assets/icons/unicodesMap.json';
 import OverviewScreen from './Overview/OverviewScreen';
 import AccountScreen from './Account/AccountScreen';
 
 const Tab = createBottomTabNavigator();
-const Icon = createIconSet(glyphMap, 'Nucleo');
 
 const HomeScreen = () => {
   const { theme } = useTheme();
@@ -22,19 +20,19 @@ const HomeScreen = () => {
     let iconName;
     switch (routeName) {
       case ROUTES.overview:
-        iconName = 'icon-budget';
+        iconName = 'barschart';
         break;
       case ROUTES.transaction:
-        iconName = 'icon-transaction';
+        iconName = 'filetext1';
         break;
       case ROUTES.account:
-        iconName = 'icon-transaction';
+        iconName = 'wallet';
         break;
     }
     return (
       <Icon
         name={iconName}
-        type={'feather'}
+        type={'antdesign'}
         color={color}
         size={size}
         style={styles.tabBarIcon}

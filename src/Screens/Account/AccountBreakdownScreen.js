@@ -16,31 +16,38 @@ import { coin } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
+import { ACCOUNT_TYPES } from '../../_shared/apis/enum';
 
-const mockData = [
-  {
-    transaction_id: '1',
-    category: {
-      category_id: '1',
-      category_name: 'food',
+const mockData = {
+  account_id: '1',
+  account_name: 'OCBC',
+  account_type: 2,
+  balance: 20000,
+  transactions: [
+    {
+      transaction_id: '1',
+      category: {
+        category_id: '1',
+        category_name: 'food',
+      },
+      amount: '12',
+      note: 'lunch',
+      transaction_time: 1687598233,
+      transaction_type: TRANSACTION_TYPE_EXPENSE,
     },
-    amount: '12',
-    note: 'lunch',
-    transaction_time: 1687598233,
-    transaction_type: TRANSACTION_TYPE_EXPENSE,
-  },
-  {
-    transaction_id: '2',
-    category: {
-      category_id: '2',
-      category_name: 'transport',
+    {
+      transaction_id: '2',
+      category: {
+        category_id: '2',
+        category_name: 'transport',
+      },
+      amount: '3',
+      note: 'mrt',
+      transaction_time: 1687598233,
+      transaction_type: TRANSACTION_TYPE_EXPENSE,
     },
-    amount: '3',
-    note: 'mrt',
-    transaction_time: 1687598233,
-    transaction_type: TRANSACTION_TYPE_EXPENSE,
-  },
-];
+  ],
+};
 
 const AccountBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -56,14 +63,18 @@ const AccountBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     let rows = [];
+    let { transactions = [] } = mockData || {};
 
-    rows.push(
-      <DailyTransactions
-        key={mockData[0].transaction_id}
-        transactions={mockData}
-        timestamp={mockData[0].transaction_time}
-      />,
-    );
+    if (transactions.length > 0) {
+      // TODO: remove transactions[0] later
+      rows.push(
+        <DailyTransactions
+          key={transactions[0].transaction_id}
+          transactions={transactions}
+          timestamp={transactions[0].transaction_time}
+        />,
+      );
+    }
 
     if (rows.length === 0) {
       return (
@@ -83,11 +94,11 @@ const AccountBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1>OCBC</BaseText>
+          <BaseText h1>{mockData.account_name}</BaseText>
           <AmountText h2 decimal={0} margin={{ top: 8, bottom: 6 }}>
-            21000
+            {mockData.balance}
           </AmountText>
-          <BaseText text4>Saving Account</BaseText>
+          <BaseText text4>{ACCOUNT_TYPES[mockData.account_type]}</BaseText>
         </View>
         <BaseImage source={coin} containerStyle={styles.image} />
       </>
