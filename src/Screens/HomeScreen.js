@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon, useTheme } from '@rneui/themed';
-import { createIconSet } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import TransactionScreen from './Transaction/TransactionScreen';
@@ -20,19 +19,19 @@ const HomeScreen = () => {
     let iconName;
     switch (routeName) {
       case ROUTES.overview:
-        iconName = 'barschart';
+        iconName = 'list';
         break;
       case ROUTES.transaction:
-        iconName = 'filetext1';
+        iconName = 'file-text';
         break;
       case ROUTES.account:
-        iconName = 'wallet';
+        iconName = 'credit-card';
         break;
     }
     return (
       <Icon
         name={iconName}
-        type={'antdesign'}
+        type={'feather'}
         color={color}
         size={size}
         style={styles.tabBarIcon}

@@ -1,374 +1,73 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useTheme, Dialog } from '@rneui/themed';
-import { Calendar } from 'react-native-calendars';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useNavigation } from '@react-navigation/native';
-
-import {
-  BaseInput,
-  BaseCurrencyInput,
-  BaseButton,
-  BaseScreen,
-  BaseBottomSheet,
-  BaseTabView,
-  BaseText,
-  TouchInput,
-} from '../../Components';
-
+import { useTheme } from '@rneui/themed';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-  TRANSACTION_TYPES,
+  TRANSACTION_TYPE_TRANSFER,
 } from '../../_shared/apis/enum';
+import { BaseScreen, BaseText, BaseScrollableTab } from '../../Components';
+import ExpenseIncomeForm from './ExpenseIncomeForm';
+import TransferForm from './TransferForm';
 
-import ROUTES from '../../_shared/constant/routes';
-import { DAYS, EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetCategories, useGetTransaction } from '../../_shared/query';
-import {
-  useCreateTransaction,
-  useUpdateTransaction,
-} from '../../_shared/mutations';
-import { validateTransaction } from '../../_shared/apis/transaction';
-import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
-import { renderErrorsToast } from '../../_shared/util/toast';
-import { EmptyContent } from '../../Components/Common';
-
-const AMOUNT_SCROLL_HEIGHT = 0;
-const NOTE_SCROLL_HEIGHT = 300;
+const scrollableTabs = [
+  {
+    name: 'Expense',
+    val: TRANSACTION_TYPE_EXPENSE,
+    iconName: 'shopping-bag',
+    iconType: 'feather',
+  },
+  {
+    name: 'Income',
+    val: TRANSACTION_TYPE_INCOME,
+    iconName: 'credit-card',
+    iconType: 'feather',
+  },
+  {
+    name: 'Transfer',
+    val: TRANSACTION_TYPE_TRANSFER,
+    iconName: 'repeat',
+    iconType: 'feather',
+  },
+];
 
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const navigation = useNavigation();
 
-  // decide if form is create or edit
   const transactionID = route.params?.transaction_id || '';
+  const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
 
-  const getTransaction = useGetTransaction(
-    { transaction_id: transactionID },
-    { enabled: transactionID !== '' },
-  );
-
-  // initial form state
-  const [transactionForm, setTransactionForm] = useState({
-    transaction_id: '',
-    transaction_time: new Date().valueOf(),
-    transaction_type: TRANSACTION_TYPE_EXPENSE,
-    amount: 0,
-    note: '',
-    category: {
-      category_id: '',
-      category_name: '',
-    },
-    account: {
-      account_id: '',
-      account_name: '',
-    },
-  });
-
-  useEffect(() => {
-    if (getTransaction.data) {
-      setTransactionForm(getTransaction.data.transaction);
-    }
-  }, [getTransaction.data]);
-
-  const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
-
-  const formatTimestampForCalendar = ts => {
-    const date = new Date(ts);
-    const year = `${getYear(date)}`;
-    const month = `${getMonth(date)}`.padStart(2, '0');
-    const day = `${getDate(date)}`.padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
-  const toggleCalendarModal = () => {
-    setIsCalendarModalVisible(!isCalendarModalVisible);
-  };
-
-  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-  const toggleCategoryModal = () => {
-    setIsCategoryModalVisible(!isCategoryModalVisible);
-  };
-
-  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
-  const toggleAccountModal = () => {
-    setIsAccountModalVisible(!isAccountModalVisible);
-  };
-
-  const getCategories = useGetCategories({
-    category_type: transactionForm.transaction_type,
-  });
-
-  const renderTimestamp = ts => {
-    const d = new Date(ts);
-
-    const yyyy = getYear(d);
-    const mm = getMonth(d);
-    const date = getDate(d);
-    const day = DAYS[getDay(d)];
-
-    return `${date}/${mm}/${yyyy} (${day})`;
-  };
-
-  const createTransaction = useCreateTransaction({
-    onSuccess: navigation.goBack,
-  });
-
-  const updateTransaction = useUpdateTransaction({
-    onSuccess: navigation.goBack,
-  });
-
-  const onFormSubmit = () => {
-    let mutation;
-    if (transactionForm.transaction_id !== '') {
-      mutation = updateTransaction;
-    } else {
-      mutation = createTransaction;
-    }
-    mutation.mutate({
-      ...transactionForm,
-      amount: String(transactionForm.amount),
-      category_id: transactionForm.category.category_id,
-    });
-  };
-
-  const isValidTransaction = () => {
-    try {
-      validateTransaction({
-        ...transactionForm,
-        category_id: transactionForm.category.category_id,
-      });
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const onNoteChange = e => {
-    setTransactionForm({ ...transactionForm, note: e });
-  };
-
-  const onAmountChange = e => {
-    setTransactionForm({ ...transactionForm, amount: e });
-  };
-
-  const onTransactionTypeChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      transaction_type: e,
-      category: {
-        category_id: '',
-        category_name: '',
-      },
-    });
-  };
-
-  const onTransactionTimeChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      transaction_time: e,
-    });
-    toggleCalendarModal();
-  };
-
-  const onCategoryChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      category: {
-        category_id: e.category_id,
-        category_name: e.category_name,
-      },
-    });
-    toggleCategoryModal();
-  };
-
-  const onEditCategory = () => {
-    navigation.navigate(ROUTES.categoryEdit, {
-      category_type: transactionForm.transaction_type,
-    });
-    toggleCategoryModal();
-  };
-
-  const onAddAccount = () => {
-    navigation.navigate(ROUTES.accountSelection);
-    toggleAccountModal();
-  };
-
-  const onAccountChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      account: {
-        account: e.account_id,
-        account_name: e.account_name,
-      },
-    });
-  };
-
-  const isFormButtonLoading = () => {
-    return createTransaction.isLoading || updateTransaction.isLoading;
-  };
-
-  const isFormLoading = () => {
-    return getTransaction.isLoading || getCategories.isLoading;
+  const onTabChange = tab => {
+    setActiveTab(tab);
   };
 
   return (
     <BaseScreen
-      isLoading={isFormLoading()}
-      errorToast={renderErrorsToast([
-        getTransaction,
-        getCategories,
-        createTransaction,
-        updateTransaction,
-      ])}
+      allowLoadable={false}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Transaction</BaseText>,
       }}>
       <>
         <View style={styles.tabContainer}>
-          <BaseTabView
-            onPress={index => onTransactionTypeChange(index + 1)}
-            selectedIndex={transactionForm.transaction_type - 1}
-            titles={[
-              TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-            ]}
+          <BaseScrollableTab
+            tabs={scrollableTabs}
+            activeTab={activeTab}
+            onTabChange={onTabChange}
           />
         </View>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="always"
-          extraHeight={scrollHeight}
-          enableOnAndroid={true}
-          keyboardOpeningTime={0}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.formBody}>
-          <TouchInput
-            label="Date"
-            value={renderTimestamp(transactionForm.transaction_time)}
-            onPress={toggleCalendarModal}
-          />
-          <Dialog
-            isVisible={isCalendarModalVisible}
-            onBackdropPress={toggleCalendarModal}>
-            <Calendar
-              showSixWeeks
-              initialDate={formatTimestampForCalendar(
-                transactionForm.transaction_time,
-              )}
-              hideExtraDays={false}
-              onDayPress={obj => {
-                onTransactionTimeChange(
-                  new Date(obj.timestamp).setHours(0, 0, 0, 0),
-                );
-              }}
-              markedDates={{
-                [formatTimestampForCalendar(transactionForm.transaction_time)]:
-                  {
-                    selected: true,
-                    disableTouchEvent: true,
-                    selectedColor: theme.colors.primary,
-                  },
-              }}
-              theme={{
-                todayTextColor: theme.colors.primary,
-                arrowColor: theme.colors.primary,
-              }}
+
+        <View style={styles.formBody}>
+          {activeTab.val === TRANSACTION_TYPE_TRANSFER ? (
+            <TransferForm transactionID={transactionID} />
+          ) : (
+            <ExpenseIncomeForm
+              transactionID={transactionID}
+              transactionType={activeTab.val}
             />
-          </Dialog>
-
-          <BaseInput
-            label="Note"
-            value={transactionForm.note}
-            onChangeText={onNoteChange}
-            clearButtonMode="always"
-            onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
-            maxLength={120}
-          />
-
-          <BaseCurrencyInput
-            label="Amount"
-            value={transactionForm.amount}
-            onChangeText={onAmountChange}
-            autoFocus={transactionForm.transaction_id === ''}
-            onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
-          />
-          <TouchInput
-            label="Category"
-            value={transactionForm.category.category_name}
-            onPress={toggleCategoryModal}
-          />
-          <BaseBottomSheet
-            isVisible={isCategoryModalVisible}
-            onBackdropPress={toggleCategoryModal}
-            close={toggleCategoryModal}
-            onSelect={onCategoryChange}
-            items={getCategories.data?.categories}
-            label="category_name"
-            headerProps={{
-              leftComponent: (
-                <BaseButton
-                  title="Edit"
-                  type="clear"
-                  align="flex-end"
-                  size="md"
-                  onPress={onEditCategory}
-                />
-              ),
-            }}
-            renderEmptyItems={() => (
-              <EmptyContent
-                item={EmptyContentConfig.category}
-                route={ROUTES.categoryForm}
-                onRedirect={toggleCategoryModal}
-              />
-            )}
-          />
-
-          <TouchInput
-            label="Account"
-            value={transactionForm.account.account_name}
-            onPress={toggleAccountModal}
-          />
-          <BaseBottomSheet
-            isVisible={isAccountModalVisible}
-            onBackdropPress={toggleAccountModal}
-            close={toggleAccountModal}
-            onSelect={onAccountChange}
-            items={[]}
-            label="account_name"
-            headerProps={{
-              leftComponent: (
-                <BaseButton
-                  title="Add"
-                  type="clear"
-                  align="flex-end"
-                  size="md"
-                  onPress={onAddAccount}
-                />
-              ),
-            }}
-            renderEmptyItems={() => (
-              <EmptyContent
-                item={EmptyContentConfig.account}
-                route={ROUTES.accountSelection}
-                onRedirect={toggleAccountModal}
-              />
-            )}
-          />
-
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            disabled={!isValidTransaction()}
-            onPress={onFormSubmit}
-            loading={isFormButtonLoading()}
-          />
-        </KeyboardAwareScrollView>
+          )}
+        </View>
       </>
     </BaseScreen>
   );
@@ -378,10 +77,10 @@ export default TransactionForm;
 
 const getStyles = _ =>
   StyleSheet.create({
-    tabContainer: {
-      marginBottom: 10,
-    },
     formBody: {
       paddingVertical: 22,
+    },
+    tabContainer: {
+      marginBottom: 10,
     },
   });

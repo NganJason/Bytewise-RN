@@ -37,6 +37,7 @@ import {
   BaseGrid,
   BaseCard,
   BaseRow,
+  BaseScrollableTab,
 } from './View';
 
 // Common
@@ -79,6 +80,7 @@ export {
   BaseLinearProgress,
   BaseToast,
   BaseScrollView,
+  BaseScrollableTab,
   Category,
   BaseListItem,
   BudgetUsage,
