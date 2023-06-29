@@ -61,6 +61,10 @@ export const EmptyContentConfig = {
     text: 'No holding yet',
     image: paper,
   },
+  account: {
+    text: 'No account yet',
+    image: paper,
+  },
   asset: {
     text: 'No assets yet',
     image: paper,

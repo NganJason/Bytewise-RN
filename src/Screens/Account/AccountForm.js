@@ -16,7 +16,6 @@ import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
 } from '../../_shared/apis/enum';
-import ROUTES from '../../_shared/constant/routes';
 import { getAccountTypes } from '../../_shared/util/budget';
 
 const AccountForm = ({ route }) => {
@@ -55,7 +54,8 @@ const AccountForm = ({ route }) => {
   };
 
   const onSave = () => {
-    navigation.navigate(ROUTES.account);
+    navigation.goBack();
+    navigation.goBack();
   };
 
   return (

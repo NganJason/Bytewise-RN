@@ -40,11 +40,9 @@ const BaseBottomSheet = ({
 
     items.map((item, i) =>
       rows.push(
-        <View key={i} style={styles.row}>
-          <BaseRow onPress={() => onSelect(item)} dividerMargin={5}>
-            <BaseText text2>{item[label]}</BaseText>
-          </BaseRow>
-        </View>,
+        <BaseRow key={i} onPress={() => onSelect(item)} dividerMargin={5}>
+          <BaseText text2>{item[label]}</BaseText>
+        </BaseRow>,
       ),
     );
 
@@ -93,6 +91,7 @@ const getStyles = (theme, screenHeight) =>
       paddingHorizontal: theme.spacing.lg,
     },
     header: {
+      paddingHorizontal: 6,
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginTop: theme.spacing.md,
@@ -100,8 +99,5 @@ const getStyles = (theme, screenHeight) =>
     body: {
       flex: 1,
       paddingHorizontal: theme.spacing.lg,
-    },
-    row: {
-      marginVertical: theme.spacing.md,
     },
   });

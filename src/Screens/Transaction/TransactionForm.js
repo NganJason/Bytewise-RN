@@ -55,11 +55,15 @@ const TransactionForm = ({ route }) => {
     transaction_id: '',
     transaction_time: new Date().valueOf(),
     transaction_type: TRANSACTION_TYPE_EXPENSE,
-    amount: '',
+    amount: 0,
     note: '',
     category: {
       category_id: '',
       category_name: '',
+    },
+    account: {
+      account_id: '',
+      account_name: '',
     },
   });
 
@@ -87,6 +91,11 @@ const TransactionForm = ({ route }) => {
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const toggleCategoryModal = () => {
     setIsCategoryModalVisible(!isCategoryModalVisible);
+  };
+
+  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
+  const toggleAccountModal = () => {
+    setIsAccountModalVisible(!isAccountModalVisible);
   };
 
   const getCategories = useGetCategories({
@@ -121,6 +130,7 @@ const TransactionForm = ({ route }) => {
     }
     mutation.mutate({
       ...transactionForm,
+      amount: String(transactionForm.amount),
       category_id: transactionForm.category.category_id,
     });
   };
@@ -180,6 +190,21 @@ const TransactionForm = ({ route }) => {
       category_type: transactionForm.transaction_type,
     });
     toggleCategoryModal();
+  };
+
+  const onAddAccount = () => {
+    navigation.navigate(ROUTES.accountSelection);
+    toggleAccountModal();
+  };
+
+  const onAccountChange = e => {
+    setTransactionForm({
+      ...transactionForm,
+      account: {
+        account: e.account_id,
+        account_name: e.account_name,
+      },
+    });
   };
 
   const isFormButtonLoading = () => {
@@ -254,6 +279,16 @@ const TransactionForm = ({ route }) => {
               }}
             />
           </Dialog>
+
+          <BaseInput
+            label="Note"
+            value={transactionForm.note}
+            onChangeText={onNoteChange}
+            clearButtonMode="always"
+            onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
+            maxLength={120}
+          />
+
           <BaseCurrencyInput
             label="Amount"
             value={transactionForm.amount}
@@ -292,14 +327,39 @@ const TransactionForm = ({ route }) => {
               />
             )}
           />
-          <BaseInput
-            label="Note"
-            value={transactionForm.note}
-            onChangeText={onNoteChange}
-            clearButtonMode="always"
-            onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
-            maxLength={120}
+
+          <TouchInput
+            label="Account"
+            value={transactionForm.account.account_name}
+            onPress={toggleAccountModal}
           />
+          <BaseBottomSheet
+            isVisible={isAccountModalVisible}
+            onBackdropPress={toggleAccountModal}
+            close={toggleAccountModal}
+            onSelect={onAccountChange}
+            items={[]}
+            label="account_name"
+            headerProps={{
+              leftComponent: (
+                <BaseButton
+                  title="Add"
+                  type="clear"
+                  align="flex-end"
+                  size="md"
+                  onPress={onAddAccount}
+                />
+              ),
+            }}
+            renderEmptyItems={() => (
+              <EmptyContent
+                item={EmptyContentConfig.account}
+                route={ROUTES.accountSelection}
+                onRedirect={toggleAccountModal}
+              />
+            )}
+          />
+
           <BaseButton
             title="Save"
             size="lg"

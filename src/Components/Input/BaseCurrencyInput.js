@@ -18,6 +18,7 @@ const BaseCurrencyInput = forwardRef(
     ref,
   ) => {
     const [inputStr, setInputStr] = useState(value);
+    const { onFocus = function () {} } = props || {};
 
     const formatAmount = () => {
       return `${CURRENCY} ${inputStr}`;
@@ -32,10 +33,11 @@ const BaseCurrencyInput = forwardRef(
       setInputStr(e);
     };
 
-    const onFocus = () => {
+    const onFocusHandler = () => {
       if (Number(inputStr) === 0) {
         setInputStr('');
       }
+      onFocus();
     };
 
     const onBlurHandler = () => {
@@ -52,16 +54,16 @@ const BaseCurrencyInput = forwardRef(
 
     return (
       <BaseInput
+        {...props}
         ref={ref}
         label={label}
         value={formatAmount()}
         placeholder={placeholder}
         onBlur={onBlurHandler}
-        onFocus={onFocus}
+        onFocus={onFocusHandler}
         onChangeText={handleChangeText}
         keyboardType="numeric"
         autoFocus={autoFocus}
-        {...props}
       />
     );
   },
