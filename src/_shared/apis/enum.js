@@ -16,12 +16,28 @@ export const BUDGET_TYPES = {
   [BUDGET_TYPE_ANNUAL]: 'Annual',
 };
 
-export const ACCOUNT_TYPE_CASH = 1;
-export const ACCOUNT_TYPE_BANK_ACCOUNT = 2;
-export const ACCOUNT_TYPE_INVESTMENT = 3;
-export const ACCOUNT_TYPE_CREDIT_CARD = 4;
-export const ACCOUNT_TYPE_LOAN = 5;
-export const ACCOUNT_TYPE_MORTGAGE = 6;
+export const ACCOUNT_TYPE_BIT_SHIFT = 4;
+export const ACCOUNT_TYPE_BIT_SIZE = 4;
+
+export const EQUITY_TYPE_ASSET = 1;
+export const EQUITY_TYPE_DEBT = 2;
+
+export const EQUITY_TYPES = {
+  [EQUITY_TYPE_ASSET]: 'Asset',
+  [EQUITY_TYPE_DEBT]: 'debt',
+};
+
+export const ACCOUNT_TYPE_INVESTMENT = 10;
+export const ACCOUNT_TYPE_CASH = EQUITY_TYPE_ASSET << ACCOUNT_TYPE_BIT_SHIFT;
+export const ACCOUNT_TYPE_BANK_ACCOUNT =
+  (EQUITY_TYPE_ASSET << ACCOUNT_TYPE_BIT_SHIFT) | 1;
+
+export const ACCOUNT_TYPE_CREDIT_CARD =
+  EQUITY_TYPE_DEBT << ACCOUNT_TYPE_BIT_SHIFT;
+export const ACCOUNT_TYPE_LOAN =
+  (EQUITY_TYPE_DEBT << ACCOUNT_TYPE_BIT_SHIFT) | 1;
+export const ACCOUNT_TYPE_MORTGAGE =
+  (EQUITY_TYPE_DEBT << ACCOUNT_TYPE_BIT_SHIFT) | 2;
 
 export const ACCOUNT_TYPES = {
   [ACCOUNT_TYPE_CASH]: 'Cash',
@@ -30,12 +46,4 @@ export const ACCOUNT_TYPES = {
   [ACCOUNT_TYPE_CREDIT_CARD]: 'Credit Card',
   [ACCOUNT_TYPE_LOAN]: 'Loan',
   [ACCOUNT_TYPE_MORTGAGE]: 'Mortgage',
-};
-
-export const EQUITY_TYPE_ASSET = 1;
-export const EQUITY_TYPE_DEBT = 2;
-
-export const EQUITY_TYPES = {
-  [EQUITY_TYPE_ASSET]: 'Asset',
-  [EQUITY_TYPE_DEBT]: 'debt',
 };

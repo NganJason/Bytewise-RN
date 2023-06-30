@@ -9,6 +9,7 @@ const AmountText = ({
   children = 0,
   showColor = false,
   showSymbol = false,
+  showNegativeOnly = false,
   center = false,
   style = {},
   decimal = 2,
@@ -43,6 +44,9 @@ const AmountText = ({
 
     text = `${CURRENCY} ${amountStr} ${suffix}`;
     if (showSymbol) {
+      text = `${symbol} ${text}`;
+    }
+    if (showNegativeOnly && symbol === '-') {
       text = `${symbol} ${text}`;
     }
 

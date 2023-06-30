@@ -1,3 +1,4 @@
+import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import {
@@ -24,51 +25,16 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { capitalize } from '../../_shared/util/string';
-const { View, StyleSheet } = require('react-native');
-
-const MockData = [
-  {
-    account_id: '1',
-    account_type: 3,
-    equity_type: 1,
-    account_name: 'Stock',
-    amount: 8000,
-  },
-  {
-    account_id: '2',
-    account_type: 2,
-    equity_type: 1,
-    account_name: 'OCBC',
-    amount: 5000,
-  },
-  {
-    account_id: '4',
-    account_type: 3,
-    equity_type: 1,
-    account_name: 'Syfe',
-    amount: 13000,
-  },
-  {
-    account_id: '5',
-    account_type: 5,
-    equity_type: 2,
-    account_name: 'Student loan',
-    amount: 21000,
-  },
-  {
-    account_id: '6',
-    account_type: 4,
-    equity_type: 2,
-    account_name: 'Citibank',
-    amount: 3000,
-  },
-];
+import { useGetAccounts } from '../../_shared/query/account';
+import { getEquityType } from '../../_shared/util/account';
 
 const AccountScreen = () => {
   const { theme } = useTheme();
   const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
+
+  const getAccountsQuery = useGetAccounts({});
 
   const computeSum = () => {
     let assets = computeEquitySum(EQUITY_TYPE_ASSET);
@@ -78,10 +44,12 @@ const AccountScreen = () => {
   };
 
   const computeEquitySum = (equityType = EQUITY_TYPE_ASSET) => {
+    const { accounts = [] } = getAccountsQuery?.data || {};
     let sum = 0;
-    MockData.map(d => {
-      if (d.equity_type === equityType) {
-        sum += d.amount;
+
+    accounts.map(d => {
+      if (getEquityType(d.account_type) === equityType) {
+        sum += Number(d.balance);
       }
     });
     return sum;
@@ -102,9 +70,13 @@ const AccountScreen = () => {
   };
 
   const renderContent = (equityType = EQUITY_TYPE_ASSET) => {
-    let data = MockData.filter(d => d.equity_type === equityType);
+    const { accounts = [] } = getAccountsQuery?.data || {};
 
-    if (data.length === 0) {
+    let items = accounts.filter(
+      d => getEquityType(d.account_type) === equityType,
+    );
+
+    if (items.length === 0 && !getAccountsQuery.isLoading) {
       return (
         <EmptyContent
           item={EmptyContentConfig.asset}
@@ -115,7 +87,7 @@ const AccountScreen = () => {
 
     return (
       <BaseGrid
-        items={data}
+        items={items}
         spacing={30}
         renderItem={item => (
           <BaseCard
@@ -135,7 +107,7 @@ const AccountScreen = () => {
               text2
               color={theme.colors.white}
               margin={{ top: 16, bottom: 4 }}>
-              {item.amount}
+              {item.balance}
             </AmountText>
             <BaseText text4 color={theme.colors.white}>
               {capitalize(ACCOUNT_TYPES[item.account_type])}
@@ -151,7 +123,11 @@ const AccountScreen = () => {
       <>
         <View style={styles.title}>
           <BaseText h1>Accounts</BaseText>
-          <AmountText h2 decimal={0} margin={{ top: 8, bottom: 2 }}>
+          <AmountText
+            h2
+            decimal={0}
+            showNegativeOnly
+            margin={{ top: 8, bottom: 2 }}>
             {computeSum()}
           </AmountText>
           <BaseButton
@@ -183,7 +159,9 @@ const AccountScreen = () => {
         component: renderHeader(),
         allowDrawer: true,
       }}>
-      <BaseLoadableView scrollable={true}>
+      <BaseLoadableView
+        scrollable={true}
+        isLoading={getAccountsQuery.isLoading}>
         <View>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>

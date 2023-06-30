@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
@@ -17,6 +17,8 @@ import {
   ACCOUNT_TYPE_BANK_ACCOUNT,
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
+import { useGetAccount } from '../../_shared/query/account';
+import { useCreateAccount } from '../../_shared/mutations/account';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -34,6 +36,28 @@ const AccountForm = ({ route }) => {
     account_type: accountType,
     balance: 0,
   });
+
+  const getAccount = useGetAccount(
+    { account_id: accountID },
+    { enabled: accountID !== '' },
+  );
+
+  const createAccount = useCreateAccount({
+    onSuccess: () => {
+      navigation.goBack();
+
+      // Go back twice for creation flow
+      // To skip account selection page
+      if (accountID === '') {
+        navigation.goBack();
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (getAccount.data) {
+    }
+  }, [getAccount.data]);
 
   const [accountTypeModalVisible, setAccountTypeModalVisible] = useState(false);
   const toggleAccountTypeModal = () => {
@@ -53,13 +77,20 @@ const AccountForm = ({ route }) => {
     setAccountForm({ ...accountForm, balance: e });
   };
 
+  const isFormLoading = () => {
+    return getAccount.isLoading;
+  };
+
   const onSave = () => {
-    navigation.goBack();
-    navigation.goBack();
+    createAccount.mutate({
+      ...accountForm,
+      balance: String(accountForm.balance),
+    });
   };
 
   return (
     <BaseScreen
+      isLoading={isFormLoading()}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -85,7 +116,7 @@ const AccountForm = ({ route }) => {
         />
 
         <TouchInput
-          label="Budget type"
+          label="Account type"
           value={ACCOUNT_TYPES[accountForm.account_type]}
           onPress={toggleAccountTypeModal}
         />
@@ -105,7 +136,13 @@ const AccountForm = ({ route }) => {
         />
 
         <View style={styles.btnContainer}>
-          <BaseButton title="Save" size="lg" width={200} onPress={onSave} />
+          <BaseButton
+            title="Save"
+            size="lg"
+            width={200}
+            onPress={onSave}
+            loading={createAccount.isLoading}
+          />
         </View>
       </KeyboardAwareScrollView>
     </BaseScreen>
