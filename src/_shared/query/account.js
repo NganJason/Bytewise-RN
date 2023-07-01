@@ -1,9 +1,9 @@
 import { queryKeys, useQueryWrapper } from './keys';
-import { getAccounts } from '../apis/account';
+import { getAccount, getAccounts } from '../apis/account';
 
 export const useGetAccount = ({ account_id = '' } = {}, opts = {}) => {
   return useQueryWrapper({
-    queryFn: () => getAccounts({ account_id: account_id }),
+    queryFn: () => getAccount({ account_id: account_id }),
     queryKey: [queryKeys.account, account_id],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,

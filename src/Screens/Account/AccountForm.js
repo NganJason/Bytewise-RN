@@ -18,7 +18,10 @@ import {
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
 import { useGetAccount } from '../../_shared/query/account';
-import { useCreateAccount } from '../../_shared/mutations/account';
+import {
+  useCreateAccount,
+  useUpdateAccount,
+} from '../../_shared/mutations/account';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -44,18 +47,26 @@ const AccountForm = ({ route }) => {
 
   const createAccount = useCreateAccount({
     onSuccess: () => {
-      navigation.goBack();
-
       // Go back twice for creation flow
       // To skip account selection page
-      if (accountID === '') {
-        navigation.goBack();
-      }
+      navigation.goBack();
+      navigation.goBack();
+    },
+  });
+
+  const updateAccount = useUpdateAccount({
+    onSuccess: () => {
+      navigation.goBack();
     },
   });
 
   useEffect(() => {
-    if (getAccount.data) {
+    const { account } = getAccount?.data || {};
+    if (account !== undefined) {
+      setAccountForm({
+        ...account,
+        balance: Number(account.balance),
+      });
     }
   }, [getAccount.data]);
 
@@ -82,10 +93,18 @@ const AccountForm = ({ route }) => {
   };
 
   const onSave = () => {
-    createAccount.mutate({
-      ...accountForm,
-      balance: String(accountForm.balance),
-    });
+    if (isAddAccount()) {
+      createAccount.mutate({
+        ...accountForm,
+        balance: String(accountForm.balance),
+      });
+    } else {
+      updateAccount.mutate({
+        ...accountForm,
+        account_id: accountID,
+        balance: String(accountForm.balance),
+      });
+    }
   };
 
   return (
@@ -117,6 +136,7 @@ const AccountForm = ({ route }) => {
 
         <TouchInput
           label="Account type"
+          disabled={!isAddAccount()}
           value={ACCOUNT_TYPES[accountForm.account_type]}
           onPress={toggleAccountTypeModal}
         />

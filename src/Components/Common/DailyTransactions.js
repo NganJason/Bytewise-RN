@@ -6,11 +6,6 @@ import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 import BaseListItem from '../View/BaseListItem';
 
-import {
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/enum';
-
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { getDate, getDay } from '../../_shared/util/date';
@@ -43,14 +38,7 @@ const DailyTransactions = ({
   const computeAmountSum = () => {
     let sum = 0;
     transactions.forEach(t => {
-      switch (t.transaction_type) {
-        case TRANSACTION_TYPE_EXPENSE:
-          sum -= Number(t.amount);
-          return;
-        case TRANSACTION_TYPE_INCOME:
-          sum += Number(t.amount);
-          return;
-      }
+      sum += Number(t.amount);
     });
 
     return sum;
@@ -60,15 +48,6 @@ const DailyTransactions = ({
     navigation.navigate(ROUTES.transactionForm, {
       transaction_id: t.transaction_id,
     });
-  };
-
-  const renderTransactionAmount = (amount, transactionType) => {
-    switch (transactionType) {
-      case TRANSACTION_TYPE_EXPENSE:
-        return amount * -1;
-      case TRANSACTION_TYPE_INCOME:
-        return amount;
-    }
   };
 
   return (
@@ -90,7 +69,7 @@ const DailyTransactions = ({
             <BaseListItem
               containerStyle={styles.listItem}
               showDivider
-              dividerMargin={4}>
+              dividerMargin={1}>
               <View style={styles.listItemContent}>
                 <BaseText
                   text5
@@ -107,6 +86,13 @@ const DailyTransactions = ({
                     ellipsizeMode="tail">
                     {capitalize(t.note)}
                   </BaseText>
+                  <BaseText
+                    text5
+                    style={styles.account}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {capitalize(t?.account?.account_name || '')}
+                  </BaseText>
                 </View>
                 <AmountText
                   text5
@@ -114,7 +100,7 @@ const DailyTransactions = ({
                   numberOfLines={1}
                   showSymbol
                   ellipsizeMode="tail">
-                  {renderTransactionAmount(t.amount, t.transaction_type)}
+                  {t.amount}
                 </AmountText>
               </View>
             </BaseListItem>
@@ -160,10 +146,10 @@ const getStyles = theme =>
     },
     category: {
       flex: 1,
-      color: theme.colors.color6,
+      color: theme.colors.color7,
     },
     account: {
-      color: theme.colors.color6,
+      color: theme.colors.color7,
     },
     noteWrapper: {
       flex: 2,

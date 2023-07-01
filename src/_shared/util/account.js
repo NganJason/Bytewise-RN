@@ -18,3 +18,13 @@ export const isAccountTypeAsset = (accountType = 0) => {
 export const isAccountTypeDebt = (accountType = 0) => {
   return ((accountType >> ACCOUNT_TYPE_BIT_SHIFT) & EQUITY_TYPE_DEBT) > 0;
 };
+
+export const getIDToAccountMap = (accounts = []) => {
+  let accountMap = {};
+
+  accounts.map(acc => {
+    accountMap[acc.account_id] = acc;
+  });
+
+  return accountMap;
+};

@@ -20,8 +20,8 @@ export const useUpdateAccount = (opts = {}) => {
     onSuccess: ({ account = {} }) => {
       const { account_id = '' } = account;
 
-      queryClient.invalidateQueries([queryClient.accounts]);
-      queryClient.invalidateQueries([queryClient.account, account_id]);
+      queryClient.invalidateQueries([queryKeys.accounts]);
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
 
       // TODO: Need to invalidate get transactions with accountID also
       opts.onSuccess && opts.onSuccess();

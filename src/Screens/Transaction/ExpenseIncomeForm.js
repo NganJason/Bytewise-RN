@@ -18,7 +18,7 @@ import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS, EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetCategories, useGetTransaction } from '../../_shared/query';
+import { useGetCategories, useGetAccounts } from '../../_shared/query';
 import {
   useCreateTransaction,
   useUpdateTransaction,
@@ -26,6 +26,7 @@ import {
 import { validateTransaction } from '../../_shared/apis/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 import { EmptyContent } from '../../Components/Common';
+import { useGetTransactionHook } from '../../_shared/hooks/transaction';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -54,14 +55,21 @@ const ExpenseIncomeForm = ({
     },
   });
 
-  const getTransaction = useGetTransaction(
+  const isAddTransaction = () => {
+    return transactionForm.transaction_id === '';
+  };
+
+  const getTransaction = useGetTransactionHook(
     { transaction_id: transactionID },
     { enabled: transactionID !== '' },
   );
+  const { transaction } = getTransaction;
 
   const getCategories = useGetCategories({
     category_type: transactionType,
   });
+
+  const getAccounts = useGetAccounts({});
 
   const createTransaction = useCreateTransaction({
     onSuccess: navigation.goBack,
@@ -72,10 +80,13 @@ const ExpenseIncomeForm = ({
   });
 
   useEffect(() => {
-    if (getTransaction.data) {
-      setTransactionForm(getTransaction.data.transaction);
+    if (transaction) {
+      setTransactionForm({
+        ...transaction,
+        amount: String(Math.abs(transaction.amount)),
+      });
     }
-  }, [getTransaction.data]);
+  }, [transaction]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {
@@ -135,15 +146,16 @@ const ExpenseIncomeForm = ({
     setTransactionForm({
       ...transactionForm,
       account: {
-        account: e.account_id,
+        account_id: e.account_id,
         account_name: e.account_name,
       },
     });
+    toggleAccountModal();
   };
 
   const onFormSubmit = () => {
     let mutation;
-    if (transactionForm.transaction_id !== '') {
+    if (!isAddTransaction()) {
       mutation = updateTransaction;
     } else {
       mutation = createTransaction;
@@ -153,11 +165,16 @@ const ExpenseIncomeForm = ({
       transaction_type: transactionType,
       amount: String(transactionForm.amount),
       category_id: transactionForm.category.category_id,
+      account_id: transactionForm.account.account_id,
     });
   };
 
   const isFormLoading = () => {
-    return getTransaction.isLoading || getCategories.isLoading;
+    return (
+      getTransaction.isLoading ||
+      getCategories.isLoading ||
+      getAccounts.isLoading
+    );
   };
 
   const isFormButtonLoading = () => {
@@ -249,7 +266,7 @@ const ExpenseIncomeForm = ({
           label="Amount"
           value={transactionForm.amount}
           onChangeText={onAmountChange}
-          autoFocus={transactionForm.transaction_id === ''}
+          autoFocus={isAddTransaction()}
           onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
         />
 
@@ -289,13 +306,14 @@ const ExpenseIncomeForm = ({
           label="Account"
           value={transactionForm.account.account_name}
           onPress={toggleAccountModal}
+          disabled={!isAddTransaction()}
         />
         <BaseBottomSheet
           isVisible={isAccountModalVisible}
           onBackdropPress={toggleAccountModal}
           close={toggleAccountModal}
           onSelect={onAccountChange}
-          items={[]}
+          items={getAccounts.data?.accounts || []}
           label="account_name"
           headerProps={{
             leftComponent: (

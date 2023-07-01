@@ -6,10 +6,11 @@ const TouchInput = ({
   onPress = function () {},
   label = '',
   value = '',
+  disabled = false,
   ...props
 }) => {
   return (
-    <TouchableOpacity activeOpacity={1} onPress={onPress}>
+    <TouchableOpacity activeOpacity={1} onPress={onPress} disabled={disabled}>
       <BaseInput
         label={label}
         pointerEvents="none"

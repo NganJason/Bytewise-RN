@@ -1,4 +1,4 @@
-import { useTheme } from '@rneui/themed';
+import { Icon, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
@@ -10,6 +10,7 @@ import {
   DateNavigator,
   EmptyContent,
   BaseLoadableView,
+  BaseButton,
 } from '../../Components';
 import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { coin } from '../../_shared/constant/asset';
@@ -17,11 +18,13 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { ACCOUNT_TYPES } from '../../_shared/apis/enum';
+import { useNavigation } from '@react-navigation/native';
+import { useGetAccount } from '../../_shared/query/account';
 
 const mockData = {
   account_id: '1',
   account_name: 'OCBC',
-  account_type: 2,
+  account_type: 16,
   balance: 20000,
   transactions: [
     {
@@ -53,13 +56,19 @@ const AccountBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
   const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme, screenWidth, screenHeight);
+  const navigation = useNavigation();
 
-  const account_id = route.params?.account_id || '';
+  const accountID = route.params?.account_id || '';
 
   const [activeDate, setActiveDate] = useState(new Date());
   const onDateMove = newDate => {
     setActiveDate(newDate);
   };
+
+  const getAccount = useGetAccount(
+    { account_id: accountID },
+    { enabled: accountID !== '' },
+  );
 
   const renderRows = () => {
     let rows = [];
@@ -91,14 +100,41 @@ const AccountBreakdownScreen = ({ route }) => {
   };
 
   const renderHeader = () => {
+    const {
+      account_name = '',
+      account_type = 0,
+      balance = '0',
+    } = getAccount?.data?.account || {};
+
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1>{mockData.account_name}</BaseText>
+          <BaseText h1>{account_name}</BaseText>
           <AmountText h2 decimal={0} margin={{ top: 8, bottom: 6 }}>
-            {mockData.balance}
+            {balance}
           </AmountText>
-          <BaseText text4>{ACCOUNT_TYPES[mockData.account_type]}</BaseText>
+          <BaseText text4 margin={{ bottom: 4 }}>
+            {ACCOUNT_TYPES[account_type]}
+          </BaseText>
+          <BaseButton
+            title="Edit account"
+            type="clear"
+            align="flex-start"
+            size="sm"
+            icon={
+              <Icon
+                name="plus-circle"
+                type="feather"
+                color={theme.colors.color1}
+                size={13}
+              />
+            }
+            onPress={() => {
+              navigation.navigate(ROUTES.accountForm, {
+                account_id: accountID,
+              });
+            }}
+          />
         </View>
         <BaseImage source={coin} containerStyle={styles.image} />
       </>

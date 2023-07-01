@@ -15,7 +15,7 @@ import {
   getMonth,
 } from '../../_shared/util/date';
 import ROUTES from '../../_shared/constant/routes';
-import { useGetTransactions, useAggrTransactions } from '../../_shared/query';
+import { useAggrTransactions } from '../../_shared/query';
 import { renderErrorsToast } from '../../_shared/util/toast';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import {
@@ -24,6 +24,7 @@ import {
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -40,7 +41,7 @@ const TransactionScreen = ({ navigation }) => {
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
 
-  const getTransactionsQuery = useGetTransactions({
+  const getTransactions = useGetTransactionsHook({
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
@@ -50,9 +51,6 @@ const TransactionScreen = ({ navigation }) => {
       page: STARTING_PAGE,
     },
   });
-
-  const { transactionTimes = [], transactionGroups = {} } =
-    groupTransactionsByDate(getTransactionsQuery.data?.transactions);
 
   const aggrTransactionsQuery = useAggrTransactions({
     transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
@@ -68,10 +66,13 @@ const TransactionScreen = ({ navigation }) => {
   };
 
   const isScreenLoading = () =>
-    getTransactionsQuery.isLoading && aggrTransactionsQuery.isLoading;
+    getTransactions.isLoading || aggrTransactionsQuery.isLoading;
 
   const renderRows = () => {
     let rows = [];
+    let { transactions = [] } = getTransactions;
+    const { transactionTimes = [], transactionGroups = {} } =
+      groupTransactionsByDate(transactions);
 
     transactionTimes.map((tt, i) =>
       rows.push(
@@ -83,7 +84,7 @@ const TransactionScreen = ({ navigation }) => {
       ),
     );
 
-    if (rows.length === 0 && !getTransactionsQuery.isLoading) {
+    if (rows.length === 0) {
       return (
         <View style={styles.emptyContent}>
           <EmptyContent
@@ -103,10 +104,7 @@ const TransactionScreen = ({ navigation }) => {
       allowLoadable={false}
       backgroundColor={theme.colors.color11}
       enablePadding={false}
-      errorToast={renderErrorsToast([
-        getTransactionsQuery,
-        aggrTransactionsQuery,
-      ])}
+      errorToast={renderErrorsToast([getTransactions, aggrTransactionsQuery])}
       headerProps={{
         allowBack: false,
         allowDrawer: true,

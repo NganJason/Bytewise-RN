@@ -9,6 +9,7 @@ import {
   useGetTransaction,
   useAggrTransactions,
 } from './transaction';
+import { useGetAccount, useGetAccounts } from './account';
 
 export {
   queryKeys,
@@ -19,4 +20,6 @@ export {
   useGetTransactions,
   useGetTransaction,
   useAggrTransactions,
+  useGetAccount,
+  useGetAccounts,
 };

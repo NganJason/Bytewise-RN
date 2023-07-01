@@ -13,11 +13,7 @@ import {
   BaseDivider,
 } from '../../Components';
 
-import {
-  useAggrTransactions,
-  useGetTransactions,
-  useGetCategory,
-} from '../../_shared/query';
+import { useAggrTransactions, useGetCategory } from '../../_shared/query';
 import {
   getUnixRangeOfMonth,
   getYear,
@@ -32,6 +28,7 @@ import { renderErrorsToast } from '../../_shared/util/toast';
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -54,8 +51,7 @@ const CategoryBreakdownScreen = ({ route }) => {
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
 
-  const getTransactionsQuery = useGetTransactions({
-    category_id: categoryID,
+  const getTransactions = useGetTransactionsHook({
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
@@ -65,9 +61,6 @@ const CategoryBreakdownScreen = ({ route }) => {
       page: STARTING_PAGE,
     },
   });
-
-  const { transactionTimes = [], transactionGroups = {} } =
-    groupTransactionsByDate(getTransactionsQuery.data?.transactions);
 
   const aggrTransactionsQuery = useAggrTransactions({
     category_ids: [categoryID],
@@ -110,6 +103,9 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     let rows = [];
+    let { transactions = [] } = getTransactions;
+    const { transactionTimes = [], transactionGroups = {} } =
+      groupTransactionsByDate(transactions);
 
     transactionTimes.map((tt, i) =>
       rows.push(
@@ -121,7 +117,7 @@ const CategoryBreakdownScreen = ({ route }) => {
       ),
     );
 
-    if (rows.length === 0 && !getTransactionsQuery.isLoading) {
+    if (rows.length === 0 && !getTransactions.isLoading) {
       return (
         <View style={styles.emptyContent}>
           <EmptyContent
@@ -137,7 +133,7 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   const isScreenLoading = () =>
     getCategory.isLoading ||
-    getTransactionsQuery.isLoading ||
+    getTransactions.isLoading ||
     aggrTransactionsQuery.isLoading;
 
   return (
@@ -145,7 +141,7 @@ const CategoryBreakdownScreen = ({ route }) => {
       isLoading={isScreenLoading()}
       errorToast={renderErrorsToast([
         getCategory,
-        getTransactionsQuery,
+        getTransactions,
         aggrTransactionsQuery,
       ])}
       headerProps={{

@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 import BaseInput from './BaseInput';
 
@@ -19,6 +19,10 @@ const BaseCurrencyInput = forwardRef(
   ) => {
     const [inputStr, setInputStr] = useState(value);
     const { onFocus = function () {} } = props || {};
+
+    useEffect(() => {
+      setInputStr(value);
+    }, [value]);
 
     const formatAmount = () => {
       return `${CURRENCY} ${inputStr}`;
