@@ -92,6 +92,10 @@ const AccountForm = ({ route }) => {
     return getAccount.isLoading;
   };
 
+  const isFormButtonLoading = () => {
+    return createAccount.isLoading || updateAccount.isLoading;
+  };
+
   const onSave = () => {
     if (isAddAccount()) {
       createAccount.mutate({
@@ -161,7 +165,7 @@ const AccountForm = ({ route }) => {
             size="lg"
             width={200}
             onPress={onSave}
-            loading={createAccount.isLoading}
+            loading={isFormButtonLoading()}
           />
         </View>
       </KeyboardAwareScrollView>

@@ -6,12 +6,20 @@ export const useCreateTransaction = (opts = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation(createTransaction, {
-    onSuccess: () => {
+    onSuccess: ({ transaction = {} }) => {
+      const { account_id = '' } = transaction;
+
       // refetch all transactions in the same time range
       queryClient.invalidateQueries([queryKeys.transactions]);
 
       // recompute aggregations with new transaction amount
       queryClient.invalidateQueries([queryKeys.transactionsAggr]);
+
+      // refetch all accounts since the amount for a specific account has changed
+      queryClient.invalidateQueries([queryKeys.accounts]);
+
+      // refetch account with given account_id
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
 
       opts.onSuccess && opts.onSuccess();
     },
@@ -23,7 +31,7 @@ export const useUpdateTransaction = (opts = {}) => {
 
   return useMutation(updateTransaction, {
     onSuccess: ({ transaction = {} }) => {
-      const { transaction_id = '' } = transaction;
+      const { transaction_id = '', account_id = '' } = transaction;
 
       // refetch all transactions
       queryClient.invalidateQueries([queryKeys.transactions]);
@@ -33,6 +41,12 @@ export const useUpdateTransaction = (opts = {}) => {
 
       // refetch any single transaction record
       queryClient.invalidateQueries([queryKeys.transaction, transaction_id]);
+
+      // refetch all accounts since the amount for a specific account has changed
+      queryClient.invalidateQueries([queryKeys.accounts]);
+
+      // refetch account with given account_id
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
 
       opts.onSuccess && opts.onSuccess();
     },

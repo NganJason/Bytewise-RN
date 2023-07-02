@@ -52,6 +52,7 @@ const CategoryBreakdownScreen = ({ route }) => {
   );
 
   const getTransactions = useGetTransactionsHook({
+    category_id: categoryID,
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],

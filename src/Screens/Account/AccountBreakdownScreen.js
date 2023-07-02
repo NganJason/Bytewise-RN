@@ -20,37 +20,16 @@ import useDimension from '../../_shared/hooks/dimension';
 import { ACCOUNT_TYPES } from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount } from '../../_shared/query/account';
+import {
+  getMonth,
+  getUnixRangeOfMonth,
+  getYear,
+} from '../../_shared/util/date';
+import { groupTransactionsByDate } from '../../_shared/util/transaction';
+import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 
-const mockData = {
-  account_id: '1',
-  account_name: 'OCBC',
-  account_type: 16,
-  balance: 20000,
-  transactions: [
-    {
-      transaction_id: '1',
-      category: {
-        category_id: '1',
-        category_name: 'food',
-      },
-      amount: '12',
-      note: 'lunch',
-      transaction_time: 1687598233,
-      transaction_type: TRANSACTION_TYPE_EXPENSE,
-    },
-    {
-      transaction_id: '2',
-      category: {
-        category_id: '2',
-        category_name: 'transport',
-      },
-      amount: '3',
-      note: 'mrt',
-      transaction_time: 1687598233,
-      transaction_type: TRANSACTION_TYPE_EXPENSE,
-    },
-  ],
-};
+const PAGING_LIMIT = 500;
+const STARTING_PAGE = 1;
 
 const AccountBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -61,9 +40,29 @@ const AccountBreakdownScreen = ({ route }) => {
   const accountID = route.params?.account_id || '';
 
   const [activeDate, setActiveDate] = useState(new Date());
+  const [timeRange, setTimeRange] = useState(
+    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+  );
+
   const onDateMove = newDate => {
     setActiveDate(newDate);
+    setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
+
+  const getTransactions = useGetTransactionsHook(
+    {
+      account_id: accountID,
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+      paging: {
+        limit: PAGING_LIMIT,
+        page: STARTING_PAGE,
+      },
+    },
+    { enabled: accountID !== '' },
+  );
 
   const getAccount = useGetAccount(
     { account_id: accountID },
@@ -72,20 +71,21 @@ const AccountBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     let rows = [];
-    let { transactions = [] } = mockData || {};
+    let { transactions = [] } = getTransactions;
+    const { transactionTimes = [], transactionGroups = {} } =
+      groupTransactionsByDate(transactions);
 
-    if (transactions.length > 0) {
-      // TODO: remove transactions[0] later
+    transactionTimes.map((tt, i) =>
       rows.push(
         <DailyTransactions
-          key={transactions[0].transaction_id}
-          transactions={transactions}
-          timestamp={transactions[0].transaction_time}
+          key={i}
+          transactions={transactionGroups[tt]}
+          timestamp={tt}
         />,
-      );
-    }
+      ),
+    );
 
-    if (rows.length === 0) {
+    if (rows.length === 0 && !getTransactions.isLoading) {
       return (
         <View style={styles.emptyContent}>
           <EmptyContent

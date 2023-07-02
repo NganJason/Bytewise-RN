@@ -16,6 +16,7 @@ import {
 
 export const useGetTransactionsHook = (
   {
+    account_id = '',
     category_id = '',
     transaction_type = 0,
     transaction_time: { gte = 0, lte = 0 } = {},
@@ -28,6 +29,7 @@ export const useGetTransactionsHook = (
   const getAccounts = useGetAccounts();
   const getTransactions = useGetTransactions(
     {
+      account_id: account_id,
       category_id: category_id,
       transaction_type: transaction_type,
       transaction_time: {
@@ -57,7 +59,7 @@ export const useGetTransactionsHook = (
 
     txns = mergeTransactionsCategory(txns, categoryMap);
     txns = mergeTransactionsAccount(txns, accountMap);
-    setTransactions(txns);
+    setTransactions([...txns]);
   }, [getTransactions.data, getCategories.data, getAccounts.data]);
 
   const isLoading = () => {

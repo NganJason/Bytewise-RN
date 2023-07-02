@@ -22,12 +22,6 @@ export const useUpdateCategory = (opts = {}) => {
     onSuccess: ({ category = {} }) => {
       const { category_id = '' } = category;
 
-      // category may change name, transaction records need to be reflected
-      queryClient.invalidateQueries([queryKeys.transactions]);
-
-      // refetch any transaction that has been fetched before as their category may be affected
-      queryClient.invalidateQueries([queryKeys.transaction]);
-
       // refetch all categories
       queryClient.invalidateQueries([queryKeys.categories]);
 

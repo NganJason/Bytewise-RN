@@ -47,6 +47,7 @@ export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
 
 export const useGetTransactions = (
   {
+    account_id = '',
     category_id = '',
     transaction_type = 0,
     transaction_time: { gte = 0, lte = 0 } = {},
@@ -57,6 +58,7 @@ export const useGetTransactions = (
   return useQueryWrapper({
     queryFn: () =>
       getTransactions({
+        account_id: account_id,
         category_id: category_id,
         transaction_type: transaction_type,
         transaction_time: { gte, lte },
@@ -65,6 +67,7 @@ export const useGetTransactions = (
     queryKey: [
       queryKeys.transactions,
       {
+        account_id: account_id,
         category_id: category_id,
         transaction_time: { gte, lte },
       },

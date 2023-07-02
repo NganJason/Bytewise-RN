@@ -69,6 +69,7 @@ export const getTransaction = async ({ transaction_id = '' } = {}) => {
 };
 
 export const getTransactions = async ({
+  account_id = '',
   category_id = '',
   transaction_type = 0,
   transaction_time: { gte = 0, lte = 0 } = {},
@@ -76,6 +77,7 @@ export const getTransactions = async ({
 } = {}) => {
   try {
     const body = await sendPostRequest(GET_TRANSACTIONS, {
+      account_id: account_id,
       category_id: category_id,
       transaction_type: transaction_type,
       transaction_time: { gte, lte },
