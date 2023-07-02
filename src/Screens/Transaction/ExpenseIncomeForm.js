@@ -37,6 +37,7 @@ const NOTE_SCROLL_HEIGHT = 300;
 const ExpenseIncomeForm = ({
   transactionID = '',
   transactionType = TRANSACTION_TYPE_EXPENSE,
+  onTransactionTypeChange = function () {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -88,6 +89,11 @@ const ExpenseIncomeForm = ({
         ...transaction,
         amount: String(Math.abs(transaction.amount)),
       });
+    }
+
+    let { transaction_type = transactionType } = transaction || {};
+    if (transaction_type !== transactionType) {
+      onTransactionTypeChange(transaction_type);
     }
   }, [transaction]);
 

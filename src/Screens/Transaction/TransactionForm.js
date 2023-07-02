@@ -42,6 +42,13 @@ const TransactionForm = ({ route }) => {
     setActiveTab(tab);
   };
 
+  const onTransactionTypeChange = type => {
+    const targetTab = scrollableTabs.find(tab => tab.val === type);
+    if (targetTab !== undefined) {
+      setActiveTab(targetTab);
+    }
+  };
+
   return (
     <BaseScreen
       allowLoadable={false}
@@ -65,6 +72,7 @@ const TransactionForm = ({ route }) => {
             <ExpenseIncomeForm
               transactionID={transactionID}
               transactionType={activeTab.val}
+              onTransactionTypeChange={onTransactionTypeChange}
             />
           )}
         </View>
