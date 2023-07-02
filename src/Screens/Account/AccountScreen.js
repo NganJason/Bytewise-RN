@@ -79,8 +79,12 @@ const AccountScreen = () => {
     if (items.length === 0 && !getAccounts.isLoading) {
       return (
         <EmptyContent
-          item={EmptyContentConfig.asset}
-          route={ROUTES.budgetForm}
+          item={
+            equityType === EQUITY_TYPE_ASSET
+              ? EmptyContentConfig.asset
+              : EmptyContentConfig.debt
+          }
+          route={ROUTES.accountSelection}
         />
       );
     }

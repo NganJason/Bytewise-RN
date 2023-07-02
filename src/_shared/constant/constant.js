@@ -66,11 +66,11 @@ export const EmptyContentConfig = {
     image: paper,
   },
   asset: {
-    text: 'No assets yet',
+    text: 'No asset yet',
     image: paper,
   },
   debt: {
-    text: 'No debts yet',
+    text: 'No debt yet',
     image: paper,
   },
 };
