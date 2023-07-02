@@ -22,6 +22,7 @@ import {
   useCreateAccount,
   useUpdateAccount,
 } from '../../_shared/mutations/account';
+import { BaseOverlay } from '../../Components/View';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -33,6 +34,13 @@ const AccountForm = ({ route }) => {
   const isAddAccount = () => {
     return accountID === '';
   };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const [isBalanceUpdated, setIsBalanceUpdated] = useState(false);
 
   const [accountForm, setAccountForm] = useState({
     account_name: '',
@@ -56,6 +64,9 @@ const AccountForm = ({ route }) => {
 
   const updateAccount = useUpdateAccount({
     onSuccess: () => {
+      if (isModalVisible) {
+        toggleModal();
+      }
       navigation.goBack();
     },
   });
@@ -85,6 +96,9 @@ const AccountForm = ({ route }) => {
   };
 
   const onBalanceChange = e => {
+    if (!isAddAccount()) {
+      setIsBalanceUpdated(true);
+    }
     setAccountForm({ ...accountForm, balance: e });
   };
 
@@ -102,13 +116,19 @@ const AccountForm = ({ route }) => {
         ...accountForm,
         balance: String(accountForm.balance),
       });
-    } else {
-      updateAccount.mutate({
-        ...accountForm,
-        account_id: accountID,
-        balance: String(accountForm.balance),
-      });
+      return;
     }
+
+    if (isBalanceUpdated && !isModalVisible) {
+      toggleModal();
+      return;
+    }
+
+    updateAccount.mutate({
+      ...accountForm,
+      account_id: accountID,
+      balance: String(accountForm.balance),
+    });
   };
 
   return (
@@ -168,6 +188,35 @@ const AccountForm = ({ route }) => {
             loading={isFormButtonLoading()}
           />
         </View>
+
+        <BaseOverlay isVisible={isModalVisible}>
+          <View style={styles.overlay}>
+            <BaseText>
+              The difference in balance will be registered as an expense/income.
+            </BaseText>
+            <BaseText margin={{ vertical: 15 }}>
+              Do you want to proceed?
+            </BaseText>
+
+            <View style={styles.overlayBtnContainer}>
+              <BaseButton
+                title="Yes"
+                size="lg"
+                width={200}
+                onPress={onSave}
+                loading={isFormButtonLoading()}
+              />
+            </View>
+
+            <BaseButton
+              title="No"
+              type="outline"
+              size="lg"
+              width={200}
+              onPress={toggleModal}
+            />
+          </View>
+        </BaseOverlay>
       </KeyboardAwareScrollView>
     </BaseScreen>
   );
@@ -178,6 +227,13 @@ const getStyles = theme =>
     btnContainer: {
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.md,
+    },
+    overlayBtnContainer: {
+      marginBottom: theme.spacing.lg,
+      marginTop: theme.spacing.sm,
+    },
+    overlay: {
+      alignItems: 'center',
     },
   });
 
