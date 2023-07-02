@@ -19,7 +19,7 @@ const BaseScrollView = ({
 const getStyles = theme =>
   StyleSheet.create({
     container: {
-      marginBottom: 200, // To ensure inner container is larger than scrollview
+      marginBottom: 400, // To ensure inner container is larger than scrollview
     },
   });
 

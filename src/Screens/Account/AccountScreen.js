@@ -34,7 +34,7 @@ const AccountScreen = () => {
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
 
-  const getAccountsQuery = useGetAccounts({});
+  const getAccounts = useGetAccounts({});
 
   const computeSum = () => {
     let assets = computeEquitySum(EQUITY_TYPE_ASSET);
@@ -44,7 +44,7 @@ const AccountScreen = () => {
   };
 
   const computeEquitySum = (equityType = EQUITY_TYPE_ASSET) => {
-    const { accounts = [] } = getAccountsQuery?.data || {};
+    const { accounts = [] } = getAccounts?.data || {};
     let sum = 0;
 
     accounts.map(d => {
@@ -70,13 +70,13 @@ const AccountScreen = () => {
   };
 
   const renderContent = (equityType = EQUITY_TYPE_ASSET) => {
-    const { accounts = [] } = getAccountsQuery?.data || {};
+    const { accounts = [] } = getAccounts?.data || {};
 
     let items = accounts.filter(
       d => getEquityType(d.account_type) === equityType,
     );
 
-    if (items.length === 0 && !getAccountsQuery.isLoading) {
+    if (items.length === 0 && !getAccounts.isLoading) {
       return (
         <EmptyContent
           item={EmptyContentConfig.asset}
@@ -127,7 +127,8 @@ const AccountScreen = () => {
             h2
             decimal={0}
             showNegativeOnly
-            margin={{ top: 8, bottom: 2 }}>
+            margin={{ top: 8, bottom: 2 }}
+            isLoading={getAccounts.isLoading}>
             {computeSum()}
           </AmountText>
           <BaseButton
@@ -159,9 +160,7 @@ const AccountScreen = () => {
         component: renderHeader(),
         allowDrawer: true,
       }}>
-      <BaseLoadableView
-        scrollable={true}
-        isLoading={getAccountsQuery.isLoading}>
+      <BaseLoadableView scrollable={true} isLoading={getAccounts.isLoading}>
         <View>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>

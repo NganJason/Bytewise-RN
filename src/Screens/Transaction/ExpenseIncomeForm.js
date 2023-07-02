@@ -14,7 +14,10 @@ import {
   BaseLoadableView,
 } from '../../Components';
 
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
+import {
+  ACCOUNT_TYPE_INVESTMENT,
+  TRANSACTION_TYPE_EXPENSE,
+} from '../../_shared/apis/enum';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS, EmptyContentConfig } from '../../_shared/constant/constant';
@@ -181,6 +184,12 @@ const ExpenseIncomeForm = ({
     return createTransaction.isLoading || updateTransaction.isLoading;
   };
 
+  const getAccountOptions = () => {
+    let { accounts = [] } = getAccounts?.data || {};
+    accounts.filter(d => d.account_type !== ACCOUNT_TYPE_INVESTMENT);
+    return accounts;
+  };
+
   const isValidTransaction = () => {
     try {
       validateTransaction({
@@ -313,7 +322,7 @@ const ExpenseIncomeForm = ({
           onBackdropPress={toggleAccountModal}
           close={toggleAccountModal}
           onSelect={onAccountChange}
-          items={getAccounts.data?.accounts || []}
+          items={getAccountOptions()}
           label="account_name"
           headerProps={{
             leftComponent: (

@@ -146,7 +146,9 @@ const TransactionScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.body}>
-        <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
+        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
+          {renderRows()}
+        </BaseLoadableView>
       </View>
     </BaseScreen>
   );

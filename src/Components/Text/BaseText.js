@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { Text } from '@rneui/themed';
+import ContentLoader from 'react-native-easy-content-loader';
 
 const BaseText = ({
   h1 = false,
@@ -23,6 +24,7 @@ const BaseText = ({
   margin = { top: 0, bottom: 0, left: 0, right: 0, vertical: 0, horizontal: 0 },
   color = '#1D1A1B',
   style = {},
+  isLoading = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -61,6 +63,13 @@ const BaseText = ({
     }
   };
 
+  const getLoadingPlaceholderHeight = () => {
+    let textStyle = getTextCommonStyles();
+    const { fontSize = 20 } = textStyle;
+
+    return fontSize;
+  };
+
   // top, bottom, left, right take precedence over vertical and horizontal
   const getMargin = () => {
     let m = {};
@@ -84,19 +93,27 @@ const BaseText = ({
   const commonTextStyles = getTextCommonStyles();
 
   return (
-    <Text
-      style={{
-        ...commonTextStyles,
-        ...(center && styles.center),
-        ...getMargin(),
-        ...{ color: color },
-        ...style,
-      }}
-      adjustsFontSizeToFit={adjustsFontSizeToFit}
-      numberOfLines={numberOfLines}
-      ellipsizeMode={ellipsizeMode}>
-      {children}
-    </Text>
+    <ContentLoader
+      active
+      title={false}
+      pRows={1}
+      loading={isLoading}
+      pWidth={'100%'}
+      pHeight={getLoadingPlaceholderHeight()}>
+      <Text
+        style={{
+          ...commonTextStyles,
+          ...(center && styles.center),
+          ...getMargin(),
+          ...{ color: color },
+          ...style,
+        }}
+        adjustsFontSizeToFit={adjustsFontSizeToFit}
+        numberOfLines={numberOfLines}
+        ellipsizeMode={ellipsizeMode}>
+        {children}
+      </Text>
+    </ContentLoader>
   );
 };
 

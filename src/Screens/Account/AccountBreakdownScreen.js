@@ -12,7 +12,6 @@ import {
   BaseLoadableView,
   BaseButton,
 } from '../../Components';
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { coin } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
@@ -109,11 +108,20 @@ const AccountBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1>{account_name}</BaseText>
-          <AmountText h2 decimal={0} margin={{ top: 8, bottom: 6 }}>
+          <BaseText h1 isLoading={getAccount.isLoading}>
+            {account_name}
+          </BaseText>
+          <AmountText
+            h2
+            decimal={0}
+            margin={{ top: 8, bottom: 6 }}
+            isLoading={getAccount.isLoading}>
             {balance}
           </AmountText>
-          <BaseText text4 margin={{ bottom: 4 }}>
+          <BaseText
+            text4
+            margin={{ bottom: 4 }}
+            isLoading={getAccount.isLoading}>
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
           <BaseButton
@@ -123,7 +131,7 @@ const AccountBreakdownScreen = ({ route }) => {
             size="sm"
             icon={
               <Icon
-                name="plus-circle"
+                name="edit"
                 type="feather"
                 color={theme.colors.color1}
                 size={13}
@@ -156,7 +164,11 @@ const AccountBreakdownScreen = ({ route }) => {
             onBackward={onDateMove}
           />
         </View>
-        <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
+        <BaseLoadableView
+          scrollable={true}
+          isLoading={getTransactions.isLoading}>
+          {renderRows()}
+        </BaseLoadableView>
       </>
     </BaseScreen2>
   );

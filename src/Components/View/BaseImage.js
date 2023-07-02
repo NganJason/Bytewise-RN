@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Image } from '@rneui/themed';
+import { useState } from 'react';
 
 const BaseImage = ({
   width = 0,
@@ -10,23 +11,51 @@ const BaseImage = ({
   containerStyle = {},
 }) => {
   const styles = getStyles();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const onImageLoad = () => {
+    setImageLoaded(true);
+  };
 
   return (
-    <Animated.View
-      entering={FadeIn.duration(300)}
-      style={{
-        alignSelf: align,
-        width: width,
-        height: height,
-        ...containerStyle,
-      }}>
-      <Image source={source} style={styles.img} />
-    </Animated.View>
+    <>
+      {!imageLoaded ? (
+        <View
+          style={{
+            alignSelf: align,
+            width: width,
+            height: height,
+            ...containerStyle,
+          }}>
+          <Image
+            source={source}
+            style={{ ...styles.imgPlaceholder }}
+            onLoad={onImageLoad}
+          />
+        </View>
+      ) : (
+        <Animated.View
+          entering={FadeIn.duration(300)}
+          style={{
+            alignSelf: align,
+            width: width,
+            height: height,
+            ...containerStyle,
+          }}>
+          <Image source={source} style={styles.img} />
+        </Animated.View>
+      )}
+    </>
   );
 };
 
 const getStyles = () =>
   StyleSheet.create({
+    imgPlaceholder: {
+      width: '100%',
+      height: '100%',
+      opacity: 0,
+    },
     img: {
       width: '100%',
       height: '100%',
