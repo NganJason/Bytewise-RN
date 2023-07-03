@@ -7,9 +7,12 @@ import {
   BaseButton,
   BaseCurrencyInput,
   BaseInput,
+  BaseRow,
   BaseScreen,
   BaseText,
+  SearchBottomSheetInput,
 } from '../../../Components';
+import { useSearchSecurities } from '../../../_shared/mutations/security';
 
 const InvestmentForm = ({ route }) => {
   const { theme } = useTheme();
@@ -25,6 +28,8 @@ const InvestmentForm = ({ route }) => {
     cost_per_unit: 0,
     num_unit: 0,
   });
+
+  const searchSecurities = useSearchSecurities();
 
   const onTickerSymbolChange = e => {
     setInvestmentForm({ ...investmentForm, ticker_symbol: e });
@@ -60,12 +65,26 @@ const InvestmentForm = ({ route }) => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <BaseInput
-          label="Ticker"
-          value={investmentForm.ticker_symbol}
+        <SearchBottomSheetInput
+          label="Symbol"
+          itemLabel="symbol"
           onChangeText={onTickerSymbolChange}
-          clearButtonMode="always"
-          maxLength={120}
+          query={searchSecurities}
+          data={searchSecurities?.data?.securities || []}
+          renderItem={(item, onPress) => (
+            <BaseRow dividerMargin={2} onPress={onPress}>
+              <View>
+                <BaseText text3>{item.symbol}</BaseText>
+                <BaseText
+                  text4
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.securityName}>
+                  {item.security_name}
+                </BaseText>
+              </View>
+            </BaseRow>
+          )}
         />
 
         <BaseCurrencyInput
@@ -96,6 +115,10 @@ const getStyles = theme =>
     btnContainer: {
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.md,
+    },
+    securityName: {
+      marginTop: 4,
+      color: theme.colors.color8,
     },
   });
 

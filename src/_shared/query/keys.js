@@ -15,6 +15,8 @@ export const queryKeys = {
 
   account: 'account',
   accounts: 'accounts',
+
+  securities: 'securities',
 };
 
 export const useQueryWrapper = (queryOpts = {}) => {

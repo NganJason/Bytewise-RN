@@ -5,6 +5,7 @@ import {
   TouchInput,
   BaseCheckbox,
   BaseToggle,
+  SearchBottomSheetInput,
 } from './Input';
 
 // Screen
@@ -59,6 +60,7 @@ export {
   BaseText,
   BaseInput,
   BaseCurrencyInput,
+  SearchBottomSheetInput,
   BaseAccordion,
   AggrSummary,
   BaseButton,
