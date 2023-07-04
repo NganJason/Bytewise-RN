@@ -71,12 +71,11 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
 
     if (rows.length === 0 && !getCategoriesQuery.isLoading) {
       return (
-        <View style={styles.emptyContent}>
-          <EmptyContent
-            item={EmptyContentConfig.category}
-            route={ROUTES.categoryForm}
-          />
-        </View>
+        <EmptyContent
+          item={EmptyContentConfig.category}
+          route={ROUTES.categoryForm}
+          marginVertical="30%"
+        />
       );
     }
 
@@ -142,9 +141,6 @@ export default CategoryOverview;
 
 const getStyles = _ =>
   StyleSheet.create({
-    emptyContent: {
-      marginTop: '30%',
-    },
     screen: {
       height: '100%',
     },

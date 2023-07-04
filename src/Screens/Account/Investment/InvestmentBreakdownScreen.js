@@ -66,12 +66,11 @@ const InvestmentBreakdownScreen = ({ route }) => {
 
     if (rows.length === 0) {
       return (
-        <View style={styles.emptyContent}>
-          <EmptyContent
-            item={EmptyContentConfig.investment}
-            route={ROUTES.transactionForm}
-          />
-        </View>
+        <EmptyContent
+          item={EmptyContentConfig.investment}
+          route={ROUTES.transactionForm}
+          marginVertical="30%"
+        />
       );
     }
 
@@ -146,9 +145,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     },
     body: {
       paddingVertical: theme.spacing.lg,
-    },
-    emptyContent: {
-      marginTop: '30%',
     },
   });
 

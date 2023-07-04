@@ -62,12 +62,11 @@ const HoldingBreakdownScreen = ({}) => {
 
     if (rows.length === 0) {
       return (
-        <View style={styles.emptyContent}>
-          <EmptyContent
-            item={EmptyContentConfig.investment}
-            route={ROUTES.investmentForm}
-          />
-        </View>
+        <EmptyContent
+          item={EmptyContentConfig.investment}
+          route={ROUTES.investmentForm}
+          marginVertical="30%"
+        />
       );
     }
 

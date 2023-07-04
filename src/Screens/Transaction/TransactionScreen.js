@@ -86,12 +86,11 @@ const TransactionScreen = ({ navigation }) => {
 
     if (rows.length === 0) {
       return (
-        <View style={styles.emptyContent}>
-          <EmptyContent
-            item={EmptyContentConfig.transaction}
-            route={ROUTES.transactionForm}
-          />
-        </View>
+        <EmptyContent
+          item={EmptyContentConfig.transaction}
+          route={ROUTES.transactionForm}
+          marginVertical="30%"
+        />
       );
     }
 
@@ -156,9 +155,6 @@ const TransactionScreen = ({ navigation }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    emptyContent: {
-      marginTop: '30%',
-    },
     aggrContainer: {
       marginBottom: 22,
     },

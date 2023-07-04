@@ -73,4 +73,12 @@ export const EmptyContentConfig = {
     text: 'No debt yet',
     image: paper,
   },
+  noSearchDataFound: {
+    text: 'No data found',
+    image: paper,
+  },
+  emptySearchText: {
+    text: 'Type something to search',
+    image: sapiens1,
+  },
 };

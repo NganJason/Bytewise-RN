@@ -1,11 +1,13 @@
-export const debounce = (func = function () {}, delayInSecond = 1) => {
-  let timeoutId;
+import { useRef } from 'react';
+
+export const debounce = (func = function () {}, delayInSeconds = 1) => {
+  const timerIDRef = useRef(null);
 
   return function (...args) {
-    clearTimeout(timeoutId);
+    clearTimeout(timerIDRef.current);
 
-    timeoutId = setTimeout(() => {
+    timerIDRef.current = setTimeout(() => {
       func.apply(this, args);
-    }, delayInSecond * 1000);
+    }, delayInSeconds * 1000);
   };
 };

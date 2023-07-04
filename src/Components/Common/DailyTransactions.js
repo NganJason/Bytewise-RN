@@ -50,6 +50,13 @@ const DailyTransactions = ({
     });
   };
 
+  const formatCategoryName = (name = '') => {
+    if (name === '') {
+      return '-';
+    }
+    return capitalize(name);
+  };
+
   return (
     <View style={styles.body}>
       <View style={styles.row}>
@@ -76,7 +83,7 @@ const DailyTransactions = ({
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {capitalize(t.category.category_name)}
+                  {formatCategoryName(t.category.category_name)}
                 </BaseText>
                 <View style={styles.noteWrapper}>
                   <BaseText

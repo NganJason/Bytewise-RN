@@ -12,7 +12,7 @@ import {
   BaseText,
   SearchBottomSheetInput,
 } from '../../../Components';
-import { useSearchSecurities } from '../../../_shared/mutations/security';
+import { useSearchSecurities } from '../../../_shared/query/security';
 
 const InvestmentForm = ({ route }) => {
   const { theme } = useTheme();
@@ -28,8 +28,6 @@ const InvestmentForm = ({ route }) => {
     cost_per_unit: 0,
     num_unit: 0,
   });
-
-  const searchSecurities = useSearchSecurities();
 
   const onTickerSymbolChange = e => {
     setInvestmentForm({ ...investmentForm, ticker_symbol: e });
@@ -69,8 +67,8 @@ const InvestmentForm = ({ route }) => {
           label="Symbol"
           itemLabel="symbol"
           onChangeText={onTickerSymbolChange}
-          query={searchSecurities}
-          data={searchSecurities?.data?.securities || []}
+          useQuery={useSearchSecurities}
+          processResp={resp => resp.securities}
           renderItem={(item, onPress) => (
             <BaseRow dividerMargin={2} onPress={onPress}>
               <View>

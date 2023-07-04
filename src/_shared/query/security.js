@@ -4,8 +4,9 @@ import { queryKeys, useQueryWrapper } from './keys';
 export const useSearchSecurities = ({ keyword = '' } = {}, opts = {}) => {
   return useQueryWrapper({
     queryFn: () => searchSecurities({ keyword: keyword }),
-    queryKey: [queryKeys.securities, keyword],
+    queryKey: [queryKeys.securities, { keyword: keyword }],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
+    ...opts,
   });
 };

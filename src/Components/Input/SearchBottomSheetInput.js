@@ -7,24 +7,21 @@ import useDimension from '../../_shared/hooks/dimension';
 import { debounce } from '../../_shared/util/common';
 import BaseSearchBar from './BaseSearchBar';
 import TouchInput from './TouchInput';
+import { BaseScrollView } from '../View';
+import { EmptyContent } from '../Common';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 
 const SearchBottomSheetInput = ({
   label = '',
   itemLabel = '',
   onChangeText = function () {},
-  query = {
-    mutate: function () {},
-    isLoading: false,
-    reset: function () {},
-  },
-  data = [],
+  useQuery = function () {},
+  processResp = function (resp) {},
   renderItem = function (item, onPress) {},
 }) => {
   const { screenHeight } = useDimension();
   const { theme } = useTheme();
   const styles = getStyles(theme, screenHeight);
-
-  const debouncedSearch = debounce(query.mutate, 0.5);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const toggleModal = () => {
@@ -38,22 +35,37 @@ const SearchBottomSheetInput = ({
     toggleModal();
   };
 
-  const [searchText, setSearchText] = useState('');
-  const onSearchTextChange = e => {
-    setSearchText(e);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const debouncedSearch = debounce(e => {
+    setDebouncedSearchTerm(e);
+  }, 0.5);
+
+  const onSearchTermChange = e => {
+    setSearchTerm(e);
     if (e !== '') {
-      debouncedSearch({ keyword: e });
+      debouncedSearch(e);
     }
   };
 
+  const { data = {}, isLoading = false } = useQuery(
+    { keyword: debouncedSearchTerm },
+    {
+      enabled: debouncedSearchTerm !== '',
+      staleTime: 60 * 60 * 1000, // 24 hour (in ms)
+      cacheTime: 24 * 60 * 60 * 1000, // 24 hours (in ms)
+    },
+  );
+
   const onCancel = () => {
     toggleModal();
-    query.reset();
   };
 
   const renderRows = () => {
     let rows = [];
-    data.map((d, idx) => {
+    let items = processResp(data) || [];
+
+    items.map((d, idx) => {
       const onPress = () => {
         onItemPress(d);
       };
@@ -62,6 +74,19 @@ const SearchBottomSheetInput = ({
         <React.Fragment key={idx}>{renderItem(d, onPress)}</React.Fragment>,
       );
     });
+
+    if (rows.length === 0 && !isLoading) {
+      return (
+        <EmptyContent
+          item={
+            debouncedSearchTerm === ''
+              ? EmptyContentConfig.emptySearchText
+              : EmptyContentConfig.noSearchDataFound
+          }
+          marginVertical="30%"
+        />
+      );
+    }
 
     return rows;
   };
@@ -80,12 +105,16 @@ const SearchBottomSheetInput = ({
         <View style={styles.container}>
           <BaseSearchBar
             autoFocus
-            value={searchText}
-            onChangeText={onSearchTextChange}
-            isLoading={query.isLoading}
+            value={searchTerm}
+            onChangeText={onSearchTermChange}
+            isLoading={isLoading}
             onCancel={onCancel}
           />
-          <View style={styles.body}>{renderRows()}</View>
+          <BaseScrollView
+            style={styles.body}
+            showsVerticalScrollIndicator={false}>
+            {renderRows()}
+          </BaseScrollView>
         </View>
       </BottomSheet>
     </>
@@ -101,11 +130,6 @@ const getStyles = (theme, screenHeight) =>
       paddingTop: 28,
       paddingBottom: theme.spacing.xl,
       paddingHorizontal: theme.spacing.lg,
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      marginTop: theme.spacing.md,
     },
     body: {
       flex: 1,

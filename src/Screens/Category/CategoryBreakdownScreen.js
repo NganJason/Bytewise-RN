@@ -120,12 +120,11 @@ const CategoryBreakdownScreen = ({ route }) => {
 
     if (rows.length === 0 && !getTransactions.isLoading) {
       return (
-        <View style={styles.emptyContent}>
-          <EmptyContent
-            item={EmptyContentConfig.transaction}
-            route={ROUTES.transactionForm}
-          />
-        </View>
+        <EmptyContent
+          item={EmptyContentConfig.transaction}
+          route={ROUTES.transactionForm}
+          marginVertical="30%"
+        />
       );
     }
 
@@ -187,9 +186,6 @@ const CategoryBreakdownScreen = ({ route }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
-    emptyContent: {
-      marginTop: '30%',
-    },
     categoryNameText: {
       marginBottom: 4,
     },
