@@ -14,7 +14,7 @@ export const useGetBudget = ({ budget_id = '', date = '' }, opts = {}) => {
 export const useGetBudgets = ({ date = '' }, opts = {}) => {
   return useQuery({
     queryFn: () => getBudgets({ date: date }),
-    queryKey: [queryKeys.budgets],
+    queryKey: [queryKeys.budgets, { date: date }],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });

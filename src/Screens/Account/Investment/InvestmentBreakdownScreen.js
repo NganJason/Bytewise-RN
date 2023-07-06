@@ -145,6 +145,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     },
     body: {
       paddingVertical: theme.spacing.lg,
+      minHeight: '100%',
     },
   });
 

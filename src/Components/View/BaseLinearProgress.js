@@ -18,6 +18,7 @@ const BaseLinearProgress = ({ value = 0 }) => {
       trackColor={theme.colors.color9}
       color={getColor()}
       value={value}
+      animation={false}
     />
   );
 };

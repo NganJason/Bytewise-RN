@@ -11,7 +11,7 @@ import {
   DateNavigator,
 } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
-import { BaseDivider, BaseRow } from '../../Components/View';
+import { BaseLoadableView, BaseRow } from '../../Components/View';
 
 import {
   BUDGET_TYPE_ANNUAL,
@@ -19,13 +19,16 @@ import {
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import useDimension from '../../_shared/hooks/dimension';
 import { useGetBudgets } from '../../_shared/query/budget';
-import { getDateString, getYear, getMonth } from '../../_shared/util/date';
+import { getDateString } from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';
+import { getBudgetAmountFromBreakdown } from '../../_shared/util/budget';
 
 const BudgetScreen = () => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
+  const { screenHeight } = useDimension();
+  const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
 
   const [activeDate, setActiveDate] = useState(new Date());
@@ -53,10 +56,6 @@ const BudgetScreen = () => {
           budget.budget_type,
         );
 
-        if (amount === 0) {
-          return;
-        }
-
         rows.push(
           <BaseRow
             key={budget.budget_id}
@@ -82,6 +81,7 @@ const BudgetScreen = () => {
               : EmptyContentConfig.annualBudget
           }
           route={ROUTES.budgetForm}
+          height="80%"
         />
       );
     }
@@ -89,28 +89,9 @@ const BudgetScreen = () => {
     return rows;
   };
 
-  const isMonthlyBudgetEmpty = () => {
-    let budgets = getBudgets?.data?.budgets || [];
-    for (let i = 0; i < budgets.length; i++) {
-      if (budgets[i].budget_type === BUDGET_TYPE_MONTHLY) {
-        let amount = getBudgetAmountFromBreakdown(
-          activeDate,
-          budgets[i].budget_breakdowns,
-          budgets[i].budget_type,
-        );
-
-        if (amount !== 0) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  };
-
   return (
     <BaseScreen
-      isLoading={getBudgets.isLoading}
+      allowLoadable={false}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -138,23 +119,25 @@ const BudgetScreen = () => {
           <View style={styles.title}>
             <BaseText h3>Monthly</BaseText>
           </View>
-          {renderRows(BUDGET_TYPE_MONTHLY)}
+          <BaseLoadableView isLoading={getBudgets.isLoading}>
+            {renderRows(BUDGET_TYPE_MONTHLY)}
+          </BaseLoadableView>
         </View>
-
-        {isMonthlyBudgetEmpty() && <BaseDivider margin={theme.spacing.md} />}
 
         <View style={styles.container}>
           <View style={styles.title}>
             <BaseText h3>Annual</BaseText>
           </View>
-          {renderRows(BUDGET_TYPE_ANNUAL)}
+          <BaseLoadableView isLoading={getBudgets.isLoading}>
+            {renderRows(BUDGET_TYPE_ANNUAL)}
+          </BaseLoadableView>
         </View>
       </BaseScrollView>
     </BaseScreen>
   );
 };
 
-const getStyles = theme => {
+const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     header: {
       alignItems: 'center',
@@ -164,7 +147,7 @@ const getStyles = theme => {
     },
     container: {
       marginBottom: theme.spacing.xl,
-      minHeight: '35%',
+      minHeight: screenHeight * 0.25,
     },
     title: {
       marginVertical: theme.spacing.md,
@@ -173,27 +156,3 @@ const getStyles = theme => {
 };
 
 export default BudgetScreen;
-
-const getBudgetAmountFromBreakdown = (
-  activeDate = new Date(),
-  breakdowns = [],
-  budgetType = BUDGET_TYPE_MONTHLY,
-) => {
-  let amount = 0;
-  let year = getYear(activeDate);
-  let month = getMonth(activeDate);
-
-  breakdowns.map(val => {
-    if (budgetType === BUDGET_TYPE_MONTHLY) {
-      if (val.year === year && val.month === month) {
-        amount = val.amount;
-      }
-    } else {
-      if (val.year === year) {
-        amount = val.amount;
-      }
-    }
-  });
-
-  return amount;
-};

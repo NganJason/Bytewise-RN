@@ -14,6 +14,7 @@ const EmptyContent = ({
   route = '',
   onRedirect = function () {},
   marginVertical = '0%',
+  height = '',
 }) => {
   const { theme } = useTheme();
   const { screenWidth } = useDimension();
@@ -29,7 +30,7 @@ const EmptyContent = ({
     <View style={{ ...styles.container, marginVertical: marginVertical }}>
       <BaseImage
         width={screenWidth * 0.4}
-        height={screenWidth * 0.4}
+        height={height === '' ? screenWidth * 0.4 : height}
         source={item.image}
       />
 

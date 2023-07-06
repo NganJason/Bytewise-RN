@@ -34,12 +34,14 @@ const AGGR_TRANSACTIONS = '/aggr_transactions';
 
 export const aggrTransactions = async ({
   category_ids = [],
+  budget_ids = [],
   transaction_types = [],
   transaction_time: { gte = 0, lte = 0 } = {},
 } = {}) => {
   try {
     const body = await sendPostRequest(AGGR_TRANSACTIONS, {
       category_ids: category_ids,
+      budget_ids: budget_ids,
       transaction_types: transaction_types,
       transaction_time: { gte, lte },
     });

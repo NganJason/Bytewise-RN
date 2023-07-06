@@ -63,7 +63,7 @@ const BaseLoadableView = ({
 
 const getStyles = _ =>
   StyleSheet.create({
-    body: { minHeight: '100%' },
+    body: { flex: 1 },
     container: { flex: 1 },
   });
 

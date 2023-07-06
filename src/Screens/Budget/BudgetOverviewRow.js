@@ -14,11 +14,18 @@ const BudgetOverviewRow = ({ budget }) => {
 
   const { budget_id = '', budget_name = '', amount = 0, used = 0 } = budget;
 
+  const getProgress = () => {
+    let progress = Math.abs(Number(used)) / amount;
+    if (isFinite(progress)) {
+      return progress;
+    }
+    return 0;
+  };
+
   return (
     <View key={budget_id} style={styles.row}>
       <View style={styles.rowInfo}>
         <BaseText text3>{capitalize(budget_name)}</BaseText>
-
         <View style={styles.aggr}>
           <AmountText text4 decimal={0} style={{ color: theme.colors.color7 }}>
             {used}
@@ -31,7 +38,7 @@ const BudgetOverviewRow = ({ budget }) => {
       </View>
 
       <View style={styles.progress}>
-        <BaseLinearProgress value={used / amount} />
+        <BaseLinearProgress value={getProgress()} />
       </View>
     </View>
   );

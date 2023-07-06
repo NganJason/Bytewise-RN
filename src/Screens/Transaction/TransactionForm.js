@@ -86,6 +86,7 @@ export default TransactionForm;
 const getStyles = _ =>
   StyleSheet.create({
     formBody: {
+      minHeight: '100%',
       paddingVertical: 22,
     },
     tabContainer: {

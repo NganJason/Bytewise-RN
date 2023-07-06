@@ -8,6 +8,7 @@ import { queryKeys, useQueryWrapper } from './keys';
 export const useAggrTransactions = (
   {
     category_ids = [],
+    budget_ids = [],
     transaction_types = [],
     transaction_time: { gte = 0, lte = 0 } = {},
   } = {},
@@ -17,6 +18,7 @@ export const useAggrTransactions = (
     queryFn: () =>
       aggrTransactions({
         category_ids: category_ids,
+        budget_ids: budget_ids,
         transaction_types: transaction_types,
         transaction_time: { gte, lte },
       }),

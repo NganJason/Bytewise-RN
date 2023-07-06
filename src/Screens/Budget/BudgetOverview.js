@@ -1,70 +1,123 @@
 import { useTheme } from '@rneui/themed';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BaseText } from '../../Components';
 import { EmptyContent } from '../../Components/Common';
-import { BaseLoadableView } from '../../Components/View';
+import { BaseLoadableView, BaseScrollView } from '../../Components/View';
 import {
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import useDimension from '../../_shared/hooks/dimension';
+import { useAggrTransactions } from '../../_shared/query';
+import { useGetBudgets } from '../../_shared/query/budget';
+import { getBudgetAmountFromBreakdown } from '../../_shared/util/budget';
+import {
+  getDateString,
+  getMonth,
+  getUnixRangeOfMonth,
+  getUnixRangeOfYear,
+  getYear,
+} from '../../_shared/util/date';
 import BudgetOverviewRow from './BudgetOverviewRow';
-
-const MockData = [
-  {
-    budget_id: '123',
-    budget_type: BUDGET_TYPE_MONTHLY,
-    budget_name: 'living cost',
-    amount: 500,
-    used: 100,
-  },
-  {
-    budget_id: '124',
-    budget_type: BUDGET_TYPE_MONTHLY,
-    budget_name: 'utilities',
-    amount: 600,
-    used: 600,
-  },
-  {
-    budget_id: '126',
-    budget_type: BUDGET_TYPE_MONTHLY,
-    budget_name: 'entertainment',
-    amount: 200,
-    used: 190,
-  },
-  {
-    budget_id: '127',
-    budget_type: BUDGET_TYPE_ANNUAL,
-    budget_name: 'travel',
-    amount: 3000,
-    used: 1000,
-  },
-  {
-    budget_id: '128',
-    budget_type: BUDGET_TYPE_ANNUAL,
-    budget_name: 'supplement',
-    amount: 300,
-    used: 100,
-  },
-];
 
 const BudgetOverview = ({ activeDate = new Date() }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
+  const { screenHeight } = useDimension();
+  const styles = getStyles(theme, screenHeight);
+
+  const [monthRange, setMonthRange] = useState(
+    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+  );
+
+  const [yearRange, setYearRange] = useState(
+    getUnixRangeOfYear(getYear(activeDate)),
+  );
+
+  useEffect(() => {
+    setMonthRange(
+      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
+    );
+    setYearRange(getUnixRangeOfYear(getYear(activeDate)));
+  }, [activeDate]);
+
+  const getBudgets = useGetBudgets({
+    date: getDateString(activeDate),
+  });
+
+  const getBudgetIDs = (type = BUDGET_TYPE_MONTHLY) => {
+    let budgets =
+      getBudgets?.data?.budgets?.filter(
+        budget => budget.budget_type === type,
+      ) || [];
+
+    return budgets.map(budget => budget.budget_id);
+  };
+
+  const aggrMonthlyBudgets = useAggrTransactions(
+    {
+      budget_ids: getBudgetIDs(BUDGET_TYPE_MONTHLY),
+      transaction_time: {
+        gte: monthRange[0],
+        lte: monthRange[1],
+      },
+    },
+    {
+      enabled:
+        (!getBudgets.isLoading &&
+          !getBudgets.isError &&
+          getBudgets.data?.budgets?.length !== 0) ||
+        false,
+    },
+  );
+
+  const aggrAnnualBudgets = useAggrTransactions(
+    {
+      budget_ids: getBudgetIDs(BUDGET_TYPE_ANNUAL),
+      transaction_time: {
+        gte: yearRange[0],
+        lte: yearRange[1],
+      },
+    },
+    {
+      enabled:
+        (!getBudgets.isLoading &&
+          !getBudgets.isError &&
+          getBudgets.data?.budgets?.length !== 0) ||
+        false,
+    },
+  );
 
   const renderRows = (type = BUDGET_TYPE_MONTHLY) => {
     let rows = [];
+    let budgets = getBudgets?.data?.budgets || [];
 
-    MockData.map(budget => {
+    budgets.map(budget => {
       if (budget.budget_type !== type) {
         return;
       }
 
+      let amount = getBudgetAmountFromBreakdown(
+        activeDate,
+        budget.budget_breakdowns,
+        budget.budget_type,
+      );
+
+      let used = 0;
+      if (type === BUDGET_TYPE_MONTHLY) {
+        used = aggrMonthlyBudgets.data?.results?.[budget.budget_id]?.sum || 0;
+      } else {
+        used = aggrAnnualBudgets.data?.results?.[budget.budget_id]?.sum || 0;
+      }
+
+      budget.amount = amount;
+      budget.used = used;
       rows.push(<BudgetOverviewRow key={budget.budget_id} budget={budget} />);
     });
 
-    if (rows.length === 0) {
+    if (rows.length === 0 && !isScreenLoading()) {
       return (
         <EmptyContent
           item={
@@ -73,6 +126,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
               : EmptyContentConfig.annualBudget
           }
           route={ROUTES.budgetForm}
+          height="80%"
         />
       );
     }
@@ -80,34 +134,49 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
     return rows;
   };
 
+  const isScreenLoading = () => {
+    return (
+      getBudgets.isLoading ||
+      aggrMonthlyBudgets.isLoading ||
+      aggrAnnualBudgets.isLoading
+    );
+  };
+
   return (
     <View style={styles.screen}>
-      <BaseLoadableView scrollable={true}>
-        <View style={styles.container}>
-          <View style={styles.title}>
-            <BaseText h3>Monthly</BaseText>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
+        <View>
+          <View style={styles.container}>
+            <View style={styles.title}>
+              <BaseText h3>Monthly</BaseText>
+            </View>
+            <BaseLoadableView isLoading={isScreenLoading()}>
+              {renderRows(BUDGET_TYPE_MONTHLY)}
+            </BaseLoadableView>
           </View>
-          {renderRows(BUDGET_TYPE_MONTHLY)}
-        </View>
 
-        <View style={styles.container}>
-          <View style={styles.title}>
-            <BaseText h3>Annual</BaseText>
+          <View style={styles.container}>
+            <View style={styles.title}>
+              <BaseText h3>Annual</BaseText>
+            </View>
+            <BaseLoadableView isLoading={isScreenLoading()}>
+              {renderRows(BUDGET_TYPE_ANNUAL)}
+            </BaseLoadableView>
           </View>
-          {renderRows(BUDGET_TYPE_ANNUAL)}
         </View>
-      </BaseLoadableView>
+      </BaseScrollView>
     </View>
   );
 };
 
-const getStyles = theme =>
+const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
     screen: {
       minHeight: '100%',
     },
     container: {
-      minHeight: '35%',
+      marginBottom: theme.spacing.xl,
+      minHeight: screenHeight * 0.25,
     },
     title: {
       marginTop: theme.spacing.lg,

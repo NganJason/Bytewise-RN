@@ -1,5 +1,6 @@
-import { ACCOUNT_TYPES, BUDGET_TYPES } from '../apis/enum';
+import { ACCOUNT_TYPES, BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../apis/enum';
 import { MONTHS } from '../constant/constant';
+import { getMonth, getYear } from './date';
 
 export const getBudgetTypes = () => {
   let budgetTypes = [];
@@ -39,4 +40,28 @@ export const getAccountTypes = () => {
   }
 
   return accountTypes;
+};
+
+export const getBudgetAmountFromBreakdown = (
+  activeDate = new Date(),
+  breakdowns = [],
+  budgetType = BUDGET_TYPE_MONTHLY,
+) => {
+  let amount = 0;
+  let year = getYear(activeDate);
+  let month = getMonth(activeDate);
+
+  breakdowns.map(val => {
+    if (budgetType === BUDGET_TYPE_MONTHLY) {
+      if (val.year === year && val.month === month) {
+        amount = val.amount;
+      }
+    } else {
+      if (val.year === year) {
+        amount = val.amount;
+      }
+    }
+  });
+
+  return amount;
 };

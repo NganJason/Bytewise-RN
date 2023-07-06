@@ -54,6 +54,16 @@ export const getUnixRangeOfMonth = (year = getYear(), month = getMonth()) => {
   return [startUnixTime, endUnixTime];
 };
 
+export const getUnixRangeOfYear = (year = getYear()) => {
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31);
+
+  const startUnixTime = Math.floor(startDate.getTime());
+  const endUnixTime = Math.floor(endDate.getTime());
+
+  return [startUnixTime, endUnixTime];
+};
+
 export const isMonthValid = monthEnum => {
   if (monthEnum > MONTHS_VALUE.Dec || monthEnum < MONTHS_VALUE.Jan) {
     return false;
