@@ -17,7 +17,7 @@ export const validateBudget = ({
     errors.categories = 'Categories cannot be empty';
   }
   if (to_date < from_date) {
-    errors.date = 'To date cannot be smaller than from date';
+    errors.date = 'From date cannot be larger than to date';
   }
   return errors;
 };
