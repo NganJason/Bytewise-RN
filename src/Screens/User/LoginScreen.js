@@ -17,7 +17,8 @@ import useDimension from '../../_shared/hooks/dimension';
 import { loginHero } from '../../_shared/constant/asset';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
-import { validateUser } from '../../_shared/apis/user';
+import { useValidation } from '../../_shared/hooks/validation';
+import { validateLogin } from '../../_shared/validator/login';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
@@ -27,11 +28,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const [formErrors, setFormErrors] = useState({});
-
-  const [formInputsTouched, setFormInputsTouched] = useState({
-    username: false,
-    password: false,
-  });
+  const { validate, showValidation } = useValidation();
 
   const [loginForm, setLoginForm] = useState({
     username: 'Jon',
@@ -39,28 +36,26 @@ const LoginScreen = () => {
   });
 
   useEffect(() => {
-    setFormErrors(validateUser(loginForm));
-  }, [formInputsTouched, loginForm]);
+    setFormErrors(validateLogin(loginForm));
+  }, [loginForm]);
 
   const onUsernameChange = e => {
     setLoginForm({ ...loginForm, username: e });
-  };
-
-  const onUsernameBlur = () => {
-    setFormInputsTouched({ ...formInputsTouched, username: true });
   };
 
   const onPasswordChange = e => {
     setLoginForm({ ...loginForm, password: e });
   };
 
-  const onPasswordBlur = () => {
-    setFormInputsTouched({ ...formInputsTouched, password: true });
-  };
-
   const { login, isLoginLoading, getLoginError } = useContext(AuthContext);
 
   const onLogin = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+    if (!isValidationPassed) {
+      return;
+    }
+
     login(loginForm);
   };
 
@@ -100,8 +95,7 @@ const LoginScreen = () => {
               value={loginForm.username}
               onChangeText={onUsernameChange}
               maxLength={60}
-              onBlur={onUsernameBlur}
-              errorMessage={formInputsTouched.username && formErrors.username}
+              errorMessage={showValidation && formErrors.username}
               containerStyle={styles.input}
             />
             <BaseInput
@@ -112,8 +106,7 @@ const LoginScreen = () => {
               value={loginForm.password}
               onChangeText={onPasswordChange}
               secureTextEntry
-              onBlur={onPasswordBlur}
-              errorMessage={formInputsTouched.password && formErrors.password}
+              errorMessage={showValidation && formErrors.password}
               containerStyle={styles.input}
             />
           </View>
@@ -126,7 +119,6 @@ const LoginScreen = () => {
                 width={200}
                 onPress={onLogin}
                 loading={isLoginLoading}
-                disabled={Object.keys(formErrors).length !== 0}
               />
             </View>
             <View style={styles.signUpContainer}>

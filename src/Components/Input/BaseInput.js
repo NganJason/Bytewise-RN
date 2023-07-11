@@ -76,7 +76,7 @@ const BaseInput = forwardRef(
         clearButtonMode={clearButtonMode}
         inputStyle={styles.input}
         pointerEvents={pointerEvents}
-        renderErrorMessage={false}
+        renderErrorMessage={true}
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
         errorMessage={errorMessage}
@@ -103,7 +103,7 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 36,
+      marginBottom: 16,
     },
     inputContainer: {
       paddingVertical: 4,

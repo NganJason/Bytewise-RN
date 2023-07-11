@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
 import { AuthContext } from '../../_shared/context/AuthContext';
+
 import { useGetUser } from '../../_shared/query/user';
 import { capitalize } from '../../_shared/util/string';
 import { BaseText } from '../Text';

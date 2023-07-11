@@ -18,7 +18,8 @@ import { AuthContext } from '../../_shared/context/AuthContext';
 import { renderErrorsToast } from '../../_shared/util/toast';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
-import { validateUser } from '../../_shared/apis/user';
+import { validateSignUp } from '../../_shared/validator/signup';
+import { useValidation } from '../../_shared/hooks/validation';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
@@ -26,11 +27,7 @@ const SignupScreen = () => {
   const styles = getStyles(theme);
 
   const [formErrors, setFormErrors] = useState({});
-
-  const [formInputsTouched, setFormInputsTouched] = useState({
-    username: false,
-    password: false,
-  });
+  const { validate, showValidation } = useValidation();
 
   const [signupForm, setSignupForm] = useState({
     username: 'Jon',
@@ -38,29 +35,27 @@ const SignupScreen = () => {
   });
 
   useEffect(() => {
-    setFormErrors(validateUser(signupForm));
-  }, [formInputsTouched, signupForm]);
+    setFormErrors(validateSignUp(signupForm));
+  }, [signupForm]);
 
   const onUsernameChange = e => {
     setSignupForm({ ...signupForm, username: e });
-  };
-
-  const onUsernameBlur = () => {
-    setFormInputsTouched({ ...formInputsTouched, username: true });
   };
 
   const onPasswordChange = e => {
     setSignupForm({ ...signupForm, password: e });
   };
 
-  const onPasswordBlur = () => {
-    setFormInputsTouched({ ...formInputsTouched, password: true });
-  };
-
   const { signup, isSignupLoading, getSignupError } = useContext(AuthContext);
   const navigation = useNavigation();
 
   const onSignup = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+
+    if (!isValidationPassed) {
+      return;
+    }
     signup(signupForm);
   };
 
@@ -99,8 +94,7 @@ const SignupScreen = () => {
             value={signupForm.username}
             onChangeText={onUsernameChange}
             maxLength={60}
-            onBlur={onUsernameBlur}
-            errorMessage={formInputsTouched.username && formErrors.username}
+            errorMessage={showValidation && formErrors.username}
             containerStyle={styles.input}
           />
           <BaseInput
@@ -111,8 +105,7 @@ const SignupScreen = () => {
             value={signupForm.password}
             onChangeText={onPasswordChange}
             secureTextEntry
-            onBlur={onPasswordBlur}
-            errorMessage={formInputsTouched.password && formErrors.password}
+            errorMessage={showValidation && formErrors.password}
             containerStyle={styles.input}
           />
         </View>

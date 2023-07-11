@@ -6,26 +6,6 @@ export class TransactionError extends AppError {
   }
 }
 
-export const validateTransaction = ({
-  category_id = 0,
-  amount = '',
-  transaction_type = 0,
-  transaction_time = 0,
-} = {}) => {
-  if (category_id === '') {
-    throw new TransactionError({ message: 'Category ID cannot be 0' });
-  }
-  if (amount === '') {
-    throw new TransactionError({ message: 'Amount cannot be empty' });
-  }
-  if (transaction_type === 0) {
-    throw new TransactionError({ message: 'Transaction type cannot be 0' });
-  }
-  if (transaction_time === 0) {
-    throw new TransactionError({ message: 'Transaction time cannot be empty' });
-  }
-};
-
 const CREATE_TRANSACTION = '/create_transaction';
 const GET_TRANSACTIONS = '/get_transactions';
 const UPDATE_TRANSACTION = '/update_transaction';

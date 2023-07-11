@@ -6,24 +6,6 @@ export class UserError extends AppError {
   }
 }
 
-export const validateUser = ({ username = '', password = '' } = {}) => {
-  const errors = {};
-
-  if (username === '') {
-    errors.username = 'Username cannot be empty';
-  } else if (username.length > 60) {
-    errors.username = 'Username cannot be more than 60 characters';
-  }
-
-  if (password === '') {
-    errors.password = 'Password cannot be empty';
-  } else if (password.length < 8) {
-    errors.password = 'Password must have at least 8 characters';
-  }
-
-  return errors;
-};
-
 const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';

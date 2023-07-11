@@ -12,6 +12,7 @@ const DatePickerInput = ({
   dateValue = new Date(),
   mode = DatePickerMode.Year,
   onSelect = function () {},
+  ...props
 }) => {
   const { screenHeight } = useDimension();
   const { theme } = useTheme();
@@ -53,7 +54,12 @@ const DatePickerInput = ({
 
   return (
     <>
-      <TouchInput label={label} value={getDateString()} onPress={toggleModal} />
+      <TouchInput
+        label={label}
+        value={getDateString()}
+        onPress={toggleModal}
+        {...props}
+      />
       <BottomSheet
         fullScreen={true}
         scrollViewProps={{ style: { maxHeight: screenHeight / 2 } }}

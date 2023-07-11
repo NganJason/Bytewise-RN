@@ -18,8 +18,9 @@ import {
 } from '../../_shared/apis/enum';
 import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
-import { validateCategory } from '../../_shared/apis/category';
 import { renderErrorsToast } from '../../_shared/util/toast';
+import { useValidation } from '../../_shared/hooks/validation';
+import { validateCategory } from '../../_shared/validator/category';
 
 const categoryTypes = [
   {
@@ -42,6 +43,12 @@ const CategoryForm = ({ route }) => {
   const isAddCategory = () => {
     return categoryID === '';
   };
+
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+  useEffect(() => {
+    setFormErrors(validateCategory(categoryForm));
+  }, [categoryForm]);
 
   const getCategory = useGetCategory(
     { category_id: categoryID },
@@ -78,20 +85,17 @@ const CategoryForm = ({ route }) => {
   });
 
   const onFormSubmit = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+    if (!isValidationPassed) {
+      return;
+    }
+
     if (categoryForm.category_id !== '') {
       const { category_type: _, ...updateCategoryForm } = categoryForm;
       updateCategory.mutate(updateCategoryForm);
     } else {
       createCategory.mutate(categoryForm);
-    }
-  };
-
-  const isValidCategory = () => {
-    try {
-      validateCategory(categoryForm);
-      return true;
-    } catch {
-      return false;
     }
   };
 
@@ -124,6 +128,7 @@ const CategoryForm = ({ route }) => {
           onChangeText={onCategoryNameChange}
           clearButtonMode="always"
           autoFocus={true}
+          errorMessage={showValidation && formErrors.category_name}
         />
         {categoryForm.category_id === '' && (
           <BaseToggle
@@ -140,7 +145,6 @@ const CategoryForm = ({ route }) => {
             width={200}
             onPress={onFormSubmit}
             loading={isFormButtonLoading()}
-            disabled={!isValidCategory()}
           />
         </View>
       </View>

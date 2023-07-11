@@ -16,6 +16,8 @@ import ROUTES from '../../_shared/constant/routes';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransaction } from '../../_shared/query';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useValidation } from '../../_shared/hooks/validation';
+import { validateTransfer } from '../../_shared/validator/transfer';
 
 const mockAccounts = [
   {
@@ -54,6 +56,18 @@ const TransferForm = ({ transactionID = '' }) => {
       account_name: '',
     },
   });
+
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+  useEffect(() => {
+    setFormErrors(
+      validateTransfer({
+        ...transactionForm,
+        from_account_id: transactionForm.from_account.account_id,
+        to_account_id: transactionForm.to_account.account_id,
+      }),
+    );
+  }, [transactionForm]);
 
   const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
   const toggleAccountModal = () => {
@@ -112,6 +126,12 @@ const TransferForm = ({ transactionID = '' }) => {
   };
 
   const onFormSubmit = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+    if (!isValidationPassed) {
+      return;
+    }
+
     navigation.goBack();
   };
 
@@ -135,6 +155,7 @@ const TransferForm = ({ transactionID = '' }) => {
           value={transactionForm.amount}
           onChangeText={onAmountChange}
           autoFocus={transactionForm.transaction_id === ''}
+          errorMessage={showValidation && formErrors.amount}
         />
 
         <TouchInput
@@ -143,6 +164,7 @@ const TransferForm = ({ transactionID = '' }) => {
           onPress={() => {
             onAccountPress(fromAccountFocus);
           }}
+          errorMessage={showValidation && formErrors.from_account}
         />
 
         <TouchableOpacity style={styles.swapBtn} onPress={onSwap}>
@@ -155,6 +177,7 @@ const TransferForm = ({ transactionID = '' }) => {
           onPress={() => {
             onAccountPress(toAccountFocus);
           }}
+          errorMessage={showValidation && formErrors.to_account}
         />
 
         <BaseBottomSheet

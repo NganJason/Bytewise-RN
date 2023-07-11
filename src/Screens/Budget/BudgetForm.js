@@ -21,7 +21,7 @@ import {
   BUDGET_TYPE_MONTHLY,
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
-import { validateBudget } from '../../_shared/apis/budget';
+import { validateBudget } from '../../_shared/validator/budget';
 import { getBudgetTypes } from '../../_shared/util/budget';
 import { useSetBudget } from '../../_shared/mutations';
 import { getDateString } from '../../_shared/util/date';
@@ -30,6 +30,7 @@ import { useGetBudget } from '../../_shared/query/budget';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import { useValidation } from '../../_shared/hooks/validation';
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -63,6 +64,12 @@ const BudgetForm = ({ route }) => {
   const toggleBudgetTypeModal = () => {
     setIsBudgetTypeModalVisible(!isBudgetTypeModalVisible);
   };
+
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+  useEffect(() => {
+    setFormErrors(validateBudget(budgetForm));
+  }, [budgetForm]);
 
   const getCategories = useGetCategories({
     category_type: TRANSACTION_TYPE_EXPENSE,
@@ -138,6 +145,13 @@ const BudgetForm = ({ route }) => {
   };
 
   const onSave = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+
+    if (!isValidationPassed) {
+      return;
+    }
+
     setBudget.mutate({
       budget_id: budgetID === '' ? null : budgetID,
       budget_name: budgetForm.budget_name,
@@ -147,17 +161,6 @@ const BudgetForm = ({ route }) => {
       range_start_date: getDateString(budgetForm.from_date),
       range_end_date: getDateString(budgetForm.to_date),
     });
-  };
-
-  const isValidBudget = () => {
-    try {
-      validateBudget({
-        ...budgetForm,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
   };
 
   const isFormLoading = () => {
@@ -197,12 +200,14 @@ const BudgetForm = ({ route }) => {
           onChangeText={onBudgetNameChange}
           clearButtonMode="always"
           maxLength={120}
+          errorMessage={showValidation && formErrors.budget_name}
         />
 
         <TouchInput
           label="Budget type"
           value={BUDGET_TYPES[budgetForm.budget_type]}
           onPress={toggleBudgetTypeModal}
+          errorMessage={showValidation && formErrors.budget_type}
         />
         <BaseBottomSheet
           isVisible={isBudgetTypeModalVisible}
@@ -220,6 +225,7 @@ const BudgetForm = ({ route }) => {
             getBudget?.data?.category_budget?.categories,
           )}
           onChange={onCategoriesChange}
+          errorMessage={showValidation && formErrors.categories}
           renderEmptyItems={closeModal => (
             <EmptyContent
               item={EmptyContentConfig.category}
@@ -233,6 +239,7 @@ const BudgetForm = ({ route }) => {
           label="Amount"
           value={budgetForm.budget_amount}
           onChangeText={onBudgetAmountChange}
+          errorMessage={showValidation && formErrors.budget_amount}
         />
 
         <View style={styles.dateContainer}>
@@ -246,6 +253,7 @@ const BudgetForm = ({ route }) => {
                   ? DatePickerMode.Year
                   : DatePickerMode.YearMonth
               }
+              errorMessage={showValidation && formErrors.date}
             />
           </View>
 
@@ -276,7 +284,6 @@ const BudgetForm = ({ route }) => {
             title="Save"
             size="lg"
             width={200}
-            disabled={!isValidBudget()}
             onPress={onSave}
             loading={setBudget.isLoading}
           />

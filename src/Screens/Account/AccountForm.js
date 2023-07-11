@@ -23,6 +23,8 @@ import {
   useUpdateAccount,
 } from '../../_shared/mutations/account';
 import { BaseOverlay } from '../../Components/View';
+import { useValidation } from '../../_shared/hooks/validation';
+import { validateAccount } from '../../_shared/validator/account';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -47,6 +49,12 @@ const AccountForm = ({ route }) => {
     account_type: accountType,
     balance: 0,
   });
+
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+  useEffect(() => {
+    setFormErrors(validateAccount(accountForm));
+  }, [accountForm]);
 
   const getAccount = useGetAccount(
     { account_id: accountID },
@@ -111,6 +119,12 @@ const AccountForm = ({ route }) => {
   };
 
   const onSave = () => {
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+    if (!isValidationPassed) {
+      return;
+    }
+
     if (isAddAccount()) {
       createAccount.mutate({
         ...accountForm,
@@ -156,6 +170,7 @@ const AccountForm = ({ route }) => {
           onChangeText={onAccountNameChange}
           clearButtonMode="always"
           maxLength={120}
+          errorMessage={showValidation && formErrors.account_name}
         />
 
         <TouchInput

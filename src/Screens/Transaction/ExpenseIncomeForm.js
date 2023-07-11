@@ -26,10 +26,11 @@ import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '../../_shared/mutations';
-import { validateTransaction } from '../../_shared/apis/transaction';
+import { validateTransaction } from '../../_shared/validator/transaction';
 import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
 import { EmptyContent } from '../../Components/Common';
 import { useGetTransactionHook } from '../../_shared/hooks/transaction';
+import { useValidation } from '../../_shared/hooks/validation';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -43,9 +44,13 @@ const ExpenseIncomeForm = ({
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: '',
+    transaction_type: transactionType,
     transaction_time: new Date().valueOf(),
     amount: 0,
     note: '',
@@ -163,6 +168,13 @@ const ExpenseIncomeForm = ({
   };
 
   const onFormSubmit = () => {
+    validate();
+
+    let isValidationPass = Object.keys(formErrors).length === 0;
+    if (!isValidationPass) {
+      return;
+    }
+
     let mutation;
     if (!isAddTransaction()) {
       mutation = updateTransaction;
@@ -196,17 +208,15 @@ const ExpenseIncomeForm = ({
     return accounts;
   };
 
-  const isValidTransaction = () => {
-    try {
+  useEffect(() => {
+    setFormErrors(
       validateTransaction({
         ...transactionForm,
         category_id: transactionForm.category.category_id,
-      });
-      return true;
-    } catch {
-      return false;
-    }
-  };
+        account_id: transactionForm.account.account_id,
+      }),
+    );
+  }, [transactionForm]);
 
   const formatTimestampForCalendar = ts => {
     const date = new Date(ts);
@@ -275,6 +285,7 @@ const ExpenseIncomeForm = ({
           clearButtonMode="always"
           onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
           maxLength={120}
+          errorMessage={showValidation && formErrors.note}
         />
 
         <BaseCurrencyInput
@@ -283,12 +294,14 @@ const ExpenseIncomeForm = ({
           onChangeText={onAmountChange}
           autoFocus={isAddTransaction()}
           onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
+          errorMessage={showValidation && formErrors.amount}
         />
 
         <TouchInput
           label="Category"
           value={transactionForm.category.category_name}
           onPress={toggleCategoryModal}
+          errorMessage={showValidation && formErrors.category}
         />
         <BaseBottomSheet
           isVisible={isCategoryModalVisible}
@@ -322,6 +335,7 @@ const ExpenseIncomeForm = ({
           value={transactionForm.account.account_name}
           onPress={toggleAccountModal}
           disabled={!isAddTransaction()}
+          errorMessage={showValidation && formErrors.account}
         />
         <BaseBottomSheet
           isVisible={isAccountModalVisible}
@@ -354,7 +368,6 @@ const ExpenseIncomeForm = ({
           title="Save"
           size="lg"
           width={200}
-          //   disabled={!isValidTransaction()}
           onPress={onFormSubmit}
           loading={isFormButtonLoading()}
         />

@@ -6,18 +6,6 @@ export class CategoryError extends AppError {
   }
 }
 
-export const validateCategory = ({
-  category_name = '',
-  category_type = 0,
-} = {}) => {
-  if (category_name === '') {
-    throw new CategoryError({ message: 'Category name cannot be empty' });
-  }
-  if (category_type === 0) {
-    throw new Error({ message: 'Category type cannot be 0' });
-  }
-};
-
 const GET_CATEGORY = '/get_category';
 const GET_CATEGORIES = '/get_categories';
 const CREATE_CATEGORY = '/create_category';

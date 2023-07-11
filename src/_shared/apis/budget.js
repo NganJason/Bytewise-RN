@@ -6,29 +6,6 @@ export class BudgetError extends AppError {
   }
 }
 
-export const validateBudget = ({
-  budget_name = '',
-  budget_amount = 0,
-  category_ids = [],
-  from_date = new Date(),
-  to_date = new Date(),
-} = {}) => {
-  if (budget_name === '') {
-    throw new BudgetError({ message: 'Budget name cannot be empty' });
-  }
-  if (budget_amount === 0) {
-    throw new BudgetError({ message: 'Budget amount cannot be 0' });
-  }
-  if (category_ids.length === 0) {
-    throw new BudgetError({ message: 'Categories cannot be empty' });
-  }
-  if (to_date < from_date) {
-    throw new BudgetError({
-      message: 'To date cannot be smaller than from date',
-    });
-  }
-};
-
 const SET_BUDGET = '/set_budget';
 const GET_BUDGET = '/get_budget';
 const GET_BUDGETS = '/get_budgets';
