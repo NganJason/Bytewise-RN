@@ -15,6 +15,7 @@ import {
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
+  ACCOUNT_TYPE_INVESTMENT,
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
 import { useGetAccount } from '../../_shared/query/account';
@@ -125,10 +126,15 @@ const AccountForm = ({ route }) => {
       return;
     }
 
+    let balance = accountForm.balance;
+    if (balance !== null) {
+      balance = String(accountForm.balance);
+    }
+
     if (isAddAccount()) {
       createAccount.mutate({
         ...accountForm,
-        balance: String(accountForm.balance),
+        balance: balance,
       });
       return;
     }
@@ -141,8 +147,12 @@ const AccountForm = ({ route }) => {
     updateAccount.mutate({
       ...accountForm,
       account_id: accountID,
-      balance: String(accountForm.balance),
+      balance: balance,
     });
+  };
+
+  const canSetBalance = () => {
+    return accountForm.account_type !== ACCOUNT_TYPE_INVESTMENT;
   };
 
   return (
@@ -188,11 +198,13 @@ const AccountForm = ({ route }) => {
           label="name"
         />
 
-        <BaseCurrencyInput
-          label="Balance"
-          value={accountForm.balance}
-          onChangeText={onBalanceChange}
-        />
+        {canSetBalance() && (
+          <BaseCurrencyInput
+            label="Balance"
+            value={accountForm.balance === null ? 0 : accountForm.balance}
+            onChangeText={onBalanceChange}
+          />
+        )}
 
         <View style={styles.btnContainer}>
           <BaseButton

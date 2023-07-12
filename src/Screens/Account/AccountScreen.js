@@ -49,6 +49,9 @@ const AccountScreen = () => {
 
     accounts.map(d => {
       if (getEquityType(d.account_type) === equityType) {
+        if (isNaN(d.balance)) {
+          return;
+        }
         sum += Number(d.balance);
       }
     });
