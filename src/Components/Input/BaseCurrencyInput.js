@@ -31,10 +31,11 @@ const BaseCurrencyInput = forwardRef(
     const handleChangeText = e => {
       e = e.replace(CURRENCY, '');
       e = e.replace(' ', '');
-      e = removeAlphabets(e);
 
-      onChangeText(Number(e));
-      setInputStr(e);
+      if (!isNaN(e)) {
+        onChangeText(Number(e));
+        setInputStr(e);
+      }
     };
 
     const onFocusHandler = () => {
@@ -49,11 +50,6 @@ const BaseCurrencyInput = forwardRef(
         setInputStr('0');
       }
       onBlur();
-    };
-
-    const removeAlphabets = input => {
-      let val = input.replace(/[^\d]/g, '');
-      return val;
     };
 
     return (

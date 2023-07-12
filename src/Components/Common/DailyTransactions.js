@@ -21,6 +21,10 @@ const DailyTransactions = ({
         category_id: '',
         category_name: '',
       },
+      account: {
+        account_id: '',
+        account_name: '',
+      },
       amount: '',
       note: '',
       transaction_time: 0,
@@ -98,7 +102,7 @@ const DailyTransactions = ({
                     style={styles.account}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {capitalize(t?.account?.account_name || '')}
+                    {capitalize(t?.account?.account_name || '-')}
                   </BaseText>
                 </View>
                 <AmountText
