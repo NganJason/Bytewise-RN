@@ -29,7 +29,6 @@ export const useUpdateAccount = (opts = {}) => {
       queryClient.invalidateQueries([queryKeys.transactions]);
 
       // refetch all transactions since account name might have changed
-      // queryClient.invalidateQueries([queryKeys.transactions]);
       opts.onSuccess && opts.onSuccess();
     },
   });

@@ -1,48 +1,57 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BaseButton,
-  BaseCurrencyInput,
-  BaseInput,
   BaseRow,
   BaseScreen,
   BaseText,
   SearchBottomSheetInput,
 } from '../../../Components';
-import { useSearchSecurities } from '../../../_shared/query/security';
+import { HOLDING_TYPE_DEFAULT } from '../../../_shared/apis/enum';
+import { useValidation } from '../../../_shared/hooks/validation';
+import { useCreateHolding } from '../../../_shared/mutations/investment';
+import { useSearchSecurities } from '../../../_shared/query/investment';
+import { validateHolding } from '../../../_shared/validator/investment';
 
-const InvestmentForm = ({ route }) => {
+const HoldingForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const shareID = route.params?.share_id || '';
-  const isAddHolding = () => {
-    return shareID === '';
-  };
+  const accountID = route.params?.account_id || '';
 
-  const [investmentForm, setInvestmentForm] = useState({
-    ticker_symbol: '',
-    cost_per_unit: 0,
-    num_unit: 0,
+  const [holdingForm, setHoldingForm] = useState({
+    account_id: accountID,
+    symbol: '',
+    holding_type: HOLDING_TYPE_DEFAULT,
   });
 
-  const onTickerSymbolChange = e => {
-    setInvestmentForm({ ...investmentForm, ticker_symbol: e });
-  };
+  const [formErrors, setFormErrors] = useState({});
+  const { validate, showValidation } = useValidation();
+  useEffect(() => {
+    setFormErrors(validateHolding(holdingForm));
+  }, [holdingForm]);
 
-  const onCostPerUnitChange = e => {
-    setInvestmentForm({ ...investmentForm, cost_per_unit: e });
-  };
+  const createHolding = useCreateHolding({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+  });
 
-  const onNumUnitChange = e => {
-    setInvestmentForm({ ...investmentForm, num_unit: e });
+  const onSymbolChange = e => {
+    setHoldingForm({ ...holdingForm, symbol: e });
   };
 
   const onSave = () => {
-    navigation.goBack();
+    validate();
+    let isValidationPassed = Object.keys(formErrors).length === 0;
+    if (!isValidationPassed) {
+      return;
+    }
+
+    createHolding.mutate(holdingForm);
   };
 
   return (
@@ -51,9 +60,7 @@ const InvestmentForm = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>
-              {isAddHolding() ? 'Add holding' : 'Edit holding'}
-            </BaseText>
+            <BaseText h2>Add holding</BaseText>
           </View>
         ),
       }}>
@@ -66,9 +73,10 @@ const InvestmentForm = ({ route }) => {
         <SearchBottomSheetInput
           label="Symbol"
           itemLabel="symbol"
-          onChangeText={onTickerSymbolChange}
+          onChangeText={onSymbolChange}
           useQuery={useSearchSecurities}
           processResp={resp => resp.securities}
+          errorMessage={showValidation && formErrors.symbol}
           renderItem={(item, onPress) => (
             <BaseRow dividerMargin={2} onPress={onPress}>
               <View>
@@ -85,23 +93,14 @@ const InvestmentForm = ({ route }) => {
           )}
         />
 
-        <BaseCurrencyInput
-          label="Cost per unit"
-          value={investmentForm.cost_per_unit}
-          onChangeText={onCostPerUnitChange}
-        />
-
-        <BaseInput
-          label="Number of unit"
-          value={String(investmentForm.num_unit)}
-          keyboardType="numeric"
-          onChangeText={onNumUnitChange}
-          clearButtonMode="always"
-          maxLength={120}
-        />
-
         <View style={styles.btnContainer}>
-          <BaseButton title="Save" size="lg" width={200} onPress={onSave} />
+          <BaseButton
+            title="Save"
+            size="lg"
+            width={200}
+            onPress={onSave}
+            loading={createHolding.isLoading}
+          />
         </View>
       </KeyboardAwareScrollView>
     </BaseScreen>
@@ -120,4 +119,4 @@ const getStyles = theme =>
     },
   });
 
-export default InvestmentForm;
+export default HoldingForm;

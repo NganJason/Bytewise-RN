@@ -49,8 +49,8 @@ import {
   Category,
   BudgetUsage,
   EmptyContent,
-  InvestmentHolding,
-  HoldingBreakdown,
+  HoldingRow,
+  LotRow,
 } from './Common';
 
 export {
@@ -91,6 +91,6 @@ export {
   LinkText,
   EarningText,
   EmptyContent,
-  InvestmentHolding,
-  HoldingBreakdown,
+  HoldingRow,
+  LotRow,
 };

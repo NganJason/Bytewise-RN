@@ -107,7 +107,7 @@ const AccountBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1 isLoading={getAccount.isLoading}>
+          <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
             {account_name}
           </BaseText>
           <AmountText

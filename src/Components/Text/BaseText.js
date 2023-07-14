@@ -3,6 +3,8 @@ import { useTheme } from '@rneui/themed';
 import { Text } from '@rneui/themed';
 import ContentLoader from 'react-native-easy-content-loader';
 
+const loadingCharSize = 15;
+
 const BaseText = ({
   h1 = false,
   h2 = false,
@@ -25,6 +27,7 @@ const BaseText = ({
   color = '#1D1A1B',
   style = {},
   isLoading = false,
+  loadingLen = 5,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -67,7 +70,7 @@ const BaseText = ({
     let textStyle = getTextCommonStyles();
     const { fontSize = 20 } = textStyle;
 
-    return fontSize;
+    return fontSize * 0.7;
   };
 
   // top, bottom, left, right take precedence over vertical and horizontal
@@ -99,7 +102,8 @@ const BaseText = ({
       pRows={1}
       loading={isLoading}
       pWidth={'100%'}
-      pHeight={getLoadingPlaceholderHeight()}>
+      pHeight={getLoadingPlaceholderHeight()}
+      containerStyles={{ width: loadingCharSize * loadingLen }}>
       <Text
         style={{
           ...commonTextStyles,
@@ -119,7 +123,7 @@ const BaseText = ({
 
 export default BaseText;
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     center: {
       width: '100%',

@@ -1,4 +1,4 @@
-import { MONTHS_VALUE } from '../constant/constant';
+import { DAYS, MONTHS_VALUE } from '../constant/constant';
 
 export const moveMonth = (date, diff) =>
   new Date(date.setMonth(date.getMonth() + diff));
@@ -18,6 +18,22 @@ export const getDate = (d = new Date()) => {
 
 export const getDay = (d = new Date()) => {
   return d.getDay();
+};
+
+export const renderCalendarTs = ts => {
+  const d = new Date(ts);
+
+  const yyyy = getYear(d);
+  const mm = getMonth(d);
+  const date = getDate(d);
+  const day = DAYS[getDay(d)];
+
+  return `${date}/${mm}/${yyyy} (${day})`;
+};
+
+export const getDateStringFromTs = ts => {
+  const date = new Date(ts);
+  return getDateString(date);
 };
 
 export const getDateString = (d = new Date()) => {
@@ -80,4 +96,17 @@ export const getDaysInMonth = (year, month) => {
   }
 
   return daysArray;
+};
+
+export const isTsLargerThanCurrTime = ts => {
+  // Convert timestamp to milliseconds if it's in seconds
+  if (ts.toString().length === 10) {
+    ts *= 1000;
+  }
+
+  const currTime = Date.now();
+  if (ts <= currTime) {
+    return false;
+  }
+  return true;
 };

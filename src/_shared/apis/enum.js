@@ -48,3 +48,11 @@ export const ACCOUNT_TYPES = {
   [ACCOUNT_TYPE_LOAN]: 'Loan',
   [ACCOUNT_TYPE_MORTGAGE]: 'Mortgage',
 };
+
+export const HOLDING_TYPE_DEFAULT = 1;
+export const HOLDING_TYPE_CUSTOM = 2;
+
+export const HOLDING_TYPES = {
+  [HOLDING_TYPE_DEFAULT]: 'Default',
+  [HOLDING_TYPE_CUSTOM]: 'Custom',
+};

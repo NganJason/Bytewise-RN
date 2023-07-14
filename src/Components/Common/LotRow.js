@@ -2,42 +2,51 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
+import { getDateStringFromTs } from '../../_shared/util/date';
+import { getTotalInvestmentCost } from '../../_shared/util/investment';
 import { AmountText, BaseText } from '../Text';
 import { BaseRow } from '../View';
 
-const HoldingBreakdown = ({ share }) => {
+const LotRow = ({
+  account_id = '',
+  holding_id = '',
+  lot_id = '',
+  shares = 0,
+  cost_per_share = 0,
+  trade_date = '',
+  symbol = '',
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const {
-    share_id = '',
-    unit = 0,
-    date = '',
-    cost_per_unit = 0,
-    amount = 0,
-  } = share;
-
   return (
     <BaseRow
       onPress={() => {
-        navigation.navigate(ROUTES.investmentForm, { share_id: share_id });
+        navigation.navigate(ROUTES.lotForm, {
+          account_id: account_id,
+          holding_id: holding_id,
+          symbol: symbol,
+          lot_id: lot_id,
+        });
       }}>
       <View>
-        <BaseText text3>{unit} units</BaseText>
+        <BaseText text3>{shares} units</BaseText>
         <BaseText text5 color={theme.colors.color8} margin={{ top: 4 }}>
-          {date}
+          {getDateStringFromTs(trade_date)}
         </BaseText>
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3>{amount}</AmountText>
+        <AmountText text3>
+          {getTotalInvestmentCost(shares, cost_per_share)}
+        </AmountText>
         <AmountText
           text5
           color={theme.colors.color8}
           margin={{ top: 4 }}
           suffix="/unit">
-          {cost_per_unit}
+          {cost_per_share}
         </AmountText>
       </View>
     </BaseRow>
@@ -51,4 +60,4 @@ const getStyles = _ =>
     },
   });
 
-export default HoldingBreakdown;
+export default LotRow;

@@ -20,14 +20,14 @@ import {
 } from '../../_shared/apis/enum';
 
 import ROUTES from '../../_shared/constant/routes';
-import { DAYS, EmptyContentConfig } from '../../_shared/constant/constant';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetCategories, useGetAccounts } from '../../_shared/query';
 import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/validator/transaction';
-import { getYear, getMonth, getDate, getDay } from '../../_shared/util/date';
+import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util/date';
 import { EmptyContent } from '../../Components/Common';
 import { useGetTransactionHook } from '../../_shared/hooks/transaction';
 import { useValidation } from '../../_shared/hooks/validation';
@@ -218,25 +218,6 @@ const ExpenseIncomeForm = ({
     );
   }, [transactionForm]);
 
-  const formatTimestampForCalendar = ts => {
-    const date = new Date(ts);
-    const year = `${getYear(date)}`;
-    const month = `${getMonth(date)}`.padStart(2, '0');
-    const day = `${getDate(date)}`.padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  const renderTimestamp = ts => {
-    const d = new Date(ts);
-
-    const yyyy = getYear(d);
-    const mm = getMonth(d);
-    const date = getDate(d);
-    const day = DAYS[getDay(d)];
-
-    return `${date}/${mm}/${yyyy} (${day})`;
-  };
-
   return (
     <BaseLoadableView isLoading={isFormLoading()}>
       <KeyboardAwareScrollView
@@ -247,7 +228,7 @@ const ExpenseIncomeForm = ({
         showsVerticalScrollIndicator={false}>
         <TouchInput
           label="Date"
-          value={renderTimestamp(transactionForm.transaction_time)}
+          value={renderCalendarTs(transactionForm.transaction_time)}
           onPress={toggleCalendarModal}
         />
         <Dialog
@@ -255,9 +236,7 @@ const ExpenseIncomeForm = ({
           onBackdropPress={toggleCalendarModal}>
           <Calendar
             showSixWeeks
-            initialDate={formatTimestampForCalendar(
-              transactionForm.transaction_time,
-            )}
+            initialDate={getDateStringFromTs(transactionForm.transaction_time)}
             hideExtraDays={false}
             onDayPress={obj => {
               onTransactionTimeChange(
@@ -265,7 +244,7 @@ const ExpenseIncomeForm = ({
               );
             }}
             markedDates={{
-              [formatTimestampForCalendar(transactionForm.transaction_time)]: {
+              [getDateStringFromTs(transactionForm.transaction_time)]: {
                 selected: true,
                 disableTouchEvent: true,
                 selectedColor: theme.colors.primary,

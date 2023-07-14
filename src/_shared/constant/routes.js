@@ -20,9 +20,11 @@ const ROUTES = {
   accountSelection: 'Account Selection',
   accountForm: 'Account Form',
   accountBreakdown: 'Account Breakdown',
-  InvestmentHolding: 'Investment Breakdown',
-  investmentForm: 'Investment Form',
+
+  investmentBreakdown: 'Investment Breakdown',
   holdingBreakdown: 'Holding Breakdown',
+  holdingForm: 'Holding Form',
+  lotForm: 'Lot Form',
 };
 
 export default ROUTES;

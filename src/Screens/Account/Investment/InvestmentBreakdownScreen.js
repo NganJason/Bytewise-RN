@@ -14,39 +14,10 @@ import {
   EarningText,
   BaseLoadableView,
   EmptyContent,
-  InvestmentHolding,
+  HoldingRow,
 } from '../../../Components';
 import { capitalize } from '../../../_shared/util/string';
-
-const mockData = {
-  account_id: '1',
-  account_name: 'stocks',
-  amount: 21000,
-  cost: 19000,
-  holdings: [
-    {
-      holding_id: '1',
-      symbol: 'AAPL',
-      amount: 2000,
-      cost: 2100,
-      unit: 10,
-    },
-    {
-      holding_id: '2',
-      symbol: 'MSFT',
-      amount: 1800,
-      cost: 1300,
-      unit: 21.5,
-    },
-    {
-      holding_id: '3',
-      symbol: 'VTI',
-      amount: 12000,
-      cost: 11000,
-      unit: 43.5,
-    },
-  ],
-};
+import { useGetAccount } from '../../../_shared/query';
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -54,14 +25,24 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
 
-  const account_id = route.params?.account_id || '';
+  const { account_id: accountID = '' } = route?.params;
+  const getAccount = useGetAccount(
+    { account_id: accountID },
+    { enabled: accountID !== '' },
+  );
+  const {
+    account_name = '',
+    latest_value = 0,
+    avg_cost,
+  } = getAccount?.data?.account || {};
 
   const renderRows = () => {
     let rows = [];
-    const { holdings } = mockData || {};
+    let holdings = getAccount?.data?.account?.holdings || [];
 
-    holdings.map(d => {
-      rows.push(<InvestmentHolding key={d.holding_id} holding={d} />);
+    holdings.map(holding => {
+      holding.holding_id = holding._id;
+      rows.push(<HoldingRow key={holding._id} {...holding} />);
     });
 
     if (rows.length === 0) {
@@ -81,19 +62,23 @@ const InvestmentBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1>{capitalize(mockData.account_name)}</BaseText>
+          <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+            {capitalize(account_name)}
+          </BaseText>
           <AmountText
             style={styles.titleText}
             h2
             decimal={0}
-            margin={{ top: 8 }}>
-            {mockData.amount}
+            margin={{ top: 8 }}
+            isLoading={getAccount.isLoading}>
+            {latest_value}
           </AmountText>
           <EarningText
-            currVal={mockData.amount}
-            initialVal={mockData.cost}
+            currVal={latest_value}
+            initialVal={avg_cost}
             text5
             margin={{ vertical: 2 }}
+            isLoading={getAccount.isLoading}
           />
           <BaseText text4>Investment</BaseText>
         </View>
@@ -126,10 +111,12 @@ const InvestmentBreakdownScreen = ({ route }) => {
             />
           }
           onPress={() => {
-            navigation.navigate(ROUTES.investmentForm);
+            navigation.navigate(ROUTES.holdingForm, { account_id: accountID });
           }}
         />
-        <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
+        <BaseLoadableView scrollable={true} isLoading={getAccount.isLoading}>
+          {renderRows()}
+        </BaseLoadableView>
       </View>
     </BaseScreen2>
   );

@@ -39,7 +39,6 @@ const AccountScreen = () => {
   const computeSum = () => {
     let assets = computeEquitySum(EQUITY_TYPE_ASSET);
     let debts = computeEquitySum(EQUITY_TYPE_DEBT);
-
     return assets - debts;
   };
 
@@ -49,10 +48,11 @@ const AccountScreen = () => {
 
     accounts.map(d => {
       if (getEquityType(d.account_type) === equityType) {
-        if (isNaN(d.balance)) {
+        let amount = d.latest_value || d.balance;
+        if (isNaN(amount)) {
           return;
         }
-        sum += Number(d.balance);
+        sum += Number(amount);
       }
     });
     return sum;
@@ -64,7 +64,7 @@ const AccountScreen = () => {
 
     let route = ROUTES.accountBreakdown;
     if (account_type === ACCOUNT_TYPE_INVESTMENT) {
-      route = ROUTES.InvestmentHolding;
+      route = ROUTES.investmentBreakdown;
     }
 
     navigation.navigate(route, {
@@ -114,7 +114,7 @@ const AccountScreen = () => {
               text2
               color={theme.colors.white}
               margin={{ top: 16, bottom: 4 }}>
-              {item.balance}
+              {item.latest_value || item.balance}
             </AmountText>
             <BaseText text4 color={theme.colors.white}>
               {capitalize(ACCOUNT_TYPES[item.account_type])}

@@ -5,31 +5,40 @@ import ROUTES from '../../_shared/constant/routes';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseRow } from '../View';
 
-const InvestmentHolding = ({ holding }) => {
+const HoldingRow = ({
+  holding_id = '',
+  account_id = '',
+  symbol = '',
+  total_shares = 0,
+  latest_value = 0,
+  avg_cost = 0,
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { symbol = '', unit = 0, amount = 0, cost = 0 } = holding || {};
-
   return (
     <BaseRow
       onPress={() => {
-        navigation.navigate(ROUTES.holdingBreakdown);
+        navigation.navigate(ROUTES.holdingBreakdown, {
+          account_id: account_id,
+          holding_id: holding_id,
+          symbol: symbol,
+        });
       }}>
       <View>
         <BaseText text3>{symbol}</BaseText>
         <BaseText text5 style={styles.subRow}>
-          {unit} {unit > 1 ? 'units' : 'unit'}
+          {total_shares} {total_shares > 1 ? 'units' : 'unit'}
         </BaseText>
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3>{amount}</AmountText>
+        <AmountText text3>{latest_value}</AmountText>
 
         <EarningText
-          currVal={amount}
-          initialVal={cost}
+          currVal={latest_value}
+          initialVal={avg_cost}
           text5
           style={styles.subRow}
         />
@@ -49,4 +58,4 @@ const getStyles = theme =>
     },
   });
 
-export default InvestmentHolding;
+export default HoldingRow;

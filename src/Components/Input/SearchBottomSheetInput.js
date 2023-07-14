@@ -18,6 +18,7 @@ const SearchBottomSheetInput = ({
   useQuery = function () {},
   processResp = function (resp) {},
   renderItem = function (item, onPress) {},
+  ...props
 }) => {
   const { screenHeight } = useDimension();
   const { theme } = useTheme();
@@ -93,7 +94,12 @@ const SearchBottomSheetInput = ({
 
   return (
     <>
-      <TouchInput label={label} value={inputVal} onPress={toggleModal} />
+      <TouchInput
+        label={label}
+        value={inputVal}
+        onPress={toggleModal}
+        {...props}
+      />
 
       <BottomSheet
         fullScreen={true}

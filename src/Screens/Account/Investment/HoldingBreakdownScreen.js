@@ -10,61 +10,57 @@ import {
   AmountText,
   EarningText,
   BaseButton,
-  HoldingBreakdown,
+  LotRow,
 } from '../../../Components';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import ROUTES from '../../../_shared/constant/routes';
+import { useGetHolding, useGetLots } from '../../../_shared/query/investment';
+import { getTotalInvestmentCost } from '../../../_shared/util/investment';
 
-const mockData = {
-  holding_id: '1',
-  symbol: 'VTI',
-  amount: 21000,
-  cost: 20000,
-  unit: 10.3184,
-  wac: 23.09,
-  breakdown: [
-    {
-      share_id: '1',
-      unit: 140,
-      date: '12-06-2023',
-      amount: 3000,
-      cost_per_unit: 20,
-    },
-    {
-      share_id: '2',
-      unit: 52.3,
-      date: '27-04-2023',
-      amount: 1000,
-      cost_per_unit: 22,
-    },
-    {
-      share_id: '3',
-      unit: 31.7,
-      date: '03-04-2023',
-      amount: 500,
-      cost_per_unit: 15,
-    },
-  ],
-};
-
-const HoldingBreakdownScreen = ({}) => {
+const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const {
+    holding_id: holdingID = '',
+    account_id: accountID = '',
+    symbol = '',
+  } = route?.params || {};
+
+  const getHolding = useGetHolding({ holding_id: holdingID });
+  const {
+    latest_value = 0,
+    avg_cost = 0,
+    total_shares = 0,
+  } = getHolding?.data?.holding || {};
+
+  const getLots = useGetLots({ holding_id: holdingID });
+
+  const isScreenLoading = () => {
+    getHolding.isLoading || getLots.isLoading;
+  };
 
   const renderRows = () => {
     let rows = [];
-    let { breakdown = [] } = mockData || {};
+    let lots = getLots?.data?.lots || [];
+    lots.sort((a, b) => b.trade_date - a.trade_date);
 
-    breakdown.map(d => {
-      rows.push(<HoldingBreakdown key={d.share_id} share={d} />);
+    lots.map(lot => {
+      rows.push(
+        <LotRow
+          key={lot.lot_id}
+          account_id={accountID}
+          symbol={symbol}
+          {...lot}
+        />,
+      );
     });
 
     if (rows.length === 0) {
       return (
         <EmptyContent
           item={EmptyContentConfig.investment}
-          route={ROUTES.investmentForm}
+          route={ROUTES.holdingForm}
           marginVertical="30%"
         />
       );
@@ -74,9 +70,11 @@ const HoldingBreakdownScreen = ({}) => {
   };
 
   const renderHeader = () => {
+    let total_cost = getTotalInvestmentCost(total_shares, avg_cost);
+
     return (
       <>
-        <BaseText h1>{mockData.symbol.toUpperCase()}</BaseText>
+        <BaseText h1>{symbol.toUpperCase()}</BaseText>
         <BaseText text5 margin={{ top: 8, bottom: 4 }}>
           Current value
         </BaseText>
@@ -84,32 +82,41 @@ const HoldingBreakdownScreen = ({}) => {
           style={styles.titleText}
           h2
           decimal={0}
-          margin={{ bottom: 8 }}>
-          {mockData.amount}
+          margin={{ bottom: 8 }}
+          isLoading={getHolding.isLoading}
+          loadingLen={10}>
+          {latest_value}
         </AmountText>
 
         <View style={styles.headerRow}>
           <BaseText text5>Invested amount</BaseText>
-          <AmountText text5>{mockData.cost}</AmountText>
+          <AmountText text5 isLoading={getHolding.isLoading}>
+            {total_cost}
+          </AmountText>
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Profit/Loss</BaseText>
           <EarningText
-            currVal={mockData.amount}
-            initialVal={mockData.cost}
+            currVal={latest_value}
+            initialVal={total_cost}
             text5
+            isLoading={getHolding.isLoading}
           />
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Quantity</BaseText>
-          <BaseText text5>{mockData.unit}</BaseText>
+          <BaseText text5 isLoading={getHolding.isLoading}>
+            {total_shares}
+          </BaseText>
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>WAC</BaseText>
-          <AmountText text5>{mockData.wac}</AmountText>
+          <AmountText text5 isLoading={getHolding.isLoading}>
+            {avg_cost}
+          </AmountText>
         </View>
       </>
     );
@@ -120,7 +127,7 @@ const HoldingBreakdownScreen = ({}) => {
       <>
         <BaseText h3>History</BaseText>
         <BaseButton
-          title="Add holding"
+          title="Add lots"
           type="clear"
           align="flex-start"
           size="sm"
@@ -134,10 +141,16 @@ const HoldingBreakdownScreen = ({}) => {
             />
           }
           onPress={() => {
-            navigation.navigate(ROUTES.investmentForm);
+            navigation.navigate(ROUTES.lotForm, {
+              account_id: accountID,
+              holding_id: holdingID,
+              symbol: symbol,
+            });
           }}
         />
-        <BaseLoadableView scrollable={true}>{renderRows()}</BaseLoadableView>
+        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
+          {renderRows()}
+        </BaseLoadableView>
       </>
     </BaseScreen3>
   );
