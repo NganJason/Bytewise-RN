@@ -32,12 +32,16 @@ export const createHolding = async ({
   account_id = '',
   symbol = '',
   holding_type = 0,
+  latest_value = 0,
+  avg_cost = 0,
 }) => {
   try {
     const body = await sendPostRequest(CREATE_HOLDING, {
       account_id: account_id,
       symbol: symbol,
       holding_type: holding_type,
+      latest_value: String(latest_value),
+      avg_cost: String(avg_cost),
     });
     return body;
   } catch (e) {

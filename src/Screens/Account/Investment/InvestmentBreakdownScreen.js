@@ -32,17 +32,15 @@ const InvestmentBreakdownScreen = ({ route }) => {
   );
   const {
     account_name = '',
-    latest_value = 0,
+    balance = 0,
     avg_cost,
   } = getAccount?.data?.account || {};
 
   const renderRows = () => {
     let rows = [];
     let holdings = getAccount?.data?.account?.holdings || [];
-
     holdings.map(holding => {
-      holding.holding_id = holding._id;
-      rows.push(<HoldingRow key={holding._id} {...holding} />);
+      rows.push(<HoldingRow key={holding.holding_id} {...holding} />);
     });
 
     if (rows.length === 0) {
@@ -71,10 +69,10 @@ const InvestmentBreakdownScreen = ({ route }) => {
             decimal={0}
             margin={{ top: 8 }}
             isLoading={getAccount.isLoading}>
-            {latest_value}
+            {balance}
           </AmountText>
           <EarningText
-            currVal={latest_value}
+            currVal={balance}
             initialVal={avg_cost}
             text5
             margin={{ vertical: 2 }}

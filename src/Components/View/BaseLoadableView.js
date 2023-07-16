@@ -1,7 +1,6 @@
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { PacmanIndicator } from 'react-native-indicators';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import BaseScrollView from './BaseScrollView';
 
@@ -41,7 +40,10 @@ const BaseLoadableView = ({
   return (
     <View style={styles.body}>
       {showLoadingIndicator && (
-        <PacmanIndicator size={70} color={theme.colors.primary} />
+        <View
+          style={[styles.container, styles.loadingContainer, containerStyle]}>
+          <ActivityIndicator size="small" color={theme.colors.color1} />
+        </View>
       )}
 
       {!showLoadingIndicator && !isLoading && (
@@ -65,6 +67,7 @@ const getStyles = _ =>
   StyleSheet.create({
     body: { flex: 1 },
     container: { flex: 1 },
+    loadingContainer: { justifyContent: 'center' },
   });
 
 export default BaseLoadableView;

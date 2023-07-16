@@ -10,12 +10,13 @@ const BaseRow = ({
   children,
   dividerMargin = 10,
   showDivider = true,
+  containerStyle = {},
 }) => {
   const styles = getStyles();
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={{ ...styles.container, ...containerStyle }}
       onPress={onPress}
       disabled={disabled}>
       <BaseListItem showDivider={showDivider} dividerMargin={dividerMargin}>

@@ -31,7 +31,7 @@ import HoldingForm from './src/Screens/Account/Investment/HoldingForm';
 import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
 import LotForm from './src/Screens/Account/Investment/LotForm';
 
-const TEST_BASE_URL = 'http://localhost:9090/api/v1';
+const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
