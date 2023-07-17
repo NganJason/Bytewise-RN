@@ -9,9 +9,35 @@ const BaseScrollableTab = ({
   tabs = [{ name: '', iconName: '', iconType: '' }],
   activeTab = { name: '', iconName: '', iconType: '' },
   onTabChange = function (tab) {},
+  disableNonActive = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+
+  const shouldDisable = tabName => {
+    let isNonActiveTab = activeTab.name !== tabName;
+    return disableNonActive && isNonActiveTab;
+  };
+
+  const getTextStyle = tabName => {
+    if (activeTab.name === tabName) {
+      return styles.activeTabText;
+    }
+    if (shouldDisable(tabName)) {
+      return styles.disabledTabText;
+    }
+    return styles.tabText;
+  };
+
+  const getIconColor = tabName => {
+    if (activeTab.name === tabName) {
+      return theme.colors.color1;
+    }
+    if (shouldDisable(tabName)) {
+      return theme.colors.color8;
+    }
+    return theme.colors.black;
+  };
 
   const renderTabs = () => {
     let allTabs = [];
@@ -25,27 +51,18 @@ const BaseScrollableTab = ({
         <TouchableOpacity
           key={tab.name}
           onPress={() => onTabChange(tab)}
-          style={[styles.tab, activeTab.name === tab.name && styles.activeTab]}>
+          disabled={shouldDisable()}
+          style={styles.tab}>
           {tab.iconName !== '' && tab.iconType !== '' && (
             <Icon
               name={tab.iconName}
               type={tab.iconType}
               containerStyle={styles.icon}
-              color={
-                activeTab.name === tab.name
-                  ? theme.colors.color1
-                  : theme.colors.black
-              }
+              color={getIconColor(tab.name)}
               size={17}
             />
           )}
-          <BaseText
-            text4
-            style={
-              activeTab.name === tab.name
-                ? styles.activeTabText
-                : styles.tabText
-            }>
+          <BaseText text4 style={getTextStyle(tab.name)}>
             {capitalize(tab.name)}
           </BaseText>
         </TouchableOpacity>,
@@ -93,9 +110,11 @@ const getStyles = theme =>
     tabText: {
       color: theme.colors.black,
     },
-    activeTab: {},
     activeTabText: {
       color: theme.colors.color1,
+    },
+    disabledTabText: {
+      color: theme.colors.color8,
     },
   });
 

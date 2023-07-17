@@ -9,6 +9,7 @@ export class SecurityError extends AppError {
 const SEARCH_SECURITIES = '/search_securities';
 const CREATE_HOLDING = '/create_holding';
 const GET_HOLDING = '/get_holding';
+const UPDATE_HOLDING = '/update_holding';
 const CREATE_LOT = '/create_lot';
 const GET_LOT = '/get_lot';
 const GET_LOTS = '/get_lots';
@@ -57,6 +58,27 @@ export const getHolding = async ({ holding_id = '' }) => {
   try {
     const body = await sendPostRequest(GET_HOLDING, {
       holding_id: holding_id,
+    });
+    return body;
+  } catch (e) {
+    throw new SecurityError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const updateHolding = async ({
+  holding_id = '',
+  avg_cost = 0,
+  latest_value = 0,
+}) => {
+  try {
+    const body = await sendPostRequest(UPDATE_HOLDING, {
+      holding_id: holding_id,
+      avg_cost: String(avg_cost),
+      latest_value: String(latest_value),
     });
     return body;
   } catch (e) {

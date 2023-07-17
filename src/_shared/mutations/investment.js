@@ -1,11 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createHolding, createLot } from '../apis/investment';
+import { createHolding, createLot, updateHolding } from '../apis/investment';
 import { queryKeys } from '../query';
 
 export const useCreateHolding = (opts = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation(createHolding, {
+    onSuccess: ({ holding = {} }) => {
+      const { account_id = '' } = holding;
+      // refetch account info
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
+
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useUpdateHolding = (opts = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateHolding, {
     onSuccess: ({ holding = {} }) => {
       const { account_id = '' } = holding;
       // refetch account info

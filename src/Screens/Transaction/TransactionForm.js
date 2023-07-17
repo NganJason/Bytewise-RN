@@ -36,6 +36,10 @@ const TransactionForm = ({ route }) => {
   const styles = getStyles(theme);
 
   const transactionID = route.params?.transaction_id || '';
+  const isAddTransaction = () => {
+    return transactionID === '';
+  };
+
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
 
   const onTabChange = tab => {
@@ -62,6 +66,7 @@ const TransactionForm = ({ route }) => {
             tabs={scrollableTabs}
             activeTab={activeTab}
             onTabChange={onTabChange}
+            disableNonActive={!isAddTransaction()}
           />
         </View>
 

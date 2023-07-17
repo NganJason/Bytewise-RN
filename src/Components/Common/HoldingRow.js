@@ -1,12 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
+import {
+  HOLDING_TYPE_CUSTOM,
+  HOLDING_TYPE_DEFAULT,
+} from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { AmountText, BaseText, EarningText } from '../Text';
-import { BaseRow } from '../View';
+import { BaseChip, BaseRow } from '../View';
 
 const HoldingRow = ({
   holding_id = '',
+  holding_type = HOLDING_TYPE_DEFAULT,
   account_id = '',
   symbol = '',
   total_shares = 0,
@@ -17,17 +22,30 @@ const HoldingRow = ({
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const onPress = () => {
+    if (holding_type === HOLDING_TYPE_DEFAULT) {
+      navigation.navigate(ROUTES.holdingBreakdown, {
+        account_id: account_id,
+        holding_id: holding_id,
+        symbol: symbol,
+      });
+    } else {
+      navigation.navigate(ROUTES.holdingForm, {
+        account_id: account_id,
+        holding_id: holding_id,
+      });
+    }
+  };
+
   return (
-    <BaseRow
-      onPress={() => {
-        navigation.navigate(ROUTES.holdingBreakdown, {
-          account_id: account_id,
-          holding_id: holding_id,
-          symbol: symbol,
-        });
-      }}>
-      <View>
-        <BaseText text3>{symbol}</BaseText>
+    <BaseRow onPress={onPress}>
+      <View style={styles.leftContainer}>
+        <View style={styles.symbol}>
+          <BaseText text3 numberOfLines={1}>
+            {symbol}
+          </BaseText>
+          {holding_type === HOLDING_TYPE_CUSTOM && <BaseChip>Custom</BaseChip>}
+        </View>
         <BaseText text5 style={styles.subRow}>
           {total_shares} {total_shares > 1 ? 'units' : 'unit'}
         </BaseText>
@@ -49,9 +67,15 @@ const HoldingRow = ({
 
 const getStyles = theme =>
   StyleSheet.create({
+    symbol: {
+      flexDirection: 'row',
+    },
     subRow: {
       marginTop: 4,
       color: theme.colors.color8,
+    },
+    leftContainer: {
+      width: '40%',
     },
     rightContainer: {
       alignItems: 'flex-end',

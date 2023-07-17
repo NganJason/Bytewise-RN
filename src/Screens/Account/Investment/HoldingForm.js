@@ -18,8 +18,14 @@ import {
   HOLDING_TYPE_DEFAULT,
 } from '../../../_shared/apis/enum';
 import { useValidation } from '../../../_shared/hooks/validation';
-import { useCreateHolding } from '../../../_shared/mutations/investment';
-import { useSearchSecurities } from '../../../_shared/query/investment';
+import {
+  useCreateHolding,
+  useUpdateHolding,
+} from '../../../_shared/mutations/investment';
+import {
+  useGetHolding,
+  useSearchSecurities,
+} from '../../../_shared/query/investment';
 import { validateHolding } from '../../../_shared/validator/investment';
 
 const scrollableTabs = [
@@ -31,20 +37,23 @@ const HoldingForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const accountID = route.params?.account_id || '';
+  const { account_id: accountID = '', holding_id: holdingID = '' } =
+    route.params || {};
+  const isAddHolding = () => {
+    return holdingID === '';
+  };
 
-  const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
+  const [activeTab, setActiveTab] = useState(
+    isAddHolding() ? scrollableTabs[0] : scrollableTabs[1],
+  );
   const onTabChange = tab => {
     setActiveTab(tab);
-    let holdingType = HOLDING_TYPE_DEFAULT;
-    if (tab.name === 'Custom') {
-      holdingType = HOLDING_TYPE_CUSTOM;
-    }
 
     setHoldingForm({
       ...holdingForm,
       symbol: '',
-      holding_type: holdingType,
+      holding_type:
+        tab.Name === 'Custom' ? HOLDING_TYPE_CUSTOM : HOLDING_TYPE_DEFAULT,
     });
   };
 
@@ -62,7 +71,26 @@ const HoldingForm = ({ route }) => {
     setFormErrors(validateHolding(holdingForm));
   }, [holdingForm]);
 
+  const getHolding = useGetHolding(
+    { holding_id: holdingID },
+    {
+      enabled: !isAddHolding(),
+    },
+  );
+  useEffect(() => {
+    if (getHolding.data) {
+      let { holding } = getHolding?.data || {};
+      setHoldingForm({ ...holding });
+    }
+  }, [getHolding.data]);
+
   const createHolding = useCreateHolding({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+  });
+
+  const updateHolding = useUpdateHolding({
     onSuccess: () => {
       navigation.goBack();
     },
@@ -105,7 +133,11 @@ const HoldingForm = ({ route }) => {
       return;
     }
 
-    createHolding.mutate(holdingForm);
+    if (isAddHolding()) {
+      createHolding.mutate(holdingForm);
+    } else {
+      updateHolding.mutate(holdingForm);
+    }
   };
 
   return (
@@ -114,7 +146,9 @@ const HoldingForm = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Add holding</BaseText>
+            <BaseText h2>
+              {isAddHolding() ? 'Add holding' : 'Edit holding'}
+            </BaseText>
           </View>
         ),
       }}>
@@ -123,6 +157,7 @@ const HoldingForm = ({ route }) => {
           tabs={scrollableTabs}
           activeTab={activeTab}
           onTabChange={onTabChange}
+          disableNonActive={!isAddHolding()}
         />
       </View>
       <KeyboardAwareScrollView
@@ -187,7 +222,7 @@ const HoldingForm = ({ route }) => {
             size="lg"
             width={200}
             onPress={onSave}
-            loading={createHolding.isLoading}
+            loading={createHolding.isLoading || updateHolding.isLoading}
           />
         </View>
       </KeyboardAwareScrollView>
