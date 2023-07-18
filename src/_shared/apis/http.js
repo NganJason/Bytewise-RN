@@ -56,6 +56,7 @@ export const sendPostRequest = async (endpoint = '', body = {}) => {
     const { data } = await axiosInstance.post(endpoint, body);
     return data?.body;
   } catch (e) {
+    console.log(e);
     throw new AppError({
       requestID: e.response?.headers['request-id'], // request ID
       message: e.response?.data.error, // error message

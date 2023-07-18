@@ -13,6 +13,7 @@ const BaseButton = ({
   activeOpacity = 0.3,
   icon = null,
   onPress = function () {},
+  textStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -98,7 +99,7 @@ const BaseButton = ({
         width: getContainerWidth(),
         alignSelf: align,
       }}
-      titleStyle={{ ...getTextStyle(), ...buttonStyle.title }}
+      titleStyle={{ ...getTextStyle(), ...buttonStyle.title, ...textStyle }}
       size={size}
       title={title}
       icon={icon !== null && <View style={styles.icon}>{icon}</View>}

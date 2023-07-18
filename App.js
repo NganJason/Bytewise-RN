@@ -30,6 +30,8 @@ import InvestmentBreakdownScreen from './src/Screens/Account/Investment/Investme
 import HoldingForm from './src/Screens/Account/Investment/HoldingForm';
 import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
 import LotForm from './src/Screens/Account/Investment/LotForm';
+import { BottomToastProvider } from './src/_shared/context/BottomToastContext';
+import BottomToast from './src/Components/Common/BottomToast';
 
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
 
@@ -178,9 +180,12 @@ function Main() {
 
   return (
     <ThemeProvider theme={THEME}>
-      <SafeAreaProvider>
-        <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
-      </SafeAreaProvider>
+      <BottomToastProvider>
+        <SafeAreaProvider>
+          <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+          <BottomToast />
+        </SafeAreaProvider>
+      </BottomToastProvider>
     </ThemeProvider>
   );
 }

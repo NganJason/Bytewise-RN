@@ -69,6 +69,7 @@ const AccountScreen = () => {
 
     navigation.navigate(route, {
       account_id: account_id,
+      account_type: account_type,
     });
   };
 

@@ -12,11 +12,11 @@ import {
   BaseLoadableView,
   BaseButton,
 } from '../../Components';
-import { coin } from '../../_shared/constant/asset';
+import { coin, coinsack } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
-import { ACCOUNT_TYPES } from '../../_shared/apis/enum';
+import { ACCOUNT_TYPES, ACCOUNT_TYPE_CASH } from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount } from '../../_shared/query/account';
 import {
@@ -24,6 +24,7 @@ import {
   getUnixRangeOfMonth,
   getYear,
 } from '../../_shared/util/date';
+import { isAccountTypeAsset } from '../../_shared/util/account';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 
@@ -36,7 +37,10 @@ const AccountBreakdownScreen = ({ route }) => {
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
 
-  const accountID = route.params?.account_id || '';
+  const {
+    account_id: accountID = '',
+    account_type: accountType = ACCOUNT_TYPE_CASH,
+  } = route.params;
 
   const [activeDate, setActiveDate] = useState(new Date());
   const [timeRange, setTimeRange] = useState(
@@ -104,6 +108,10 @@ const AccountBreakdownScreen = ({ route }) => {
       balance = '0',
     } = getAccount?.data?.account || {};
 
+    const textColor = isAccountTypeAsset(accountType)
+      ? theme.colors.color1
+      : theme.colors.color12;
+
     return (
       <>
         <View style={styles.title}>
@@ -128,13 +136,9 @@ const AccountBreakdownScreen = ({ route }) => {
             type="clear"
             align="flex-start"
             size="sm"
+            textStyle={{ color: textColor }}
             icon={
-              <Icon
-                name="edit"
-                type="feather"
-                color={theme.colors.color1}
-                size={13}
-              />
+              <Icon name="edit" type="feather" color={textColor} size={13} />
             }
             onPress={() => {
               navigation.navigate(ROUTES.accountForm, {
@@ -143,7 +147,10 @@ const AccountBreakdownScreen = ({ route }) => {
             }}
           />
         </View>
-        <BaseImage source={coin} containerStyle={styles.image} />
+        <BaseImage
+          source={isAccountTypeAsset(accountType) ? coin : coinsack}
+          containerStyle={styles.image}
+        />
       </>
     );
   };
@@ -153,7 +160,9 @@ const AccountBreakdownScreen = ({ route }) => {
       headerProps={{
         component: renderHeader(),
         allowBack: true,
-        backgroundColor: theme.colors.color4,
+        backgroundColor: isAccountTypeAsset(accountType)
+          ? theme.colors.color4
+          : theme.colors.color13,
       }}>
       <>
         <View style={styles.dataNavigator}>
