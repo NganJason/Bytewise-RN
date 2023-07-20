@@ -103,10 +103,11 @@ const AccountSelectionScreen = () => {
   );
 };
 
-const getStyles = theme => {
+const getStyles = _ => {
   return StyleSheet.create({
     grid: {
       marginTop: 0,
+      paddingHorizontal: 3,
     },
   });
 };

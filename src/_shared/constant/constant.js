@@ -42,15 +42,15 @@ export const DAYS = {
 
 export const EmptyContentConfig = {
   monthlyBudget: {
-    text: ['Plan your monthly budget now'],
+    text: ['Plan your budget for the month'],
     image: sapiens2,
   },
   annualBudget: {
-    text: ['Allocate budget for the year'],
+    text: ['Allocate budget for annual expenses'],
     image: sapiens1,
   },
   category: {
-    text: ['Category groups and ', 'tracks your expenses'],
+    text: ['Category groups and ', 'tracks your transactions'],
     image: paper,
   },
   transaction: {
