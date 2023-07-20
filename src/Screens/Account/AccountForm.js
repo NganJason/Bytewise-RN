@@ -126,8 +126,10 @@ const AccountForm = ({ route }) => {
       return;
     }
 
-    let balance = accountForm.balance;
-    if (balance !== null) {
+    let balance;
+    if (accountForm.account_type === ACCOUNT_TYPE_INVESTMENT) {
+      balance = null;
+    } else {
       balance = String(accountForm.balance);
     }
 

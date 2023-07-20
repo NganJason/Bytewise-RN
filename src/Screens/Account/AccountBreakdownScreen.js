@@ -28,6 +28,7 @@ import { isAccountTypeAsset } from '../../_shared/util/account';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
+import { sapiens3 } from '../../_shared/constant/asset';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -156,17 +157,8 @@ const AccountBreakdownScreen = ({ route }) => {
     );
   };
 
-  useError([getAccount, getTransactions]);
-
-  return (
-    <BaseScreen2
-      headerProps={{
-        component: renderHeader(),
-        allowBack: true,
-        backgroundColor: isAccountTypeAsset(accountType)
-          ? theme.colors.color4
-          : theme.colors.color13,
-      }}>
+  const renderAssetContent = () => {
+    return (
       <>
         <View style={styles.dataNavigator}>
           <DateNavigator
@@ -181,6 +173,43 @@ const AccountBreakdownScreen = ({ route }) => {
           {renderRows()}
         </BaseLoadableView>
       </>
+    );
+  };
+
+  const renderDebtContent = () => {
+    return (
+      <View style={styles.debtContainer}>
+        <BaseImage
+          width={screenWidth * 0.4}
+          height={screenWidth * 0.4}
+          source={sapiens3}
+        />
+        <View style={styles.debtTextContainer}>
+          <BaseText text3 style={styles.debtText}>
+            More features coming soon.
+          </BaseText>
+          <BaseText text3 style={styles.debtText}>
+            Stay tuned!
+          </BaseText>
+        </View>
+      </View>
+    );
+  };
+
+  useError([getAccount, getTransactions]);
+
+  return (
+    <BaseScreen2
+      headerProps={{
+        component: renderHeader(),
+        allowBack: true,
+        backgroundColor: isAccountTypeAsset(accountType)
+          ? theme.colors.color4
+          : theme.colors.color13,
+      }}>
+      {isAccountTypeAsset(accountType)
+        ? renderAssetContent()
+        : renderDebtContent()}
     </BaseScreen2>
   );
 };
@@ -196,6 +225,18 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     dataNavigator: {
       alignItems: 'center',
       marginBottom: theme.spacing.lg,
+    },
+    debtContainer: {
+      marginVertical: '30%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    debtTextContainer: {
+      alignItems: 'center',
+    },
+    debtText: {
+      marginBottom: theme.spacing.md,
+      color: theme.colors.color7,
     },
   });
 

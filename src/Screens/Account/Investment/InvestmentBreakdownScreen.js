@@ -106,6 +106,27 @@ const InvestmentBreakdownScreen = ({ route }) => {
               />
             )}
           </View>
+
+          <BaseButton
+            title="Edit account"
+            type="clear"
+            align="flex-start"
+            size="sm"
+            textStyle={{ color: theme.colors.color1 }}
+            icon={
+              <Icon
+                name="edit"
+                type="feather"
+                color={theme.colors.color1}
+                size={13}
+              />
+            }
+            onPress={() => {
+              navigation.navigate(ROUTES.accountForm, {
+                account_id: accountID,
+              });
+            }}
+          />
         </View>
         <BaseImage source={graph} containerStyle={styles.image} />
       </>

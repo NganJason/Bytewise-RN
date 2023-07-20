@@ -9,8 +9,8 @@ import {
   IconButton,
   BaseScrollView,
   DateNavigator,
-  AggrSummary,
   BaseDivider,
+  AmountText,
 } from '../../Components';
 
 import { useAggrTransactions, useGetCategory } from '../../_shared/query';
@@ -145,7 +145,10 @@ const CategoryBreakdownScreen = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <>
-            <BaseText h2 style={styles.categoryNameText}>
+            <BaseText
+              h2
+              style={styles.categoryNameText}
+              isLoading={getCategory.isLoading}>
               {getCategory.data?.category.category_name}
             </BaseText>
             <DateNavigator
@@ -153,15 +156,25 @@ const CategoryBreakdownScreen = ({ route }) => {
               onForward={onDateMove}
               onBackward={onDateMove}
             />
+            <View style={styles.aggr}>
+              <BaseText text3 style={styles.categoryNameText}>
+                Used:
+              </BaseText>
+              <AmountText>
+                {aggrTransactionsQuery.data?.results?.[categoryID].sum || 0}
+              </AmountText>
+            </View>
           </>
         ),
         rightComponent: (
           <IconButton
             buttonSize="xs"
+            iconSize={22}
             type="clear"
             iconName="edit"
-            iconType="fontawesome"
+            iconType="feather"
             align="left"
+            color={theme.colors.color1}
             onPress={() => {
               navigation.navigate(ROUTES.categoryForm, {
                 category_id: categoryID,
@@ -170,10 +183,7 @@ const CategoryBreakdownScreen = ({ route }) => {
           />
         ),
       }}>
-      <View>
-        <AggrSummary aggrs={renderAggrSummaryByType()} />
-      </View>
-      <BaseDivider margin={30} />
+      <BaseDivider margin={20} />
       <BaseScrollView showsVerticalScrollIndicator={false}>
         {renderRows()}
       </BaseScrollView>
@@ -183,6 +193,7 @@ const CategoryBreakdownScreen = ({ route }) => {
 
 const getStyles = theme => {
   return StyleSheet.create({
+    aggr: { alignSelf: 'center', flexDirection: 'row' },
     categoryNameText: {
       marginBottom: 4,
     },

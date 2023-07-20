@@ -1,6 +1,5 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { Image } from '@rneui/themed';
 import { useState } from 'react';
 
 const BaseImage = ({
