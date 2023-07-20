@@ -55,7 +55,10 @@ const BottomToast = () => {
 const InfoToast = ({ toastInfo = {} }) => {
   return (
     <View>
-      <BaseText>{toastInfo.text}</BaseText>
+      <BaseText h3 margin={{ bottom: 6 }}>
+        {toastInfo.title}
+      </BaseText>
+      <BaseText text3>{toastInfo.text}</BaseText>
     </View>
   );
 };
@@ -82,7 +85,6 @@ const getStyles = (theme, screenHeight) =>
     },
     body: {
       flex: 1,
-      paddingTop: 24,
       paddingHorizontal: theme.spacing.lg,
     },
   });

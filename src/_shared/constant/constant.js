@@ -42,43 +42,43 @@ export const DAYS = {
 
 export const EmptyContentConfig = {
   monthlyBudget: {
-    text: 'No monthly budget yet',
+    text: ['Plan your monthly budget now'],
     image: sapiens2,
   },
   annualBudget: {
-    text: 'No annual budget yet',
+    text: ['Allocate budget for the year'],
     image: sapiens1,
   },
   category: {
-    text: 'No category yet',
+    text: ['Category groups and ', 'tracks your expenses'],
     image: paper,
   },
   transaction: {
-    text: 'No transaction yet',
+    text: ['Your everyday transactions'],
     image: paper,
   },
   investment: {
-    text: 'No holding yet',
+    text: ['No holding yet'],
     image: paper,
   },
   account: {
-    text: 'No account yet',
+    text: ['No account yet'],
     image: paper,
   },
   asset: {
-    text: 'No asset yet',
+    text: ['Your asset accounts'],
     image: paper,
   },
   debt: {
-    text: 'No debt yet',
+    text: ['Your outstanding liabilities'],
     image: paper,
   },
   noSearchDataFound: {
-    text: 'No data found',
+    text: ['No data found'],
     image: paper,
   },
   emptySearchText: {
-    text: 'Type something to search',
+    text: ['Type something to search'],
     image: sapiens1,
   },
 };

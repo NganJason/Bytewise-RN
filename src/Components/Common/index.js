@@ -6,6 +6,7 @@ import EmptyContent from './EmptyContent';
 import CustomDrawer from './CustomDrawer';
 import HoldingRow from './HoldingRow';
 import LotRow from './LotRow';
+import InfoToolTip from './InfoToolTip';
 
 export {
   DailyTransactions,
@@ -16,4 +17,5 @@ export {
   CustomDrawer,
   HoldingRow,
   LotRow,
+  InfoToolTip,
 };

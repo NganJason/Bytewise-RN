@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
-import { useContext } from 'react';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import {
@@ -12,12 +11,11 @@ import {
   EarningText,
   BaseButton,
   LotRow,
-  IconButton,
+  InfoToolTip,
 } from '../../../Components';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
-import { BottomToastContext } from '../../../_shared/context/BottomToastContext';
 import { useGetHolding, useGetLots } from '../../../_shared/query/investment';
 import { getTotalInvestmentCost } from '../../../_shared/util/investment';
 
@@ -25,7 +23,6 @@ const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { toast } = useContext(BottomToastContext);
   const {
     holding_id: holdingID = '',
     account_id: accountID = '',
@@ -46,10 +43,6 @@ const HoldingBreakdownScreen = ({ route }) => {
 
   const isScreenLoading = () => {
     getHolding.isLoading || getLots.isLoading;
-  };
-
-  const onInfoIconPress = () => {
-    toast.info(genStockUpdateTimeMsg(quote.update_time));
   };
 
   const renderRows = () => {
@@ -90,14 +83,9 @@ const HoldingBreakdownScreen = ({ route }) => {
           <BaseText h1 margin={{ right: 15 }}>
             {symbol.toUpperCase()}
           </BaseText>
-          <IconButton
-            iconName="info"
-            iconType="feather"
-            type="clear"
-            color={theme.colors.color1}
+          <InfoToolTip
             iconSize={18}
-            align="flex-start"
-            onPress={onInfoIconPress}
+            message={genStockUpdateTimeMsg(quote.update_time)}
           />
         </View>
         <BaseText text5 margin={{ top: 8, bottom: 4 }}>

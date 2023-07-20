@@ -51,6 +51,7 @@ import {
   EmptyContent,
   HoldingRow,
   LotRow,
+  InfoToolTip,
 } from './Common';
 
 export {
@@ -93,4 +94,5 @@ export {
   EmptyContent,
   HoldingRow,
   LotRow,
+  InfoToolTip,
 };

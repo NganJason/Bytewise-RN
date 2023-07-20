@@ -31,7 +31,7 @@ const LoginScreen = () => {
   const { validate, showValidation } = useValidation();
 
   const [loginForm, setLoginForm] = useState({
-    username: 'Jon',
+    username: 'Test',
     password: 'Hello123',
   });
 

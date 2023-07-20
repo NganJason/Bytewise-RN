@@ -7,12 +7,14 @@ const BottomToastProvider = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [toastInfo, setToastInfo] = useState({
     toastType: 1,
+    title: '',
     text: '',
   });
 
-  const info = (text = '') => {
+  const info = (text = '', title = '') => {
     setToastInfo({
       toastType: ToastTypeInfo,
+      title: title,
       text: text,
     });
     setIsVisible(true);

@@ -88,7 +88,7 @@ const AccountSelectionScreen = () => {
           </View>
         ),
       }}>
-      <BaseScrollView>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
         <View>
           <BaseText h3>Assets</BaseText>
           {renderContent(EQUITY_TYPE_ASSET)}

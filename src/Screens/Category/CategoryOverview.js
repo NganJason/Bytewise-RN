@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-import { BaseText, AmountText, BaseTabView } from '../../Components';
+import {
+  BaseText,
+  AmountText,
+  BaseTabView,
+  BaseButton,
+} from '../../Components';
 
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -136,6 +141,15 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
             TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
           ]}
         />
+        <View style={styles.buttonContainer}>
+          <BaseButton
+            title="Edit"
+            type="secondary"
+            align="flex-end"
+            size="sm"
+            onPress={() => navigation.navigate(ROUTES.categoryEdit)}
+          />
+        </View>
       </View>
       <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
         {renderRows()}
@@ -153,5 +167,8 @@ const getStyles = _ =>
     },
     tabContainer: {
       marginBottom: 14,
+    },
+    buttonContainer: {
+      marginTop: 6,
     },
   });

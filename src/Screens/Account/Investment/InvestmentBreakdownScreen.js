@@ -15,12 +15,10 @@ import {
   BaseLoadableView,
   EmptyContent,
   HoldingRow,
-  IconButton,
+  InfoToolTip,
 } from '../../../Components';
 import { capitalize } from '../../../_shared/util/string';
 import { useGetAccount } from '../../../_shared/query';
-import { useContext } from 'react';
-import { BottomToastContext } from '../../../_shared/context/BottomToastContext';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import { getStockUpdateTime } from '../../../_shared/util/investment';
 
@@ -29,7 +27,6 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
-  const { toast } = useContext(BottomToastContext);
 
   const { account_id: accountID = '' } = route?.params;
   const getAccount = useGetAccount(
@@ -42,11 +39,6 @@ const InvestmentBreakdownScreen = ({ route }) => {
     avg_cost,
     holdings = [],
   } = getAccount?.data?.account || {};
-
-  const onInfoIconPress = () => {
-    console.log(getStockUpdateTime(holdings));
-    toast.info(genStockUpdateTimeMsg(getStockUpdateTime(holdings)));
-  };
 
   const renderRows = () => {
     let rows = [];
@@ -95,14 +87,8 @@ const InvestmentBreakdownScreen = ({ route }) => {
               Investment
             </BaseText>
             {getStockUpdateTime(holdings) !== 0 && (
-              <IconButton
-                iconName="info"
-                iconType="feather"
-                type="clear"
-                color={theme.colors.color1}
-                iconSize={15}
-                align="flex-start"
-                onPress={onInfoIconPress}
+              <InfoToolTip
+                message={genStockUpdateTimeMsg(getStockUpdateTime(holdings))}
               />
             )}
           </View>

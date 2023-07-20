@@ -8,7 +8,7 @@ import { BaseImage } from '../View';
 
 const EmptyContent = ({
   item = {
-    text: 'No data',
+    text: ['No data'],
     image: paper,
   },
   route = '',
@@ -35,9 +35,11 @@ const EmptyContent = ({
       />
 
       <View style={styles.textContainer}>
-        <BaseText text3 style={styles.text}>
-          {item.text}
-        </BaseText>
+        {item.text.map(d => (
+          <BaseText key={d} text3 style={styles.text}>
+            {d}
+          </BaseText>
+        ))}
         {route !== '' && (
           <LinkText text4 onPress={onPress}>
             Add now!

@@ -1,14 +1,16 @@
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BaseText } from '../../Components';
-import { EmptyContent } from '../../Components/Common';
+import { BaseButton, BaseText } from '../../Components';
+import { EmptyContent, InfoToolTip } from '../../Components/Common';
 import { BaseLoadableView, BaseScrollView } from '../../Components/View';
 import {
   BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { annualBudgetDesc } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { useError } from '../../_shared/hooks/error';
@@ -28,6 +30,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
+  const navigation = useNavigation();
 
   const [monthRange, setMonthRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
@@ -147,6 +150,16 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   return (
     <View style={styles.screen}>
+      <View style={styles.buttonContainer}>
+        <BaseButton
+          title="Edit"
+          type="secondary"
+          align="flex-end"
+          size="sm"
+          onPress={() => navigation.navigate(ROUTES.budgetList)}
+        />
+      </View>
+
       <BaseScrollView showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.container}>
@@ -160,7 +173,13 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
           <View style={styles.container}>
             <View style={styles.title}>
-              <BaseText h3>Annual</BaseText>
+              <BaseText h3 margin={{ right: 6 }}>
+                Annual
+              </BaseText>
+              <InfoToolTip
+                title={annualBudgetDesc.title}
+                message={annualBudgetDesc.text}
+              />
             </View>
             <BaseLoadableView isLoading={isScreenLoading()}>
               {renderRows(BUDGET_TYPE_ANNUAL)}
@@ -182,6 +201,8 @@ const getStyles = (theme, screenHeight) =>
       minHeight: screenHeight * 0.25,
     },
     title: {
+      flexDirection: 'row',
+      alignItems: 'center',
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.xl,
     },

@@ -30,7 +30,7 @@ import { validateHolding } from '../../../_shared/validator/investment';
 
 const scrollableTabs = [
   { name: 'Common stocks', iconName: 'line-graph', iconType: 'entypo' },
-  { name: 'Custom', iconName: 'edit', iconType: 'entypo' },
+  { name: 'Custom symbol', iconName: 'edit', iconType: 'entypo' },
 ];
 
 const HoldingForm = ({ route }) => {
@@ -53,7 +53,9 @@ const HoldingForm = ({ route }) => {
       ...holdingForm,
       symbol: '',
       holding_type:
-        tab.Name === 'Custom' ? HOLDING_TYPE_CUSTOM : HOLDING_TYPE_DEFAULT,
+        tab.Name === 'Custom symbol'
+          ? HOLDING_TYPE_CUSTOM
+          : HOLDING_TYPE_DEFAULT,
       avg_cost: null,
       latest_value: null,
     });

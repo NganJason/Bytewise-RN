@@ -264,7 +264,7 @@ const BudgetForm = ({ route }) => {
             <Icon
               name={'arrow-right'}
               type={'feather'}
-              color={theme.colors.color4}
+              color={theme.colors.color8}
             />
           </View>
 
