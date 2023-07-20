@@ -27,6 +27,7 @@ import {
 import { isAccountTypeAsset } from '../../_shared/util/account';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
+import { useError } from '../../_shared/hooks/error';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -154,6 +155,8 @@ const AccountBreakdownScreen = ({ route }) => {
       </>
     );
   };
+
+  useError([getAccount, getTransactions]);
 
   return (
     <BaseScreen2

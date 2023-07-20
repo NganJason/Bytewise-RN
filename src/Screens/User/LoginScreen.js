@@ -16,10 +16,10 @@ import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { loginHero } from '../../_shared/constant/asset';
 import { AuthContext } from '../../_shared/context/AuthContext';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import { useValidation } from '../../_shared/hooks/validation';
 import { validateLogin } from '../../_shared/validator/login';
 import { useNavigation } from '@react-navigation/native';
+import { useError } from '../../_shared/hooks/error';
 
 const LoginScreen = () => {
   const { theme } = useTheme();
@@ -59,8 +59,10 @@ const LoginScreen = () => {
     login(loginForm);
   };
 
+  useError([getLoginError()]);
+
   return (
-    <BaseScreen errorToast={renderErrorsToast([getLoginError()])}>
+    <BaseScreen>
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}

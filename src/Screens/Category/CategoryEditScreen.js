@@ -16,11 +16,11 @@ import {
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
 import { useGetCategories } from '../../_shared/query';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { BaseRow, BaseTabView } from '../../Components/View';
 import { useState } from 'react';
+import { useError } from '../../_shared/hooks/error';
 
 const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -68,10 +68,10 @@ const CategoryEditScreen = ({ route }) => {
     return rows;
   };
 
+  useError([getCategoriesQuery]);
   return (
     <BaseScreen
       isLoading={getCategoriesQuery.isLoading}
-      errorToast={renderErrorsToast([getCategoriesQuery])}
       headerProps={{
         allowBack: true,
         centerComponent: <BaseText h2>Categories</BaseText>,

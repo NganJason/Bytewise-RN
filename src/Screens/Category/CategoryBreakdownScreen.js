@@ -24,11 +24,11 @@ import {
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
+import { useError } from '../../_shared/hooks/error';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -136,14 +136,11 @@ const CategoryBreakdownScreen = ({ route }) => {
     getTransactions.isLoading ||
     aggrTransactionsQuery.isLoading;
 
+  useError([getCategory, getTransactions, aggrTransactionsQuery]);
+
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
-      errorToast={renderErrorsToast([
-        getCategory,
-        getTransactions,
-        aggrTransactionsQuery,
-      ])}
       headerProps={{
         allowBack: true,
         centerComponent: (

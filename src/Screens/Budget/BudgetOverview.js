@@ -11,6 +11,7 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
+import { useError } from '../../_shared/hooks/error';
 import { useAggrTransactions } from '../../_shared/query';
 import { useGetBudgets } from '../../_shared/query/budget';
 import { getBudgetAmountFromBreakdown } from '../../_shared/util/budget';
@@ -141,6 +142,8 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
       aggrAnnualBudgets.isLoading
     );
   };
+
+  useError([getBudgets, aggrMonthlyBudgets, aggrAnnualBudgets]);
 
   return (
     <View style={styles.screen}>

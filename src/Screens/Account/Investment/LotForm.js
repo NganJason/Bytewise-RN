@@ -13,7 +13,10 @@ import {
   TouchInput,
 } from '../../../Components';
 import { useValidation } from '../../../_shared/hooks/validation';
-import { useCreateLot } from '../../../_shared/mutations/investment';
+import {
+  useCreateLot,
+  useUpdateLot,
+} from '../../../_shared/mutations/investment';
 import { useGetLot } from '../../../_shared/query/investment';
 import {
   getDateStringFromTs,
@@ -31,6 +34,9 @@ const LotForm = ({ route }) => {
     symbol = '',
     lot_id: lotID = '',
   } = route?.params || {};
+  const isAddLot = () => {
+    return lotID === '';
+  };
 
   const [lotForm, setLotForm] = useState({
     holding_id: String(holdingID),
@@ -54,6 +60,15 @@ const LotForm = ({ route }) => {
   }, [lotForm]);
 
   const createLot = useCreateLot({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+    meta: {
+      account_id: accountID,
+    },
+  });
+
+  const updateLot = useUpdateLot({
     onSuccess: () => {
       navigation.goBack();
     },
@@ -87,11 +102,20 @@ const LotForm = ({ route }) => {
       return;
     }
 
-    createLot.mutate({
-      ...lotForm,
-      shares: String(lotForm.shares),
-      cost_per_share: String(lotForm.cost_per_share),
-    });
+    if (isAddLot()) {
+      createLot.mutate({
+        ...lotForm,
+        shares: String(lotForm.shares),
+        cost_per_share: String(lotForm.cost_per_share),
+      });
+    } else {
+      updateLot.mutate({
+        ...lotForm,
+        lot_id: lotID,
+        shares: String(lotForm.shares),
+        cost_per_share: String(lotForm.cost_per_share),
+      });
+    }
   };
 
   return (

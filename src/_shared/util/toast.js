@@ -1,24 +1,27 @@
-export const renderErrorsToast = (queryErrors = []) => {
+import { BaseToast } from '../../Components/View';
+
+export const toastError = (queryErrors = []) => {
+  let err = getErrors(queryErrors);
+  if (err === null) {
+    return;
+  }
+
+  const { error = { message: '' }, reset = function () {} } = err;
+
+  BaseToast.show({
+    type: 'error',
+    text1: error.message,
+    onHIde: reset,
+  });
+};
+
+export const getErrors = (queryErrors = []) => {
   for (let i = 0; i < queryErrors.length; i++) {
-    let errObj = renderErrorToast(queryErrors[i]);
-    const { show: isError } = errObj;
+    const { isError = false } = queryErrors[i];
     if (isError) {
-      return errObj;
+      return queryErrors[i];
     }
   }
 
-  return {};
-};
-
-export const renderErrorToast = (queryError = {}) => {
-  const { isError = false, error = {}, reset = function () {} } = queryError;
-  if (isError) {
-    return {
-      show: isError,
-      message1: error?.message || '',
-      onHide: reset,
-    };
-  }
-
-  return {};
+  return null;
 };

@@ -27,6 +27,7 @@ import useDimension from '../../_shared/hooks/dimension';
 import { capitalize } from '../../_shared/util/string';
 import { useGetAccounts } from '../../_shared/query/account';
 import { getEquityType } from '../../_shared/util/account';
+import { useError } from '../../_shared/hooks/error';
 
 const AccountScreen = () => {
   const { theme } = useTheme();
@@ -161,6 +162,8 @@ const AccountScreen = () => {
       </>
     );
   };
+
+  useError([getAccounts]);
 
   return (
     <BaseScreen2

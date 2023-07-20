@@ -13,6 +13,7 @@ const UPDATE_HOLDING = '/update_holding';
 const CREATE_LOT = '/create_lot';
 const GET_LOT = '/get_lot';
 const GET_LOTS = '/get_lots';
+const UPDATE_LOT = '/update_lot';
 
 export const searchSecurities = async ({ keyword = '' } = {}) => {
   try {
@@ -33,16 +34,16 @@ export const createHolding = async ({
   account_id = '',
   symbol = '',
   holding_type = 0,
-  latest_value = 0,
-  avg_cost = 0,
+  latest_value,
+  avg_cost,
 }) => {
   try {
     const body = await sendPostRequest(CREATE_HOLDING, {
       account_id: account_id,
       symbol: symbol,
       holding_type: holding_type,
-      latest_value: String(latest_value),
-      avg_cost: String(avg_cost),
+      latest_value: latest_value !== null ? String(latest_value) : latest_value,
+      avg_cost: avg_cost !== null ? String(avg_cost) : avg_cost,
     });
     return body;
   } catch (e) {
@@ -132,6 +133,29 @@ export const getLots = async ({ holding_id = '' }) => {
   try {
     const body = await sendPostRequest(GET_LOTS, {
       holding_id: holding_id,
+    });
+    return body;
+  } catch (e) {
+    throw new SecurityError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const updateLot = async ({
+  lot_id = '',
+  shares = 0,
+  cost_per_share = 0,
+  trade_date = 0,
+}) => {
+  try {
+    const body = await sendPostRequest(UPDATE_LOT, {
+      lot_id: lot_id,
+      shares: shares,
+      cost_per_share: cost_per_share,
+      trade_date: trade_date,
     });
     return body;
   } catch (e) {

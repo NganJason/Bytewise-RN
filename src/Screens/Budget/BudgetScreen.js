@@ -24,6 +24,7 @@ import { useGetBudgets } from '../../_shared/query/budget';
 import { getDateString } from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';
 import { getBudgetAmountFromBreakdown } from '../../_shared/util/budget';
+import { useError } from '../../_shared/hooks/error';
 
 const BudgetScreen = () => {
   const { theme } = useTheme();
@@ -88,6 +89,8 @@ const BudgetScreen = () => {
 
     return rows;
   };
+
+  useError([getBudgets]);
 
   return (
     <BaseScreen

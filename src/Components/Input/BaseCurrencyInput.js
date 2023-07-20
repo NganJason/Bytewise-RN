@@ -21,7 +21,11 @@ const BaseCurrencyInput = forwardRef(
     const { onFocus = function () {} } = props || {};
 
     useEffect(() => {
-      setInputStr(value);
+      if (isNaN(value) || value === null) {
+        setInputStr('0');
+      } else {
+        setInputStr(value);
+      }
     }, [value]);
 
     const formatAmount = () => {

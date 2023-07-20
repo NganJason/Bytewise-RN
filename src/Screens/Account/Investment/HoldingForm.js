@@ -54,6 +54,8 @@ const HoldingForm = ({ route }) => {
       symbol: '',
       holding_type:
         tab.Name === 'Custom' ? HOLDING_TYPE_CUSTOM : HOLDING_TYPE_DEFAULT,
+      avg_cost: null,
+      latest_value: null,
     });
   };
 
@@ -61,8 +63,8 @@ const HoldingForm = ({ route }) => {
     account_id: accountID,
     symbol: '',
     holding_type: HOLDING_TYPE_DEFAULT,
-    latest_value: 0,
-    avg_cost: 0,
+    latest_value: null,
+    avg_cost: null,
   });
 
   const [formErrors, setFormErrors] = useState({});

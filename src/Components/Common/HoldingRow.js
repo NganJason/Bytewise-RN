@@ -46,9 +46,12 @@ const HoldingRow = ({
           </BaseText>
           {holding_type === HOLDING_TYPE_CUSTOM && <BaseChip>Custom</BaseChip>}
         </View>
-        <BaseText text5 style={styles.subRow}>
-          {total_shares} {total_shares > 1 ? 'units' : 'unit'}
-        </BaseText>
+
+        {holding_type === HOLDING_TYPE_DEFAULT && (
+          <BaseText text5 style={styles.subRow}>
+            {total_shares} {total_shares > 1 ? 'units' : 'unit'}
+          </BaseText>
+        )}
       </View>
 
       <View style={styles.rightContainer}>

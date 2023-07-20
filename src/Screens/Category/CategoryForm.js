@@ -18,9 +18,9 @@ import {
 } from '../../_shared/apis/enum';
 import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import { useValidation } from '../../_shared/hooks/validation';
 import { validateCategory } from '../../_shared/validator/category';
+import { useError } from '../../_shared/hooks/error';
 
 const categoryTypes = [
   {
@@ -44,6 +44,13 @@ const CategoryForm = ({ route }) => {
     return categoryID === '';
   };
 
+  // initial form state
+  const [categoryForm, setCategoryForm] = useState({
+    category_id: '',
+    category_name: '',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  });
+
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
   useEffect(() => {
@@ -54,13 +61,6 @@ const CategoryForm = ({ route }) => {
     { category_id: categoryID },
     { enabled: categoryID !== '' },
   );
-
-  // initial form state
-  const [categoryForm, setCategoryForm] = useState({
-    category_id: '',
-    category_name: '',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-  });
 
   useEffect(() => {
     if (getCategory.data) {
@@ -104,15 +104,11 @@ const CategoryForm = ({ route }) => {
   };
 
   const isFormLoading = () => getCategory.isLoading;
+  useError([getCategory, createCategory, updateCategory]);
 
   return (
     <BaseScreen
       isLoading={isFormLoading()}
-      errorToast={renderErrorsToast([
-        getCategory,
-        createCategory,
-        updateCategory,
-      ])}
       headerProps={{
         allowBack: true,
         centerComponent: (

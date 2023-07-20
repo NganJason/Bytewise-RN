@@ -31,6 +31,7 @@ import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useValidation } from '../../_shared/hooks/validation';
+import { useError } from '../../_shared/hooks/error';
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -174,6 +175,8 @@ const BudgetForm = ({ route }) => {
     });
     return items;
   };
+
+  useError([getBudget, setBudget]);
 
   return (
     <BaseScreen

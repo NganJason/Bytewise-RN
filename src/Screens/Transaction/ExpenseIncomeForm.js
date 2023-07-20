@@ -31,6 +31,7 @@ import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util/date';
 import { EmptyContent } from '../../Components/Common';
 import { useGetTransactionHook } from '../../_shared/hooks/transaction';
 import { useValidation } from '../../_shared/hooks/validation';
+import { useError } from '../../_shared/hooks/error';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -218,6 +219,13 @@ const ExpenseIncomeForm = ({
     );
   }, [transactionForm]);
 
+  useError([
+    getTransaction,
+    getAccounts,
+    getCategories,
+    createTransaction,
+    updateTransaction,
+  ]);
   return (
     <BaseLoadableView isLoading={isFormLoading()}>
       <KeyboardAwareScrollView

@@ -22,6 +22,7 @@ import { BaseLoadableView, BaseRow } from '../../Components/View';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useNavigation } from '@react-navigation/native';
+import { useError } from '../../_shared/hooks/error';
 
 const CategoryOverview = ({ activeDate = new Date() }) => {
   const { theme } = useTheme();
@@ -41,7 +42,35 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
   const onCategoryTypeChange = type => {
     setCategoryType(type);
   };
+
   const getCategoriesQuery = useGetCategories({});
+
+  const aggrTransactionsByTypeQuery = useAggrTransactions({
+    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
+    },
+  });
+
+  const aggrTransactionsByCategoryQuery = useAggrTransactions(
+    {
+      category_ids: getCategoriesQuery.data?.categories?.map(
+        category => category.category_id,
+      ),
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+    },
+    {
+      enabled:
+        (!getCategoriesQuery.isLoading &&
+          !getCategoriesQuery.isError &&
+          getCategoriesQuery.data?.categories?.length !== 0) ||
+        false,
+    },
+  );
 
   const renderRows = () => {
     let rows = [];
@@ -82,34 +111,6 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
     return rows;
   };
 
-  const aggrTransactionsByTypeQuery = useAggrTransactions({
-    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-  });
-
-  const aggrTransactionsByCategoryQuery = useAggrTransactions(
-    {
-      category_ids: getCategoriesQuery.data?.categories?.map(
-        category => category.category_id,
-      ),
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-    },
-    {
-      enabled:
-        (!getCategoriesQuery.isLoading &&
-          !getCategoriesQuery.isError &&
-          getCategoriesQuery.data?.categories?.length !== 0) ||
-        false,
-    },
-  );
-
-  // TODO: Add back later
   const isScreenLoading = () => {
     return (
       getCategoriesQuery.isLoading ||
@@ -117,6 +118,12 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
       aggrTransactionsByCategoryQuery.isLoading
     );
   };
+
+  useError([
+    getCategoriesQuery,
+    aggrTransactionsByTypeQuery,
+    aggrTransactionsByCategoryQuery,
+  ]);
 
   return (
     <View style={styles.screen}>

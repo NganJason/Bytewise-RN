@@ -15,11 +15,11 @@ import { signupHero } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { AuthContext } from '../../_shared/context/AuthContext';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import { validateSignUp } from '../../_shared/validator/signup';
 import { useValidation } from '../../_shared/hooks/validation';
+import { useError } from '../../_shared/hooks/error';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
@@ -59,8 +59,11 @@ const SignupScreen = () => {
     signup(signupForm);
   };
 
+  const signupError = getSignupError();
+  useError([signupError]);
+
   return (
-    <BaseScreen errorToast={renderErrorsToast([getSignupError()])}>
+    <BaseScreen>
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}

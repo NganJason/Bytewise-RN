@@ -16,7 +16,6 @@ import {
 } from '../../_shared/util/date';
 import ROUTES from '../../_shared/constant/routes';
 import { useAggrTransactions } from '../../_shared/query';
-import { renderErrorsToast } from '../../_shared/util/toast';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -25,6 +24,7 @@ import {
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
+import { useError } from '../../_shared/hooks/error';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -97,13 +97,14 @@ const TransactionScreen = ({ navigation }) => {
     return rows;
   };
 
+  useError([getTransactions, aggrTransactionsQuery]);
+
   return (
     <BaseScreen
       isLoading={isScreenLoading()}
       allowLoadable={false}
       backgroundColor={theme.colors.color11}
       enablePadding={false}
-      errorToast={renderErrorsToast([getTransactions, aggrTransactionsQuery])}
       headerProps={{
         allowBack: false,
         allowDrawer: true,

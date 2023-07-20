@@ -48,7 +48,7 @@ const AccountForm = ({ route }) => {
   const [accountForm, setAccountForm] = useState({
     account_name: '',
     account_type: accountType,
-    balance: 0,
+    balance: null,
   });
 
   const [formErrors, setFormErrors] = useState({});
