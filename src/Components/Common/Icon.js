@@ -15,7 +15,7 @@ export const BackIcon = () => {
       iconName="arrow-left"
       iconType="feather"
       color={theme.colors.color8}
-      align="left"
+      align="flex-start"
     />
   );
 };
@@ -33,7 +33,7 @@ export const DrawerIcon = () => {
         iconName="menu"
         iconType="entypo"
         color={theme.colors.color8}
-        align="left"
+        align="flex-start"
       />
     </View>
   );

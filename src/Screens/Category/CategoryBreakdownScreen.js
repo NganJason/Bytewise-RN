@@ -150,7 +150,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             type="clear"
             iconName="edit"
             iconType="feather"
-            align="left"
+            align="flex-start"
             color={theme.colors.color1}
             onPress={() => {
               navigation.navigate(ROUTES.categoryForm, {

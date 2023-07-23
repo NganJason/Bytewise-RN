@@ -107,7 +107,7 @@ const getStyles = (theme, screenHeight) =>
       marginTop: theme.spacing.md,
       paddingHorizontal: 24,
       flexDirection: 'row',
-      justifyContent: 'left',
+      justifyContent: 'flex-start',
       alignItems: 'center',
     },
     body: {
