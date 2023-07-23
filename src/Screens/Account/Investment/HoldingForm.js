@@ -26,6 +26,7 @@ import {
   useGetHolding,
   useSearchSecurities,
 } from '../../../_shared/query/investment';
+import { useError } from '../../../_shared/hooks/error';
 import { validateHolding } from '../../../_shared/validator/investment';
 
 const scrollableTabs = [
@@ -56,8 +57,8 @@ const HoldingForm = ({ route }) => {
         tab.Name === 'Custom symbol'
           ? HOLDING_TYPE_CUSTOM
           : HOLDING_TYPE_DEFAULT,
-      total_cost: null,
-      latest_value: null,
+      total_cost: 0,
+      latest_value: 0,
     });
   };
 
@@ -65,8 +66,8 @@ const HoldingForm = ({ route }) => {
     account_id: accountID,
     symbol: '',
     holding_type: HOLDING_TYPE_DEFAULT,
-    total_cost: null,
-    latest_value: null,
+    total_cost: 0,
+    latest_value: 0,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -137,12 +138,21 @@ const HoldingForm = ({ route }) => {
       return;
     }
 
+    let form = { ...holdingForm };
+    if (holdingForm.holding_type === HOLDING_TYPE_DEFAULT) {
+      form.total_cost = null;
+      form.latest_value = null;
+    }
+
     if (isAddHolding()) {
-      createHolding.mutate(holdingForm);
+      createHolding.mutate(form);
     } else {
-      updateHolding.mutate(holdingForm);
+      console.log(form);
+      updateHolding.mutate(form);
     }
   };
+
+  useError([createHolding, updateHolding]);
 
   return (
     <BaseScreen

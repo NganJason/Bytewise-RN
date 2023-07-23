@@ -110,7 +110,7 @@ const AccountScreen = () => {
                 : theme.colors.lightRed
             }>
             <BaseText text3 color={theme.colors.white}>
-              {capitalize(item.account_name)}
+              {item.account_name}
             </BaseText>
             <AmountText
               text2

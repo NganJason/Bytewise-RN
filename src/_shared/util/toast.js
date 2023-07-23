@@ -1,4 +1,5 @@
 import { BaseToast } from '../../Components/View';
+import { defaultErrorText1, defaultErrorText2 } from '../constant/message';
 
 export const toastError = (queryErrors = []) => {
   let err = getErrors(queryErrors);
@@ -6,13 +7,25 @@ export const toastError = (queryErrors = []) => {
     return;
   }
 
-  const { error = { message: '' }, reset = function () {} } = err;
+  const { error = { message: '', code: 0 }, reset = function () {} } =
+    err || {};
 
-  BaseToast.show({
-    type: 'error',
-    text1: error.message,
-    onHIde: reset,
-  });
+  console.log('-----', error, error.code);
+
+  if (error.message === '') {
+    BaseToast.show({
+      type: 'error',
+      text1: defaultErrorText1,
+      text2: defaultErrorText2,
+      onHide: reset,
+    });
+  } else {
+    BaseToast.show({
+      type: 'error',
+      text1: error.message,
+      onHide: reset,
+    });
+  }
 };
 
 export const getErrors = (queryErrors = []) => {

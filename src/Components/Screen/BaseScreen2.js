@@ -24,6 +24,7 @@ const BaseScreen2 = ({
     iconColor: '',
     color: '',
     onPress: function () {},
+    marginBottom: 0,
   },
   errorToast = {
     show: false,
@@ -83,7 +84,10 @@ const BaseScreen2 = ({
             }
             color={fabProps.color}
             onPress={fabProps.onPress}
-            style={styles.fab}
+            style={[
+              styles.fab,
+              fabProps.marginBottom && { bottom: fabProps.marginBottom },
+            ]}
           />
         )}
         <BaseToast />
@@ -130,6 +134,8 @@ const getStyles = (theme, screenHeight) =>
       shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 4,
+      position: 'absolute',
+      bottom: 0,
     },
   });
 

@@ -38,6 +38,10 @@ const NOTE_SCROLL_HEIGHT = 300;
 
 const ExpenseIncomeForm = ({
   transactionID = '',
+  account = {
+    account_id: '',
+    account_name: '',
+  },
   transactionType = TRANSACTION_TYPE_EXPENSE,
   onTransactionTypeChange = function () {},
 }) => {
@@ -60,8 +64,8 @@ const ExpenseIncomeForm = ({
       category_name: '',
     },
     account: {
-      account_id: '',
-      account_name: '',
+      account_id: account.account_id,
+      account_name: account.account_name,
     },
   });
 

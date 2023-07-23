@@ -16,6 +16,7 @@ const BaseScreen = ({
     iconColor: '',
     color: '',
     onPress: function () {},
+    marginBottom: 0,
   },
   headerProps = {
     allowBack: false,
@@ -116,7 +117,10 @@ const BaseScreen = ({
               }
               color={fabProps.color}
               onPress={fabProps.onPress}
-              style={styles.fab}
+              style={[
+                styles.fab,
+                fabProps.marginBottom && { bottom: fabProps.marginBottom },
+              ]}
             />
           )}
         </>
@@ -171,6 +175,9 @@ const getStyles = theme =>
       shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 4,
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
     },
   });
 

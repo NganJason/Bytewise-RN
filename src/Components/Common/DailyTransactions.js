@@ -102,7 +102,7 @@ const DailyTransactions = ({
                     style={styles.account}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {capitalize(t?.account?.account_name || '-')}
+                    {t?.account?.account_name || '-'}
                   </BaseText>
                 </View>
                 <AmountText

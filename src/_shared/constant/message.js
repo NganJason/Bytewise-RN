@@ -12,3 +12,6 @@ export const annualBudgetDesc = {
   title: 'Annual budget',
   text: 'Budget allocated for the whole year.\n\nEg: Travel, Beauty & Self-Care.',
 };
+
+export const defaultErrorText1 = 'Ops, something went wrong.';
+export const defaultErrorText2 = 'Please try again later.';

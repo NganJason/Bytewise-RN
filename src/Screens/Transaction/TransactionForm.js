@@ -23,19 +23,22 @@ const scrollableTabs = [
     iconName: 'credit-card',
     iconType: 'feather',
   },
-  {
-    name: 'Transfer',
-    val: TRANSACTION_TYPE_TRANSFER,
-    iconName: 'repeat',
-    iconType: 'feather',
-  },
+  // {
+  //   name: 'Transfer',
+  //   val: TRANSACTION_TYPE_TRANSFER,
+  //   iconName: 'repeat',
+  //   iconType: 'feather',
+  // },
 ];
 
 const TransactionForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const transactionID = route.params?.transaction_id || '';
+  const {
+    transaction_id: transactionID = '',
+    account = { account_id: '', account_name: '' },
+  } = route.params || {};
   const isAddTransaction = () => {
     return transactionID === '';
   };
@@ -76,6 +79,7 @@ const TransactionForm = ({ route }) => {
           ) : (
             <ExpenseIncomeForm
               transactionID={transactionID}
+              account={account}
               transactionType={activeTab.val}
               onTransactionTypeChange={onTransactionTypeChange}
             />

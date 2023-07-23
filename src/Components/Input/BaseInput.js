@@ -27,6 +27,7 @@ const BaseInput = forwardRef(
       maxLength = null,
       secureTextEntry = false,
       errorMessage = '',
+      disabled = false,
     },
     ref,
   ) => {
@@ -74,7 +75,7 @@ const BaseInput = forwardRef(
         autoFocus={autoFocus}
         containerStyle={{ ...styles.container, ...containerStyle }}
         clearButtonMode={clearButtonMode}
-        inputStyle={styles.input}
+        inputStyle={[styles.input, disabled && styles.inputDisabled]}
         pointerEvents={pointerEvents}
         renderErrorMessage={true}
         maxLength={maxLength}
@@ -100,6 +101,9 @@ const getStyles = theme =>
     input: {
       ...theme.fontStyles.text2,
       color: theme.colors.color6,
+    },
+    inputDisabled: {
+      color: theme.colors.color8,
     },
     container: {
       paddingHorizontal: 0,

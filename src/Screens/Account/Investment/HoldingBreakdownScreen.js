@@ -66,8 +66,13 @@ const HoldingBreakdownScreen = ({ route }) => {
     if (rows.length === 0) {
       return (
         <EmptyContent
-          item={EmptyContentConfig.investment}
-          route={ROUTES.holdingForm}
+          item={EmptyContentConfig.unit}
+          route={ROUTES.lotForm}
+          routeParam={{
+            account_id: accountID,
+            holding_id: holdingID,
+            symbol: symbol,
+          }}
           marginVertical="30%"
         />
       );
@@ -147,7 +152,7 @@ const HoldingBreakdownScreen = ({ route }) => {
       <>
         <BaseText h3>History</BaseText>
         <BaseButton
-          title="Add lots"
+          title="Add units"
           type="clear"
           align="flex-start"
           size="sm"

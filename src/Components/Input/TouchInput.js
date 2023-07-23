@@ -16,6 +16,7 @@ const TouchInput = ({
         pointerEvents="none"
         value={value}
         readOnly
+        disabled={disabled}
         {...props}
       />
     </TouchableOpacity>
