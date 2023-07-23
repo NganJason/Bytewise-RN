@@ -229,22 +229,24 @@ const AccountBreakdownScreen = ({ route }) => {
           ? theme.colors.color4
           : theme.colors.color13,
       }}
-      fabProps={{
-        show: true,
-        placement: 'right',
-        iconName: 'plus',
-        iconType: 'entypo',
-        iconColor: theme.colors.white,
-        color: theme.colors.color1,
-        onPress: () =>
-          navigation.navigate(ROUTES.transactionForm, {
-            account: {
-              account_id: accountID,
-              account_name: getAccount?.data?.account?.account_name || '',
-            },
-          }),
-        marginBottom: screenHeight * 0.02,
-      }}>
+      fabProps={
+        accountType !== ACCOUNT_TYPE_LOAN && {
+          show: true,
+          placement: 'right',
+          iconName: 'plus',
+          iconType: 'entypo',
+          iconColor: theme.colors.white,
+          color: theme.colors.color1,
+          onPress: () =>
+            navigation.navigate(ROUTES.transactionForm, {
+              account: {
+                account_id: accountID,
+                account_name: getAccount?.data?.account?.account_name || '',
+              },
+            }),
+          marginBottom: screenHeight * 0.02,
+        }
+      }>
       {renderContent()}
     </BaseScreen2>
   );

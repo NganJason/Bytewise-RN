@@ -26,6 +26,7 @@ export const useAggrTransactions = (
       queryKeys.transactionsAggr,
       {
         transaction_time: { gte, lte },
+        budget_ids,
         category_ids,
         transaction_types,
       },

@@ -31,6 +31,9 @@ export const useSetBudget = (opts = {}) => {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.budgets],
       });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.transactionsAggr],
+      });
       opts.onSuccess && opts.onSuccess();
     },
   });
