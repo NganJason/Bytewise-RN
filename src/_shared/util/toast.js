@@ -1,5 +1,8 @@
 import { BaseToast } from '../../Components/View';
+import { ErrCode } from '../constant/errcode';
 import { defaultErrorText1, defaultErrorText2 } from '../constant/message';
+
+const serverError = [ErrCode.ErrInternalServer];
 
 export const toastError = (queryErrors = []) => {
   let err = getErrors(queryErrors);
@@ -10,9 +13,7 @@ export const toastError = (queryErrors = []) => {
   const { error = { message: '', code: 0 }, reset = function () {} } =
     err || {};
 
-  console.log('-----', error, error.code);
-
-  if (error.message === '') {
+  if (error.message === '' || serverError.includes(error.code)) {
     BaseToast.show({
       type: 'error',
       text1: defaultErrorText1,

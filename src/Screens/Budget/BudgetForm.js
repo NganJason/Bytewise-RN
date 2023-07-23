@@ -41,12 +41,12 @@ const BudgetForm = ({ route }) => {
   const {
     budget_id: budgetID = '',
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
-  } = route.params;
+    target_date_string: targetDateString = '',
+  } = route?.params || {};
   const isAddBudget = () => {
     return budgetID === '';
   };
 
-  const targetDateString = route.params?.target_date_string || '';
   const targetDate = useMemo(() => {
     if (targetDateString !== '') {
       return new Date(targetDateString);

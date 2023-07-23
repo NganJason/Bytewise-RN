@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import {
@@ -28,14 +28,18 @@ import {
 } from '../../Components/View';
 import { useValidation } from '../../_shared/hooks/validation';
 import { validateAccount } from '../../_shared/validator/account';
+import ROUTES from '../../_shared/constant/routes';
+import { useError } from '../../_shared/hooks/error';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const accountID = route.params?.account_id || '';
-  const accountType = route.params?.account_type || ACCOUNT_TYPE_BANK_ACCOUNT;
+  const {
+    account_id: accountID = '',
+    account_type: accountType = ACCOUNT_TYPE_BANK_ACCOUNT,
+  } = route?.params || {};
   const isAddAccount = () => {
     return accountID === '';
   };
@@ -65,11 +69,36 @@ const AccountForm = ({ route }) => {
   );
 
   const createAccount = useCreateAccount({
-    onSuccess: () => {
-      // Go back twice for creation flow
-      // To skip account selection page
-      navigation.goBack();
-      navigation.goBack();
+    onSuccess: resp => {
+      const { account_id: newAccountID = '' } = resp?.account || [];
+
+      if (
+        accountForm.account_type === ACCOUNT_TYPE_INVESTMENT &&
+        newAccountID !== ''
+      ) {
+        const navigationStack = navigation.getState().routes;
+        // Pop accountForm and accountSelection screen
+        navigationStack.pop();
+        navigationStack.pop();
+
+        navigation.dispatch(
+          CommonActions.reset({
+            index: navigationStack.length,
+            routes: [
+              ...navigationStack,
+              {
+                name: ROUTES.investmentBreakdown,
+                params: { account_id: newAccountID },
+              },
+            ],
+          }),
+        );
+      } else {
+        // Go back twice for creation flow
+        // To skip account selection page
+        navigation.goBack();
+        navigation.goBack();
+      }
     },
   });
 
@@ -158,6 +187,8 @@ const AccountForm = ({ route }) => {
   const canSetBalance = () => {
     return accountForm.account_type !== ACCOUNT_TYPE_INVESTMENT;
   };
+
+  useError([getAccount, createAccount, updateAccount]);
 
   return (
     <BaseScreen

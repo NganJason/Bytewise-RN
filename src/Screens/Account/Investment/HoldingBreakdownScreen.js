@@ -17,7 +17,6 @@ import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
 import { useGetHolding, useGetLots } from '../../../_shared/query/investment';
-import { getTotalInvestmentCost } from '../../../_shared/util/investment';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();

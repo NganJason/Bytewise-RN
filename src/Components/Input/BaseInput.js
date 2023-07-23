@@ -1,13 +1,18 @@
 import { useState, forwardRef } from 'react';
 import { useTheme, Input } from '@rneui/themed';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import BaseText from '../Text/BaseText';
+import { InfoToolTip } from '../Common';
 
 const BaseInput = forwardRef(
   (
     {
       label = '',
+      desc = {
+        title: '',
+        text: '',
+      },
       value = '',
       placeholder = '',
       keyboardType = 'default',
@@ -55,9 +60,14 @@ const BaseInput = forwardRef(
         placeholder={placeholder}
         label={
           label !== '' && (
-            <BaseText h4 style={labelStyle}>
-              {label}
-            </BaseText>
+            <View style={styles.label}>
+              <BaseText h4 style={labelStyle} margin={{ right: 6 }}>
+                {label}
+              </BaseText>
+              {desc.text !== '' && (
+                <InfoToolTip title={desc.title} message={desc.text} />
+              )}
+            </View>
           )
         }
         value={value}
@@ -97,6 +107,10 @@ const getStyles = theme =>
     blur: {
       borderBottomColor: theme.colors.color8,
       borderBottomWidth: 1,
+    },
+    label: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     input: {
       ...theme.fontStyles.text2,

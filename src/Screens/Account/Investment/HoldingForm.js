@@ -28,6 +28,7 @@ import {
 } from '../../../_shared/query/investment';
 import { useError } from '../../../_shared/hooks/error';
 import { validateHolding } from '../../../_shared/validator/investment';
+import { toolTipMessage } from '../../../_shared/constant/message';
 
 const scrollableTabs = [
   { name: 'Common stocks', iconName: 'line-graph', iconType: 'entypo' },
@@ -39,7 +40,7 @@ const HoldingForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { account_id: accountID = '', holding_id: holdingID = '' } =
-    route.params || {};
+    route?.params || {};
   const isAddHolding = () => {
     return holdingID === '';
   };
@@ -183,6 +184,7 @@ const HoldingForm = ({ route }) => {
         {activeTab.name === scrollableTabs[0].name ? (
           <SearchBottomSheetInput
             label="Symbol"
+            desc={toolTipMessage.symbolDesc}
             itemLabel="symbol"
             onChangeText={onDefaultSymbolChange}
             useQuery={useSearchSecurities}
@@ -207,6 +209,7 @@ const HoldingForm = ({ route }) => {
           <View>
             <BaseInput
               label="Custom symbol"
+              desc={toolTipMessage.customSymbolDesc}
               value={holdingForm.symbol}
               onChangeText={onCustomSymbolChange}
               clearButtonMode="always"
@@ -215,7 +218,8 @@ const HoldingForm = ({ route }) => {
             />
 
             <BaseCurrencyInput
-              label="Latest price"
+              label="Latest total market value"
+              desc={toolTipMessage.totalLatestMarketValueDesc}
               value={holdingForm.latest_value}
               onChangeText={onLatestValueChange}
               errorMessage={showValidation && formErrors.budget_amount}
@@ -223,6 +227,7 @@ const HoldingForm = ({ route }) => {
 
             <BaseCurrencyInput
               label="Total invested amount"
+              desc={toolTipMessage.totalInvestedAmount}
               value={holdingForm.total_cost}
               onChangeText={onTotalCostChange}
               errorMessage={showValidation && formErrors.budget_amount}

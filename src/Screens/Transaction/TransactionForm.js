@@ -38,7 +38,7 @@ const TransactionForm = ({ route }) => {
   const {
     transaction_id: transactionID = '',
     account = { account_id: '', account_name: '' },
-  } = route.params || {};
+  } = route?.params || {};
   const isAddTransaction = () => {
     return transactionID === '';
   };

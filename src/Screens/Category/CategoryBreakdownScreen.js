@@ -40,14 +40,13 @@ const CategoryBreakdownScreen = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  // cannot pass date object as param
-  const activeTimestamp = route.params?.active_timestamp || TODAY.valueOf();
   const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
 
   const {
+    active_timestamp: activeTimestamp = TODAY.valueOf(),
     category_id: categoryID = '',
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
-  } = route.params;
+  } = route?.params || {};
   const getCategory = useGetCategory({ category_id: categoryID });
 
   const [timeRange, setTimeRange] = useState(

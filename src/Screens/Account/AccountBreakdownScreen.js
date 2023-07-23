@@ -47,7 +47,7 @@ const AccountBreakdownScreen = ({ route }) => {
   const {
     account_id: accountID = '',
     account_type: accountType = ACCOUNT_TYPE_CASH,
-  } = route.params;
+  } = route?.params || {};
 
   const [activeDate, setActiveDate] = useState(new Date());
   const [timeRange, setTimeRange] = useState(

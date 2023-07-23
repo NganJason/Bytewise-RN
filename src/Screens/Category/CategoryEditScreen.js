@@ -27,7 +27,7 @@ const CategoryEditScreen = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { category_type = TRANSACTION_TYPE_EXPENSE } = route.params || {};
+  const { category_type = TRANSACTION_TYPE_EXPENSE } = route?.params || {};
 
   const getCategoriesQuery = useGetCategories({});
 

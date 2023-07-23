@@ -6,9 +6,9 @@ export const useCreateAccount = (opts = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation(createAccount, {
-    onSuccess: () => {
+    onSuccess: resp => {
       queryClient.invalidateQueries([queryKeys.accounts]);
-      opts.onSuccess && opts.onSuccess();
+      opts.onSuccess && opts.onSuccess(resp);
     },
   });
 };

@@ -40,7 +40,7 @@ const CategoryForm = ({ route }) => {
   const {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
     category_id: categoryID = '',
-  } = route.params || {};
+  } = route?.params || {};
   const isAddCategory = () => {
     return categoryID === '';
   };

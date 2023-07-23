@@ -10,7 +10,7 @@ import {
   BUDGET_TYPE_MONTHLY,
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { annualBudgetDesc } from '../../_shared/constant/message';
+import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { useError } from '../../_shared/hooks/error';
@@ -174,12 +174,12 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
           <View style={styles.container}>
             <View style={styles.title}>
-              <BaseText h3 margin={{ right: 6 }}>
+              <BaseText h3 margin={{ right: 8 }}>
                 Annual
               </BaseText>
               <InfoToolTip
-                title={annualBudgetDesc.title}
-                message={annualBudgetDesc.text}
+                title={toolTipMessage.annualBudgetDesc.title}
+                message={toolTipMessage.annualBudgetDesc.text}
               />
             </View>
             <BaseLoadableView isLoading={isScreenLoading()}>

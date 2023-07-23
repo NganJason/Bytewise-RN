@@ -39,17 +39,17 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const queryClient = new QueryClient();
 
-const WAIT_TIME_FOR_SPLASH_SCREEN = 500;
+const WAIT_TIME_FOR_SPLASH_SCREEN = 2000;
 
 function Main() {
   const { isLogin } = useContext(AuthContext);
 
   const [isAppReady, setIsAppReady] = useState(false);
-  const [showSplashScreen, setShowSplashScreen] = useState(false);
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowSplashScreen(true);
+      setShowSplashScreen(false);
     }, WAIT_TIME_FOR_SPLASH_SCREEN);
 
     async function init() {
@@ -98,14 +98,13 @@ function Main() {
         // TODO: Handle error
         console.log(err);
       } finally {
-        clearTimeout(timer);
-        setShowSplashScreen(false);
+        // clearTimeout(timer);
+        // setShowSplashScreen(false);
         setIsAppReady(true);
       }
     }
 
     init();
-
     return () => {
       clearTimeout(timer);
     };
