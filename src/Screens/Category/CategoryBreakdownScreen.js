@@ -40,8 +40,6 @@ const CategoryBreakdownScreen = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
-
   const {
     active_timestamp: activeTimestamp = TODAY.valueOf(),
     category_id: categoryID = '',
@@ -49,6 +47,7 @@ const CategoryBreakdownScreen = ({ route }) => {
   } = route?.params || {};
   const getCategory = useGetCategory({ category_id: categoryID });
 
+  const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );

@@ -4,7 +4,7 @@ const ROUTES = {
 
   homeWithDrawer: 'Home with drawer',
   home: 'Home',
-  overview: 'Overview',
+  overview: 'Breakdown',
 
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',
