@@ -2,11 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BaseButton,
   BaseCurrencyInput,
   BaseInput,
+  BaseKeyboardAwareScrollView,
   BaseRow,
   BaseScreen,
   BaseScrollableTab,
@@ -56,7 +56,7 @@ const HoldingForm = ({ route }) => {
         tab.Name === 'Custom symbol'
           ? HOLDING_TYPE_CUSTOM
           : HOLDING_TYPE_DEFAULT,
-      avg_cost: null,
+      total_cost: null,
       latest_value: null,
     });
   };
@@ -65,8 +65,8 @@ const HoldingForm = ({ route }) => {
     account_id: accountID,
     symbol: '',
     holding_type: HOLDING_TYPE_DEFAULT,
+    total_cost: null,
     latest_value: null,
-    avg_cost: null,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -123,10 +123,10 @@ const HoldingForm = ({ route }) => {
     });
   };
 
-  const onAvgCostChange = e => {
+  const onTotalCostChange = e => {
     setHoldingForm({
       ...holdingForm,
-      avg_cost: e,
+      total_cost: e,
     });
   };
 
@@ -164,7 +164,7 @@ const HoldingForm = ({ route }) => {
           disableNonActive={!isAddHolding()}
         />
       </View>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -213,8 +213,8 @@ const HoldingForm = ({ route }) => {
 
             <BaseCurrencyInput
               label="Total invested amount"
-              value={holdingForm.avg_cost}
-              onChangeText={onAvgCostChange}
+              value={holdingForm.total_cost}
+              onChangeText={onTotalCostChange}
               errorMessage={showValidation && formErrors.budget_amount}
             />
           </View>
@@ -229,7 +229,7 @@ const HoldingForm = ({ route }) => {
             loading={createHolding.isLoading || updateHolding.isLoading}
           />
         </View>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

@@ -15,7 +15,6 @@ import {
   ACCOUNT_TYPE_CREDIT_CARD,
   ACCOUNT_TYPE_INVESTMENT,
   ACCOUNT_TYPE_LOAN,
-  ACCOUNT_TYPE_MORTGAGE,
   EQUITY_TYPE_ASSET,
   EQUITY_TYPE_DEBT,
 } from '../../_shared/apis/enum';
@@ -27,11 +26,7 @@ const assets = [
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
 ];
-const debts = [
-  ACCOUNT_TYPE_CREDIT_CARD,
-  ACCOUNT_TYPE_LOAN,
-  ACCOUNT_TYPE_MORTGAGE,
-];
+const debts = [ACCOUNT_TYPE_CREDIT_CARD, ACCOUNT_TYPE_LOAN];
 
 const AccountSelectionScreen = () => {
   const { theme } = useTheme();

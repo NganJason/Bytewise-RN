@@ -39,6 +39,7 @@ import {
   BaseCard,
   BaseRow,
   BaseScrollableTab,
+  BaseKeyboardAwareScrollView,
 } from './View';
 
 // Common
@@ -84,6 +85,7 @@ export {
   BaseToast,
   BaseScrollView,
   BaseScrollableTab,
+  BaseKeyboardAwareScrollView,
   Category,
   BaseListItem,
   BudgetUsage,

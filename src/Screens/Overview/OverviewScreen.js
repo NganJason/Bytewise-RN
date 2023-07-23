@@ -7,6 +7,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { BaseScrollableTab } from '../../Components/View';
 import CategoryOverview from '../Category/CategoryOverview';
 import BudgetOverview from '../Budget/BudgetOverview';
+import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 
 const TODAY = new Date();
 const scrollableTabs = [
@@ -19,20 +20,27 @@ const OverviewScreen = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const [activeDate, setActiveDate] = useState(TODAY);
+  const onDateMove = newDate => {
+    setActiveDate(newDate);
+  };
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
   const onTabChange = tab => {
     setActiveTab(tab);
   };
 
-  const onDateMove = newDate => {
-    setActiveDate(newDate);
-  };
+  // For category screen only
+  const [categoryType, setCategoryType] = useState(TRANSACTION_TYPE_EXPENSE);
 
   const getScreen = () => {
     switch (activeTab.name) {
       case 'Category':
-        return <CategoryOverview activeDate={activeDate} />;
+        return (
+          <CategoryOverview
+            activeDate={activeDate}
+            setTransactionType={setCategoryType}
+          />
+        );
       case 'Budget':
         return <BudgetOverview activeDate={activeDate} />;
       default:
@@ -43,7 +51,9 @@ const OverviewScreen = ({ navigation }) => {
   const onFabPress = () => {
     switch (activeTab.name) {
       case 'Category':
-        navigation.navigate(ROUTES.categoryForm);
+        navigation.navigate(ROUTES.categoryForm, {
+          category_type: categoryType,
+        });
         break;
       case 'Budget':
         navigation.navigate(ROUTES.budgetForm);
@@ -85,7 +95,6 @@ const OverviewScreen = ({ navigation }) => {
             onTabChange={onTabChange}
           />
         </View>
-
         <View style={styles.body}>{getScreen()}</View>
       </>
     </BaseScreen>

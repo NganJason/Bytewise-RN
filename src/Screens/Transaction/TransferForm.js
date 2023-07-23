@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon, useTheme } from '@rneui/themed';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 
 import {
   BaseBottomSheet,
   BaseButton,
   BaseCurrencyInput,
+  BaseKeyboardAwareScrollView,
   BaseLoadableView,
   EmptyContent,
   TouchInput,
@@ -145,7 +145,7 @@ const TransferForm = ({ transactionID = '' }) => {
 
   return (
     <BaseLoadableView isLoading={isFormLoading()}>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -214,7 +214,7 @@ const TransferForm = ({ transactionID = '' }) => {
           onPress={onFormSubmit}
           loading={isFormButtonLoading()}
         />
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseLoadableView>
   );
 };

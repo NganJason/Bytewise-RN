@@ -9,13 +9,13 @@ import {
   BaseText,
   BaseImage,
   LinkText,
+  BaseKeyboardAwareScrollView,
 } from '../../Components';
 
 import { signupHero } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
 import { AuthContext } from '../../_shared/context/AuthContext';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import { validateSignUp } from '../../_shared/validator/signup';
 import { useValidation } from '../../_shared/hooks/validation';
@@ -30,8 +30,8 @@ const SignupScreen = () => {
   const { validate, showValidation } = useValidation();
 
   const [signupForm, setSignupForm] = useState({
-    username: 'Jon',
-    password: 'Hello123',
+    username: '',
+    password: '',
   });
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const SignupScreen = () => {
 
   return (
     <BaseScreen>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -132,7 +132,7 @@ const SignupScreen = () => {
             </LinkText>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

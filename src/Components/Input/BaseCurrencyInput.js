@@ -36,7 +36,7 @@ const BaseCurrencyInput = forwardRef(
       e = e.replace(CURRENCY, '');
       e = e.replace(' ', '');
 
-      if (!isNaN(e)) {
+      if (!isNaN(e) || e === '-') {
         onChangeText(Number(e));
         setInputStr(e);
       }

@@ -12,6 +12,7 @@ const EmptyContent = ({
     image: paper,
   },
   route = '',
+  routeParam = {},
   onRedirect = function () {},
   marginVertical = '0%',
   height = '',
@@ -23,7 +24,7 @@ const EmptyContent = ({
 
   const onPress = () => {
     onRedirect();
-    navigation.navigate(route);
+    navigation.navigate(route, routeParam);
   };
 
   return (

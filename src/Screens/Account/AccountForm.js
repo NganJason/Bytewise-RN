@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BaseBottomSheet,
   BaseButton,
@@ -23,7 +22,10 @@ import {
   useCreateAccount,
   useUpdateAccount,
 } from '../../_shared/mutations/account';
-import { BaseOverlay } from '../../Components/View';
+import {
+  BaseKeyboardAwareScrollView,
+  BaseOverlay,
+} from '../../Components/View';
 import { useValidation } from '../../_shared/hooks/validation';
 import { validateAccount } from '../../_shared/validator/account';
 
@@ -48,7 +50,7 @@ const AccountForm = ({ route }) => {
   const [accountForm, setAccountForm] = useState({
     account_name: '',
     account_type: accountType,
-    balance: null,
+    balance: 0,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -170,7 +172,7 @@ const AccountForm = ({ route }) => {
           </View>
         ),
       }}>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -246,7 +248,7 @@ const AccountForm = ({ route }) => {
             />
           </View>
         </BaseOverlay>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

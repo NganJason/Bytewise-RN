@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 
 import {
@@ -12,6 +11,7 @@ import {
   BaseBottomSheet,
   TouchInput,
   BaseLoadableView,
+  BaseKeyboardAwareScrollView,
 } from '../../Components';
 
 import {
@@ -205,7 +205,7 @@ const ExpenseIncomeForm = ({
 
   const getAccountOptions = () => {
     let { accounts = [] } = getAccounts?.data || {};
-    accounts.filter(d => d.account_type !== ACCOUNT_TYPE_INVESTMENT);
+    accounts = accounts.filter(d => d.account_type !== ACCOUNT_TYPE_INVESTMENT);
     return accounts;
   };
 
@@ -226,9 +226,10 @@ const ExpenseIncomeForm = ({
     createTransaction,
     updateTransaction,
   ]);
+
   return (
-    <BaseLoadableView isLoading={isFormLoading()}>
-      <KeyboardAwareScrollView
+    <BaseLoadableView isLoading={isFormLoading()} scrollable={true}>
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         extraHeight={scrollHeight}
         enableOnAndroid={true}
@@ -279,7 +280,6 @@ const ExpenseIncomeForm = ({
           label="Amount"
           value={transactionForm.amount}
           onChangeText={onAmountChange}
-          autoFocus={isAddTransaction()}
           onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           errorMessage={showValidation && formErrors.amount}
         />
@@ -358,7 +358,7 @@ const ExpenseIncomeForm = ({
           onPress={onFormSubmit}
           loading={isFormButtonLoading()}
         />
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseLoadableView>
   );
 };

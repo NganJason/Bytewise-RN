@@ -16,7 +16,7 @@ const HoldingRow = ({
   symbol = '',
   total_shares = 0,
   latest_value = 0,
-  avg_cost = 0,
+  total_cost = 0,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -59,7 +59,7 @@ const HoldingRow = ({
 
         <EarningText
           currVal={latest_value}
-          initialVal={avg_cost}
+          initialVal={total_cost}
           text5
           style={styles.subRow}
         />

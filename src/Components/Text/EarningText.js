@@ -6,7 +6,7 @@ const EarningText = ({ currVal = 0, initialVal = 0, ...props }) => {
   };
 
   const getEarningPercentage = () => {
-    let percentage = getEarning() / initialVal;
+    let percentage = (getEarning() / initialVal) * 100;
     if (isNaN(percentage)) {
       return 0;
     }

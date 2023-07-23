@@ -12,11 +12,15 @@ import {
   BaseLoadableView,
   BaseButton,
 } from '../../Components';
-import { coin, coinsack } from '../../_shared/constant/asset';
+import { card, coin, coinsack } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import useDimension from '../../_shared/hooks/dimension';
-import { ACCOUNT_TYPES, ACCOUNT_TYPE_CASH } from '../../_shared/apis/enum';
+import {
+  ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CASH,
+  ACCOUNT_TYPE_CREDIT_CARD,
+} from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount } from '../../_shared/query/account';
 import {
@@ -24,11 +28,12 @@ import {
   getUnixRangeOfMonth,
   getYear,
 } from '../../_shared/util/date';
-import { isAccountTypeAsset } from '../../_shared/util/account';
+import { ACCOUNT_TYPE_LOAN } from '../../_shared/apis/enum';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
 import { sapiens3 } from '../../_shared/constant/asset';
+import { isAccountTypeAsset } from '../../_shared/util/account';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -114,6 +119,16 @@ const AccountBreakdownScreen = ({ route }) => {
       ? theme.colors.color1
       : theme.colors.color12;
 
+    const getImg = () => {
+      if (isAccountTypeAsset(accountType)) {
+        return coin;
+      }
+      if (accountType === ACCOUNT_TYPE_CREDIT_CARD) {
+        return card;
+      }
+      return coinsack;
+    };
+
     return (
       <>
         <View style={styles.title}>
@@ -149,15 +164,16 @@ const AccountBreakdownScreen = ({ route }) => {
             }}
           />
         </View>
-        <BaseImage
-          source={isAccountTypeAsset(accountType) ? coin : coinsack}
-          containerStyle={styles.image}
-        />
+        <BaseImage source={getImg()} containerStyle={styles.image} />
       </>
     );
   };
 
-  const renderAssetContent = () => {
+  const renderContent = () => {
+    if (accountType === ACCOUNT_TYPE_LOAN) {
+      return renderMoreFeature();
+    }
+
     return (
       <>
         <View style={styles.dataNavigator}>
@@ -176,7 +192,7 @@ const AccountBreakdownScreen = ({ route }) => {
     );
   };
 
-  const renderDebtContent = () => {
+  const renderMoreFeature = () => {
     return (
       <View style={styles.debtContainer}>
         <BaseImage
@@ -207,9 +223,7 @@ const AccountBreakdownScreen = ({ route }) => {
           ? theme.colors.color4
           : theme.colors.color13,
       }}>
-      {isAccountTypeAsset(accountType)
-        ? renderAssetContent()
-        : renderDebtContent()}
+      {renderContent()}
     </BaseScreen2>
   );
 };

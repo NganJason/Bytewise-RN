@@ -44,7 +44,10 @@ const CategoryBreakdownScreen = ({ route }) => {
   const activeTimestamp = route.params?.active_timestamp || TODAY.valueOf();
   const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
 
-  const categoryID = route.params?.category_id || '';
+  const {
+    category_id: categoryID = '',
+    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
+  } = route.params;
   const getCategory = useGetCategory({ category_id: categoryID });
 
   const [timeRange, setTimeRange] = useState(
@@ -74,32 +77,6 @@ const CategoryBreakdownScreen = ({ route }) => {
   const onDateMove = newDate => {
     setActiveDate(newDate);
     setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
-  };
-
-  const renderAggrSummaryByType = () => {
-    if (getCategory.data?.category.category_type === TRANSACTION_TYPE_EXPENSE) {
-      return [
-        {
-          label: 'Budget',
-          amount: 0,
-        },
-        {
-          label: 'Used',
-          amount: -aggrTransactionsQuery.data?.results?.[categoryID].sum || 0,
-        },
-      ];
-    }
-
-    if (getCategory.data?.category.category_type === TRANSACTION_TYPE_INCOME) {
-      return [
-        {
-          label: 'Total',
-          amount: aggrTransactionsQuery.data?.results?.[categoryID].sum || 0,
-        },
-      ];
-    }
-
-    return [];
   };
 
   const renderRows = () => {
@@ -158,7 +135,9 @@ const CategoryBreakdownScreen = ({ route }) => {
             />
             <View style={styles.aggr}>
               <BaseText text3 style={styles.categoryNameText}>
-                Used:
+                {categoryType === TRANSACTION_TYPE_EXPENSE
+                  ? 'Used: '
+                  : 'Total: '}
               </BaseText>
               <AmountText>
                 {aggrTransactionsQuery.data?.results?.[categoryID].sum || 0}

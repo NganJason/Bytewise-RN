@@ -7,3 +7,4 @@ export const sapiens3 = require('../../../assets/images/sapiens3.png');
 export const coin = require('../../../assets/images/coin.png');
 export const graph = require('../../../assets/images/graph2.png');
 export const coinsack = require('../../../assets/images/coinsack.png');
+export const card = require('../../../assets/images/card.png');

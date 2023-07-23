@@ -15,6 +15,7 @@ export const useCreateHolding = (opts = {}) => {
       const { account_id = '' } = holding;
       // refetch account info
       queryClient.invalidateQueries([queryKeys.account, account_id]);
+      queryClient.invalidateQueries([queryKeys.accounts]);
 
       opts.onSuccess && opts.onSuccess();
     },

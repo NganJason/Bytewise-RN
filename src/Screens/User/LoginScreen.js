@@ -1,8 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import {
   BaseButton,
   BaseInput,
@@ -10,6 +8,7 @@ import {
   BaseText,
   BaseImage,
   LinkText,
+  BaseKeyboardAwareScrollView,
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
@@ -31,8 +30,8 @@ const LoginScreen = () => {
   const { validate, showValidation } = useValidation();
 
   const [loginForm, setLoginForm] = useState({
-    username: 'Test',
-    password: 'Hello123',
+    username: '',
+    password: '',
   });
 
   useEffect(() => {
@@ -63,7 +62,7 @@ const LoginScreen = () => {
 
   return (
     <BaseScreen>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -135,7 +134,7 @@ const LoginScreen = () => {
             </View>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

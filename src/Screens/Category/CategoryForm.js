@@ -37,9 +37,10 @@ const CategoryForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-
-  // decide if form is create or edit
-  const categoryID = route.params?.category_id || '';
+  const {
+    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
+    category_id: categoryID = '',
+  } = route.params || {};
   const isAddCategory = () => {
     return categoryID === '';
   };
@@ -48,7 +49,7 @@ const CategoryForm = ({ route }) => {
   const [categoryForm, setCategoryForm] = useState({
     category_id: '',
     category_name: '',
-    category_type: TRANSACTION_TYPE_EXPENSE,
+    category_type: categoryType,
   });
 
   const [formErrors, setFormErrors] = useState({});

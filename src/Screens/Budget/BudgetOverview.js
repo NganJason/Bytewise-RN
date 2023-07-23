@@ -130,6 +130,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
               : EmptyContentConfig.annualBudget
           }
           route={ROUTES.budgetForm}
+          routeParam={{ budget_type: type }}
           height="80%"
         />
       );

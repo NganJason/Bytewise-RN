@@ -53,7 +53,7 @@ const AccountScreen = () => {
         if (isNaN(amount)) {
           return;
         }
-        sum += Number(amount);
+        sum += Number(Math.abs(amount));
       }
     });
     return sum;

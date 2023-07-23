@@ -36,7 +36,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const {
     account_name = '',
     balance = 0,
-    avg_cost,
+    total_cost = 0,
     holdings = [],
   } = getAccount?.data?.account || {};
 
@@ -50,7 +50,8 @@ const InvestmentBreakdownScreen = ({ route }) => {
       return (
         <EmptyContent
           item={EmptyContentConfig.investment}
-          route={ROUTES.transactionForm}
+          route={ROUTES.holdingForm}
+          routeParam={{ account_id: accountID }}
           marginVertical="30%"
         />
       );
@@ -76,7 +77,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
           </AmountText>
           <EarningText
             currVal={balance}
-            initialVal={avg_cost}
+            initialVal={total_cost}
             text5
             margin={{ vertical: 4 }}
             isLoading={getAccount.isLoading}

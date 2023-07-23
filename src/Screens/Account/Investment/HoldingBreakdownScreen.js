@@ -32,9 +32,11 @@ const HoldingBreakdownScreen = ({ route }) => {
   const getHolding = useGetHolding({ holding_id: holdingID });
   const {
     latest_value = 0,
-    avg_cost = 0,
+    total_cost = 0,
     total_shares = 0,
+    avg_cost_per_share = 0,
     quote = {
+      latest_price: 0,
       update_time: 0,
     },
   } = getHolding?.data?.holding || {};
@@ -75,8 +77,6 @@ const HoldingBreakdownScreen = ({ route }) => {
   };
 
   const renderHeader = () => {
-    let total_cost = getTotalInvestmentCost(total_shares, avg_cost);
-
     return (
       <>
         <View style={styles.symbol}>
@@ -126,9 +126,16 @@ const HoldingBreakdownScreen = ({ route }) => {
         </View>
 
         <View style={styles.headerRow}>
+          <BaseText text5>Latest price</BaseText>
+          <AmountText text5 isLoading={getHolding.isLoading}>
+            {quote.latest_price}
+          </AmountText>
+        </View>
+
+        <View style={styles.headerRow}>
           <BaseText text5>WAC</BaseText>
           <AmountText text5 isLoading={getHolding.isLoading}>
-            {avg_cost}
+            {avg_cost_per_share}
           </AmountText>
         </View>
       </>

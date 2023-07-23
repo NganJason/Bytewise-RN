@@ -2,12 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BaseBottomSheet,
   BaseButton,
   BaseCurrencyInput,
   BaseInput,
+  BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
@@ -38,7 +38,10 @@ const BudgetForm = ({ route }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const budgetID = route.params?.budget_id || '';
+  const {
+    budget_id: budgetID = '',
+    budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+  } = route.params;
   const isAddBudget = () => {
     return budgetID === '';
   };
@@ -53,7 +56,7 @@ const BudgetForm = ({ route }) => {
 
   const [budgetForm, setBudgetForm] = useState({
     budget_name: '',
-    budget_type: BUDGET_TYPE_MONTHLY,
+    budget_type: budgetType,
     budget_amount: 0,
     category_ids: [],
     from_date: targetDate,
@@ -191,7 +194,7 @@ const BudgetForm = ({ route }) => {
           </View>
         ),
       }}>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -291,7 +294,7 @@ const BudgetForm = ({ route }) => {
             loading={setBudget.isLoading}
           />
         </View>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

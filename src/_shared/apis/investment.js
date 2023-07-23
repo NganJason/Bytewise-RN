@@ -15,10 +15,10 @@ const GET_LOT = '/get_lot';
 const GET_LOTS = '/get_lots';
 const UPDATE_LOT = '/update_lot';
 
-export const searchSecurities = async ({ keyword = '' } = {}) => {
+export const searchSecurities = async ({ symbol = '' } = {}) => {
   try {
     const body = await sendPostRequest(SEARCH_SECURITIES, {
-      keyword: keyword,
+      symbol: symbol,
     });
     return body;
   } catch (e) {
@@ -34,16 +34,16 @@ export const createHolding = async ({
   account_id = '',
   symbol = '',
   holding_type = 0,
-  latest_value,
-  avg_cost,
+  total_cost = 0,
+  latest_value = 0,
 }) => {
   try {
     const body = await sendPostRequest(CREATE_HOLDING, {
       account_id: account_id,
       symbol: symbol,
       holding_type: holding_type,
+      total_cost: total_cost !== null ? String(total_cost) : total_cost,
       latest_value: latest_value !== null ? String(latest_value) : latest_value,
-      avg_cost: avg_cost !== null ? String(avg_cost) : avg_cost,
     });
     return body;
   } catch (e) {
@@ -72,13 +72,13 @@ export const getHolding = async ({ holding_id = '' }) => {
 
 export const updateHolding = async ({
   holding_id = '',
-  avg_cost = 0,
+  total_cost = 0,
   latest_value = 0,
 }) => {
   try {
     const body = await sendPostRequest(UPDATE_HOLDING, {
       holding_id: holding_id,
-      avg_cost: String(avg_cost),
+      total_cost: String(total_cost),
       latest_value: String(latest_value),
     });
     return body;

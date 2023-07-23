@@ -3,11 +3,11 @@ import { Dialog, useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BaseButton,
   BaseCurrencyInput,
   BaseInput,
+  BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
@@ -129,7 +129,7 @@ const LotForm = ({ route }) => {
           </View>
         ),
       }}>
-      <KeyboardAwareScrollView
+      <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
@@ -190,7 +190,7 @@ const LotForm = ({ route }) => {
             loading={createLot.isLoading}
           />
         </View>
-      </KeyboardAwareScrollView>
+      </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
 };

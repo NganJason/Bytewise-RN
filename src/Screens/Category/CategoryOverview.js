@@ -29,7 +29,10 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useNavigation } from '@react-navigation/native';
 import { useError } from '../../_shared/hooks/error';
 
-const CategoryOverview = ({ activeDate = new Date() }) => {
+const CategoryOverview = ({
+  activeDate = new Date(),
+  setTransactionType = function () {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -46,6 +49,7 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
   const [categoryType, setCategoryType] = useState(TRANSACTION_TYPE_EXPENSE);
   const onCategoryTypeChange = type => {
     setCategoryType(type);
+    setTransactionType(type);
   };
 
   const getCategoriesQuery = useGetCategories({});
@@ -94,6 +98,7 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
               navigation.navigate(ROUTES.categoryBreakdown, {
                 category_id: category.category_id,
                 active_timestamp: activeDate.valueOf(), // pass unix as date object is not serializable
+                category_type: categoryType,
               });
             }}>
             <BaseText text3>{capitalize(category.category_name)}</BaseText>
@@ -108,6 +113,7 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
         <EmptyContent
           item={EmptyContentConfig.category}
           route={ROUTES.categoryForm}
+          routeParam={{ category_type: categoryType }}
           marginVertical="30%"
         />
       );
@@ -147,7 +153,11 @@ const CategoryOverview = ({ activeDate = new Date() }) => {
             type="secondary"
             align="flex-end"
             size="sm"
-            onPress={() => navigation.navigate(ROUTES.categoryEdit)}
+            onPress={() =>
+              navigation.navigate(ROUTES.categoryEdit, {
+                category_type: categoryType,
+              })
+            }
           />
         </View>
       </View>
