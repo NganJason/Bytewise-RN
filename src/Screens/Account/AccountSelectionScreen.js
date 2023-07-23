@@ -79,7 +79,7 @@ const AccountSelectionScreen = () => {
         allowBack: true,
         centerComponent: (
           <View style={styles.header}>
-            <BaseText h2>Add account</BaseText>
+            <BaseText h2>Add Account</BaseText>
           </View>
         ),
       }}>

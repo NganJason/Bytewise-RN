@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../query';
-import { createTransaction, updateTransaction } from '../apis/transaction';
+import {
+  createTransaction,
+  deleteTransaction,
+  updateTransaction,
+} from '../apis/transaction';
 
 export const useCreateTransaction = (opts = {}) => {
   const queryClient = useQueryClient();
@@ -48,6 +52,21 @@ export const useUpdateTransaction = (opts = {}) => {
       // refetch account with given account_id
       queryClient.invalidateQueries([queryKeys.account, account_id]);
 
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useDeleteTransaction = (opts = {}) => {
+  const queryClient = useQueryClient();
+  const { account_id = '' } = opts?.meta || {};
+
+  return useMutation(deleteTransaction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.transactionsAggr]);
+      queryClient.invalidateQueries([queryKeys.accounts]);
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
       opts.onSuccess && opts.onSuccess();
     },
   });

@@ -47,7 +47,9 @@ const BaseToast = () => {
   return <Toast config={toastTheme} />;
 };
 
-BaseToast.show = opt => Toast.show(opt);
+BaseToast.show = opt => {
+  Toast.show(opt);
+};
 
 const getStyles = theme =>
   StyleSheet.create({

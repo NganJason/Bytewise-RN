@@ -22,7 +22,7 @@ export const toolTipMessage = {
     text: 'Symbols or holdings that are currently not supported by us.\n\nMarket prices have to be tracked manually.',
   },
   totalLatestMarketValueDesc: {
-    title: 'Total Latest Market Value',
+    title: 'Latest Total Market Value',
     text: 'The latest market value of your holding.',
   },
   totalInvestedAmount: {

@@ -15,6 +15,7 @@ import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
+  ACCOUNT_TYPE_LOAN,
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
 import { useGetAccount } from '../../_shared/query/account';
@@ -188,6 +189,10 @@ const AccountForm = ({ route }) => {
     return accountForm.account_type !== ACCOUNT_TYPE_INVESTMENT;
   };
 
+  const shouldDisableBalance = () => {
+    return accountForm.account_type === ACCOUNT_TYPE_LOAN && !isAddAccount();
+  };
+
   useError([getAccount, createAccount, updateAccount]);
 
   return (
@@ -198,7 +203,7 @@ const AccountForm = ({ route }) => {
         centerComponent: (
           <View style={styles.header}>
             <BaseText h2>
-              {isAddAccount() ? 'Add account' : 'Edit account'}
+              {isAddAccount() ? 'Add Account' : 'Edit Account'}
             </BaseText>
           </View>
         ),
@@ -210,7 +215,7 @@ const AccountForm = ({ route }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
         <BaseInput
-          label="Account name"
+          label="Account Name"
           value={accountForm.account_name}
           onChangeText={onAccountNameChange}
           clearButtonMode="always"
@@ -219,7 +224,7 @@ const AccountForm = ({ route }) => {
         />
 
         <TouchInput
-          label="Account type"
+          label="Account Type"
           disabled={!isAddAccount()}
           value={ACCOUNT_TYPES[accountForm.account_type]}
           onPress={toggleAccountTypeModal}
@@ -236,6 +241,7 @@ const AccountForm = ({ route }) => {
         {canSetBalance() && (
           <BaseCurrencyInput
             label="Balance"
+            disabled={shouldDisableBalance()}
             value={accountForm.balance === null ? 0 : accountForm.balance}
             onChangeText={onBalanceChange}
           />

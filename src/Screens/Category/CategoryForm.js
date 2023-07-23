@@ -114,7 +114,7 @@ const CategoryForm = ({ route }) => {
         allowBack: true,
         centerComponent: (
           <BaseText h2>
-            {isAddCategory() ? 'Add category' : 'Edit category'}
+            {isAddCategory() ? 'Add Category' : 'Edit Category'}
           </BaseText>
         ),
       }}>

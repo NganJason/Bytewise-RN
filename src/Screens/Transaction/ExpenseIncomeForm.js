@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -32,6 +32,7 @@ import { EmptyContent } from '../../Components/Common';
 import { useGetTransactionHook } from '../../_shared/hooks/transaction';
 import { useValidation } from '../../_shared/hooks/validation';
 import { useError } from '../../_shared/hooks/error';
+import { useDeleteTransaction } from '../../_shared/mutations/transaction';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -91,6 +92,13 @@ const ExpenseIncomeForm = ({
 
   const updateTransaction = useUpdateTransaction({
     onSuccess: navigation.goBack,
+  });
+
+  const deleteTransaction = useDeleteTransaction({
+    onSuccess: navigation.goBack,
+    meta: {
+      account_id: transactionForm?.account?.account_id || '',
+    },
   });
 
   useEffect(() => {
@@ -195,6 +203,12 @@ const ExpenseIncomeForm = ({
     });
   };
 
+  const onDelete = () => {
+    deleteTransaction.mutate({
+      transaction_id: transactionForm.transaction_id,
+    });
+  };
+
   const isFormLoading = () => {
     return (
       getTransaction.isLoading ||
@@ -229,6 +243,7 @@ const ExpenseIncomeForm = ({
     getCategories,
     createTransaction,
     updateTransaction,
+    deleteTransaction,
   ]);
 
   return (
@@ -316,6 +331,7 @@ const ExpenseIncomeForm = ({
             <EmptyContent
               item={EmptyContentConfig.category}
               route={ROUTES.categoryForm}
+              routeParam={{ category_type: transactionType }}
               onRedirect={toggleCategoryModal}
             />
           )}
@@ -355,6 +371,18 @@ const ExpenseIncomeForm = ({
           )}
         />
 
+        {!isAddTransaction() && (
+          <View style={styles.btnContainer}>
+            <BaseButton
+              title="Delete"
+              size="lg"
+              type="outline"
+              width={200}
+              onPress={onDelete}
+              loading={deleteTransaction.isLoading}
+            />
+          </View>
+        )}
         <BaseButton
           title="Save"
           size="lg"
@@ -369,4 +397,9 @@ const ExpenseIncomeForm = ({
 
 export default ExpenseIncomeForm;
 
-const getStyles = _ => StyleSheet.create({});
+const getStyles = _ =>
+  StyleSheet.create({
+    btnContainer: {
+      marginBottom: 16,
+    },
+  });

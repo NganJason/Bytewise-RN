@@ -11,6 +11,7 @@ const GET_TRANSACTIONS = '/get_transactions';
 const UPDATE_TRANSACTION = '/update_transaction';
 const GET_TRANSACTION = '/get_transaction';
 const AGGR_TRANSACTIONS = '/aggr_transactions';
+const DELETE_TRANSACTION = '/delete_transaction';
 
 export const aggrTransactions = async ({
   category_ids = [],
@@ -121,6 +122,21 @@ export const updateTransaction = async ({
       transaction_type: transaction_type,
       transaction_time: transaction_time,
       note: note,
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const deleteTransaction = async ({ transaction_id = '' } = {}) => {
+  try {
+    const body = await sendPostRequest(DELETE_TRANSACTION, {
+      transaction_id: transaction_id,
     });
     return body;
   } catch (e) {

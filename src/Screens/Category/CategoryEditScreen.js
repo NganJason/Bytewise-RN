@@ -60,6 +60,7 @@ const CategoryEditScreen = ({ route }) => {
         <EmptyContent
           item={EmptyContentConfig.category}
           route={ROUTES.categoryForm}
+          routeParam={{ category_type: categoryType }}
           marginVertical="30%"
         />
       );
@@ -90,7 +91,11 @@ const CategoryEditScreen = ({ route }) => {
           type="secondary"
           align="flex-end"
           size="sm"
-          onPress={() => navigation.navigate(ROUTES.categoryForm)}
+          onPress={() =>
+            navigation.navigate(ROUTES.categoryForm, {
+              category_type: categoryType,
+            })
+          }
         />
       </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>

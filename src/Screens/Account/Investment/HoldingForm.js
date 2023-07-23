@@ -148,7 +148,6 @@ const HoldingForm = ({ route }) => {
     if (isAddHolding()) {
       createHolding.mutate(form);
     } else {
-      console.log(form);
       updateHolding.mutate(form);
     }
   };
@@ -162,7 +161,7 @@ const HoldingForm = ({ route }) => {
         centerComponent: (
           <View style={styles.header}>
             <BaseText h2>
-              {isAddHolding() ? 'Add holding' : 'Edit holding'}
+              {isAddHolding() ? 'Add Holding' : 'Edit Holding'}
             </BaseText>
           </View>
         ),
@@ -208,7 +207,7 @@ const HoldingForm = ({ route }) => {
         ) : (
           <View>
             <BaseInput
-              label="Custom symbol"
+              label="Custom Symbol"
               desc={toolTipMessage.customSymbolDesc}
               value={holdingForm.symbol}
               onChangeText={onCustomSymbolChange}
@@ -218,7 +217,7 @@ const HoldingForm = ({ route }) => {
             />
 
             <BaseCurrencyInput
-              label="Latest total market value"
+              label="Latest Total Market Value"
               desc={toolTipMessage.totalLatestMarketValueDesc}
               value={holdingForm.latest_value}
               onChangeText={onLatestValueChange}
@@ -226,7 +225,7 @@ const HoldingForm = ({ route }) => {
             />
 
             <BaseCurrencyInput
-              label="Total invested amount"
+              label="Total Invested Amount"
               desc={toolTipMessage.totalInvestedAmount}
               value={holdingForm.total_cost}
               onChangeText={onTotalCostChange}

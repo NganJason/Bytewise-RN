@@ -189,7 +189,7 @@ const BudgetForm = ({ route }) => {
         centerComponent: (
           <View style={styles.header}>
             <BaseText h2>
-              {isAddBudget() ? 'Add budget' : 'Edit budget'}
+              {isAddBudget() ? 'Add Budget' : 'Edit Budget'}
             </BaseText>
           </View>
         ),
@@ -201,7 +201,7 @@ const BudgetForm = ({ route }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
         <BaseInput
-          label="Budget name"
+          label="Budget Name"
           value={budgetForm.budget_name}
           onChangeText={onBudgetNameChange}
           clearButtonMode="always"
@@ -210,7 +210,7 @@ const BudgetForm = ({ route }) => {
         />
 
         <TouchInput
-          label="Budget type"
+          label="Budget Type"
           value={BUDGET_TYPES[budgetForm.budget_type]}
           onPress={toggleBudgetTypeModal}
           errorMessage={showValidation && formErrors.budget_type}
