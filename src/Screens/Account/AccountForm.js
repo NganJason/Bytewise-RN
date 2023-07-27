@@ -225,7 +225,7 @@ const AccountForm = ({ route }) => {
 
         <TouchInput
           label="Account Type"
-          disabled={!isAddAccount()}
+          hide={!isAddAccount()}
           value={ACCOUNT_TYPES[accountForm.account_type]}
           onPress={toggleAccountTypeModal}
         />
@@ -241,7 +241,7 @@ const AccountForm = ({ route }) => {
         {canSetBalance() && (
           <BaseCurrencyInput
             label="Balance"
-            disabled={shouldDisableBalance()}
+            hide={shouldDisableBalance()}
             value={accountForm.balance === null ? 0 : accountForm.balance}
             onChangeText={onBalanceChange}
           />

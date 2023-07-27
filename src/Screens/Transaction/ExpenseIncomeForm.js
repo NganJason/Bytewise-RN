@@ -105,7 +105,7 @@ const ExpenseIncomeForm = ({
     if (transaction) {
       setTransactionForm({
         ...transaction,
-        amount: String(Math.abs(transaction.amount)),
+        amount: String(Math.abs(transaction.amount).toFixed(2)),
       });
     }
 
@@ -341,8 +341,8 @@ const ExpenseIncomeForm = ({
           label="Account"
           value={transactionForm.account.account_name}
           onPress={toggleAccountModal}
-          disabled={!isAddTransaction()}
           errorMessage={showValidation && formErrors.account}
+          hide={!isAddTransaction()}
         />
         <BaseBottomSheet
           isVisible={isAccountModalVisible}

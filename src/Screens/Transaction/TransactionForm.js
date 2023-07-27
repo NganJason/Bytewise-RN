@@ -69,7 +69,7 @@ const TransactionForm = ({ route }) => {
             tabs={scrollableTabs}
             activeTab={activeTab}
             onTabChange={onTabChange}
-            disableNonActive={!isAddTransaction()}
+            hideNonActive={!isAddTransaction()}
           />
         </View>
 

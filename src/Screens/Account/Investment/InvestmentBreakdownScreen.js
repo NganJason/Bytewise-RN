@@ -17,7 +17,6 @@ import {
   HoldingRow,
   InfoToolTip,
 } from '../../../Components';
-import { capitalize } from '../../../_shared/util/string';
 import { useGetAccount } from '../../../_shared/query';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import { getStockUpdateTime } from '../../../_shared/util/investment';
@@ -65,7 +64,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
       <>
         <View style={styles.title}>
           <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
-            {capitalize(account_name)}
+            {account_name}
           </BaseText>
           <AmountText
             style={styles.titleText}
@@ -162,6 +161,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       height: screenHeight * 0.18,
       position: 'absolute',
       right: screenWidth * -0.12,
+      zIndex: -1,
     },
     body: {
       paddingVertical: theme.spacing.lg,

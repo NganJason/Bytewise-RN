@@ -7,8 +7,13 @@ const TouchInput = ({
   label = '',
   value = '',
   disabled = false,
+  hide = false,
   ...props
 }) => {
+  if (hide) {
+    return <></>;
+  }
+
   return (
     <TouchableOpacity activeOpacity={1} onPress={onPress} disabled={disabled}>
       <BaseInput

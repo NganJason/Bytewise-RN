@@ -42,12 +42,15 @@ const AmountText = ({
     const amount = Number(children.toFixed(decimal));
     const amountStr = amount.toLocaleString();
 
-    text = `${CURRENCY} ${amountStr} ${suffix}`;
+    text = `${CURRENCY} ${amountStr}`;
     if (showSymbol) {
       text = `${symbol} ${text}`;
-    }
-    if (showNegativeOnly && symbol === '-') {
+    } else if (showNegativeOnly && symbol === '-') {
       text = `${symbol} ${text}`;
+    }
+
+    if (suffix !== '') {
+      text = `${text} ${suffix}`;
     }
 
     return text;

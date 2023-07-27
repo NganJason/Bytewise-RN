@@ -26,7 +26,10 @@ const assets = [
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
 ];
-const debts = [ACCOUNT_TYPE_CREDIT_CARD, ACCOUNT_TYPE_LOAN];
+const debts = [
+  ACCOUNT_TYPE_CREDIT_CARD,
+  // ACCOUNT_TYPE_LOAN,
+];
 
 const AccountSelectionScreen = () => {
   const { theme } = useTheme();

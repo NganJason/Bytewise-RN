@@ -10,13 +10,21 @@ const BaseScrollableTab = ({
   activeTab = { name: '', iconName: '', iconType: '' },
   onTabChange = function (tab) {},
   disableNonActive = false,
+  hideNonActive = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  const isActive = tabName => {
+    return activeTab.name === tabName;
+  };
+
+  const shouldHide = tabName => {
+    return hideNonActive && !isActive(tabName);
+  };
+
   const shouldDisable = tabName => {
-    let isNonActiveTab = activeTab.name !== tabName;
-    return disableNonActive && isNonActiveTab;
+    return disableNonActive && !isActive(tabName);
   };
 
   const getTextStyle = tabName => {
@@ -47,11 +55,15 @@ const BaseScrollableTab = ({
         return;
       }
 
+      if (shouldHide(tab.name)) {
+        return;
+      }
+
       allTabs.push(
         <TouchableOpacity
           key={tab.name}
           onPress={() => onTabChange(tab)}
-          disabled={shouldDisable()}
+          disabled={shouldDisable(tab.name)}
           style={styles.tab}>
           {tab.iconName !== '' && tab.iconType !== '' && (
             <Icon

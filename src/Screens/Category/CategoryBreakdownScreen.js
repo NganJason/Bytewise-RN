@@ -45,12 +45,13 @@ const CategoryBreakdownScreen = ({ route }) => {
     category_id: categoryID = '',
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
-  const getCategory = useGetCategory({ category_id: categoryID });
 
   const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
+
+  const getCategory = useGetCategory({ category_id: categoryID });
 
   const getTransactions = useGetTransactionsHook({
     category_id: categoryID,

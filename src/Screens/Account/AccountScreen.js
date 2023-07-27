@@ -199,6 +199,7 @@ const getStyles = (_, screenWidth, screenHeight) =>
       height: screenHeight * 0.26,
       position: 'absolute',
       right: screenWidth * -0.2,
+      zIndex: -1,
     },
   });
 

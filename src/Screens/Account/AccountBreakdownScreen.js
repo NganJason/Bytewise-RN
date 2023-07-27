@@ -259,6 +259,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       height: screenHeight * 0.18,
       position: 'absolute',
       right: screenWidth * -0.15,
+      zIndex: -1,
     },
     dataNavigator: {
       alignItems: 'center',

@@ -41,6 +41,7 @@ const HomeScreen = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName={ROUTES.transaction}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
