@@ -2,17 +2,16 @@
   "expo": {
     "name": "Pocketeer",
     "slug": "Pocketeer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {},
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pocketeer"
+      "bundleIdentifier": "com.pocketeer",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

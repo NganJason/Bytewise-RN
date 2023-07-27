@@ -141,7 +141,7 @@ const AccountScreen = () => {
             {computeSum()}
           </AmountText>
           <BaseButton
-            title="Add account"
+            title="Add Account"
             type="clear"
             align="flex-start"
             size="sm"

@@ -87,7 +87,7 @@ const CategoryEditScreen = ({ route }) => {
       />
       <View style={styles.buttonContainer}>
         <BaseButton
-          title="Add category"
+          title="Add Category"
           type="secondary"
           align="flex-end"
           size="sm"

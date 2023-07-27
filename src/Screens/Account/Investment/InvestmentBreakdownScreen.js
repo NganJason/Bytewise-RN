@@ -94,7 +94,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
           </View>
 
           <BaseButton
-            title="Edit account"
+            title="Edit Account"
             type="clear"
             align="flex-start"
             size="sm"
@@ -129,7 +129,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
       <View style={styles.body}>
         <BaseText h3>Holdings</BaseText>
         <BaseButton
-          title="Add holding"
+          title="Add Holding"
           type="clear"
           align="flex-start"
           size="sm"

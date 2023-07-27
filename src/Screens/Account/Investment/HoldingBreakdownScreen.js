@@ -151,7 +151,7 @@ const HoldingBreakdownScreen = ({ route }) => {
       <>
         <BaseText h3>History</BaseText>
         <BaseButton
-          title="Add units"
+          title="Add Units"
           type="clear"
           align="flex-start"
           size="sm"

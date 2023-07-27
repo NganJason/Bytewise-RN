@@ -155,7 +155,7 @@ const AccountBreakdownScreen = ({ route }) => {
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
           <BaseButton
-            title="Edit account"
+            title="Edit Account"
             type="clear"
             align="flex-start"
             size="sm"

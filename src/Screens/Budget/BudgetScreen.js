@@ -110,7 +110,7 @@ const BudgetScreen = () => {
       }}>
       <View style={styles.buttonContainer}>
         <BaseButton
-          title="Add budget"
+          title="Add Budget"
           type="secondary"
           align="flex-end"
           size="sm"
