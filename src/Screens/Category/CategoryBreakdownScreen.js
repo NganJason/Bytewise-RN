@@ -19,10 +19,7 @@ import {
   getYear,
   getMonth,
 } from '../../_shared/util/date';
-import {
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/enum';
+import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContent } from '../../Components/Common';
@@ -42,10 +39,11 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   const {
     active_timestamp: activeTimestamp = TODAY.valueOf(),
-    category_id: categoryID = '',
+    // category_id: categoryID = '64b9cae6da15f96cd5566439',
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
+  let categoryID = '64c04c9ed66ff3c175c0c6f6';
   const [activeDate, setActiveDate] = useState(new Date(activeTimestamp));
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),

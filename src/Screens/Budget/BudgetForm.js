@@ -1,23 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
-import { Icon, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
   BaseCurrencyInput,
-  BaseInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
 } from '../../Components';
-import DatePickerInput from '../../Components/Input/DatePickerInput';
-import MultiSelectBottomInput from '../../Components/Input/MultiSelectBottomInput';
-import { DatePickerMode } from '../../Components/Input/Picker/DatePicker';
 import {
   BUDGET_TYPES,
-  BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
@@ -53,6 +48,17 @@ const BudgetForm = ({ route }) => {
     }
     return new Date();
   }, [targetDateString]);
+
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const toggleCategoryModal = () => {
+    setIsCategoryModalVisible(!isCategoryModalVisible);
+  };
+  const onEditCategory = () => {
+    navigation.navigate(ROUTES.categoryEdit, {
+      category_type: TRANSACTION_TYPE_EXPENSE,
+    });
+    toggleCategoryModal();
+  };
 
   const [budgetForm, setBudgetForm] = useState({
     budget_name: '',
@@ -118,10 +124,6 @@ const BudgetForm = ({ route }) => {
     }
   }, [getBudget.data, targetDate]);
 
-  const onBudgetNameChange = e => {
-    setBudgetForm({ ...budgetForm, budget_name: e });
-  };
-
   const onBudgetTypeChange = e => {
     toggleBudgetTypeModal();
     setBudgetForm({ ...budgetForm, budget_type: e.value });
@@ -138,14 +140,6 @@ const BudgetForm = ({ route }) => {
     });
 
     setBudgetForm({ ...budgetForm, category_ids: ids });
-  };
-
-  const onFromDateChange = e => {
-    setBudgetForm({ ...budgetForm, from_date: e });
-  };
-
-  const onToDateChange = e => {
-    setBudgetForm({ ...budgetForm, to_date: e });
   };
 
   const onSave = () => {
@@ -200,13 +194,38 @@ const BudgetForm = ({ route }) => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <BaseInput
-          label="Budget Name"
-          value={budgetForm.budget_name}
-          onChangeText={onBudgetNameChange}
-          clearButtonMode="always"
-          maxLength={120}
-          errorMessage={showValidation && formErrors.budget_name}
+        <TouchInput
+          label="Category"
+          // value={transactionForm.category.category_name}
+          onPress={toggleCategoryModal}
+          errorMessage={showValidation && formErrors.category}
+        />
+        <BaseBottomSheet
+          isVisible={isCategoryModalVisible}
+          onBackdropPress={toggleCategoryModal}
+          close={toggleCategoryModal}
+          onSelect={onCategoriesChange}
+          items={getCategoryItems(getCategories.data?.categories)}
+          label="category_name"
+          headerProps={{
+            leftComponent: (
+              <BaseButton
+                title="Edit"
+                type="clear"
+                align="flex-end"
+                size="md"
+                onPress={onEditCategory}
+              />
+            ),
+          }}
+          renderEmptyItems={() => (
+            <EmptyContent
+              item={EmptyContentConfig.category}
+              route={ROUTES.categoryForm}
+              routeParam={{ category_type: TRANSACTION_TYPE_EXPENSE }}
+              onRedirect={toggleCategoryModal}
+            />
+          )}
         />
 
         <TouchInput
@@ -224,66 +243,12 @@ const BudgetForm = ({ route }) => {
           label="name"
         />
 
-        <MultiSelectBottomInput
-          label="Categories"
-          items={getCategoryItems(getCategories.data?.categories)}
-          initialSelected={getCategoryItems(
-            getBudget?.data?.category_budget?.categories,
-          )}
-          onChange={onCategoriesChange}
-          errorMessage={showValidation && formErrors.categories}
-          renderEmptyItems={closeModal => (
-            <EmptyContent
-              item={EmptyContentConfig.category}
-              route={ROUTES.categoryForm}
-              onRedirect={closeModal}
-            />
-          )}
-        />
-
         <BaseCurrencyInput
           label="Amount"
           value={budgetForm.budget_amount}
           onChangeText={onBudgetAmountChange}
           errorMessage={showValidation && formErrors.budget_amount}
         />
-
-        <View style={styles.dateContainer}>
-          <View style={styles.dateInput}>
-            <DatePickerInput
-              label="From"
-              dateValue={budgetForm.from_date}
-              onSelect={onFromDateChange}
-              mode={
-                budgetForm.budget_type === BUDGET_TYPE_ANNUAL
-                  ? DatePickerMode.Year
-                  : DatePickerMode.YearMonth
-              }
-              errorMessage={showValidation && formErrors.date}
-            />
-          </View>
-
-          <View style={styles.arrowIcon}>
-            <Icon
-              name={'arrow-right'}
-              type={'feather'}
-              color={theme.colors.color8}
-            />
-          </View>
-
-          <View style={styles.dateInput}>
-            <DatePickerInput
-              label="To"
-              dateValue={budgetForm.to_date}
-              onSelect={onToDateChange}
-              mode={
-                budgetForm.budget_type === BUDGET_TYPE_ANNUAL
-                  ? DatePickerMode.Year
-                  : DatePickerMode.YearMonth
-              }
-            />
-          </View>
-        </View>
 
         <View style={styles.btnContainer}>
           <BaseButton
