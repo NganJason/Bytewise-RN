@@ -33,7 +33,7 @@ const BaseScreen3 = ({
   };
 
   const calculateContentMarginTop = () => {
-    let marginTop = floatingHeaderMinHeight / 2;
+    let marginTop = floatingHeaderMinHeight / 2.3;
     marginTop += floatingHeaderHeight - floatingHeaderMinHeight;
     return marginTop;
   };

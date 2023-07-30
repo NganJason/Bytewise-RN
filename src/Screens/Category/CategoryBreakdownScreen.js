@@ -4,13 +4,14 @@ import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import {
   BaseText,
-  BaseScreen,
   DailyTransactions,
   IconButton,
-  BaseScrollView,
   DateNavigator,
   BaseDivider,
   AmountText,
+  BaseScreen3,
+  BaseLinearProgress,
+  BaseLoadableView,
 } from '../../Components';
 
 import { useAggrTransactions, useGetCategory } from '../../_shared/query';
@@ -26,6 +27,7 @@ import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -105,6 +107,10 @@ const CategoryBreakdownScreen = ({ route }) => {
     return rows;
   };
 
+  const onBudgetPress = () => {
+    navigation.navigate(ROUTES.budgetForm);
+  };
+
   const isScreenLoading = () =>
     getCategory.isLoading ||
     getTransactions.isLoading ||
@@ -112,66 +118,82 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   useError([getCategory, getTransactions, aggrTransactionsQuery]);
 
-  return (
-    <BaseScreen
-      isLoading={isScreenLoading()}
-      headerProps={{
-        allowBack: true,
-        centerComponent: (
-          <>
-            <BaseText
-              h2
-              style={styles.categoryNameText}
-              isLoading={getCategory.isLoading}>
-              {getCategory.data?.category.category_name}
-            </BaseText>
-            <DateNavigator
-              startingDate={activeDate}
-              onForward={onDateMove}
-              onBackward={onDateMove}
-            />
-            <View style={styles.aggr}>
-              <BaseText text3 style={styles.categoryNameText}>
-                {categoryType === TRANSACTION_TYPE_EXPENSE
-                  ? 'Used: '
-                  : 'Total: '}
-              </BaseText>
-              <AmountText>
-                {aggrTransactionsQuery.data?.results?.[categoryID].sum || 0}
-              </AmountText>
-            </View>
-          </>
-        ),
-        rightComponent: (
+  const renderHeader = () => {
+    return (
+      <>
+        <View style={styles.headerTitle}>
+          <BaseText h2>{getCategory.data?.category.category_name}</BaseText>
           <IconButton
             buttonSize="xs"
-            iconSize={22}
+            iconSize={20}
             type="clear"
-            iconName="edit"
+            iconName="settings"
             iconType="feather"
             align="flex-start"
-            color={theme.colors.color1}
+            color={theme.colors.color8}
             onPress={() => {
               navigation.navigate(ROUTES.categoryForm, {
                 category_id: categoryID,
               });
             }}
           />
-        ),
+        </View>
+
+        <BaseText text4 margin={{ top: 14, bottom: 8 }}>
+          Used
+        </BaseText>
+        <TouchableOpacity onPress={onBudgetPress}>
+          <View style={styles.headerAggr}>
+            <AmountText h4>
+              {aggrTransactionsQuery.data?.results?.[categoryID].sum || 0}
+            </AmountText>
+            <BaseDivider orientation="vertical" margin={6} />
+            <AmountText h4>200</AmountText>
+          </View>
+          <BaseLinearProgress value={0.3} />
+        </TouchableOpacity>
+      </>
+    );
+  };
+
+  return (
+    <BaseScreen3
+      headerProps={{
+        allowBack: true,
+        component: renderHeader(),
       }}>
-      <BaseDivider margin={20} />
-      <BaseScrollView showsVerticalScrollIndicator={false}>
-        {renderRows()}
-      </BaseScrollView>
-    </BaseScreen>
+      <>
+        <View style={styles.dateContainer}>
+          <DateNavigator
+            startingDate={activeDate}
+            onForward={onDateMove}
+            onBackward={onDateMove}
+          />
+        </View>
+
+        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
+          {renderRows()}
+        </BaseLoadableView>
+      </>
+    </BaseScreen3>
   );
 };
 
-const getStyles = theme => {
+const getStyles = _ => {
   return StyleSheet.create({
-    aggr: { alignSelf: 'center', flexDirection: 'row' },
-    categoryNameText: {
-      marginBottom: 4,
+    headerTitle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+    },
+    headerAggr: {
+      flexDirection: 'row',
+      marginBottom: 16,
+    },
+    dateContainer: {
+      alignItems: 'center',
+      marginBottom: 16,
     },
   });
 };
