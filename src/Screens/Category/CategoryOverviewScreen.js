@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
-import {
-  BaseText,
-  AmountText,
-  BaseTabView,
-  BaseButton,
-} from '../../Components';
+import { BaseText, AmountText, BaseScreen } from '../../Components';
 
 import {
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
+  TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import {
   getUnixRangeOfMonth,
@@ -24,38 +18,34 @@ import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
 import { capitalize } from '../../_shared/util/string';
 import { BaseLoadableView, BaseRow } from '../../Components/View';
-import { EmptyContent } from '../../Components/Common';
+import { DateNavigator, EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useNavigation } from '@react-navigation/native';
 import { useError } from '../../_shared/hooks/error';
 
-const CategoryOverview = ({
-  activeDate = new Date(),
-  setTransactionType = function () {},
-}) => {
+const CategoryOverviewScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const {
+    active_date: activeD = new Date(),
+    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
+  } = route?.params || {};
+
+  const [activeDate, setActiveDate] = useState(activeD);
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
-  useEffect(() => {
-    setTimeRange(
-      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-    );
-  }, [activeDate]);
-
-  const [categoryType, setCategoryType] = useState(TRANSACTION_TYPE_EXPENSE);
-  const onCategoryTypeChange = type => {
-    setCategoryType(type);
-    setTransactionType(type);
+  const onDateMove = newDate => {
+    setActiveDate(newDate);
+    setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
 
   const getCategoriesQuery = useGetCategories({});
 
   const aggrTransactionsByTypeQuery = useAggrTransactions({
-    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+    transaction_types: [categoryType],
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
@@ -137,44 +127,44 @@ const CategoryOverview = ({
   ]);
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.tabContainer}>
-        <BaseTabView
-          onPress={idx => onCategoryTypeChange(idx + 1)}
-          selectedIndex={categoryType - 1}
-          titles={[
-            TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-            TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-          ]}
-        />
-        <View style={styles.buttonContainer}>
-          <BaseButton
-            title="Edit"
-            type="secondary"
-            align="flex-end"
-            size="sm"
-            onPress={() =>
-              navigation.navigate(ROUTES.categoryEdit, {
-                category_type: categoryType,
-              })
-            }
-          />
-        </View>
-      </View>
+    <BaseScreen
+      headerProps={{
+        allowBack: true,
+        centerComponent: (
+          <View style={styles.header}>
+            <BaseText h3>{TRANSACTION_TYPES[categoryType]}</BaseText>
+            <DateNavigator
+              startingDate={activeDate}
+              onForward={onDateMove}
+              onBackward={onDateMove}
+            />
+            <View style={styles.headerSubtitle}>
+              <BaseText text3 margin={{ right: 8 }}>
+                Total:
+              </BaseText>
+              <AmountText>
+                {aggrTransactionsByTypeQuery?.data?.results?.[categoryType]
+                  ?.sum || 0}
+              </AmountText>
+            </View>
+          </View>
+        ),
+      }}>
       <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
         {renderRows()}
       </BaseLoadableView>
-    </View>
+    </BaseScreen>
   );
 };
 
-export default CategoryOverview;
+export default CategoryOverviewScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
-    screen: {
-      height: '100%',
+    header: {
+      alignItems: 'center',
     },
+    headerSubtitle: { flexDirection: 'row' },
     tabContainer: {
       marginBottom: 14,
     },

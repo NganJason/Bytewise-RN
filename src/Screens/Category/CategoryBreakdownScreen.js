@@ -108,7 +108,9 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const onBudgetPress = () => {
-    navigation.navigate(ROUTES.budgetForm);
+    navigation.navigate(ROUTES.budgetForm, {
+      category_id: categoryID,
+    });
   };
 
   const isScreenLoading = () =>
@@ -122,7 +124,9 @@ const CategoryBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.headerTitle}>
-          <BaseText h2>{getCategory.data?.category.category_name}</BaseText>
+          <BaseText h2 isLoading={getCategory.isLoading}>
+            {getCategory.data?.category.category_name}
+          </BaseText>
           <IconButton
             buttonSize="xs"
             iconSize={20}
@@ -139,16 +143,21 @@ const CategoryBreakdownScreen = ({ route }) => {
           />
         </View>
 
-        <BaseText text4 margin={{ top: 14, bottom: 8 }}>
+        <BaseText
+          text4
+          margin={{ top: 14, bottom: 8 }}
+          isLoading={getCategory.isLoading}>
           Used
         </BaseText>
         <TouchableOpacity onPress={onBudgetPress}>
           <View style={styles.headerAggr}>
-            <AmountText h4>
+            <AmountText h4 isLoading={getCategory.isLoading}>
               {aggrTransactionsQuery.data?.results?.[categoryID].sum || 0}
             </AmountText>
             <BaseDivider orientation="vertical" margin={6} />
-            <AmountText h4>200</AmountText>
+            <AmountText h4 isLoading={getCategory.isLoading}>
+              200
+            </AmountText>
           </View>
           <BaseLinearProgress value={0.3} />
         </TouchableOpacity>

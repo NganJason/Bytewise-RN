@@ -6,10 +6,17 @@ import { BaseScreen, DateNavigator } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { BaseScrollableTab } from '../../Components/View';
 import BudgetOverview from '../Budget/BudgetOverview';
+import * as Localization from 'expo-localization';
+import BreakdownOverviewScreen from './BreakdownOverviewScreen';
 
 const TODAY = new Date();
 const scrollableTabs = [
-  { name: 'Budget', iconName: 'credit-card', iconType: 'feather' },
+  {
+    name: 'Budget',
+    iconName: 'filetext1',
+    iconType: 'ant-design',
+  },
+  { name: 'Breakdown', iconName: 'grid', iconType: 'feather' },
 ];
 
 const OverviewScreen = ({ navigation }) => {
@@ -19,6 +26,8 @@ const OverviewScreen = ({ navigation }) => {
   const [activeDate, setActiveDate] = useState(TODAY);
   const onDateMove = newDate => {
     setActiveDate(newDate);
+    const deviceTimezone = Localization.timezone;
+    console.log(deviceTimezone);
   };
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
@@ -30,6 +39,8 @@ const OverviewScreen = ({ navigation }) => {
     switch (activeTab.name) {
       case 'Budget':
         return <BudgetOverview activeDate={activeDate} />;
+      case 'Breakdown':
+        return <BreakdownOverviewScreen activeDate={activeDate} />;
       default:
         return <BudgetOverview activeDate={activeDate} />;
     }

@@ -21,6 +21,7 @@ const BaseCheckbox = ({
       title={title}
       checked={checked}
       textStyle={styles.checkBoxText}
+      containerStyle={styles.checkBoxContainer}
       onPress={onCheck}
       checkedIcon={
         <Icon
@@ -53,6 +54,10 @@ const getStyles = theme => {
       ...theme.fontStyles.text2,
       alignSelf: 'center',
       color: theme.colors.color6,
+    },
+    checkBoxContainer: {
+      marginVertical: 8,
+      padding: 0,
     },
   });
 };

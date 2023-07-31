@@ -36,7 +36,6 @@ const TransactionScreen = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const [activeDate, setActiveDate] = useState(TODAY);
-
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );

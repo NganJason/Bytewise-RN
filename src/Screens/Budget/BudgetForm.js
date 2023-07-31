@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
+  BaseCheckboxInput,
   BaseCurrencyInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
@@ -34,12 +35,12 @@ const BudgetForm = ({ route }) => {
   const navigation = useNavigation();
 
   const {
-    budget_id: budgetID = '',
+    category_id: categoryID = '',
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
     target_date_string: targetDateString = '',
   } = route?.params || {};
   const isAddBudget = () => {
-    return budgetID === '';
+    return categoryID === '';
   };
 
   const targetDate = useMemo(() => {
@@ -67,6 +68,7 @@ const BudgetForm = ({ route }) => {
     category_ids: [],
     from_date: targetDate,
     to_date: targetDate,
+    change_enum: 0,
   });
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
@@ -85,44 +87,44 @@ const BudgetForm = ({ route }) => {
     category_type: TRANSACTION_TYPE_EXPENSE,
   });
 
-  const getBudget = useGetBudget(
-    {
-      budget_id: budgetID,
-      date: getDateString(targetDate),
-    },
-    { enabled: budgetID !== '' },
-  );
+  // const getBudget = useGetBudget(
+  //   {
+  //     category_id: categoryID,
+  //     date: getDateString(targetDate),
+  //   },
+  //   { enabled: categoryID !== '' },
+  // );
 
   const setBudget = useSetBudget({
     onSuccess: navigation.goBack,
   });
 
-  useEffect(() => {
-    if (getBudget.data) {
-      let { budget = {}, categories = [] } =
-        getBudget?.data?.category_budget || {};
+  // useEffect(() => {
+  //   if (getBudget.data) {
+  //     let { budget = {}, categories = [] } =
+  //       getBudget?.data?.category_budget || {};
 
-      let ids = [];
-      categories.map(category => {
-        ids.push(category.category_id);
-      });
+  //     let ids = [];
+  //     categories.map(category => {
+  //       ids.push(category.category_id);
+  //     });
 
-      let form = {
-        budget_name: budget.budget_name,
-        budget_type: budget.budget_type,
-        category_ids: ids,
-        from_date: targetDate,
-        to_date: targetDate,
-      };
+  //     let form = {
+  //       budget_name: budget.budget_name,
+  //       budget_type: budget.budget_type,
+  //       category_ids: ids,
+  //       from_date: targetDate,
+  //       to_date: targetDate,
+  //     };
 
-      if (budget.budget_breakdowns.length > 0) {
-        let { amount = 0 } = budget.budget_breakdowns[0];
-        form.budget_amount = amount;
-      }
+  //     if (budget.budget_breakdowns.length > 0) {
+  //       let { amount = 0 } = budget.budget_breakdowns[0];
+  //       form.budget_amount = amount;
+  //     }
 
-      setBudgetForm(form);
-    }
-  }, [getBudget.data, targetDate]);
+  //     setBudgetForm(form);
+  //   }
+  // }, [getBudget.data, targetDate]);
 
   const onBudgetTypeChange = e => {
     toggleBudgetTypeModal();
@@ -142,6 +144,10 @@ const BudgetForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, category_ids: ids });
   };
 
+  const onCheckBoxChange = e => {
+    setBudgetForm({ ...budgetForm, change_enum: e });
+  };
+
   const onSave = () => {
     validate();
     let isValidationPassed = Object.keys(formErrors).length === 0;
@@ -151,7 +157,7 @@ const BudgetForm = ({ route }) => {
     }
 
     setBudget.mutate({
-      budget_id: budgetID === '' ? null : budgetID,
+      // budget_id: budgetID === '' ? null : budgetID,
       budget_name: budgetForm.budget_name,
       budget_type: budgetForm.budget_type,
       budget_amount: String(budgetForm.budget_amount),
@@ -162,7 +168,7 @@ const BudgetForm = ({ route }) => {
   };
 
   const isFormLoading = () => {
-    return getCategories.isLoading || getBudget.isLoading;
+    return getCategories.isLoading;
   };
 
   const getCategoryItems = (categories = []) => {
@@ -173,7 +179,10 @@ const BudgetForm = ({ route }) => {
     return items;
   };
 
-  useError([getBudget, setBudget]);
+  useError([
+    setBudget,
+    // getBudget
+  ]);
 
   return (
     <BaseScreen
@@ -194,12 +203,15 @@ const BudgetForm = ({ route }) => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <TouchInput
-          label="Category"
-          // value={transactionForm.category.category_name}
-          onPress={toggleCategoryModal}
-          errorMessage={showValidation && formErrors.category}
-        />
+        {isAddBudget() && (
+          <TouchInput
+            label="Category"
+            // value={transactionForm.category.category_name}
+            onPress={toggleCategoryModal}
+            errorMessage={showValidation && formErrors.category}
+          />
+        )}
+
         <BaseBottomSheet
           isVisible={isCategoryModalVisible}
           onBackdropPress={toggleCategoryModal}
@@ -250,15 +262,48 @@ const BudgetForm = ({ route }) => {
           errorMessage={showValidation && formErrors.budget_amount}
         />
 
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={setBudget.isLoading}
+        {!isAddBudget() && (
+          <BaseCheckboxInput
+            label="Edit Budget For"
+            value={budgetForm.change_enum}
+            onChange={onCheckBoxChange}
+            items={[
+              {
+                title: 'July only',
+                value: 0,
+              },
+              {
+                title: 'July and all future months',
+                value: 1,
+              },
+              {
+                title: 'All past and future months',
+                value: 2,
+              },
+            ]}
           />
-        </View>
+        )}
+
+        {!isAddBudget() && (
+          <View style={styles.btnContainer}>
+            <BaseButton
+              title="Delete"
+              size="lg"
+              type="outline"
+              width={200}
+              // onPress={onDelete}
+              // loading={deleteTransaction.isLoading}
+            />
+          </View>
+        )}
+
+        <BaseButton
+          title="Save"
+          size="lg"
+          width={200}
+          onPress={onSave}
+          loading={setBudget.isLoading}
+        />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
@@ -283,8 +328,8 @@ const getStyles = theme =>
       flex: 1,
     },
     btnContainer: {
-      marginTop: theme.spacing.lg,
-      marginBottom: theme.spacing.md,
+      marginTop: 40,
+      marginBottom: 16,
     },
   });
 

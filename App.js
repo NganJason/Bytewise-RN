@@ -32,6 +32,7 @@ import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBrea
 import LotForm from './src/Screens/Account/Investment/LotForm';
 import { BottomToastProvider } from './src/_shared/context/BottomToastContext';
 import BottomToast from './src/Components/Common/BottomToast';
+import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
 
@@ -143,6 +144,10 @@ function Main() {
               <Stack.Screen
                 name={ROUTES.categoryBreakdown}
                 component={CategoryBreakdownScreen}
+              />
+              <Stack.Screen
+                name={ROUTES.categoriesOverview}
+                component={CategoryOverviewScreen}
               />
               <Stack.Screen
                 name={ROUTES.accountSelection}
