@@ -19,14 +19,16 @@ const BaseCheckboxInput = ({
 
   return (
     <View>
-      <View style={styles.label}>
-        <BaseText h4 margin={{ right: 6 }}>
-          {label}
-        </BaseText>
-        {desc.text !== '' && (
-          <InfoToolTip title={desc.title} message={desc.text} />
-        )}
-      </View>
+      {label !== '' && (
+        <View style={styles.label}>
+          <BaseText h4 margin={{ right: 6 }}>
+            {label}
+          </BaseText>
+          {desc.text !== '' && (
+            <InfoToolTip title={desc.title} message={desc.text} />
+          )}
+        </View>
+      )}
 
       {items.map((item, idx) => (
         <BaseCheckbox

@@ -28,6 +28,7 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useValidation } from '../../_shared/hooks/validation';
 import { useError } from '../../_shared/hooks/error';
+import { BaseOverlay } from '../../Components/View';
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -68,13 +69,19 @@ const BudgetForm = ({ route }) => {
     category_ids: [],
     from_date: targetDate,
     to_date: targetDate,
-    change_enum: 0,
+    update_enum: 0,
+    delete_enum: 0,
   });
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);
   const toggleBudgetTypeModal = () => {
     setIsBudgetTypeModalVisible(!isBudgetTypeModalVisible);
+  };
+
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const toggleDeleteModal = () => {
+    setIsDeleteModalVisible(!isDeleteModalVisible);
   };
 
   const [formErrors, setFormErrors] = useState({});
@@ -144,8 +151,12 @@ const BudgetForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, category_ids: ids });
   };
 
-  const onCheckBoxChange = e => {
-    setBudgetForm({ ...budgetForm, change_enum: e });
+  const onUpdateEnumChange = e => {
+    setBudgetForm({ ...budgetForm, update_enum: e, delete_enum: e });
+  };
+
+  const onDeleteEnumChange = e => {
+    setBudgetForm({ ...budgetForm, delete_enum: e });
   };
 
   const onSave = () => {
@@ -177,6 +188,23 @@ const BudgetForm = ({ route }) => {
       items.push({ id: val.category_id, name: val.category_name });
     });
     return items;
+  };
+
+  const getEditEnums = () => {
+    return [
+      {
+        title: 'July only',
+        value: 0,
+      },
+      {
+        title: 'July and all future months',
+        value: 1,
+      },
+      {
+        title: 'All past and future months',
+        value: 2,
+      },
+    ];
   };
 
   useError([
@@ -265,22 +293,9 @@ const BudgetForm = ({ route }) => {
         {!isAddBudget() && (
           <BaseCheckboxInput
             label="Edit Budget For"
-            value={budgetForm.change_enum}
-            onChange={onCheckBoxChange}
-            items={[
-              {
-                title: 'July only',
-                value: 0,
-              },
-              {
-                title: 'July and all future months',
-                value: 1,
-              },
-              {
-                title: 'All past and future months',
-                value: 2,
-              },
-            ]}
+            value={budgetForm.update_enum}
+            onChange={onUpdateEnumChange}
+            items={getEditEnums()}
           />
         )}
 
@@ -291,8 +306,15 @@ const BudgetForm = ({ route }) => {
               size="lg"
               type="outline"
               width={200}
-              // onPress={onDelete}
-              // loading={deleteTransaction.isLoading}
+              onPress={toggleDeleteModal}
+            />
+
+            <DeleteBudgetOverlay
+              isVisible={isDeleteModalVisible}
+              close={toggleDeleteModal}
+              onChange={onDeleteEnumChange}
+              value={budgetForm.delete_enum}
+              items={getEditEnums()}
             />
           </View>
         )}
@@ -309,27 +331,56 @@ const BudgetForm = ({ route }) => {
   );
 };
 
+const DeleteBudgetOverlay = ({
+  isVisible = false,
+  close = function () {},
+  value = 0,
+  items = [],
+  onChange = function (value) {},
+  onConfirm = function () {},
+  isConfirmLoading = false,
+}) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <BaseOverlay isVisible={isVisible} onBackdropPress={close}>
+      <BaseText text1>Delete budget for</BaseText>
+      <BaseCheckboxInput items={items} value={value} onChange={onChange} />
+
+      <View style={styles.overlayBtnContainer}>
+        <BaseButton
+          title="Cancel"
+          type="outline"
+          size="lg"
+          width={200}
+          onPress={close}
+        />
+      </View>
+
+      <BaseButton
+        title="Confirm"
+        size="lg"
+        width={200}
+        onPress={onConfirm}
+        isLoading={isConfirmLoading}
+      />
+    </BaseOverlay>
+  );
+};
+
 const getStyles = theme =>
   StyleSheet.create({
     formBody: {
       paddingVertical: theme.spacing.xl,
     },
-    dateContainer: {
-      flexDirection: 'row',
-      width: '100%',
-      alignItem: 'center',
-      justifyContent: 'space-between',
-    },
-    arrowIcon: {
-      justifyContent: 'center',
-      marginHorizontal: theme.spacing.lg,
-    },
-    dateInput: {
-      flex: 1,
-    },
     btnContainer: {
       marginTop: 40,
       marginBottom: 16,
+    },
+    overlayBtnContainer: {
+      marginBottom: 16,
+      marginTop: 30,
     },
   });
 
