@@ -12,7 +12,7 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { useError } from '../../_shared/hooks/error';
 import { useAggrTransactions } from '../../_shared/query';
 import { useGetBudgets } from '../../_shared/query/budget';

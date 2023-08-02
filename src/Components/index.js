@@ -56,6 +56,8 @@ import {
   InfoToolTip,
 } from './Common';
 
+import { BaseDonutChart, ChartLegend } from './Chart';
+
 export {
   BaseCheckbox,
   BaseCheckboxInput,
@@ -99,4 +101,6 @@ export {
   HoldingRow,
   LotRow,
   InfoToolTip,
+  BaseDonutChart,
+  ChartLegend,
 };

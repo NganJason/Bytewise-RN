@@ -2,7 +2,7 @@ import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 import HideKeyboard from './HideKeyboard';
 

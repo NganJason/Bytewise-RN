@@ -86,3 +86,11 @@ export const EmptyContentConfig = {
     image: sapiens1,
   },
 };
+
+export const DonutChartColors = [
+  '#1C6758',
+  '#3D8361',
+  '#61876E',
+  '#D6CDA4',
+  '#EEF2E6',
+];

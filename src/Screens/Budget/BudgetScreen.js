@@ -19,7 +19,7 @@ import {
 } from '../../_shared/apis/enum';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { useGetBudgets } from '../../_shared/query/budget';
 import { getDateString } from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';

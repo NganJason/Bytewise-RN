@@ -28,6 +28,7 @@ const BaseText = ({
   style = {},
   isLoading = false,
   loadingLen = 5,
+  shadow = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -105,13 +106,14 @@ const BaseText = ({
       pHeight={getLoadingPlaceholderHeight()}
       containerStyles={{ width: loadingCharSize * loadingLen }}>
       <Text
-        style={{
-          ...commonTextStyles,
-          ...(center && styles.center),
-          ...getMargin(),
-          ...{ color: color },
-          ...style,
-        }}
+        style={[
+          commonTextStyles,
+          center && styles.center,
+          getMargin(),
+          { color: color },
+          style,
+          shadow && styles.textShadow,
+        ]}
         adjustsFontSizeToFit={adjustsFontSizeToFit}
         numberOfLines={numberOfLines}
         ellipsizeMode={ellipsizeMode}>
@@ -128,5 +130,10 @@ const getStyles = _ =>
     center: {
       width: '100%',
       textAlign: 'center',
+    },
+    textShadow: {
+      textShadowColor: 'rgba(0, 0, 0, 0.5)', // Shadow color (black with 50% transparency)
+      textShadowOffset: { width: 0, height: 0 }, // Shadow offset (2 pixels to the right and 2 pixels down)
+      textShadowRadius: 2,
     },
   });

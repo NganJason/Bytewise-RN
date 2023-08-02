@@ -6,7 +6,7 @@ import {
   BottomToastContext,
   ToastTypeInfo,
 } from '../../_shared/context/BottomToastContext';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { BaseText } from '../Text';
 import { IconButton } from '../Touch';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { BottomSheet, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 
 import { debounce } from '../../_shared/util/common';
 import BaseSearchBar from './BaseSearchBar';

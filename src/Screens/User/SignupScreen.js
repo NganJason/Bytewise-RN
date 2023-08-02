@@ -14,7 +14,7 @@ import {
 
 import { signupHero } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { AuthContext } from '../../_shared/context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { validateSignUp } from '../../_shared/validator/signup';

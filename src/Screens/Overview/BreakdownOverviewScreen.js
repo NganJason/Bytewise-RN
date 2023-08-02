@@ -43,14 +43,18 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
     return aggrTransactionsByTypeQuery?.data?.results?.[type]?.sum || 0;
   };
 
-  const getItemCard = (title = '', subtitle = '', imgSource = '') => {
+  const getItemCard = (
+    title = '',
+    subtitle = '',
+    imgSource = '',
+    route = '',
+    routeParam = {},
+  ) => {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
         onPress={() => {
-          navigation.navigate(ROUTES.categoriesOverview, {
-            category_type: TRANSACTION_TYPE_EXPENSE,
-          });
+          navigation.navigate(route, routeParam);
         }}>
         <View>
           <BaseText text3>{title}</BaseText>
@@ -69,12 +73,22 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
         'Expense',
         getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE),
         expenseIcon,
+        ROUTES.categoriesOverview,
+        {
+          category_type: TRANSACTION_TYPE_EXPENSE,
+          active_date: activeDate.valueOf(),
+        },
       )}
 
       {getItemCard(
         'Income',
         getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME),
         incomeIcon,
+        ROUTES.categoriesOverview,
+        {
+          category_type: TRANSACTION_TYPE_INCOME,
+          active_date: activeDate.valueOf(),
+        },
       )}
     </View>
   );

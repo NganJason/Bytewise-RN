@@ -4,7 +4,7 @@ import { BottomSheet, useTheme } from '@rneui/themed';
 
 import { BaseText } from '../Text';
 import { BaseButton } from '../Touch';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import BaseRow from './BaseRow';
 
 const BaseBottomSheet = ({
