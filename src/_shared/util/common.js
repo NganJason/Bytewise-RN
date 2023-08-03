@@ -11,3 +11,11 @@ export const debounce = (func = function () {}, delayInSeconds = 1) => {
     }, delayInSeconds * 1000);
   };
 };
+
+export const getProgress = (currValue = 0, totalValue = 0) => {
+  let progress = Math.abs(Number(currValue)) / totalValue;
+  if (isFinite(progress)) {
+    return progress;
+  }
+  return 0;
+};

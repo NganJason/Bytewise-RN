@@ -39,14 +39,14 @@ const DatePickerInput = ({
     toggleModal();
   };
 
-  const getDateString = () => {
+  const getFormattedDateString = () => {
     switch (mode) {
       case DatePickerMode.Year:
         return getYearString(selectedDate);
       case DatePickerMode.YearMonth:
         return getYearMonthString(selectedDate);
       case DatePickerMode.Date:
-        return getDateString(selectedDate);
+        return getFormattedDateString(selectedDate);
       default:
         return '';
     }
@@ -56,7 +56,7 @@ const DatePickerInput = ({
     <>
       <TouchInput
         label={label}
-        value={getDateString()}
+        value={getFormattedDateString()}
         onPress={toggleModal}
         {...props}
       />

@@ -6,7 +6,6 @@ import { BaseScreen, DateNavigator } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { BaseScrollableTab } from '../../Components/View';
 import BudgetOverview from '../Budget/BudgetOverview';
-import * as Localization from 'expo-localization';
 import BreakdownOverviewScreen from './BreakdownOverviewScreen';
 
 const TODAY = new Date();
@@ -26,8 +25,6 @@ const OverviewScreen = ({ navigation }) => {
   const [activeDate, setActiveDate] = useState(TODAY);
   const onDateMove = newDate => {
     setActiveDate(newDate);
-    const deviceTimezone = Localization.timezone;
-    console.log(deviceTimezone);
   };
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);

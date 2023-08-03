@@ -19,10 +19,7 @@ import {
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
 import { useGetAccount } from '../../_shared/query/account';
-import {
-  useCreateAccount,
-  useUpdateAccount,
-} from '../../_shared/mutations/account';
+import { useCreateAccount, useUpdateAccount } from '../../_shared/mutations';
 import {
   BaseKeyboardAwareScrollView,
   BaseOverlay,

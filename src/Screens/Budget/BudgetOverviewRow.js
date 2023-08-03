@@ -9,34 +9,33 @@ import {
   BaseText,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
+import { getProgress } from '../../_shared/util/common';
 import { capitalize } from '../../_shared/util/string';
 
-const BudgetOverviewRow = ({ budget }) => {
+const BudgetOverviewRow = ({ categoryWithBudget }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { budget_id = '', budget_name = '', amount = 0, used = 0 } = budget;
+  const {
+    category_id: categoryID = '',
+    category_name: catgoryName = '',
+    budget = {},
+  } = categoryWithBudget || {};
 
-  const getProgress = () => {
-    let progress = Math.abs(Number(used)) / amount;
-    if (isFinite(progress)) {
-      return progress;
-    }
-    return 0;
-  };
+  const { used_amount: usedAmount = 0, amount = 0 } = budget;
 
   const onPress = () => {
-    navigation.navigate(ROUTES.categoryBreakdown);
+    navigation.navigate(ROUTES.categoryBreakdown, { category_id: categoryID });
   };
 
   return (
-    <TouchableOpacity key={budget_id} style={styles.row} onPress={onPress}>
+    <TouchableOpacity style={styles.row} onPress={onPress}>
       <View style={styles.rowInfo}>
-        <BaseText text3>{capitalize(budget_name)}</BaseText>
+        <BaseText text3>{capitalize(catgoryName)}</BaseText>
         <View style={styles.aggr}>
           <AmountText text4 decimal={0} style={{ color: theme.colors.color7 }}>
-            {used}
+            {usedAmount}
           </AmountText>
           <BaseDivider orientation={'vertical'} margin={5} />
           <AmountText text4 decimal={0} style={{ color: theme.colors.color7 }}>
@@ -46,7 +45,7 @@ const BudgetOverviewRow = ({ budget }) => {
       </View>
 
       <View style={styles.progress}>
-        <BaseLinearProgress value={getProgress()} />
+        <BaseLinearProgress value={getProgress(usedAmount, amount)} />
       </View>
     </TouchableOpacity>
   );

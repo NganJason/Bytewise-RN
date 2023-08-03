@@ -33,10 +33,10 @@ export const renderCalendarTs = ts => {
 
 export const getDateStringFromTs = ts => {
   const date = new Date(ts);
-  return getDateString(date);
+  return getFormattedDateString(date);
 };
 
-export const getDateString = (d = new Date()) => {
+export const getFormattedDateString = (d = new Date()) => {
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const day = d.getDate();
@@ -45,6 +45,17 @@ export const getDateString = (d = new Date()) => {
   const formattedDay = day.toString().padStart(2, '0');
 
   return `${year}-${formattedMonth}-${formattedDay}`;
+};
+
+export const getDateStringWithoutDelim = (d = new Date()) => {
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+
+  const formattedMonth = month.toString().padStart(2, '0');
+  const formattedDay = day.toString().padStart(2, '0');
+
+  return `${year}${formattedMonth}${formattedDay}`;
 };
 
 export const getYearMonthString = (d = new Date()) => {

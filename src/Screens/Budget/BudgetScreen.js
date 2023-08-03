@@ -21,7 +21,7 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useDimension } from '../../_shared/hooks';
 import { useGetBudgets } from '../../_shared/query/budget';
-import { getDateString } from '../../_shared/util/date';
+import { getFormattedDateString } from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';
 import { getBudgetAmountFromBreakdown } from '../../_shared/util/budget';
 import { useError } from '../../_shared/hooks/error';
@@ -38,7 +38,7 @@ const BudgetScreen = () => {
   };
 
   const getBudgets = useGetBudgets({
-    date: getDateString(activeDate),
+    date: getFormattedDateString(activeDate),
   });
 
   const onAddBugdet = () => {
@@ -63,7 +63,7 @@ const BudgetScreen = () => {
             onPress={() => {
               navigation.navigate(ROUTES.budgetForm, {
                 budget_id: budget.budget_id,
-                target_date_string: getDateString(activeDate),
+                target_date_string: getFormattedDateString(activeDate),
               });
             }}>
             <BaseText text3>{capitalize(budget.budget_name)}</BaseText>

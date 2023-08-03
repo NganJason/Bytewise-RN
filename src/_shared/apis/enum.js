@@ -8,14 +8,6 @@ export const TRANSACTION_TYPES = {
   [TRANSACTION_TYPE_TRANSFER]: 'Transfer',
 };
 
-export const BUDGET_TYPE_MONTHLY = 1;
-export const BUDGET_TYPE_ANNUAL = 2;
-
-export const BUDGET_TYPES = {
-  [BUDGET_TYPE_MONTHLY]: 'Monthly',
-  [BUDGET_TYPE_ANNUAL]: 'Annual',
-};
-
 export const ACCOUNT_TYPE_BIT_SHIFT = 4;
 export const ACCOUNT_TYPE_BIT_SIZE = 4;
 
@@ -55,4 +47,22 @@ export const HOLDING_TYPE_CUSTOM = 2;
 export const HOLDING_TYPES = {
   [HOLDING_TYPE_DEFAULT]: 'Default',
   [HOLDING_TYPE_CUSTOM]: 'Custom',
+};
+
+export const BUDGET_TYPE_MONTHLY = 1;
+export const BUDGET_TYPE_ANNUAL = 2;
+
+export const BUDGET_TYPES = {
+  [BUDGET_TYPE_MONTHLY]: 'Monthly',
+  [BUDGET_TYPE_ANNUAL]: 'Annual',
+};
+
+export const BUDGET_REPEAT_NOW = 0;
+export const BUDGET_REPEAT_NOW_TO_FUTURE = 1;
+export const BUDGET_REPEAT_ALL_TIME = 2;
+
+export const BUDGET_REPEATS = {
+  [BUDGET_REPEAT_NOW]: 'This month only',
+  [BUDGET_REPEAT_NOW_TO_FUTURE]: 'This month and future months',
+  [BUDGET_REPEAT_ALL_TIME]: 'All past and future months',
 };

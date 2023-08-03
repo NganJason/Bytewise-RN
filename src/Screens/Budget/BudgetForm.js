@@ -13,22 +13,23 @@ import {
   TouchInput,
 } from '../../Components';
 import {
+  BUDGET_REPEAT_ALL_TIME,
+  BUDGET_REPEAT_NOW_TO_FUTURE,
   BUDGET_TYPES,
   BUDGET_TYPE_MONTHLY,
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import { validateBudget } from '../../_shared/validator/budget';
 import { getBudgetTypes } from '../../_shared/util/budget';
-import { useSetBudget } from '../../_shared/mutations';
-import { getDateString } from '../../_shared/util/date';
-import { useGetCategories } from '../../_shared/query';
-import { useGetBudget } from '../../_shared/query/budget';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useValidation } from '../../_shared/hooks/validation';
 import { useError } from '../../_shared/hooks/error';
 import { BaseOverlay } from '../../Components/View';
+import { useGetCategoriesHelper } from '../../_shared/hooks';
+import { useCreateBudget } from '../../_shared/mutations';
+import { getDateStringWithoutDelim } from '../../_shared/util/date';
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -62,17 +63,6 @@ const BudgetForm = ({ route }) => {
     toggleCategoryModal();
   };
 
-  const [budgetForm, setBudgetForm] = useState({
-    budget_name: '',
-    budget_type: budgetType,
-    budget_amount: 0,
-    category_ids: [],
-    from_date: targetDate,
-    to_date: targetDate,
-    update_enum: 0,
-    delete_enum: 0,
-  });
-
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);
   const toggleBudgetTypeModal = () => {
@@ -84,54 +74,36 @@ const BudgetForm = ({ route }) => {
     setIsDeleteModalVisible(!isDeleteModalVisible);
   };
 
+  const [budgetForm, setBudgetForm] = useState({
+    category_id: '',
+    category_name: '',
+    budget_type: budgetType,
+    amount: 0,
+    budget_date: getDateStringWithoutDelim(targetDate),
+    budget_repeat: isAddBudget()
+      ? BUDGET_REPEAT_ALL_TIME
+      : BUDGET_REPEAT_NOW_TO_FUTURE,
+  });
+
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
   useEffect(() => {
     setFormErrors(validateBudget(budgetForm));
   }, [budgetForm]);
 
-  const getCategories = useGetCategories({
-    category_type: TRANSACTION_TYPE_EXPENSE,
+  const {
+    categoriesWithoutBudget = [],
+    getQueries = [],
+    isLoading = false,
+  } = useGetCategoriesHelper({
+    budgetDate: targetDate,
   });
 
-  // const getBudget = useGetBudget(
-  //   {
-  //     category_id: categoryID,
-  //     date: getDateString(targetDate),
-  //   },
-  //   { enabled: categoryID !== '' },
-  // );
-
-  const setBudget = useSetBudget({
-    onSuccess: navigation.goBack,
+  const createBudget = useCreateBudget({
+    onSuccess: resp => {
+      navigation.goBack();
+    },
   });
-
-  // useEffect(() => {
-  //   if (getBudget.data) {
-  //     let { budget = {}, categories = [] } =
-  //       getBudget?.data?.category_budget || {};
-
-  //     let ids = [];
-  //     categories.map(category => {
-  //       ids.push(category.category_id);
-  //     });
-
-  //     let form = {
-  //       budget_name: budget.budget_name,
-  //       budget_type: budget.budget_type,
-  //       category_ids: ids,
-  //       from_date: targetDate,
-  //       to_date: targetDate,
-  //     };
-
-  //     if (budget.budget_breakdowns.length > 0) {
-  //       let { amount = 0 } = budget.budget_breakdowns[0];
-  //       form.budget_amount = amount;
-  //     }
-
-  //     setBudgetForm(form);
-  //   }
-  // }, [getBudget.data, targetDate]);
 
   const onBudgetTypeChange = e => {
     toggleBudgetTypeModal();
@@ -139,24 +111,20 @@ const BudgetForm = ({ route }) => {
   };
 
   const onBudgetAmountChange = e => {
-    setBudgetForm({ ...budgetForm, budget_amount: e });
+    setBudgetForm({ ...budgetForm, amount: e });
   };
 
-  const onCategoriesChange = categories => {
-    let ids = [];
-    categories.map(val => {
-      ids.push(val.id);
+  const onCategoryChange = e => {
+    toggleCategoryModal();
+    setBudgetForm({
+      ...budgetForm,
+      category_id: e.value,
+      category_name: e.name,
     });
-
-    setBudgetForm({ ...budgetForm, category_ids: ids });
   };
 
-  const onUpdateEnumChange = e => {
-    setBudgetForm({ ...budgetForm, update_enum: e, delete_enum: e });
-  };
-
-  const onDeleteEnumChange = e => {
-    setBudgetForm({ ...budgetForm, delete_enum: e });
+  const onBudgetRepeatChange = e => {
+    setBudgetForm({ ...budgetForm, budget_repeat: e });
   };
 
   const onSave = () => {
@@ -167,25 +135,15 @@ const BudgetForm = ({ route }) => {
       return;
     }
 
-    setBudget.mutate({
-      // budget_id: budgetID === '' ? null : budgetID,
-      budget_name: budgetForm.budget_name,
-      budget_type: budgetForm.budget_type,
-      budget_amount: String(budgetForm.budget_amount),
-      category_ids: budgetForm.category_ids,
-      range_start_date: getDateString(budgetForm.from_date),
-      range_end_date: getDateString(budgetForm.to_date),
-    });
+    if (isAddBudget()) {
+      createBudget.mutate(budgetForm);
+    }
   };
 
-  const isFormLoading = () => {
-    return getCategories.isLoading;
-  };
-
-  const getCategoryItems = (categories = []) => {
+  const getCategoryItems = () => {
     let items = [];
-    categories.map(val => {
-      items.push({ id: val.category_id, name: val.category_name });
+    categoriesWithoutBudget.map(val => {
+      items.push({ value: val.category_id, name: val.category_name });
     });
     return items;
   };
@@ -207,14 +165,11 @@ const BudgetForm = ({ route }) => {
     ];
   };
 
-  useError([
-    setBudget,
-    // getBudget
-  ]);
+  useError(getQueries());
 
   return (
     <BaseScreen
-      isLoading={isFormLoading()}
+      isLoading={isLoading()}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -234,19 +189,18 @@ const BudgetForm = ({ route }) => {
         {isAddBudget() && (
           <TouchInput
             label="Category"
-            // value={transactionForm.category.category_name}
+            value={budgetForm.category_name}
             onPress={toggleCategoryModal}
             errorMessage={showValidation && formErrors.category}
           />
         )}
-
         <BaseBottomSheet
           isVisible={isCategoryModalVisible}
           onBackdropPress={toggleCategoryModal}
           close={toggleCategoryModal}
-          onSelect={onCategoriesChange}
-          items={getCategoryItems(getCategories.data?.categories)}
-          label="category_name"
+          onSelect={onCategoryChange}
+          items={getCategoryItems()}
+          label="name"
           headerProps={{
             leftComponent: (
               <BaseButton
@@ -285,16 +239,16 @@ const BudgetForm = ({ route }) => {
 
         <BaseCurrencyInput
           label="Amount"
-          value={budgetForm.budget_amount}
+          value={budgetForm.amount}
           onChangeText={onBudgetAmountChange}
-          errorMessage={showValidation && formErrors.budget_amount}
+          errorMessage={showValidation && formErrors.amount}
         />
 
         {!isAddBudget() && (
           <BaseCheckboxInput
             label="Edit Budget For"
-            value={budgetForm.update_enum}
-            onChange={onUpdateEnumChange}
+            value={budgetForm.budget_repeat}
+            onChange={onBudgetRepeatChange}
             items={getEditEnums()}
           />
         )}
@@ -312,20 +266,14 @@ const BudgetForm = ({ route }) => {
             <DeleteBudgetOverlay
               isVisible={isDeleteModalVisible}
               close={toggleDeleteModal}
-              onChange={onDeleteEnumChange}
-              value={budgetForm.delete_enum}
+              onChange={onBudgetRepeatChange}
+              value={budgetForm.budget_repeat}
               items={getEditEnums()}
             />
           </View>
         )}
 
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onSave}
-          loading={setBudget.isLoading}
-        />
+        <BaseButton title="Save" size="lg" width={200} onPress={onSave} />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
