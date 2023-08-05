@@ -28,6 +28,8 @@ export const useUpdateCategory = (opts = {}) => {
       // refetch any single category record
       queryClient.invalidateQueries([queryKeys.category, category_id]);
 
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
+
       opts.onSuccess && opts.onSuccess();
     },
   });

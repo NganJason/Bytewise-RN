@@ -1,4 +1,5 @@
 import { DAYS, MONTHS_VALUE } from '../constant/constant';
+import { capitalizeFirstWord } from './string';
 
 export const moveMonth = (date, diff) =>
   new Date(date.setMonth(date.getMonth() + diff));
@@ -20,6 +21,12 @@ export const getDay = (d = new Date()) => {
   return d.getDay();
 };
 
+export const getMonthStr = (d = new Date()) => {
+  const options = { month: 'short' };
+  const monthString = d.toLocaleString('en-US', options);
+  return capitalizeFirstWord(monthString);
+};
+
 export const renderCalendarTs = ts => {
   const d = new Date(ts);
 
@@ -34,6 +41,11 @@ export const renderCalendarTs = ts => {
 export const getDateStringFromTs = ts => {
   const date = new Date(ts);
   return getFormattedDateString(date);
+};
+
+export const getDateObjFromTs = ts => {
+  const d = new Date(ts);
+  return d;
 };
 
 export const getFormattedDateString = (d = new Date()) => {

@@ -8,7 +8,7 @@ export const useCreateBudget = (opts = {}) => {
 
   return useMutation(createBudget, {
     onSuccess: resp => {
-      queryClient.invalidateQueries([queryKeys.getCategoriesBudget]);
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
       opts.onSuccess && opts.onSuccess(resp);
     },
   });
@@ -19,7 +19,7 @@ export const useUpdateBudget = (opts = {}) => {
 
   return useMutation(updateBudget, {
     onSuccess: resp => {
-      queryClient.invalidateQueries([queryKeys.getCategoriesBudget]);
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
       opts.onSuccess && opts.onSuccess(resp);
     },
   });
@@ -30,7 +30,7 @@ export const useDeleteBudget = (opts = {}) => {
 
   return useMutation(deleteBudget, {
     onSuccess: resp => {
-      queryClient.invalidateQueries([queryKeys.getCategoriesBudget]);
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
       opts.onSuccess && opts.onSuccess(resp);
     },
   });

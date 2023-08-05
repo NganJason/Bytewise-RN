@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BaseButton, BaseText } from '../../Components';
+import { BaseButton, BaseText, IconButton } from '../../Components';
 import { EmptyContent, InfoToolTip } from '../../Components/Common';
 import { BaseLoadableView, BaseScrollView } from '../../Components/View';
 import {
@@ -21,6 +22,11 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
 
+  const [isEdit, setIsEdit] = useState(false);
+  const toggleEdit = () => {
+    setIsEdit(!isEdit);
+  };
+
   const { categoriesWithBudget, isLoading, getQueries } =
     useGetCategoriesHelper({
       budgetDate: activeDate,
@@ -38,7 +44,13 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
         return;
       }
       rows.push(
-        <BudgetOverviewRow key={categoryID} categoryWithBudget={category} />,
+        <BudgetOverviewRow
+          key={categoryID}
+          categoryWithBudget={category}
+          activeDate={activeDate}
+          isEdit={isEdit}
+          toggleEdit={toggleEdit}
+        />,
       );
     });
 
@@ -64,11 +76,11 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
     <View style={styles.screen}>
       <View style={styles.buttonContainer}>
         <BaseButton
-          title="Edit"
-          type="secondary"
+          title={isEdit ? 'Done' : 'Edit'}
+          type={isEdit ? 'tertiary' : 'secondary'}
           align="flex-end"
           size="sm"
-          onPress={() => navigation.navigate(ROUTES.budgetList)}
+          onPress={toggleEdit}
         />
       </View>
 
@@ -77,6 +89,22 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
           <View style={styles.container}>
             <View style={styles.title}>
               <BaseText h3>Monthly</BaseText>
+              {isEdit && (
+                <IconButton
+                  iconSize={22}
+                  type="clear"
+                  iconName="plus"
+                  iconType="entypo"
+                  color={theme.colors.color8}
+                  onPress={() => {
+                    navigation.navigate(ROUTES.budgetForm, {
+                      active_date: activeDate.valueOf(),
+                      budget_type: BUDGET_TYPE_MONTHLY,
+                    });
+                    toggleEdit();
+                  }}
+                />
+              )}
             </View>
             <BaseLoadableView isLoading={isLoading()}>
               {renderRows(BUDGET_TYPE_MONTHLY)}
@@ -85,13 +113,31 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
           <View style={styles.container}>
             <View style={styles.title}>
-              <BaseText h3 margin={{ right: 8 }}>
-                Annual
-              </BaseText>
-              <InfoToolTip
-                title={toolTipMessage.annualBudgetDesc.title}
-                message={toolTipMessage.annualBudgetDesc.text}
-              />
+              <View style={styles.textWithToolTip}>
+                <BaseText h3 margin={{ right: 8 }}>
+                  Annual
+                </BaseText>
+                <InfoToolTip
+                  title={toolTipMessage.annualBudgetDesc.title}
+                  message={toolTipMessage.annualBudgetDesc.text}
+                />
+              </View>
+              {isEdit && (
+                <IconButton
+                  iconSize={22}
+                  type="clear"
+                  iconName="plus"
+                  iconType="entypo"
+                  color={theme.colors.color8}
+                  onPress={() => {
+                    navigation.navigate(ROUTES.budgetForm, {
+                      active_date: activeDate.valueOf(),
+                      budget_type: BUDGET_TYPE_ANNUAL,
+                    });
+                    toggleEdit();
+                  }}
+                />
+              )}
             </View>
             <BaseLoadableView isLoading={isLoading()}>
               {renderRows(BUDGET_TYPE_ANNUAL)}
@@ -110,13 +156,18 @@ const getStyles = (theme, screenHeight) =>
     },
     container: {
       marginBottom: theme.spacing.xl,
-      minHeight: screenHeight * 0.25,
+      minHeight: screenHeight * 0.28,
     },
     title: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'space-between',
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.xl,
+    },
+    textWithToolTip: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     row: {
       marginBottom: 10,

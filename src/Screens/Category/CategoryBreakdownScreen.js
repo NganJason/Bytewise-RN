@@ -154,6 +154,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             </View>
             <BaseLinearProgress
               value={getProgress(budget.used_amount, budget.amount)}
+              showPercentage
             />
           </TouchableOpacity>
         </>
@@ -167,7 +168,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             text4
             margin={{ top: 14, bottom: 8 }}
             isLoading={isCategoryBudgetLoading()}>
-            Used
+            Total
           </BaseText>
           <AmountText h4 isLoading={isCategoryBudgetLoading()}>
             {getCategoryUsedAmount()}

@@ -49,8 +49,8 @@ export const HOLDING_TYPES = {
   [HOLDING_TYPE_CUSTOM]: 'Custom',
 };
 
-export const BUDGET_TYPE_MONTHLY = 1;
-export const BUDGET_TYPE_ANNUAL = 2;
+export const BUDGET_TYPE_MONTHLY = 0;
+export const BUDGET_TYPE_ANNUAL = 1;
 
 export const BUDGET_TYPES = {
   [BUDGET_TYPE_MONTHLY]: 'Monthly',

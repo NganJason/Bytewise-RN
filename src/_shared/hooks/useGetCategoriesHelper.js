@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useGetCategories } from '../query/category';
-import { TRANSACTION_TYPE_EXPENSE } from '../apis/enum';
 import { useGetCategoriesBudget } from '../query/budget';
 import * as Localization from 'expo-localization';
 import { getDateStringWithoutDelim } from '../util/date';
@@ -11,9 +10,7 @@ const useGetCategoriesHelper = ({ budgetDate = new Date() } = {}) => {
   const [categoriesWithoutBudget, setCategoriesWithoutBudget] = useState([]);
   const [categoryIDToCategoryMap, setCategoryIDToCategoryMap] = useState({});
 
-  const getCategories = useGetCategories({
-    category_type: TRANSACTION_TYPE_EXPENSE,
-  });
+  const getCategories = useGetCategories({});
   useEffect(() => {
     const { categories = [] } = getCategories.data || {};
     let ids = [];

@@ -56,13 +56,8 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
         onPress={() => {
           navigation.navigate(route, routeParam);
         }}>
-        <View>
-          <BaseText text3>{title}</BaseText>
-          <AmountText h2 margin={{ top: 10 }}>
-            {subtitle}
-          </AmountText>
-        </View>
-        <BaseImage source={imgSource} width={50} height={50} />
+        <BaseText text3>{title}</BaseText>
+        <AmountText h2>{subtitle}</AmountText>
       </TouchableOpacity>
     );
   };

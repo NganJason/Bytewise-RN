@@ -52,10 +52,10 @@ const BaseDonutChart = ({
         showText
         innerRadius={80}
         backgroundColor="white"
-        shadow={shadow}
+        shadow={true}
         shadowColor="black"
-        strokeWidth={1}
-        strokeColor="white"
+        // strokeWidth={1}
+        // strokeColor="white"
         labelsPosition="mid"
         centerLabelComponent={renderCenterComponent}
       />

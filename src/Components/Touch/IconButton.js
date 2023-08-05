@@ -1,31 +1,24 @@
 import { Icon } from '@rneui/themed';
 
-import BaseButton from './BaseButton';
-
 import { THEME } from '../../_shared/constant/theme';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const IconButton = ({
   onPress = function () {},
   iconName = '',
   iconType = '',
-  type = 'solid',
-  buttonSize = 'md',
   iconSize = 28,
   color = THEME.colors.color4,
-  align = 'center',
+  align = 'flex-start',
   buttonStyle = {},
 }) => {
   return (
-    <BaseButton
-      size={buttonSize}
-      type={type}
+    <TouchableOpacity
       onPress={onPress}
-      align={align}
       buttonStyle={buttonStyle}
-      icon={
-        <Icon name={iconName} type={iconType} size={iconSize} color={color} />
-      }
-    />
+      style={{ alignItems: align }}>
+      <Icon name={iconName} type={iconType} size={iconSize} color={color} />
+    </TouchableOpacity>
   );
 };
 

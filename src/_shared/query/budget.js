@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { getBudget, getBudgets, getCategoriesBudget } from '../apis/budget';
 import { queryKeys, useQueryWrapper } from './keys';
 
@@ -12,7 +11,7 @@ export const useGetBudget = ({ budget_id = '', date = '' }, opts = {}) => {
 };
 
 export const useGetBudgets = ({ date = '' }, opts = {}) => {
-  return useQuery({
+  return useQueryWrapper({
     queryFn: () => getBudgets({ date: date }),
     queryKey: [queryKeys.budgets, { date: date }],
     onSuccess: opts.onSuccess || function () {},
@@ -24,14 +23,14 @@ export const useGetCategoriesBudget = (
   { category_ids = [], budget_date = '', timezone = '' },
   opts = {},
 ) => {
-  return useQuery({
+  return useQueryWrapper({
     queryFn: () =>
       getCategoriesBudget({
         category_ids: category_ids,
         budget_date: budget_date,
         timezone: timezone,
       }),
-    queryKey: [queryKeys.getCategoriesBudget, budget_date, category_ids],
+    queryKey: [queryKeys.categoriesBudget, budget_date, category_ids],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });
