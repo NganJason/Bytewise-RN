@@ -6,9 +6,11 @@ export class BudgetError extends AppError {
   }
 }
 
-const SET_BUDGET = '/set_budget';
 const GET_BUDGET = '/get_budget';
-const GET_BUDGETS = '/get_budgets';
+const GET_CATEGORIES_BUDGET = '/get_categories_budget';
+const CREATE_BUDGET = '/create_budget';
+const UPDATE_BUDGET = '/update_budget';
+const DELETE_BUDGET = '/delete_budget';
 
 export const getBudget = async ({ budget_id = '', date = '' } = {}) => {
   try {
@@ -26,10 +28,16 @@ export const getBudget = async ({ budget_id = '', date = '' } = {}) => {
   }
 };
 
-export const getBudgets = async ({ date = '' } = {}) => {
+export const getCategoriesBudget = async ({
+  category_ids = [],
+  budget_date = '',
+  timezone = '',
+} = {}) => {
   try {
-    const body = await sendPostRequest(GET_BUDGETS, {
-      date: date,
+    const body = await sendPostRequest(GET_CATEGORIES_BUDGET, {
+      category_ids: category_ids,
+      budget_date: budget_date,
+      timezone: timezone,
     });
     return body;
   } catch (e) {
@@ -41,24 +49,66 @@ export const getBudgets = async ({ date = '' } = {}) => {
   }
 };
 
-export const setBudget = async ({
-  budget_id = null,
-  budget_name = '',
+export const createBudget = async ({
+  budget_date = '',
+  category_id = '',
   budget_type = 0,
-  budget_amount = '0',
-  category_ids = [],
-  range_start_date = '',
-  range_end_date = '',
+  budget_repeat = 0,
+  amount = '0',
 } = {}) => {
   try {
-    const body = await sendPostRequest(SET_BUDGET, {
-      budget_id: budget_id,
-      budget_name: budget_name,
+    const body = await sendPostRequest(CREATE_BUDGET, {
+      budget_date: budget_date,
+      category_id: category_id,
       budget_type: budget_type,
-      budget_amount: budget_amount,
-      category_ids: category_ids,
-      range_start_date: range_start_date,
-      range_end_date: range_end_date,
+      budget_repeat: budget_repeat,
+      amount: String(amount),
+    });
+    return body;
+  } catch (e) {
+    throw new BudgetError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const updateBudget = async ({
+  budget_date = '',
+  category_id = '',
+  budget_type = 0,
+  budget_repeat = 0,
+  amount = '0',
+} = {}) => {
+  try {
+    const body = await sendPostRequest(UPDATE_BUDGET, {
+      budget_date: budget_date,
+      category_id: category_id,
+      budget_type: budget_type,
+      budget_repeat: budget_repeat,
+      amount: String(amount),
+    });
+    return body;
+  } catch (e) {
+    throw new BudgetError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const deleteBudget = async ({
+  budget_date = '',
+  category_id = '',
+  budget_repeat = 0,
+} = {}) => {
+  try {
+    const body = await sendPostRequest(DELETE_BUDGET, {
+      budget_date: budget_date,
+      category_id: category_id,
+      budget_repeat: budget_repeat,
     });
     return body;
   } catch (e) {

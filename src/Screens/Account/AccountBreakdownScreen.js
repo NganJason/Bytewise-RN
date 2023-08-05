@@ -15,7 +15,7 @@ import {
 import { card, coin, coinsack } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_CASH,

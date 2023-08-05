@@ -1,37 +1,47 @@
 import { useNavigation } from '@react-navigation/native';
-import { Icon, useTheme } from '@rneui/themed';
-import { useEffect, useState, useMemo } from 'react';
+import { useTheme } from '@rneui/themed';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
+  BaseCheckboxInput,
   BaseCurrencyInput,
-  BaseInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
 } from '../../Components';
-import DatePickerInput from '../../Components/Input/DatePickerInput';
-import MultiSelectBottomInput from '../../Components/Input/MultiSelectBottomInput';
-import { DatePickerMode } from '../../Components/Input/Picker/DatePicker';
 import {
+  BUDGET_REPEAT_ALL_TIME,
+  BUDGET_REPEAT_NOW,
+  BUDGET_REPEAT_NOW_TO_FUTURE,
   BUDGET_TYPES,
-  BUDGET_TYPE_ANNUAL,
   BUDGET_TYPE_MONTHLY,
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import { validateBudget } from '../../_shared/validator/budget';
 import { getBudgetTypes } from '../../_shared/util/budget';
-import { useSetBudget } from '../../_shared/mutations';
-import { getDateString } from '../../_shared/util/date';
-import { useGetCategories } from '../../_shared/query';
-import { useGetBudget } from '../../_shared/query/budget';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useValidation } from '../../_shared/hooks/validation';
 import { useError } from '../../_shared/hooks/error';
+import { BaseOverlay } from '../../Components/View';
+import { useGetCategoriesHelper } from '../../_shared/hooks';
+import {
+  useCreateBudget,
+  useDeleteBudget,
+  useUpdateBudget,
+} from '../../_shared/mutations';
+import {
+  getDateObjFromTs,
+  getDateStringWithoutDelim,
+  getMonthStr,
+  getYear,
+} from '../../_shared/util/date';
+
+const TODAY = new Date();
 
 const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
@@ -39,29 +49,26 @@ const BudgetForm = ({ route }) => {
   const navigation = useNavigation();
 
   const {
-    budget_id: budgetID = '',
+    category_id: categoryID = '',
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
-    target_date_string: targetDateString = '',
+    active_date: activeDate = TODAY.valueOf(),
   } = route?.params || {};
+  const [activeD, setActiveD] = useState(getDateObjFromTs(activeDate));
+
   const isAddBudget = () => {
-    return budgetID === '';
+    return categoryID === '';
   };
 
-  const targetDate = useMemo(() => {
-    if (targetDateString !== '') {
-      return new Date(targetDateString);
-    }
-    return new Date();
-  }, [targetDateString]);
-
-  const [budgetForm, setBudgetForm] = useState({
-    budget_name: '',
-    budget_type: budgetType,
-    budget_amount: 0,
-    category_ids: [],
-    from_date: targetDate,
-    to_date: targetDate,
-  });
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const toggleCategoryModal = () => {
+    setIsCategoryModalVisible(!isCategoryModalVisible);
+  };
+  const onEditCategory = () => {
+    navigation.navigate(ROUTES.categoryEdit, {
+      category_type: TRANSACTION_TYPE_EXPENSE,
+    });
+    toggleCategoryModal();
+  };
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);
@@ -69,58 +76,68 @@ const BudgetForm = ({ route }) => {
     setIsBudgetTypeModalVisible(!isBudgetTypeModalVisible);
   };
 
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const toggleDeleteModal = () => {
+    setIsDeleteModalVisible(!isDeleteModalVisible);
+  };
+
+  const [budgetForm, setBudgetForm] = useState({
+    category_id: categoryID,
+    category_name: '',
+    budget_type: budgetType,
+    amount: 0,
+    budget_date: getDateStringWithoutDelim(activeD),
+    budget_repeat: isAddBudget()
+      ? BUDGET_REPEAT_ALL_TIME
+      : BUDGET_REPEAT_NOW_TO_FUTURE,
+  });
+
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
   useEffect(() => {
     setFormErrors(validateBudget(budgetForm));
   }, [budgetForm]);
 
-  const getCategories = useGetCategories({
-    category_type: TRANSACTION_TYPE_EXPENSE,
+  const {
+    categoriesWithoutBudget = [],
+    categoryIDToCategoryMap = {},
+    getQueries = [],
+    isLoading = false,
+  } = useGetCategoriesHelper({
+    budgetDate: activeD,
   });
-
-  const getBudget = useGetBudget(
-    {
-      budget_id: budgetID,
-      date: getDateString(targetDate),
-    },
-    { enabled: budgetID !== '' },
-  );
-
-  const setBudget = useSetBudget({
-    onSuccess: navigation.goBack,
-  });
-
   useEffect(() => {
-    if (getBudget.data) {
-      let { budget = {}, categories = [] } =
-        getBudget?.data?.category_budget || {};
-
-      let ids = [];
-      categories.map(category => {
-        ids.push(category.category_id);
-      });
-
-      let form = {
-        budget_name: budget.budget_name,
-        budget_type: budget.budget_type,
-        category_ids: ids,
-        from_date: targetDate,
-        to_date: targetDate,
-      };
-
-      if (budget.budget_breakdowns.length > 0) {
-        let { amount = 0 } = budget.budget_breakdowns[0];
-        form.budget_amount = amount;
-      }
-
-      setBudgetForm(form);
+    let category = categoryIDToCategoryMap[categoryID];
+    if (!category) {
+      return;
     }
-  }, [getBudget.data, targetDate]);
 
-  const onBudgetNameChange = e => {
-    setBudgetForm({ ...budgetForm, budget_name: e });
-  };
+    const { category_name: categoryName = '', budget = {} } = category;
+    setBudgetForm({
+      ...budgetForm,
+      category_name: categoryName,
+      amount: budget.amount || 0,
+    });
+  }, [categoryIDToCategoryMap]);
+
+  const createBudget = useCreateBudget({
+    onSuccess: _ => {
+      navigation.goBack();
+    },
+  });
+
+  const updateBudget = useUpdateBudget({
+    onSuccess: _ => {
+      navigation.goBack();
+    },
+  });
+
+  const deleteBudget = useDeleteBudget({
+    onSuccess: _ => {
+      toggleDeleteModal();
+      navigation.goBack();
+    },
+  });
 
   const onBudgetTypeChange = e => {
     toggleBudgetTypeModal();
@@ -128,24 +145,20 @@ const BudgetForm = ({ route }) => {
   };
 
   const onBudgetAmountChange = e => {
-    setBudgetForm({ ...budgetForm, budget_amount: e });
+    setBudgetForm({ ...budgetForm, amount: e });
   };
 
-  const onCategoriesChange = categories => {
-    let ids = [];
-    categories.map(val => {
-      ids.push(val.id);
+  const onCategoryChange = e => {
+    toggleCategoryModal();
+    setBudgetForm({
+      ...budgetForm,
+      category_id: e.value,
+      category_name: e.name,
     });
-
-    setBudgetForm({ ...budgetForm, category_ids: ids });
   };
 
-  const onFromDateChange = e => {
-    setBudgetForm({ ...budgetForm, from_date: e });
-  };
-
-  const onToDateChange = e => {
-    setBudgetForm({ ...budgetForm, to_date: e });
+  const onBudgetRepeatChange = e => {
+    setBudgetForm({ ...budgetForm, budget_repeat: e });
   };
 
   const onSave = () => {
@@ -156,34 +169,60 @@ const BudgetForm = ({ route }) => {
       return;
     }
 
-    setBudget.mutate({
-      budget_id: budgetID === '' ? null : budgetID,
-      budget_name: budgetForm.budget_name,
-      budget_type: budgetForm.budget_type,
-      budget_amount: String(budgetForm.budget_amount),
-      category_ids: budgetForm.category_ids,
-      range_start_date: getDateString(budgetForm.from_date),
-      range_end_date: getDateString(budgetForm.to_date),
-    });
+    if (isAddBudget()) {
+      createBudget.mutate(budgetForm);
+    } else {
+      updateBudget.mutate(budgetForm);
+    }
   };
 
-  const isFormLoading = () => {
-    return getCategories.isLoading || getBudget.isLoading;
+  const onDelete = () => {
+    deleteBudget.mutate(budgetForm);
   };
 
-  const getCategoryItems = (categories = []) => {
+  const getCategoryItems = () => {
     let items = [];
-    categories.map(val => {
-      items.push({ id: val.category_id, name: val.category_name });
+    categoriesWithoutBudget.map(val => {
+      if (val.category_type === TRANSACTION_TYPE_EXPENSE) {
+        items.push({ value: val.category_id, name: val.category_name });
+      }
     });
     return items;
   };
 
-  useError([getBudget, setBudget]);
+  const getEditEnums = () => {
+    let dateVal = '';
+    let dateTerm = '';
+    if (budgetForm.budget_type === BUDGET_TYPE_MONTHLY) {
+      dateVal = `${getMonthStr(activeD)} ${getYear(activeD)}`;
+      dateTerm = 'months';
+    } else {
+      dateVal = String(getYear(activeD));
+      dateTerm = 'years';
+    }
+
+    return [
+      {
+        title: `${dateVal} and future ${dateTerm}`,
+        value: BUDGET_REPEAT_NOW_TO_FUTURE,
+      },
+
+      {
+        title: `Past and future ${dateTerm}`,
+        value: BUDGET_REPEAT_ALL_TIME,
+      },
+      {
+        title: `${dateVal} only`,
+        value: BUDGET_REPEAT_NOW,
+      },
+    ];
+  };
+
+  useError([...getQueries(), updateBudget]);
 
   return (
     <BaseScreen
-      isLoading={isFormLoading()}
+      isLoading={isLoading()}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -200,13 +239,39 @@ const BudgetForm = ({ route }) => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <BaseInput
-          label="Budget Name"
-          value={budgetForm.budget_name}
-          onChangeText={onBudgetNameChange}
-          clearButtonMode="always"
-          maxLength={120}
-          errorMessage={showValidation && formErrors.budget_name}
+        <TouchInput
+          label="Category"
+          value={budgetForm.category_name}
+          onPress={toggleCategoryModal}
+          errorMessage={showValidation && formErrors.category}
+          disabled={!isAddBudget()}
+        />
+        <BaseBottomSheet
+          isVisible={isCategoryModalVisible}
+          onBackdropPress={toggleCategoryModal}
+          close={toggleCategoryModal}
+          onSelect={onCategoryChange}
+          items={getCategoryItems()}
+          label="name"
+          headerProps={{
+            leftComponent: (
+              <BaseButton
+                title="Edit"
+                type="clear"
+                align="flex-end"
+                size="md"
+                onPress={onEditCategory}
+              />
+            ),
+          }}
+          renderEmptyItems={() => (
+            <EmptyContent
+              item={EmptyContentConfig.category}
+              route={ROUTES.categoryForm}
+              routeParam={{ category_type: TRANSACTION_TYPE_EXPENSE }}
+              onRedirect={toggleCategoryModal}
+            />
+          )}
         />
 
         <TouchInput
@@ -224,78 +289,91 @@ const BudgetForm = ({ route }) => {
           label="name"
         />
 
-        <MultiSelectBottomInput
-          label="Categories"
-          items={getCategoryItems(getCategories.data?.categories)}
-          initialSelected={getCategoryItems(
-            getBudget?.data?.category_budget?.categories,
-          )}
-          onChange={onCategoriesChange}
-          errorMessage={showValidation && formErrors.categories}
-          renderEmptyItems={closeModal => (
-            <EmptyContent
-              item={EmptyContentConfig.category}
-              route={ROUTES.categoryForm}
-              onRedirect={closeModal}
-            />
-          )}
-        />
-
         <BaseCurrencyInput
           label="Amount"
-          value={budgetForm.budget_amount}
+          value={budgetForm.amount}
           onChangeText={onBudgetAmountChange}
-          errorMessage={showValidation && formErrors.budget_amount}
+          errorMessage={showValidation && formErrors.amount}
         />
 
-        <View style={styles.dateContainer}>
-          <View style={styles.dateInput}>
-            <DatePickerInput
-              label="From"
-              dateValue={budgetForm.from_date}
-              onSelect={onFromDateChange}
-              mode={
-                budgetForm.budget_type === BUDGET_TYPE_ANNUAL
-                  ? DatePickerMode.Year
-                  : DatePickerMode.YearMonth
-              }
-              errorMessage={showValidation && formErrors.date}
-            />
-          </View>
-
-          <View style={styles.arrowIcon}>
-            <Icon
-              name={'arrow-right'}
-              type={'feather'}
-              color={theme.colors.color8}
-            />
-          </View>
-
-          <View style={styles.dateInput}>
-            <DatePickerInput
-              label="To"
-              dateValue={budgetForm.to_date}
-              onSelect={onToDateChange}
-              mode={
-                budgetForm.budget_type === BUDGET_TYPE_ANNUAL
-                  ? DatePickerMode.Year
-                  : DatePickerMode.YearMonth
-              }
-            />
-          </View>
-        </View>
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={setBudget.isLoading}
+        <View style={{ marginBottom: 40 }}>
+          <BaseCheckboxInput
+            label={isAddBudget() ? 'Add Budget For' : 'Edit Budget For'}
+            value={budgetForm.budget_repeat}
+            onChange={onBudgetRepeatChange}
+            items={getEditEnums()}
           />
         </View>
+
+        {!isAddBudget() && (
+          <View style={styles.btnContainer}>
+            <BaseButton
+              title="Delete"
+              size="lg"
+              type="outline"
+              width={200}
+              onPress={toggleDeleteModal}
+            />
+
+            <DeleteBudgetOverlay
+              isVisible={isDeleteModalVisible}
+              close={toggleDeleteModal}
+              onChange={onBudgetRepeatChange}
+              value={budgetForm.budget_repeat}
+              items={getEditEnums()}
+              onConfirm={onDelete}
+              isConfirmLoading={deleteBudget.isLoading}
+            />
+          </View>
+        )}
+
+        <BaseButton
+          title="Save"
+          size="lg"
+          width={200}
+          onPress={onSave}
+          isLoading={createBudget.isLoading || updateBudget.isLoading}
+        />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
+  );
+};
+
+const DeleteBudgetOverlay = ({
+  isVisible = false,
+  close = function () {},
+  value = 0,
+  items = [],
+  onChange = function (value) {},
+  onConfirm = function () {},
+  isConfirmLoading = false,
+}) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <BaseOverlay isVisible={isVisible} onBackdropPress={close}>
+      <BaseText text1>Delete budget for</BaseText>
+      <BaseCheckboxInput items={items} value={value} onChange={onChange} />
+
+      <View style={styles.overlayBtnContainer}>
+        <BaseButton
+          title="Cancel"
+          type="outline"
+          size="lg"
+          width={200}
+          onPress={close}
+        />
+      </View>
+
+      <BaseButton
+        title="Confirm"
+        size="lg"
+        width={200}
+        onPress={onConfirm}
+        isLoading={isConfirmLoading}
+      />
+    </BaseOverlay>
   );
 };
 
@@ -304,22 +382,12 @@ const getStyles = theme =>
     formBody: {
       paddingVertical: theme.spacing.xl,
     },
-    dateContainer: {
-      flexDirection: 'row',
-      width: '100%',
-      alignItem: 'center',
-      justifyContent: 'space-between',
-    },
-    arrowIcon: {
-      justifyContent: 'center',
-      marginHorizontal: theme.spacing.lg,
-    },
-    dateInput: {
-      flex: 1,
-    },
     btnContainer: {
-      marginTop: theme.spacing.lg,
-      marginBottom: theme.spacing.md,
+      marginBottom: 16,
+    },
+    overlayBtnContainer: {
+      marginBottom: 16,
+      marginTop: 30,
     },
   });
 

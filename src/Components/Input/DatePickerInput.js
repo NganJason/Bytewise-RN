@@ -1,7 +1,7 @@
 import { BottomSheet, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { getYearMonthString, getYearString } from '../../_shared/util/date';
 import { BaseButton } from '../Touch';
 import DatePicker, { DatePickerMode } from './Picker/DatePicker';
@@ -39,14 +39,14 @@ const DatePickerInput = ({
     toggleModal();
   };
 
-  const getDateString = () => {
+  const getFormattedDateString = () => {
     switch (mode) {
       case DatePickerMode.Year:
         return getYearString(selectedDate);
       case DatePickerMode.YearMonth:
         return getYearMonthString(selectedDate);
       case DatePickerMode.Date:
-        return getDateString(selectedDate);
+        return getFormattedDateString(selectedDate);
       default:
         return '';
     }
@@ -56,7 +56,7 @@ const DatePickerInput = ({
     <>
       <TouchInput
         label={label}
-        value={getDateString()}
+        value={getFormattedDateString()}
         onPress={toggleModal}
         {...props}
       />

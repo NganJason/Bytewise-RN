@@ -68,6 +68,14 @@ const BaseButton = ({
           btn: styles.secondaryButtonStyle,
           disabled: styles.secondaryDisabledButtonStyle,
         };
+      case 'tertiary':
+        return {
+          title: disabled
+            ? styles.tertiaryButtonTextStyle
+            : styles.tertiaryButtonTextStyle,
+          btn: styles.tertiaryButtonStyle,
+          disabled: styles.tertiaryDisabledButtonStyle,
+        };
       default:
         return {
           title: disabled
@@ -162,7 +170,24 @@ const getStyles = theme =>
     },
     secondaryButtonTextStyle: {
       color: theme.colors.color6,
+      ...theme.fontStyles.text4,
     },
+
+    tertiaryButtonStyle: {
+      backgroundColor: theme.colors.color3,
+      borderRadius: 15,
+      paddingHorizontal: 12,
+    },
+    tertiaryDisabledButtonStyle: {
+      backgroundColor: theme.colors.color3,
+      borderRadius: 15,
+      paddingHorizontal: 12,
+    },
+    tertiaryButtonTextStyle: {
+      color: theme.colors.color1,
+      ...theme.fontStyles.text4,
+    },
+
     secondaryDisabledButtonTextStyle: {},
 
     icon: {

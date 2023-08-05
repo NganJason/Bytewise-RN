@@ -8,6 +8,7 @@ const ROUTES = {
 
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',
+  categoriesOverview: 'Categories Overview',
   categoryBreakdown: 'Category Breakdown',
 
   budgetList: 'Budget List',

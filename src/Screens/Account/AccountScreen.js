@@ -23,7 +23,7 @@ import {
 import { loginHero } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { capitalize } from '../../_shared/util/string';
 import { useGetAccounts } from '../../_shared/query/account';
 import { getEquityType } from '../../_shared/util/account';

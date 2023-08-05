@@ -32,8 +32,11 @@ import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBrea
 import LotForm from './src/Screens/Account/Investment/LotForm';
 import { BottomToastProvider } from './src/_shared/context/BottomToastContext';
 import BottomToast from './src/Components/Common/BottomToast';
+import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 
+const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
+const BASE_URL = TEST_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -145,6 +148,10 @@ function Main() {
                 component={CategoryBreakdownScreen}
               />
               <Stack.Screen
+                name={ROUTES.categoriesOverview}
+                component={CategoryOverviewScreen}
+              />
+              <Stack.Screen
                 name={ROUTES.accountSelection}
                 component={AccountSelectionScreen}
               />
@@ -191,7 +198,7 @@ function Main() {
 
 const App = () => {
   initAxios({
-    baseURL: TEST_BASE_URL,
+    baseURL: BASE_URL,
   });
 
   return (

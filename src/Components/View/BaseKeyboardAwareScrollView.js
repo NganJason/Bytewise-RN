@@ -1,6 +1,6 @@
 import { Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useKeyboard } from '../../_shared/hooks/keyboard';
+import { useKeyboard } from '../../_shared/hooks';
 
 const BaseKeyboardAwareScrollView = ({ children, ...props }) => {
   const { keyboardHeight } = useKeyboard();

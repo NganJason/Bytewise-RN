@@ -2,7 +2,7 @@ import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 import HideKeyboard from './HideKeyboard';
 
@@ -33,7 +33,7 @@ const BaseScreen3 = ({
   };
 
   const calculateContentMarginTop = () => {
-    let marginTop = floatingHeaderMinHeight / 2;
+    let marginTop = floatingHeaderMinHeight / 2.3;
     marginTop += floatingHeaderHeight - floatingHeaderMinHeight;
     return marginTop;
   };

@@ -1,7 +1,7 @@
 import { getCategories, getCategory } from '../apis/category';
 import { queryKeys, useQueryWrapper } from './keys';
 
-export const useGetCategories = ({ category_type = 0 } = {}, opts = {}) => {
+export const useGetCategories = ({ category_type } = {}, opts = {}) => {
   return useQueryWrapper({
     queryFn: () => getCategories({ category_type: category_type }),
     queryKey: [queryKeys.categories, category_type],

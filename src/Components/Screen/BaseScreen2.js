@@ -5,7 +5,7 @@ import { BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 
 const BaseScreen2 = ({

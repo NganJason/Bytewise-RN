@@ -5,14 +5,17 @@ import { useTheme } from '@rneui/themed';
 import { BaseScreen, DateNavigator } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { BaseScrollableTab } from '../../Components/View';
-import CategoryOverview from '../Category/CategoryOverview';
 import BudgetOverview from '../Budget/BudgetOverview';
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
+import BreakdownOverviewScreen from './BreakdownOverviewScreen';
 
 const TODAY = new Date();
 const scrollableTabs = [
-  { name: 'Category', iconName: 'grid', iconType: 'feather' },
-  { name: 'Budget', iconName: 'credit-card', iconType: 'feather' },
+  {
+    name: 'Budget',
+    iconName: 'filetext1',
+    iconType: 'ant-design',
+  },
+  { name: 'Breakdown', iconName: 'grid', iconType: 'feather' },
 ];
 
 const OverviewScreen = ({ navigation }) => {
@@ -29,38 +32,34 @@ const OverviewScreen = ({ navigation }) => {
     setActiveTab(tab);
   };
 
-  // For category screen only
-  const [categoryType, setCategoryType] = useState(TRANSACTION_TYPE_EXPENSE);
-
   const getScreen = () => {
     switch (activeTab.name) {
-      case 'Category':
-        return (
-          <CategoryOverview
-            activeDate={activeDate}
-            setTransactionType={setCategoryType}
-          />
-        );
       case 'Budget':
         return <BudgetOverview activeDate={activeDate} />;
+      case 'Breakdown':
+        return <BreakdownOverviewScreen activeDate={activeDate} />;
       default:
-        return <CategoryOverview activeDate={activeDate} />;
+        return <BudgetOverview activeDate={activeDate} />;
     }
   };
 
   const onFabPress = () => {
     switch (activeTab.name) {
-      case 'Category':
-        navigation.navigate(ROUTES.categoryForm, {
-          category_type: categoryType,
-        });
-        break;
       case 'Budget':
         navigation.navigate(ROUTES.budgetForm);
         break;
       default:
         navigation.navigate(ROUTES.budgetForm);
         break;
+    }
+  };
+
+  const shouldShowFabs = () => {
+    switch (activeTab.name) {
+      case 'Budget':
+        return false;
+      default:
+        return false;
     }
   };
 
@@ -79,7 +78,7 @@ const OverviewScreen = ({ navigation }) => {
         ),
       }}
       fabProps={{
-        show: true,
+        show: shouldShowFabs(),
         placement: 'right',
         iconName: 'plus',
         iconType: 'entypo',

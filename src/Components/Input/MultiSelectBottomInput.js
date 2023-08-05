@@ -1,7 +1,7 @@
 import { BottomSheet, useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import useDimension from '../../_shared/hooks/dimension';
+import { useDimension } from '../../_shared/hooks';
 import { BaseButton } from '../Touch';
 import BaseCheckbox from './BaseCheckbox';
 import TouchInput from './TouchInput';

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import useDimension from '../../../_shared/hooks/dimension';
+import { useDimension } from '../../../_shared/hooks';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { graph } from '../../../_shared/constant/asset';
 import ROUTES from '../../../_shared/constant/routes';
