@@ -146,3 +146,17 @@ export const tsToDateTimeStr = ts => {
   dateTimeStr = dateTimeStr.replace(/\//g, '-');
   return dateTimeStr;
 };
+
+export const getCurrDatePercentage = () => {
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+
+  const lastDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0,
+  ).getDate();
+
+  const percentage = currentDay / lastDayOfMonth;
+  return percentage;
+};

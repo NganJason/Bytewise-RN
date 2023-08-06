@@ -104,14 +104,14 @@ const CategoryOverviewScreen = ({ route }) => {
           </View>
         ),
       }}>
+      <BaseDonutChart
+        items={categoriesInfo}
+        innerLabel={{
+          title: `$ ${getCategoriesTotal()}`,
+          subtitle: TRANSACTION_TYPES[categoryType],
+        }}
+      />
       <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
-        <BaseDonutChart
-          items={categoriesInfo}
-          innerLabel={{
-            title: `$ ${getCategoriesTotal()}`,
-            subtitle: TRANSACTION_TYPES[categoryType],
-          }}
-        />
         <View style={styles.body}>{renderRows()}</View>
       </BaseLoadableView>
     </BaseScreen>

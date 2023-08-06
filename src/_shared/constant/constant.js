@@ -88,14 +88,11 @@ export const EmptyContentConfig = {
 };
 
 export const DonutChartColors = [
-  '#2C3E50',
-  '#E67E22',
-  '#27AE60',
-  '#8E44AD',
-  '#C0392B',
-  '#1A5276',
-  '#9B59B6',
-  '#D35400',
-  '#1F618D',
-  '#CA6F1E',
+  '#2D4356',
+  '#FFC6AC',
+  '#5B9A8B',
+  '#BA704F',
+  '#FFD89C',
+  '#E57C23',
+  '#F99B7D',
 ];

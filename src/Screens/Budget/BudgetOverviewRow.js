@@ -12,6 +12,7 @@ import {
 import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { getProgress } from '../../_shared/util/common';
+import { getCurrDatePercentage, getMonth } from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';
 
 const BudgetOverviewRow = ({
@@ -48,6 +49,18 @@ const BudgetOverviewRow = ({
     });
     toggleEdit();
   };
+
+  const getCurrDateExpectedProgress = () => {
+    let currMonth = getMonth();
+    let activeMonth = getMonth(activeDate);
+
+    if (currMonth !== activeMonth) {
+      return 0;
+    }
+
+    return getCurrDatePercentage();
+  };
+
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} disabled={isEdit}>
       <View style={styles.rowInfo}>
@@ -84,7 +97,10 @@ const BudgetOverviewRow = ({
         {isEdit ? (
           <BaseDivider />
         ) : (
-          <BaseLinearProgress value={getProgress(usedAmount, amount)} />
+          <BaseLinearProgress
+            value={getProgress(usedAmount, amount)}
+            target={getCurrDateExpectedProgress()}
+          />
         )}
       </View>
     </TouchableOpacity>
