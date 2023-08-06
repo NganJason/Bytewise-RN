@@ -342,7 +342,6 @@ const ExpenseIncomeForm = ({
           value={transactionForm.account.account_name}
           onPress={toggleAccountModal}
           errorMessage={showValidation && formErrors.account}
-          hide={!isAddTransaction()}
         />
         <BaseBottomSheet
           isVisible={isAccountModalVisible}

@@ -15,6 +15,7 @@ import {
   BaseButton,
 } from '../../Components';
 import {
+  BUDGET_TYPE_MONTHLY,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
@@ -28,6 +29,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useGetCategoriesHelper } from '../../_shared/hooks';
 import { getProgress } from '../../_shared/util/common';
 import { useAggrTransactions } from '../../_shared/query';
+import {
+  getCurrDatePercentage,
+  getMonthPercentage,
+} from '../../_shared/util/date';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -39,12 +44,12 @@ const CategoryBreakdownScreen = ({ route }) => {
   const navigation = useNavigation();
 
   const {
-    active_timestamp: activeTimestamp = TODAY.valueOf(),
+    active_ts: activeTs = TODAY.valueOf(),
     category_id: categoryID = '',
   } = route?.params || {};
 
   const { activeDate, timeRange, onDateMove } = useTimeRange(
-    new Date(activeTimestamp),
+    new Date(activeTs),
   );
 
   const {
@@ -59,7 +64,10 @@ const CategoryBreakdownScreen = ({ route }) => {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
     budget = null,
   } = categoryIDToCategoryMap[categoryID] || {};
-  const { amount: budgetAmount = 0 } = budget || {};
+  const {
+    amount: budgetAmount = 0,
+    budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+  } = budget || {};
 
   const aggrTransactionsQuery = useAggrTransactions({
     category_ids: [categoryID],
@@ -154,6 +162,11 @@ const CategoryBreakdownScreen = ({ route }) => {
             </View>
             <BaseLinearProgress
               value={getProgress(budget.used_amount, budget.amount)}
+              target={
+                budgetType === BUDGET_TYPE_MONTHLY
+                  ? getCurrDatePercentage(activeDate)
+                  : getMonthPercentage(activeDate)
+              }
               showPercentage
             />
           </TouchableOpacity>

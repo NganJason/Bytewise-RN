@@ -109,6 +109,7 @@ export const createTransaction = async ({
 export const updateTransaction = async ({
   transaction_id = '',
   category_id = '',
+  account_id = '',
   amount = '',
   transaction_type = 0,
   transaction_time = 0,
@@ -118,6 +119,7 @@ export const updateTransaction = async ({
     const body = await sendPostRequest(UPDATE_TRANSACTION, {
       transaction_id: transaction_id,
       category_id: category_id,
+      account_id: account_id,
       amount: amount,
       transaction_type: transaction_type,
       transaction_time: transaction_time,

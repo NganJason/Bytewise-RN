@@ -14,6 +14,7 @@ const CREATE_LOT = '/create_lot';
 const GET_LOT = '/get_lot';
 const GET_LOTS = '/get_lots';
 const UPDATE_LOT = '/update_lot';
+const DELETE_LOT = '/delete_lot';
 
 export const searchSecurities = async ({ symbol = '' } = {}) => {
   try {
@@ -156,6 +157,21 @@ export const updateLot = async ({
       shares: shares,
       cost_per_share: cost_per_share,
       trade_date: trade_date,
+    });
+    return body;
+  } catch (e) {
+    throw new SecurityError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const deleteLot = async ({ lot_id = '' }) => {
+  try {
+    const body = await sendPostRequest(DELETE_LOT, {
+      lot_id: lot_id,
     });
     return body;
   } catch (e) {

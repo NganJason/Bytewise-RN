@@ -53,6 +53,10 @@ export const EmptyContentConfig = {
     text: ['Category groups and ', 'tracks your transactions'],
     image: paper,
   },
+  categoryOverview: {
+    text: ['No category yet'],
+    image: paper,
+  },
   transaction: {
     text: ['Your everyday transactions'],
     image: paper,

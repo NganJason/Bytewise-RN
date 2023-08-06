@@ -12,6 +12,7 @@ import {
   BaseText,
   AmountText,
   BaseScreen,
+  BaseDivider,
 } from '../../Components';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
@@ -53,7 +54,7 @@ const CategoryOverviewScreen = ({ route }) => {
           onPress={() => {
             navigation.navigate(ROUTES.categoryBreakdown, {
               category_id: category.category_id,
-              active_timestamp: activeDate.valueOf(),
+              active_ts: activeDate.valueOf(),
               category_type: categoryType,
             });
           }}>
@@ -70,7 +71,7 @@ const CategoryOverviewScreen = ({ route }) => {
     if (rows.length === 0) {
       return (
         <EmptyContent
-          item={EmptyContentConfig.category}
+          item={EmptyContentConfig.categoryOverview}
           route={ROUTES.categoryForm}
           routeParam={{ category_type: categoryType }}
           marginVertical="30%"
@@ -111,6 +112,8 @@ const CategoryOverviewScreen = ({ route }) => {
           subtitle: TRANSACTION_TYPES[categoryType],
         }}
       />
+      {categoriesInfo.length === 0 && <BaseDivider margin={10} />}
+
       <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
         <View style={styles.body}>{renderRows()}</View>
       </BaseLoadableView>

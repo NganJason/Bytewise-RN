@@ -33,7 +33,7 @@ const BaseLinearProgress = ({
       />
       {showPercentage && (
         <BaseText text4 style={{ color: theme.colors.color7 }}>
-          {getPercentage()}%
+          {getPercentage(value)}%
         </BaseText>
       )}
     </View>

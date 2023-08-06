@@ -147,7 +147,14 @@ export const tsToDateTimeStr = ts => {
   return dateTimeStr;
 };
 
-export const getCurrDatePercentage = () => {
+export const getCurrDatePercentage = (activeDate = new Date()) => {
+  let currMonth = getMonth();
+  let activeMonth = getMonth(activeDate);
+
+  if (currMonth !== activeMonth) {
+    return 0;
+  }
+
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
 
@@ -159,4 +166,9 @@ export const getCurrDatePercentage = () => {
 
   const percentage = currentDay / lastDayOfMonth;
   return percentage;
+};
+
+export const getMonthPercentage = (activeDate = new Date()) => {
+  let aciveMonth = getMonth(activeDate);
+  return aciveMonth / 12;
 };

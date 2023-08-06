@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createHolding,
   createLot,
+  deleteLot,
   updateHolding,
   updateLot,
 } from '../apis/investment';
@@ -62,6 +63,23 @@ export const useUpdateLot = (opts = {}) => {
   return useMutation(updateLot, {
     onSuccess: ({ lot = {} }) => {
       const { holding_id = '' } = lot;
+
+      queryClient.invalidateQueries([queryKeys.holding, holding_id]);
+      queryClient.invalidateQueries([queryKeys.lots, holding_id]);
+      queryClient.invalidateQueries([queryKeys.account, account_id]);
+      queryClient.invalidateQueries([queryKeys.accounts]);
+
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useDeleteLot = (opts = {}) => {
+  const queryClient = useQueryClient();
+  const { account_id = '', holding_id = '' } = opts?.meta || {};
+
+  return useMutation(deleteLot, {
+    onSuccess: ({ lot = {} }) => {
 
       queryClient.invalidateQueries([queryKeys.holding, holding_id]);
       queryClient.invalidateQueries([queryKeys.lots, holding_id]);

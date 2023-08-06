@@ -15,6 +15,7 @@ import {
 import { useValidation } from '../../../_shared/hooks/validation';
 import {
   useCreateLot,
+  useDeleteLot,
   useUpdateLot,
 } from '../../../_shared/mutations/investment';
 import { useGetLot } from '../../../_shared/query/investment';
@@ -23,6 +24,7 @@ import {
   renderCalendarTs,
 } from '../../../_shared/util/date';
 import { validateLot } from '../../../_shared/validator/investment';
+import { useError } from '../../../_shared/hooks/error';
 
 const LotForm = ({ route }) => {
   const { theme } = useTheme();
@@ -77,6 +79,16 @@ const LotForm = ({ route }) => {
     },
   });
 
+  const deleteLot = useDeleteLot({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+    meta: {
+      account_id: accountID,
+      holding_id: holdingID,
+    },
+  });
+
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {
     setIsCalendarModalVisible(!isCalendarModalVisible);
@@ -117,6 +129,14 @@ const LotForm = ({ route }) => {
       });
     }
   };
+
+  const onDelete = () => {
+    deleteLot.mutate({
+      lot_id: lotID,
+    });
+  };
+
+  useError([createLot, updateLot, deleteLot]);
 
   return (
     <BaseScreen
@@ -181,6 +201,19 @@ const LotForm = ({ route }) => {
           />
         </Dialog>
 
+        {!isAddLot() && (
+          <View style={styles.btnContainer}>
+            <BaseButton
+              title="Delete"
+              size="lg"
+              type="outline"
+              width={200}
+              onPress={onDelete}
+              loading={deleteLot.isLoading}
+            />
+          </View>
+        )}
+
         <View style={styles.btnContainer}>
           <BaseButton
             title="Save"
@@ -199,7 +232,6 @@ const getStyles = theme =>
   StyleSheet.create({
     btnContainer: {
       marginTop: theme.spacing.lg,
-      marginBottom: theme.spacing.md,
     },
     securityName: {
       marginTop: 4,
