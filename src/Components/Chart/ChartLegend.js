@@ -7,11 +7,10 @@ const ChartLegend = ({ color = '', text = '', ...props }) => {
     <View style={styles.container}>
       <View
         style={{
-          width: 10,
-          height: 10,
+          ...styles.legend,
           backgroundColor: color,
-          borderRadius: 100,
-        }}></View>
+        }}
+      />
 
       <BaseText margin={{ left: 12 }} {...props}>
         {text}
@@ -22,6 +21,7 @@ const ChartLegend = ({ color = '', text = '', ...props }) => {
 
 const getStyles = _ =>
   StyleSheet.create({
+    legend: { width: 10, height: 10, borderRadius: 100 },
     container: {
       flexDirection: 'row',
       alignItems: 'center',

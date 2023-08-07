@@ -190,7 +190,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
     screen: {
-      minHeight: '100%',
+      flex: 1,
     },
     container: {
       marginBottom: theme.spacing.xl,

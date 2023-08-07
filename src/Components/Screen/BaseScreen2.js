@@ -111,7 +111,7 @@ const getStyles = (theme, screenHeight) =>
       alignItems: 'center',
     },
     body: {
-      minHeight: '100%',
+      flex: 1,
       paddingVertical: theme.spacing.md,
       paddingHorizontal: 26,
       backgroundColor: theme.colors.white,

@@ -14,7 +14,12 @@ const EarningText = ({ currVal = 0, initialVal = 0, ...props }) => {
   };
 
   const getPercentageSuffix = () => {
-    return `(${getEarningPercentage()}%)`;
+    let percentage = getEarningPercentage();
+    if (isFinite(percentage)) {
+      return `(${getEarningPercentage()}%)`;
+    }
+
+    return '(N/A)';
   };
 
   return (

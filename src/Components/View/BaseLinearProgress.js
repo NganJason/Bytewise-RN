@@ -92,7 +92,7 @@ const getStyles = theme =>
       marginRight: 10,
     },
     progressBarContainer: {
-      height: 2.5,
+      height: 3.5,
       borderRadius: 10,
       backgroundColor: theme.colors.color9,
       flex: 1,

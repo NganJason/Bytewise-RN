@@ -12,10 +12,6 @@ import {
 import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { getProgress } from '../../_shared/util/common';
-import {
-  getCurrDatePercentage,
-  getMonthPercentage,
-} from '../../_shared/util/date';
 import { capitalize } from '../../_shared/util/string';
 
 const BudgetOverviewRow = ({
@@ -92,14 +88,7 @@ const BudgetOverviewRow = ({
         {isEdit ? (
           <BaseDivider />
         ) : (
-          <BaseLinearProgress
-            value={getProgress(usedAmount, amount)}
-            target={
-              budgetType === BUDGET_TYPE_MONTHLY
-                ? getCurrDatePercentage(activeDate)
-                : getMonthPercentage(activeDate)
-            }
-          />
+          <BaseLinearProgress value={getProgress(usedAmount, amount)} />
         )}
       </View>
     </TouchableOpacity>

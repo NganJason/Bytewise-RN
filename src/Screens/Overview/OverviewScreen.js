@@ -104,5 +104,5 @@ export default OverviewScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
-    body: { marginTop: 12 },
+    body: { marginTop: 12, flex: 1 },
   });

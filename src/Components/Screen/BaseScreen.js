@@ -4,6 +4,7 @@ import { BaseLoadableView, BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
+import { useDimension } from '../../_shared/hooks';
 
 const BaseScreen = ({
   children,
@@ -36,7 +37,8 @@ const BaseScreen = ({
   },
 }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
+  const { screenHeight } = useDimension();
+  const styles = getStyles(theme, screenHeight);
 
   useEffect(() => {
     if (errorToast.show) {
@@ -85,12 +87,13 @@ const BaseScreen = ({
       )}
 
       <HideKeyboard>
-        <>
+        <View style={styles.body}>
           {allowLoadable ? (
             <BaseLoadableView
               isLoading={isLoading}
               containerStyle={[
                 enablePadding && styles.paddingHori,
+                styles.container,
                 { backgroundColor: backgroundColor },
               ]}>
               {children}
@@ -99,6 +102,7 @@ const BaseScreen = ({
             <View
               style={[
                 enablePadding && styles.paddingHori,
+                styles.container,
                 { backgroundColor: backgroundColor },
               ]}>
               {children}
@@ -123,30 +127,30 @@ const BaseScreen = ({
               ]}
             />
           )}
-        </>
+        </View>
       </HideKeyboard>
       <BaseToast />
     </>
   );
 };
 
-const getStyles = theme =>
+const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
-    container: {
-      minHeight: '100%',
-    },
-    body: {
-      minHeight: '100%',
-      flex: 1,
-    },
     paddingHori: {
       paddingHorizontal: 26,
     },
     header: {
+      minHeight: screenHeight * 0.1,
       backgroundColor: theme.colors.white,
       paddingHorizontal: 26,
       borderBottomWidth: 0,
       paddingVertical: 22,
+    },
+    body: {
+      flex: 1,
+    },
+    container: {
+      flex: 1,
     },
     emptyHeader: {
       paddingVertical: 0,

@@ -25,6 +25,7 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
+import { useDimension } from '../../_shared/hooks';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -33,7 +34,8 @@ const TODAY = new Date();
 
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
+  const { screenHeight } = useDimension();
+  const styles = getStyles(theme, screenHeight);
 
   const [activeDate, setActiveDate] = useState(TODAY);
   const [timeRange, setTimeRange] = useState(
@@ -159,7 +161,7 @@ const getStyles = theme => {
       marginBottom: 22,
     },
     body: {
-      minHeight: '100%',
+      flex: 1,
       padding: theme.spacing.xl,
       backgroundColor: theme.colors.white,
       borderRadius: 20,

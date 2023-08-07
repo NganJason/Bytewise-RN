@@ -6,7 +6,7 @@ import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 import HideKeyboard from './HideKeyboard';
 
-const headerPercentage = 0.25;
+const headerPercentage = 0.24;
 const floatingHeaderPercentage = 0.2;
 
 const BaseScreen3 = ({
@@ -95,7 +95,6 @@ const getStyles = (theme, screenHeight, screenWidth) =>
     },
     body: {
       flex: 1,
-      minHeight: '100%',
       paddingVertical: theme.spacing.md,
       paddingHorizontal: 26,
       backgroundColor: theme.colors.white,

@@ -29,10 +29,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useGetCategoriesHelper } from '../../_shared/hooks';
 import { getProgress } from '../../_shared/util/common';
 import { useAggrTransactions } from '../../_shared/query';
-import {
-  getCurrDatePercentage,
-  getMonthPercentage,
-} from '../../_shared/util/date';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -162,11 +158,6 @@ const CategoryBreakdownScreen = ({ route }) => {
             </View>
             <BaseLinearProgress
               value={getProgress(budget.used_amount, budget.amount)}
-              target={
-                budgetType === BUDGET_TYPE_MONTHLY
-                  ? getCurrDatePercentage(activeDate)
-                  : getMonthPercentage(activeDate)
-              }
               showPercentage
             />
           </TouchableOpacity>
