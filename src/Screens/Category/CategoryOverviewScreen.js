@@ -87,7 +87,6 @@ const CategoryOverviewScreen = ({ route }) => {
           item={EmptyContentConfig.categoryOverview}
           route={ROUTES.categoryForm}
           routeParam={{ category_type: categoryType }}
-          marginVertical="30%"
         />
       );
     }

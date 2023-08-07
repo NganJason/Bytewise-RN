@@ -90,7 +90,6 @@ const TransactionScreen = ({ navigation }) => {
         <EmptyContent
           item={EmptyContentConfig.transaction}
           route={ROUTES.transactionForm}
-          marginVertical="30%"
         />
       );
     }

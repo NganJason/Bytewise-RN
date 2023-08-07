@@ -51,7 +51,6 @@ const InvestmentBreakdownScreen = ({ route }) => {
           item={EmptyContentConfig.investment}
           route={ROUTES.holdingForm}
           routeParam={{ account_id: accountID }}
-          marginVertical="30%"
         />
       );
     }
@@ -164,8 +163,8 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       zIndex: -1,
     },
     body: {
+      flex: 1,
       paddingVertical: theme.spacing.lg,
-      minHeight: '100%',
     },
     accountType: {
       flexDirection: 'row',

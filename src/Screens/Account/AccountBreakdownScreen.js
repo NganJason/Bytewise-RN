@@ -106,7 +106,6 @@ const AccountBreakdownScreen = ({ route }) => {
               account_name: getAccount?.data?.account?.account_name || '',
             },
           }}
-          marginVertical="30%"
         />
       );
     }
@@ -247,13 +246,16 @@ const AccountBreakdownScreen = ({ route }) => {
           marginBottom: screenHeight * 0.02,
         }
       }>
-      {renderContent()}
+      <View style={styles.body}>{renderContent()}</View>
     </BaseScreen2>
   );
 };
 
 const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
+    body: {
+      flex: 1,
+    },
     image: {
       width: screenHeight * 0.2,
       height: screenHeight * 0.18,

@@ -72,7 +72,6 @@ const HoldingBreakdownScreen = ({ route }) => {
             holding_id: holdingID,
             symbol: symbol,
           }}
-          marginVertical="30%"
         />
       );
     }

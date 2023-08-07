@@ -14,8 +14,6 @@ const EmptyContent = ({
   route = '',
   routeParam = {},
   onRedirect = function () {},
-  marginVertical = '0%',
-  height = '',
 }) => {
   const { theme } = useTheme();
   const { screenWidth } = useDimension();
@@ -28,24 +26,26 @@ const EmptyContent = ({
   };
 
   return (
-    <View style={{ ...styles.container, marginVertical: marginVertical }}>
-      <BaseImage
-        width={screenWidth * 0.4}
-        height={height === '' ? screenWidth * 0.4 : height}
-        source={item.image}
-      />
+    <View style={styles.container}>
+      <View>
+        <BaseImage
+          width={screenWidth * 0.4}
+          height={'80%'}
+          source={item.image}
+        />
 
-      <View style={styles.textContainer}>
-        {item.text.map(d => (
-          <BaseText key={d} text3 style={styles.text}>
-            {d}
-          </BaseText>
-        ))}
-        {route !== '' && (
-          <LinkText text4 onPress={onPress}>
-            Add now!
-          </LinkText>
-        )}
+        <View style={styles.textContainer}>
+          {item.text.map(d => (
+            <BaseText key={d} text3 style={styles.text}>
+              {d}
+            </BaseText>
+          ))}
+          {route !== '' && (
+            <LinkText text4 onPress={onPress}>
+              Add now!
+            </LinkText>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -54,6 +54,7 @@ const EmptyContent = ({
 const getStyles = theme => {
   return StyleSheet.create({
     container: {
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },

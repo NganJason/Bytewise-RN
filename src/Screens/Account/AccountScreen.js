@@ -172,7 +172,7 @@ const AccountScreen = () => {
         allowDrawer: true,
       }}>
       <BaseLoadableView scrollable={true} isLoading={getAccounts.isLoading}>
-        <View>
+        <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
             <AmountText text3>{computeEquitySum(EQUITY_TYPE_ASSET)}</AmountText>
@@ -180,7 +180,7 @@ const AccountScreen = () => {
           {renderContent(EQUITY_TYPE_ASSET)}
         </View>
 
-        <View>
+        <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Debts</BaseText>
             <AmountText text3>{computeEquitySum(EQUITY_TYPE_DEBT)}</AmountText>
@@ -194,6 +194,9 @@ const AccountScreen = () => {
 
 const getStyles = (_, screenWidth, screenHeight) =>
   StyleSheet.create({
+    contentContainer: {
+      flex: 1,
+    },
     image: {
       width: screenHeight * 0.26,
       height: screenHeight * 0.26,

@@ -61,7 +61,6 @@ const CategoryEditScreen = ({ route }) => {
           item={EmptyContentConfig.category}
           route={ROUTES.categoryForm}
           routeParam={{ category_type: categoryType }}
-          marginVertical="30%"
         />
       );
     }

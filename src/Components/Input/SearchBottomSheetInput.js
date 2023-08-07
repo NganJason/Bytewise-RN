@@ -84,7 +84,6 @@ const SearchBottomSheetInput = ({
               ? EmptyContentConfig.emptySearchText
               : EmptyContentConfig.noSearchDataFound
           }
-          marginVertical="30%"
         />
       );
     }
