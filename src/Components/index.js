@@ -41,6 +41,7 @@ import {
   BaseRow,
   BaseScrollableTab,
   BaseKeyboardAwareScrollView,
+  BaseBottomSelectTab,
 } from './View';
 
 // Common
@@ -49,7 +50,6 @@ import {
   DateNavigator,
   AggrSummary,
   Category,
-  BudgetUsage,
   EmptyContent,
   HoldingRow,
   LotRow,
@@ -90,9 +90,9 @@ export {
   BaseScrollView,
   BaseScrollableTab,
   BaseKeyboardAwareScrollView,
+  BaseBottomSelectTab,
   Category,
   BaseListItem,
-  BudgetUsage,
   BaseToggle,
   BaseImage,
   LinkText,

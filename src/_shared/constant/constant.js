@@ -40,6 +40,14 @@ export const DAYS = {
   6: 'Sat',
 };
 
+export const TIME_RANGE_MONTHLY = 1;
+export const TIME_RANGE_YEARLY = 2;
+
+export const TIME_RANGE_TYPES = {
+  [TIME_RANGE_MONTHLY]: 'Monthly',
+  [TIME_RANGE_YEARLY]: 'Yearly',
+};
+
 export const EmptyContentConfig = {
   monthlyBudget: {
     text: ['Plan your budget for the month'],

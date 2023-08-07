@@ -21,14 +21,6 @@ const drawerRows = [
     },
     route: ROUTES.categoryEdit,
   },
-  {
-    name: 'Manage budgets',
-    icon: {
-      type: 'feather',
-      name: 'credit-card',
-    },
-    route: ROUTES.budgetList,
-  },
 ];
 
 const CustomDrawer = () => {

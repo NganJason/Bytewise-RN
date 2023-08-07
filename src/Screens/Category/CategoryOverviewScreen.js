@@ -13,6 +13,7 @@ import {
   AmountText,
   BaseScreen,
   BaseDivider,
+  BaseBottomSelectTab,
 } from '../../Components';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
@@ -21,6 +22,9 @@ import { capitalize } from '../../_shared/util/string';
 import {
   DonutChartColors,
   EmptyContentConfig,
+  TIME_RANGE_MONTHLY,
+  TIME_RANGE_TYPES,
+  TIME_RANGE_YEARLY,
 } from '../../_shared/constant/constant';
 import {
   TRANSACTION_TYPES,
@@ -35,11 +39,20 @@ const CategoryOverviewScreen = ({ route }) => {
   const navigation = useNavigation();
 
   const {
-    active_date: activeD = new Date().valueOf(),
+    active_date: activeTs = new Date().valueOf(),
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
-  const { activeDate, timeRange, onDateMove } = useTimeRange(activeD);
+  const [timeRangeType, setTimeRangeType] = useState(TIME_RANGE_MONTHLY);
+  const onTimeRangeTypeChange = e => {
+    setTimeRangeType(e.value);
+  };
+
+  const { activeDate, timeRange, onDateMove } = useTimeRange(
+    activeTs,
+    timeRangeType,
+  );
+
   const { categoriesInfo, isScreenLoading } = useCategoryInfo(
     timeRange,
     categoryType,
@@ -101,8 +114,19 @@ const CategoryOverviewScreen = ({ route }) => {
               startingDate={activeDate}
               onForward={onDateMove}
               onBackward={onDateMove}
+              year={timeRangeType === TIME_RANGE_YEARLY}
             />
           </View>
+        ),
+        rightComponent: (
+          <BaseBottomSelectTab
+            currTabText={TIME_RANGE_TYPES[timeRangeType][0]}
+            items={[
+              { name: 'Monthly', value: TIME_RANGE_MONTHLY },
+              { name: 'Yearly', value: TIME_RANGE_YEARLY },
+            ]}
+            onSelect={onTimeRangeTypeChange}
+          />
         ),
       }}>
       <BaseDonutChart
