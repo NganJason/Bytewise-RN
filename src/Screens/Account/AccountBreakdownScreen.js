@@ -11,6 +11,7 @@ import {
   EmptyContent,
   BaseLoadableView,
   BaseButton,
+  Transactions,
 } from '../../Components';
 import { card, coin, coinsack } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
@@ -80,37 +81,8 @@ const AccountBreakdownScreen = ({ route }) => {
   );
 
   const renderRows = () => {
-    let rows = [];
     let { transactions = [] } = getTransactions;
-    const { transactionTimes = [], transactionGroups = {} } =
-      groupTransactionsByDate(transactions);
-
-    transactionTimes.map((tt, i) =>
-      rows.push(
-        <DailyTransactions
-          key={i}
-          transactions={transactionGroups[tt]}
-          timestamp={tt}
-        />,
-      ),
-    );
-
-    if (rows.length === 0 && !getTransactions.isLoading) {
-      return (
-        <EmptyContent
-          item={EmptyContentConfig.transaction}
-          route={ROUTES.transactionForm}
-          routeParam={{
-            account: {
-              account_id: accountID,
-              account_name: getAccount?.data?.account?.account_name || '',
-            },
-          }}
-        />
-      );
-    }
-
-    return rows;
+    return <Transactions transactions={transactions} />;
   };
 
   const renderHeader = () => {
