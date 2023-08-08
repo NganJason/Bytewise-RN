@@ -38,6 +38,7 @@ const TransactionForm = ({ route }) => {
   const {
     transaction_id: transactionID = '',
     account = { account_id: '', account_name: '' },
+    category = { category_id: '', category_name: '' },
   } = route?.params || {};
   const isAddTransaction = () => {
     return transactionID === '';
@@ -80,6 +81,7 @@ const TransactionForm = ({ route }) => {
             <ExpenseIncomeForm
               transactionID={transactionID}
               account={account}
+              category={category}
               transactionType={activeTab.val}
               onTransactionTypeChange={onTransactionTypeChange}
             />

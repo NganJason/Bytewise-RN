@@ -25,6 +25,8 @@ export const useCreateTransaction = (opts = {}) => {
       // refetch account with given account_id
       queryClient.invalidateQueries([queryKeys.account, account_id]);
 
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
+
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -52,6 +54,8 @@ export const useUpdateTransaction = (opts = {}) => {
       // refetch account with given account_id
       queryClient.invalidateQueries([queryKeys.account, account_id]);
 
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
+
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -67,6 +71,7 @@ export const useDeleteTransaction = (opts = {}) => {
       queryClient.invalidateQueries([queryKeys.transactionsAggr]);
       queryClient.invalidateQueries([queryKeys.accounts]);
       queryClient.invalidateQueries([queryKeys.account, account_id]);
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
       opts.onSuccess && opts.onSuccess();
     },
   });

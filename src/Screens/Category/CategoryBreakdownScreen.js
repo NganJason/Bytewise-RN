@@ -23,7 +23,11 @@ import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContent } from '../../Components/Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetTransactionsHook, useTimeRange } from '../../_shared/hooks';
+import {
+  useDimension,
+  useGetTransactionsHook,
+  useTimeRange,
+} from '../../_shared/hooks';
 import { useError } from '../../_shared/hooks/error';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useGetCategoriesHelper } from '../../_shared/hooks';
@@ -36,6 +40,7 @@ const TODAY = new Date();
 
 const CategoryBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
+  const { screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
@@ -157,7 +162,7 @@ const CategoryBreakdownScreen = ({ route }) => {
               </AmountText>
             </View>
             <BaseLinearProgress
-              value={getProgress(budget.used_amount, budget.amount)}
+              value={getProgress(getCategoryUsedAmount(), budget.amount)}
               showPercentage
             />
           </TouchableOpacity>
@@ -250,6 +255,19 @@ const CategoryBreakdownScreen = ({ route }) => {
       headerProps={{
         allowBack: true,
         component: renderHeader(),
+      }}
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'plus',
+        iconType: 'entypo',
+        iconColor: theme.colors.white,
+        color: theme.colors.color1,
+        onPress: () =>
+          navigation.navigate(ROUTES.transactionForm, {
+            category: { category_id: categoryID, category_name: categoryName },
+          }),
+        marginBottom: screenHeight * 0.02,
       }}>
       <>
         <View style={styles.dateContainer}>

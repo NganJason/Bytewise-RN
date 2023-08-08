@@ -99,7 +99,7 @@ const CategoryOverviewScreen = ({ route }) => {
     categoriesInfo.map(category => {
       sum += category.sum;
     });
-    return sum;
+    return sum.toFixed(2);
   };
 
   return (
@@ -131,7 +131,7 @@ const CategoryOverviewScreen = ({ route }) => {
       <BaseDonutChart
         items={categoriesInfo}
         innerLabel={{
-          title: `$ ${getCategoriesTotal()}`,
+          title: `S$ ${getCategoriesTotal()}`,
           subtitle: TRANSACTION_TYPES[categoryType],
         }}
       />

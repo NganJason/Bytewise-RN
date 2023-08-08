@@ -43,6 +43,10 @@ const ExpenseIncomeForm = ({
     account_id: '',
     account_name: '',
   },
+  category = {
+    category_id: '',
+    category_name: '',
+  },
   transactionType = TRANSACTION_TYPE_EXPENSE,
   onTransactionTypeChange = function () {},
 }) => {
@@ -61,8 +65,8 @@ const ExpenseIncomeForm = ({
     amount: 0,
     note: '',
     category: {
-      category_id: '',
-      category_name: '',
+      category_id: category.category_id,
+      category_name: category.category_name,
     },
     account: {
       account_id: account.account_id,
@@ -285,6 +289,14 @@ const ExpenseIncomeForm = ({
           />
         </Dialog>
 
+        <BaseCurrencyInput
+          label="Amount"
+          value={transactionForm.amount}
+          onChangeText={onAmountChange}
+          onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
+          errorMessage={showValidation && formErrors.amount}
+        />
+
         <BaseInput
           label="Note"
           value={transactionForm.note}
@@ -293,14 +305,6 @@ const ExpenseIncomeForm = ({
           onFocus={() => setScrollHeight(NOTE_SCROLL_HEIGHT)}
           maxLength={120}
           errorMessage={showValidation && formErrors.note}
-        />
-
-        <BaseCurrencyInput
-          label="Amount"
-          value={transactionForm.amount}
-          onChangeText={onAmountChange}
-          onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
-          errorMessage={showValidation && formErrors.amount}
         />
 
         <TouchInput

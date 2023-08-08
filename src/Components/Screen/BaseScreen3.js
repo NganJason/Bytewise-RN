@@ -1,9 +1,10 @@
-import { useTheme } from '@rneui/themed';
+import { FAB, Icon, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
+import { BaseToast } from '../View';
 import HideKeyboard from './HideKeyboard';
 
 const headerPercentage = 0.24;
@@ -15,6 +16,16 @@ const BaseScreen3 = ({
     allowBack: false,
     allowDrawer: false,
     backgroundColor: '#F3F7FB',
+  },
+  fabProps = {
+    show: false,
+    placement: 'right',
+    iconName: '',
+    iconType: '',
+    iconColor: '',
+    color: '',
+    onPress: function () {},
+    marginBottom: 0,
   },
   children,
 }) => {
@@ -63,6 +74,28 @@ const BaseScreen3 = ({
             {children}
           </View>
         </View>
+
+        {fabProps.show && (
+          <FAB
+            placement={fabProps.placement}
+            size={'medium'}
+            icon={
+              <Icon
+                name={fabProps.iconName}
+                color={fabProps.iconColor}
+                type={fabProps.iconType}
+              />
+            }
+            color={fabProps.color}
+            onPress={fabProps.onPress}
+            style={[
+              styles.fab,
+              fabProps.marginBottom && { bottom: fabProps.marginBottom },
+            ]}
+          />
+        )}
+
+        <BaseToast />
       </>
     </HideKeyboard>
   );

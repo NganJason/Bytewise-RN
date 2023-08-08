@@ -18,10 +18,18 @@ const BaseDonutChart = ({
 
     return (
       <View style={styles.centerContainer}>
-        <BaseText h1 style={{ color: theme.colors.color1 }}>
+        <BaseText
+          h1
+          style={{ color: theme.colors.color1 }}
+          numberOfLines={1}
+          adjustsFontSizeToFit>
           {innerLabel.title}
         </BaseText>
-        <BaseText text3 style={{ color: theme.colors.color7 }}>
+        <BaseText
+          text3
+          style={{ color: theme.colors.color7 }}
+          numberOfLines={1}
+          adjustsFontSizeToFit>
           {innerLabel.subtitle}
         </BaseText>
       </View>
@@ -69,6 +77,7 @@ const getStyles = _ =>
       alignItems: 'center',
     },
     centerContainer: {
+      padding: 10,
       alignItems: 'center',
     },
   });

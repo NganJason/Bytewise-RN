@@ -72,12 +72,14 @@ export const getHolding = async ({ holding_id = '' }) => {
 };
 
 export const updateHolding = async ({
+  symbol = '',
   holding_id = '',
   total_cost = 0,
   latest_value = 0,
 }) => {
   try {
     const body = await sendPostRequest(UPDATE_HOLDING, {
+      symbol: symbol,
       holding_id: holding_id,
       total_cost: String(total_cost),
       latest_value: String(latest_value),

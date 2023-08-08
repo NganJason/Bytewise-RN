@@ -98,7 +98,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
             align="flex-start"
             size="sm"
             textStyle={{ color: theme.colors.color1 }}
-            margin={{ top: 4 }}
+            margin={{ top: 6 }}
             icon={
               <Icon
                 name="edit"
@@ -168,7 +168,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       paddingVertical: theme.spacing.lg,
     },
     accountType: {
-      marginTop: 4,
+      // marginTop: 8,
       flexDirection: 'row',
       alignItems: 'center',
     },
