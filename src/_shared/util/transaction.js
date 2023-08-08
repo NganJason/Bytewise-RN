@@ -4,22 +4,40 @@ import {
 } from '../apis/enum';
 
 export const groupTransactionsByDate = (transactions = []) => {
-  const transactionGroups = {};
-  const transactionTimes = [];
+  const dateToTransactions = {};
+  const transactionDates = [];
 
   transactions.forEach(t => {
     // group by date
     const tt = new Date(t.transaction_time).setHours(0, 0, 0, 0);
-    if (!(tt in transactionGroups)) {
-      transactionTimes.push(tt);
+    if (!(tt in dateToTransactions)) {
+      transactionDates.push(tt);
     }
-    transactionGroups[tt] = [...(transactionGroups[tt] || []), t];
+    dateToTransactions[tt] = [...(dateToTransactions[tt] || []), t];
   });
-  transactionTimes.sort().reverse();
+  transactionDates.sort().reverse();
 
-  return { transactionTimes, transactionGroups };
+  return { transactionDates, dateToTransactions };
 };
 
+export const groupTransactionDatesByMonth = (transactionDates = []) => {
+  const transactionMonthToDates = {};
+  const transactionMonths = [];
+
+  transactionDates.forEach(d => {
+    const date = new Date(d);
+    date.setDate(1);
+    let ts = date.setHours(0, 0, 0, 0);
+
+    if (!(ts in transactionMonthToDates)) {
+      transactionMonths.push(ts);
+    }
+    transactionMonthToDates[ts] = [...(transactionMonthToDates[ts] || []), d];
+  });
+  transactionMonths.sort().reverse();
+
+  return { transactionMonths, transactionMonthToDates };
+};
 export const mergeTransactionsCategory = (
   transactions = [],
   categoryMap = {},

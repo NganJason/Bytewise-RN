@@ -43,15 +43,11 @@ const CategoryOverviewScreen = ({ route }) => {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
-  const [timeRangeType, setTimeRangeType] = useState(TIME_RANGE_MONTHLY);
+  const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
+    useTimeRange(activeTs, TIME_RANGE_MONTHLY);
   const onTimeRangeTypeChange = e => {
     setTimeRangeType(e.value);
   };
-
-  const { activeDate, timeRange, onDateMove } = useTimeRange(
-    activeTs,
-    timeRangeType,
-  );
 
   const { categoriesInfo, isScreenLoading } = useCategoryInfo(
     timeRange,

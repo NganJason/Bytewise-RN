@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Icon, useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import {
   BaseText,
-  DailyTransactions,
   IconButton,
   DateNavigator,
   BaseDivider,
@@ -16,13 +15,16 @@ import {
 } from '../../Components';
 import {
   BUDGET_TYPE_MONTHLY,
+  BUDGET_TYPE_ANNUAL,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
-import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import ROUTES from '../../_shared/constant/routes';
-import { EmptyContent } from '../../Components/Common';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { Transactions } from '../../Components/Common';
+import {
+  TIME_RANGE_MONTHLY,
+  TIME_RANGE_YEARLY,
+} from '../../_shared/constant/constant';
 import {
   useDimension,
   useGetTransactionsHook,
@@ -49,9 +51,8 @@ const CategoryBreakdownScreen = ({ route }) => {
     category_id: categoryID = '',
   } = route?.params || {};
 
-  const { activeDate, timeRange, onDateMove } = useTimeRange(
-    new Date(activeTs),
-  );
+  const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
+    useTimeRange(new Date(activeTs), TIME_RANGE_MONTHLY);
 
   const {
     categoryIDToCategoryMap,
@@ -65,10 +66,19 @@ const CategoryBreakdownScreen = ({ route }) => {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
     budget = null,
   } = categoryIDToCategoryMap[categoryID] || {};
-  const {
-    amount: budgetAmount = 0,
-    budget_type: budgetType = BUDGET_TYPE_MONTHLY,
-  } = budget || {};
+  const { amount: budgetAmount = 0, budget_type: budgetType } = budget || {};
+
+  useEffect(() => {
+    if (!budgetType) {
+      return;
+    }
+
+    setTimeRangeType(
+      budgetType === BUDGET_TYPE_MONTHLY
+        ? TIME_RANGE_MONTHLY
+        : TIME_RANGE_YEARLY,
+    );
+  }, [budgetType]);
 
   const aggrTransactionsQuery = useAggrTransactions({
     category_ids: [categoryID],
@@ -223,31 +233,13 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const renderRows = () => {
-    let rows = [];
     let { transactions = [] } = getTransactions;
-    const { transactionTimes = [], transactionGroups = {} } =
-      groupTransactionsByDate(transactions);
-
-    transactionTimes.map((tt, i) =>
-      rows.push(
-        <DailyTransactions
-          key={i}
-          transactions={transactionGroups[tt]}
-          timestamp={tt}
-        />,
-      ),
+    return (
+      <Transactions
+        transactions={transactions}
+        showMonthLabel={budgetType === BUDGET_TYPE_ANNUAL}
+      />
     );
-
-    if (rows.length === 0 && !getTransactions.isLoading) {
-      return (
-        <EmptyContent
-          item={EmptyContentConfig.transaction}
-          route={ROUTES.transactionForm}
-        />
-      );
-    }
-
-    return rows;
   };
 
   return (
@@ -275,6 +267,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             startingDate={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
+            year={timeRangeType === TIME_RANGE_YEARLY}
           />
         </View>
 

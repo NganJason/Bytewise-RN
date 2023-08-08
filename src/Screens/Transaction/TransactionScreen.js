@@ -4,10 +4,9 @@ import { View, StyleSheet } from 'react-native';
 import {
   BaseScreen,
   DateNavigator,
-  DailyTransactions,
   AggrSummary,
-  EmptyContent,
   BaseLoadableView,
+  Transactions,
 } from '../../Components';
 import {
   getUnixRangeOfMonth,
@@ -16,13 +15,11 @@ import {
 } from '../../_shared/util/date';
 import ROUTES from '../../_shared/constant/routes';
 import { useAggrTransactions } from '../../_shared/query';
-import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
 import { useDimension } from '../../_shared/hooks';
@@ -70,31 +67,8 @@ const TransactionScreen = ({ navigation }) => {
     getTransactions.isLoading || aggrTransactionsQuery.isLoading;
 
   const renderRows = () => {
-    let rows = [];
     let { transactions = [] } = getTransactions;
-    const { transactionTimes = [], transactionGroups = {} } =
-      groupTransactionsByDate(transactions);
-
-    transactionTimes.map((tt, i) =>
-      rows.push(
-        <DailyTransactions
-          key={i}
-          transactions={transactionGroups[tt]}
-          timestamp={tt}
-        />,
-      ),
-    );
-
-    if (rows.length === 0) {
-      return (
-        <EmptyContent
-          item={EmptyContentConfig.transaction}
-          route={ROUTES.transactionForm}
-        />
-      );
-    }
-
-    return rows;
+    return <Transactions transactions={transactions} />;
   };
 
   useError([getTransactions, aggrTransactionsQuery]);

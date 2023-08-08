@@ -7,7 +7,9 @@ import {
   getYear,
 } from '../util/date';
 
-const useTimeRange = (activeTs = 0, timeRangeType = TIME_RANGE_MONTHLY) => {
+const useTimeRange = (activeTs = 0, rangeType = TIME_RANGE_MONTHLY) => {
+  const [timeRangeType, setTimeRangeType] = useState(rangeType);
+
   const [activeDate, setActiveDate] = useState(new Date(activeTs));
   const [timeRange, setTimeRange] = useState(
     getTimeRange(activeDate, timeRangeType),
@@ -21,7 +23,7 @@ const useTimeRange = (activeTs = 0, timeRangeType = TIME_RANGE_MONTHLY) => {
     setTimeRange(getTimeRange(activeDate, timeRangeType));
   }, [activeDate, timeRangeType]);
 
-  return { activeDate, timeRange, onDateMove };
+  return { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType };
 };
 
 const getTimeRange = (
