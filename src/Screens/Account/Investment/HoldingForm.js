@@ -29,6 +29,7 @@ import {
 import { useError } from '../../../_shared/hooks/error';
 import { validateHolding } from '../../../_shared/validator/investment';
 import { toolTipMessage } from '../../../_shared/constant/message';
+import { CURRENCY_USD } from '../../../_shared/util/currency';
 
 const scrollableTabs = [
   { name: 'Common stocks', iconName: 'line-graph', iconType: 'entypo' },
@@ -222,6 +223,7 @@ const HoldingForm = ({ route }) => {
               value={holdingForm.latest_value}
               onChangeText={onLatestValueChange}
               errorMessage={showValidation && formErrors.budget_amount}
+              currency={CURRENCY_USD}
             />
 
             <BaseCurrencyInput
@@ -230,6 +232,7 @@ const HoldingForm = ({ route }) => {
               value={holdingForm.total_cost}
               onChangeText={onTotalCostChange}
               errorMessage={showValidation && formErrors.budget_amount}
+              currency={CURRENCY_USD}
             />
           </View>
         )}

@@ -16,7 +16,7 @@ const EmptyContent = ({
   onRedirect = function () {},
 }) => {
   const { theme } = useTheme();
-  const { screenWidth } = useDimension();
+  const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
@@ -31,6 +31,7 @@ const EmptyContent = ({
         <BaseImage
           width={screenWidth * 0.4}
           height={'80%'}
+          maxHeight={screenHeight * 0.15}
           source={item.image}
         />
 

@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
-
-import { CURRENCY } from '../../_shared/mock_data/user';
+import { getCurrencySymbol, CURRENCY_SGD } from '../../_shared/util/currency';
 
 const AmountText = ({
   children = 0,
@@ -14,6 +13,7 @@ const AmountText = ({
   style = {},
   decimal = 2,
   suffix = '',
+  currency = CURRENCY_SGD,
   ...props
 }) => {
   const { theme } = useTheme();
@@ -42,7 +42,8 @@ const AmountText = ({
     const amount = Number(children.toFixed(decimal));
     const amountStr = amount.toLocaleString();
 
-    text = `${CURRENCY} ${amountStr}`;
+    let currencySymbol = getCurrencySymbol(currency);
+    text = `${currencySymbol} ${amountStr}`;
     if (showSymbol) {
       text = `${symbol} ${text}`;
     } else if (showNegativeOnly && symbol === '-') {

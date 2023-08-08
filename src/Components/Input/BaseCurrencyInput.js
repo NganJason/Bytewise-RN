@@ -1,8 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react';
 
 import BaseInput from './BaseInput';
-
-import { CURRENCY } from '../../_shared/mock_data/user';
+import { CURRENCY_SGD, getCurrencySymbol } from '../../_shared/util/currency';
 
 const BaseCurrencyInput = forwardRef(
   (
@@ -13,12 +12,15 @@ const BaseCurrencyInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       autoFocus = false,
+      currency = CURRENCY_SGD,
+      isNegative = false,
       ...props
     },
     ref,
   ) => {
     const [inputStr, setInputStr] = useState(value);
     const { onFocus = function () {} } = props || {};
+    let currencySymbol = getCurrencySymbol(currency);
 
     useEffect(() => {
       if (isNaN(value) || value === null) {
@@ -29,11 +31,15 @@ const BaseCurrencyInput = forwardRef(
     }, [value]);
 
     const formatAmount = () => {
-      return `${CURRENCY} ${inputStr}`;
+      if (isNegative || Number(inputStr) < 0) {
+        return `- ${currencySymbol} ${Math.abs(Number(inputStr))}`;
+      }
+      return `${currencySymbol} ${inputStr}`;
     };
 
     const handleChangeText = e => {
-      e = e.replace(CURRENCY, '');
+      e = e.replace(`- ${currencySymbol}`, '');
+      e = e.replace(currencySymbol, '');
       e = e.replace(' ', '');
 
       if (!isNaN(e) || e === '-') {

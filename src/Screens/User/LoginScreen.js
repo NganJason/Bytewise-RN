@@ -22,7 +22,7 @@ import { useError } from '../../_shared/hooks/error';
 
 const LoginScreen = () => {
   const { theme } = useTheme();
-  const { screenWidth } = useDimension();
+  const { screenWidth, screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
@@ -77,8 +77,8 @@ const LoginScreen = () => {
               Your personal financial companion
             </BaseText>
             <BaseImage
-              width={screenWidth * 0.7}
-              height={screenWidth * 0.6}
+              width={'100%'}
+              height={screenHeight * 0.25}
               source={loginHero}
             />
           </View>
@@ -154,9 +154,11 @@ const getStyles = theme => {
       color: theme.colors.color7,
     },
     input: {
-      marginBottom: 20,
+      marginBottom: 0,
     },
-    btnContainer: { marginVertical: 20 },
+    btnContainer: {
+      marginBottom: 16,
+    },
     signUpContainer: {
       flexDirection: 'row',
       justifyContent: 'center',

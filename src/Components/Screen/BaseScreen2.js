@@ -102,6 +102,7 @@ const getStyles = (theme, screenHeight) =>
       minHeight: screenHeight * 0.25,
       paddingHorizontal: 26,
       paddingBottom: 22,
+      paddingTop: 10,
     },
     headerContent: {
       marginTop: theme.spacing.md,

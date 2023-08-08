@@ -6,6 +6,7 @@ import {
   HOLDING_TYPE_DEFAULT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
+import { CURRENCY_USD } from '../../_shared/util/currency';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseChip, BaseRow } from '../View';
 
@@ -55,11 +56,14 @@ const HoldingRow = ({
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3>{latest_value}</AmountText>
+        <AmountText text3 currency={CURRENCY_USD}>
+          {latest_value}
+        </AmountText>
 
         <EarningText
           currVal={latest_value}
           initialVal={total_cost}
+          currency={CURRENCY_USD}
           text5
           style={styles.subRow}
         />

@@ -1,17 +1,16 @@
 import { StyleSheet, View, Image } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useState } from 'react';
-import { useDimension } from '../../_shared/hooks';
 
 const BaseImage = ({
   width = 0,
   height = 0,
+  maxHeight = null,
   source = null,
   align = 'center',
   containerStyle = {},
 }) => {
   const styles = getStyles();
-  const { screenHeight } = useDimension();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const onImageLoad = () => {
@@ -25,8 +24,8 @@ const BaseImage = ({
           style={{
             alignSelf: align,
             width: width,
-            maxHeight: screenHeight * 0.15,
             height: height,
+            maxHeight: maxHeight,
             ...containerStyle,
           }}>
           <Image
@@ -41,8 +40,8 @@ const BaseImage = ({
           style={{
             alignSelf: align,
             width: width,
-            maxHeight: screenHeight * 0.15,
             height: height,
+            maxHeight: maxHeight,
             ...containerStyle,
           }}>
           <Image source={source} style={styles.img} />

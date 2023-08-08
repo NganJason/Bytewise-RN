@@ -37,8 +37,8 @@ export const ACCOUNT_TYPES = {
   [ACCOUNT_TYPE_BANK_ACCOUNT]: 'Bank Account',
   [ACCOUNT_TYPE_INVESTMENT]: 'Investment',
   [ACCOUNT_TYPE_CREDIT_CARD]: 'Credit Card',
-  [ACCOUNT_TYPE_LOAN]: 'Loan',
-  [ACCOUNT_TYPE_MORTGAGE]: 'Mortgage',
+  // [ACCOUNT_TYPE_LOAN]: 'Loan',
+  // [ACCOUNT_TYPE_MORTGAGE]: 'Mortgage',
 };
 
 export const HOLDING_TYPE_DEFAULT = 1;

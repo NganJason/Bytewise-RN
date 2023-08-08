@@ -14,6 +14,7 @@ const BaseButton = ({
   icon = null,
   onPress = function () {},
   textStyle = {},
+  margin = { top: 0, bottom: 0, left: 0, right: 0, vertical: 0, horizontal: 0 },
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -87,6 +88,26 @@ const BaseButton = ({
     }
   };
 
+  // top, bottom, left, right take precedence over vertical and horizontal
+  const getMargin = () => {
+    let m = {};
+    if (margin.top !== undefined || margin.bottom !== undefined) {
+      m.marginTop = margin.top;
+      m.marginBottom = margin.bottom;
+    } else {
+      m.marginVertical = margin.vertical;
+    }
+
+    if (margin.left !== undefined || margin.right !== undefined) {
+      m.marginLeft = margin.left;
+      m.marginRight = margin.right;
+    } else {
+      m.marginHorizontal = margin.horizontal;
+    }
+
+    return m;
+  };
+
   const buttonStyle = getButtonStyle();
 
   return (
@@ -103,10 +124,13 @@ const BaseButton = ({
         ...styles.commonButtonStyle,
         ...buttonStyle.btn,
       }}
-      containerStyle={{
-        width: getContainerWidth(),
-        alignSelf: align,
-      }}
+      containerStyle={[
+        getMargin(),
+        {
+          width: getContainerWidth(),
+          alignSelf: align,
+        },
+      ]}
       titleStyle={{ ...getTextStyle(), ...buttonStyle.title, ...textStyle }}
       size={size}
       title={title}

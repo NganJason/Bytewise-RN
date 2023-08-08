@@ -17,6 +17,7 @@ import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
 import { useGetHolding, useGetLots } from '../../../_shared/query/investment';
+import { CURRENCY_USD } from '../../../_shared/util/currency';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -100,13 +101,17 @@ const HoldingBreakdownScreen = ({ route }) => {
           decimal={0}
           margin={{ bottom: 8 }}
           isLoading={getHolding.isLoading}
-          loadingLen={10}>
+          loadingLen={10}
+          currency={CURRENCY_USD}>
           {latest_value}
         </AmountText>
 
         <View style={styles.headerRow}>
           <BaseText text5>Invested amount</BaseText>
-          <AmountText text5 isLoading={getHolding.isLoading}>
+          <AmountText
+            text5
+            isLoading={getHolding.isLoading}
+            currency={CURRENCY_USD}>
             {total_cost}
           </AmountText>
         </View>
@@ -118,6 +123,7 @@ const HoldingBreakdownScreen = ({ route }) => {
             initialVal={total_cost}
             text5
             isLoading={getHolding.isLoading}
+            currency={CURRENCY_USD}
           />
         </View>
 
@@ -130,14 +136,20 @@ const HoldingBreakdownScreen = ({ route }) => {
 
         <View style={styles.headerRow}>
           <BaseText text5>Latest price</BaseText>
-          <AmountText text5 isLoading={getHolding.isLoading}>
+          <AmountText
+            text5
+            isLoading={getHolding.isLoading}
+            currency={CURRENCY_USD}>
             {quote.latest_price}
           </AmountText>
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>WAC</BaseText>
-          <AmountText text5 isLoading={getHolding.isLoading}>
+          <AmountText
+            text5
+            isLoading={getHolding.isLoading}
+            currency={CURRENCY_USD}>
             {avg_cost_per_share}
           </AmountText>
         </View>

@@ -96,7 +96,9 @@ const CustomDrawer = () => {
 const getStyles = theme =>
   StyleSheet.create({
     screen: {
-      padding: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.xl,
+      paddingTop: theme.spacing.xl,
+      paddingBottom: theme.spacing.sm,
       flex: 1,
     },
     row: {
@@ -107,9 +109,10 @@ const getStyles = theme =>
     icon: {
       marginRight: theme.spacing.lg,
     },
-    footer: {
-      marginBottom: theme.spacing.xl,
+    body: {
+      flex: 1,
     },
+    footer: {},
   });
 
 export default CustomDrawer;

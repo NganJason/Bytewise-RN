@@ -23,7 +23,7 @@ import { useError } from '../../_shared/hooks/error';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
-  const { screenWidth } = useDimension();
+  const { screenHeight } = useDimension();
   const styles = getStyles(theme);
 
   const [formErrors, setFormErrors] = useState({});
@@ -78,8 +78,8 @@ const SignupScreen = () => {
             Achieve your financial goals
           </BaseText>
           <BaseImage
-            width={screenWidth * 0.7}
-            height={screenWidth * 0.6}
+            width={'100%'}
+            height={screenHeight * 0.25}
             source={signupHero}
           />
         </View>
@@ -152,9 +152,11 @@ const getStyles = theme => {
       color: theme.colors.color7,
     },
     input: {
-      marginBottom: 20,
+      marginBottom: 0,
     },
-    btnContainer: { marginVertical: 20 },
+    btnContainer: {
+      marginBottom: 18,
+    },
     signUpContainer: {
       flexDirection: 'row',
       justifyContent: 'center',

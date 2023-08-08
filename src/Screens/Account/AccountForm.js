@@ -28,6 +28,10 @@ import { useValidation } from '../../_shared/hooks/validation';
 import { validateAccount } from '../../_shared/validator/account';
 import ROUTES from '../../_shared/constant/routes';
 import { useError } from '../../_shared/hooks/error';
+import {
+  isAccountTypeAsset,
+  isAccountTypeDebt,
+} from '../../_shared/util/account';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -237,10 +241,15 @@ const AccountForm = ({ route }) => {
 
         {canSetBalance() && (
           <BaseCurrencyInput
-            label="Balance"
+            label={
+              isAccountTypeAsset(accountForm.account_type)
+                ? 'Balance'
+                : 'Amount Owed'
+            }
             hide={shouldDisableBalance()}
             value={accountForm.balance === null ? 0 : accountForm.balance}
             onChangeText={onBalanceChange}
+            isNegative={isAccountTypeDebt(accountForm.account_type)}
           />
         )}
 

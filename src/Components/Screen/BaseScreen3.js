@@ -73,13 +73,14 @@ const getStyles = (theme, screenHeight, screenWidth) =>
     header: {
       minHeight: screenHeight * headerPercentage,
       paddingHorizontal: 26,
+      paddingTop: 10,
     },
     floatingHeader: {
       minHeight: screenHeight * floatingHeaderPercentage,
       width: screenWidth * 0.9,
       padding: 16,
       position: 'absolute',
-      top: `${(headerPercentage / 2) * 100}%`,
+      top: '12%',
       left: (screenWidth - screenWidth * 0.9) / 2,
       backgroundColor: theme.colors.white,
       shadowColor: theme.colors.black,

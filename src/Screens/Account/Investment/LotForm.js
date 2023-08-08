@@ -25,6 +25,7 @@ import {
 } from '../../../_shared/util/date';
 import { validateLot } from '../../../_shared/validator/investment';
 import { useError } from '../../../_shared/hooks/error';
+import { CURRENCY_USD } from '../../../_shared/util/currency';
 
 const LotForm = ({ route }) => {
   const { theme } = useTheme();
@@ -159,6 +160,7 @@ const LotForm = ({ route }) => {
           label="Cost per share"
           value={lotForm.cost_per_share}
           onChangeText={onCostPerShareChange}
+          currency={CURRENCY_USD}
         />
 
         <BaseInput
