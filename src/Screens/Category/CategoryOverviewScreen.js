@@ -40,11 +40,12 @@ const CategoryOverviewScreen = ({ route }) => {
 
   const {
     active_date: activeTs = new Date().valueOf(),
+    defaultTimeRangeType = TIME_RANGE_MONTHLY,
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
   const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
-    useTimeRange(activeTs, TIME_RANGE_MONTHLY);
+    useTimeRange(activeTs, defaultTimeRangeType);
   const onTimeRangeTypeChange = e => {
     setTimeRangeType(e.value);
   };

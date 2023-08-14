@@ -7,6 +7,11 @@ import ROUTES from '../../_shared/constant/routes';
 import { BaseScrollableTab } from '../../Components/View';
 import BudgetOverview from '../Budget/BudgetOverview';
 import BreakdownOverviewScreen from './BreakdownOverviewScreen';
+import { useTimeRange } from '../../_shared/hooks';
+import {
+  TIME_RANGE_MONTHLY,
+  TIME_RANGE_YEARLY,
+} from '../../_shared/constant/constant';
 
 const TODAY = new Date();
 const scrollableTabs = [
@@ -22,10 +27,8 @@ const OverviewScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const [activeDate, setActiveDate] = useState(TODAY);
-  const onDateMove = newDate => {
-    setActiveDate(newDate);
-  };
+  const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
+    useTimeRange(TODAY.valueOf(), TIME_RANGE_MONTHLY);
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
   const onTabChange = tab => {
@@ -37,7 +40,14 @@ const OverviewScreen = ({ navigation }) => {
       case 'Budget':
         return <BudgetOverview activeDate={activeDate} />;
       case 'Breakdown':
-        return <BreakdownOverviewScreen activeDate={activeDate} />;
+        return (
+          <BreakdownOverviewScreen
+            activeTs={activeDate.valueOf()}
+            timeRange={timeRange}
+            timeRangeType={timeRangeType}
+            setTimeRangeType={setTimeRangeType}
+          />
+        );
       default:
         return <BudgetOverview activeDate={activeDate} />;
     }
@@ -74,6 +84,7 @@ const OverviewScreen = ({ navigation }) => {
             startingDate={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
+            year={timeRangeType === TIME_RANGE_YEARLY}
           />
         ),
       }}

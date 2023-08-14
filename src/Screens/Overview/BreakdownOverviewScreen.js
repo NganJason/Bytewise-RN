@@ -1,43 +1,39 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { AmountText, BaseText } from '../../Components';
+import { AmountText, BaseBottomSelectTab, BaseText } from '../../Components';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
+import {
+  TIME_RANGE_MONTHLY,
+  TIME_RANGE_TYPES,
+  TIME_RANGE_YEARLY,
+} from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
 import { BottomToastContext } from '../../_shared/context/BottomToastContext';
 import { useAggrTransactions } from '../../_shared/query';
-import {
-  getMonth,
-  getUnixRangeOfMonth,
-  getYear,
-} from '../../_shared/util/date';
 
-const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
+const BreakdownOverviewScreen = ({
+  activeTs = new Date().valueOf(),
+  timeRange = [],
+  timeRangeType = TIME_RANGE_MONTHLY,
+  setTimeRangeType = function () {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { toast } = useContext(BottomToastContext);
 
-  const [monthRange, setMonthRange] = useState(
-    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-  );
-  useEffect(() => {
-    setMonthRange(
-      getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-    );
-  }, [activeDate]);
-
   const aggrTransactionsByTypeQuery = useAggrTransactions({
     transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
     transaction_time: {
-      gte: monthRange[0],
-      lte: monthRange[1],
+      gte: timeRange[0],
+      lte: timeRange[1],
     },
   });
 
@@ -54,7 +50,8 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
         onPress={() => {
           navigation.navigate(ROUTES.categoriesOverview, {
             category_type: TRANSACTION_TYPE_EXPENSE,
-            active_date: activeDate.valueOf(),
+            active_date: activeTs,
+            defaultTimeRangeType: timeRangeType,
           });
         }}>
         <BaseText text3>Expense</BaseText>
@@ -72,7 +69,8 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
         onPress={() => {
           navigation.navigate(ROUTES.categoriesOverview, {
             category_type: TRANSACTION_TYPE_INCOME,
-            active_date: activeDate.valueOf(),
+            active_date: activeTs,
+            defaultTimeRangeType: timeRangeType,
           });
         }}>
         <BaseText text3>Income</BaseText>
@@ -107,6 +105,16 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
 
   return (
     <View style={styles.screen}>
+      <View style={styles.bottomSelectTab}>
+        <BaseBottomSelectTab
+          currTabText={TIME_RANGE_TYPES[timeRangeType][0]}
+          items={[
+            { name: 'Monthly', value: TIME_RANGE_MONTHLY },
+            { name: 'Yearly', value: TIME_RANGE_YEARLY },
+          ]}
+          onSelect={e => setTimeRangeType(e.value)}
+        />
+      </View>
       {expenseCard()}
       {incomeCard()}
       {cashFlowCard()}
@@ -118,6 +126,9 @@ const getStyles = theme =>
   StyleSheet.create({
     screen: {
       minHeight: '100%',
+    },
+    bottomSelectTab: {
+      alignItems: 'flex-end',
     },
     itemContainer: {
       flexDirection: 'row',

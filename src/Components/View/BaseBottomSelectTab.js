@@ -1,6 +1,6 @@
 import { Icon, useTheme } from '@rneui/themed';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDimension } from '../../_shared/hooks';
 import { BaseText } from '../Text';
@@ -26,7 +26,7 @@ const BaseBottomSelectTab = ({
   };
 
   return (
-    <>
+    <View style={styles.tabContainer}>
       <TouchableOpacity onPress={toggleModal} style={styles.tab}>
         <Icon
           name="chevron-down"
@@ -47,12 +47,16 @@ const BaseBottomSelectTab = ({
         items={items}
         label="name"
       />
-    </>
+    </View>
   );
 };
 
 const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
+    tabContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     tab: {
       flexDirection: 'row',
       alignItems: 'center',
