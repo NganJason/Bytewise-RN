@@ -1,15 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { AmountText, BaseImage, BaseText } from '../../Components';
+import { AmountText, BaseText } from '../../Components';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
-import { expenseIcon, incomeIcon } from '../../_shared/constant/asset';
+import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
+import { BottomToastContext } from '../../_shared/context/BottomToastContext';
 import { useAggrTransactions } from '../../_shared/query';
 import {
   getMonth,
@@ -21,6 +22,7 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { toast } = useContext(BottomToastContext);
 
   const [monthRange, setMonthRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
@@ -40,51 +42,74 @@ const BreakdownOverviewScreen = ({ activeDate = new Date() }) => {
   });
 
   const getTotalAmountByCategoryType = (type = TRANSACTION_TYPE_EXPENSE) => {
-    return aggrTransactionsByTypeQuery?.data?.results?.[type]?.sum || 0;
+    return (
+      Math.abs(aggrTransactionsByTypeQuery?.data?.results?.[type]?.sum) || 0
+    );
   };
 
-  const getItemCard = (
-    title = '',
-    subtitle = '',
-    imgSource = '',
-    route = '',
-    routeParam = {},
-  ) => {
+  const expenseCard = () => {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
         onPress={() => {
-          navigation.navigate(route, routeParam);
+          navigation.navigate(ROUTES.categoriesOverview, {
+            category_type: TRANSACTION_TYPE_EXPENSE,
+            active_date: activeDate.valueOf(),
+          });
         }}>
-        <BaseText text3>{title}</BaseText>
-        <AmountText h2>{subtitle}</AmountText>
+        <BaseText text3>Expense</BaseText>
+        <AmountText h2>
+          {getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE)}
+        </AmountText>
+      </TouchableOpacity>
+    );
+  };
+
+  const incomeCard = () => {
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          navigation.navigate(ROUTES.categoriesOverview, {
+            category_type: TRANSACTION_TYPE_INCOME,
+            active_date: activeDate.valueOf(),
+          });
+        }}>
+        <BaseText text3>Income</BaseText>
+        <AmountText h2>
+          {getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME)}
+        </AmountText>
+      </TouchableOpacity>
+    );
+  };
+
+  const cashFlowCard = () => {
+    let cashFlow =
+      getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME) -
+      getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE);
+
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          toast.info(
+            toolTipMessage.cashFlowDesc.text,
+            toolTipMessage.cashFlowDesc.title,
+          );
+        }}>
+        <BaseText text3>Cash Flow</BaseText>
+        <AmountText h2 showNegativeOnly showColor>
+          {cashFlow}
+        </AmountText>
       </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.screen}>
-      {getItemCard(
-        'Expense',
-        getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE),
-        expenseIcon,
-        ROUTES.categoriesOverview,
-        {
-          category_type: TRANSACTION_TYPE_EXPENSE,
-          active_date: activeDate.valueOf(),
-        },
-      )}
-
-      {getItemCard(
-        'Income',
-        getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME),
-        incomeIcon,
-        ROUTES.categoriesOverview,
-        {
-          category_type: TRANSACTION_TYPE_INCOME,
-          active_date: activeDate.valueOf(),
-        },
-      )}
+      {expenseCard()}
+      {incomeCard()}
+      {cashFlowCard()}
     </View>
   );
 };

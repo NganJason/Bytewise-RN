@@ -29,6 +29,10 @@ export const toolTipMessage = {
     title: 'Total Invested Amount',
     text: 'The total cost that you have invested into this holding.',
   },
+  cashFlowDesc: {
+    title: 'Cash Flow',
+    text: 'Cash flow = Income - Expense',
+  },
 };
 
 export const defaultErrorText1 = 'Ops, something went wrong.';

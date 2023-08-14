@@ -6,15 +6,12 @@ import {
   BaseImage,
   BaseScreen2,
   BaseText,
-  DailyTransactions,
   DateNavigator,
-  EmptyContent,
   BaseLoadableView,
   BaseButton,
   Transactions,
 } from '../../Components';
 import { card, coin, coinsack } from '../../_shared/constant/asset';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useDimension } from '../../_shared/hooks';
 import {
@@ -30,7 +27,6 @@ import {
   getYear,
 } from '../../_shared/util/date';
 import { ACCOUNT_TYPE_LOAN } from '../../_shared/apis/enum';
-import { groupTransactionsByDate } from '../../_shared/util/transaction';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError } from '../../_shared/hooks/error';
 import { sapiens3 } from '../../_shared/constant/asset';
