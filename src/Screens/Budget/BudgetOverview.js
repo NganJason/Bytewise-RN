@@ -135,17 +135,11 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
             />
           ) : (
             <View style={styles.aggr}>
-              <AmountText
-                text4
-                decimal={0}
-                style={{ color: theme.colors.color7 }}>
+              <AmountText text4 style={{ color: theme.colors.color7 }}>
                 {getTotalUsedAmount(type)}
               </AmountText>
               <BaseDivider orientation={'vertical'} margin={5} />
-              <AmountText
-                text4
-                decimal={0}
-                style={{ color: theme.colors.color7 }}>
+              <AmountText text4 style={{ color: theme.colors.color7 }}>
                 {getBudgetSum(type)}
               </AmountText>
             </View>

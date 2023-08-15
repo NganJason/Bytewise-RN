@@ -53,10 +53,10 @@ const AccountScreen = () => {
         if (isNaN(amount)) {
           return;
         }
-        sum += Number(Math.abs(amount));
+        sum += Number(amount);
       }
     });
-    return sum;
+    return Math.abs(sum);
   };
 
   const onAccountPress = account => {
@@ -114,6 +114,7 @@ const AccountScreen = () => {
             </BaseText>
             <AmountText
               text2
+              showNegativeOnly={equityType === EQUITY_TYPE_ASSET}
               color={theme.colors.white}
               margin={{ top: 16, bottom: 4 }}>
               {item.latest_value || item.balance}
@@ -134,7 +135,6 @@ const AccountScreen = () => {
           <BaseText h1>Accounts</BaseText>
           <AmountText
             h2
-            decimal={0}
             showNegativeOnly
             margin={{ top: 8, bottom: 2 }}
             isLoading={getAccounts.isLoading}>
@@ -175,7 +175,9 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
-            <AmountText text3>{computeEquitySum(EQUITY_TYPE_ASSET)}</AmountText>
+            <AmountText showNegativeOnly text3>
+              {computeEquitySum(EQUITY_TYPE_ASSET)}
+            </AmountText>
           </BaseRow>
           {renderContent(EQUITY_TYPE_ASSET)}
         </View>
@@ -183,7 +185,9 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Debts</BaseText>
-            <AmountText text3>{computeEquitySum(EQUITY_TYPE_DEBT)}</AmountText>
+            <AmountText showNegativeOnly text3>
+              {computeEquitySum(EQUITY_TYPE_DEBT)}
+            </AmountText>
           </BaseRow>
           {renderContent(EQUITY_TYPE_DEBT)}
         </View>

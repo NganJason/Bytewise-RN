@@ -98,7 +98,6 @@ const HoldingBreakdownScreen = ({ route }) => {
         <AmountText
           style={styles.titleText}
           h2
-          decimal={0}
           margin={{ bottom: 8 }}
           isLoading={getHolding.isLoading}
           loadingLen={10}

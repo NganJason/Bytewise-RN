@@ -67,17 +67,11 @@ const BudgetOverviewRow = ({
           />
         ) : (
           <View style={styles.aggr}>
-            <AmountText
-              text4
-              decimal={0}
-              style={{ color: theme.colors.color7 }}>
+            <AmountText text4 style={{ color: theme.colors.color7 }}>
               {usedAmount}
             </AmountText>
             <BaseDivider orientation={'vertical'} margin={5} />
-            <AmountText
-              text4
-              decimal={0}
-              style={{ color: theme.colors.color7 }}>
+            <AmountText text4 style={{ color: theme.colors.color7 }}>
               {amount}
             </AmountText>
           </View>

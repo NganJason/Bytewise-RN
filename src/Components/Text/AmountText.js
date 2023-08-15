@@ -38,9 +38,12 @@ const AmountText = ({
 
     // use symbol string to show negative
     children = Math.abs(children);
+    let amountStr = children.toLocaleString();
 
-    const amount = Number(children.toFixed(decimal));
-    const amountStr = amount.toLocaleString();
+    if (amountStr.includes('.')) {
+      let amount = parseFloat(children).toFixed(decimal);
+      amountStr = amount.toLocaleString();
+    }
 
     let currencySymbol = getCurrencySymbol(currency);
     text = `${currencySymbol} ${amountStr}`;

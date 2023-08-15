@@ -95,7 +95,7 @@ const DailyTransactions = ({
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {capitalize(t.note)}
+                    {t.note !== '' ? capitalize(t.note) : '-'}
                   </BaseText>
                   <BaseText
                     text5

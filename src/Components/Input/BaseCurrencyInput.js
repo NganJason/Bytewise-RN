@@ -31,19 +31,25 @@ const BaseCurrencyInput = forwardRef(
     }, [value]);
 
     const formatAmount = () => {
-      if (isNegative || Number(inputStr) < 0) {
-        return `- ${currencySymbol} ${Math.abs(Number(inputStr))}`;
-      }
-      return `${currencySymbol} ${inputStr}`;
+      let valueStr = String(inputStr);
+
+      let formattedAmount =
+        valueStr === ''
+          ? `${currencySymbol} `
+          : valueStr.startsWith('-')
+          ? `-${currencySymbol} ${valueStr.slice(1)}`
+          : `${currencySymbol} ${valueStr}`;
+      return formattedAmount;
     };
 
     const handleChangeText = e => {
-      e = e.replace(`- ${currencySymbol}`, '');
       e = e.replace(currencySymbol, '');
       e = e.replace(' ', '');
+      const regex = /^-?\d*\.?\d*$/;
 
-      if (!isNaN(e) || e === '-') {
-        onChangeText(Number(e));
+      // Validate input: allow digits, optional minus sign, and optional decimal point
+      if (regex.test(e) || e === '' || e === '-') {
+        onChangeText(e);
         setInputStr(e);
       }
     };

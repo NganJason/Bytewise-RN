@@ -20,9 +20,6 @@ export const validateTransaction = ({
   if (transaction_time === 0) {
     errors.transaction_type = 'Transaction type cannot be empty';
   }
-  if (note === '') {
-    errors.note = 'Note cannot be empty';
-  }
   if (account_id === '') {
     errors.account = 'Account cannot be empty';
   }

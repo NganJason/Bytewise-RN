@@ -32,6 +32,9 @@ const OverviewScreen = ({ navigation }) => {
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
   const onTabChange = tab => {
+    if (tab.name === 'Budget') {
+      setTimeRangeType(TIME_RANGE_MONTHLY);
+    }
     setActiveTab(tab);
   };
 
