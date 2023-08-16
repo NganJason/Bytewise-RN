@@ -41,6 +41,14 @@ export const ACCOUNT_TYPES = {
   // [ACCOUNT_TYPE_MORTGAGE]: 'Mortgage',
 };
 
+export const ACCOUNT_UPDATE_MODE_DEFAULT = 0;
+export const ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION = 1;
+
+export const ACCOUNT_UPDATE_MODES = {
+  [ACCOUNT_UPDATE_MODE_DEFAULT]: 'Default',
+  [ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION]: 'Offset Transaction',
+};
+
 export const HOLDING_TYPE_DEFAULT = 1;
 export const HOLDING_TYPE_CUSTOM = 2;
 

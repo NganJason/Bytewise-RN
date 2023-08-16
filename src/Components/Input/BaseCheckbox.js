@@ -1,12 +1,14 @@
-import { StyleSheet } from 'react-native';
-import { useTheme, CheckBox, Icon } from '@rneui/themed';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from '@rneui/themed';
+import { BaseText } from '../Text';
+import { IconButton } from '../Touch';
 
 const BaseCheckbox = ({
-  right = false,
   checked = false,
   title = '',
   value = {},
   onPress = function () {},
+  containerStyle = {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -16,48 +18,34 @@ const BaseCheckbox = ({
   };
 
   return (
-    <CheckBox
-      right={right}
-      title={title}
-      checked={checked}
-      textStyle={styles.checkBoxText}
-      containerStyle={styles.checkBoxContainer}
-      onPress={onCheck}
-      checkedIcon={
-        <Icon
-          name="radio-button-checked"
-          type="material"
-          color="green"
-          size={20}
-          iconStyle={styles.icon}
-        />
-      }
-      uncheckedIcon={
-        <Icon
-          name="radio-button-unchecked"
-          type="material"
-          color="grey"
-          size={20}
-          iconStyle={styles.icon}
-        />
-      }
-    />
+    <View style={[styles.container, containerStyle]}>
+      <IconButton
+        iconName={checked ? 'radio-button-checked' : 'radio-button-unchecked'}
+        iconType="material"
+        color={checked ? 'green' : 'grey'}
+        iconSize={20}
+        iconStyle={styles.icon}
+        onPress={onCheck}
+      />
+      <BaseText text3 style={styles.checkBoxText} adjustsFontSizeToFit>
+        {title}
+      </BaseText>
+    </View>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    icon: {
-      marginRight: theme.spacing.sm,
+    container: {
+      marginVertical: 8,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
     },
     checkBoxText: {
-      ...theme.fontStyles.text2,
-      alignSelf: 'center',
+      flex: 1,
       color: theme.colors.color6,
-    },
-    checkBoxContainer: {
-      marginVertical: 8,
-      padding: 0,
+      flexWrap: 'wrap',
+      marginLeft: 8,
     },
   });
 };

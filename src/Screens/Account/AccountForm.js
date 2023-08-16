@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
+  BaseCheckbox,
   BaseCurrencyInput,
   BaseInput,
   BaseScreen,
@@ -16,6 +17,8 @@ import {
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
   ACCOUNT_TYPE_LOAN,
+  ACCOUNT_UPDATE_MODE_DEFAULT,
+  ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION,
 } from '../../_shared/apis/enum';
 import { getAccountTypes } from '../../_shared/util/budget';
 import { useGetAccount } from '../../_shared/query/account';
@@ -46,17 +49,12 @@ const AccountForm = ({ route }) => {
     return accountID === '';
   };
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  const [isBalanceUpdated, setIsBalanceUpdated] = useState(false);
-
   const [accountForm, setAccountForm] = useState({
+    account_id: accountID,
     account_name: '',
     account_type: accountType,
     balance: 0,
+    update_mode: ACCOUNT_UPDATE_MODE_DEFAULT,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -106,9 +104,6 @@ const AccountForm = ({ route }) => {
 
   const updateAccount = useUpdateAccount({
     onSuccess: () => {
-      if (isModalVisible) {
-        toggleModal();
-      }
       navigation.goBack();
     },
   });
@@ -119,6 +114,7 @@ const AccountForm = ({ route }) => {
       setAccountForm({
         ...account,
         balance: Number(account.balance),
+        update_mode: ACCOUNT_UPDATE_MODE_DEFAULT,
       });
     }
   }, [getAccount.data]);
@@ -138,10 +134,21 @@ const AccountForm = ({ route }) => {
   };
 
   const onBalanceChange = e => {
-    if (!isAddAccount()) {
-      setIsBalanceUpdated(true);
-    }
     setAccountForm({ ...accountForm, balance: e });
+  };
+
+  const toggleUpdateMode = () => {
+    if (accountForm.update_mode === ACCOUNT_UPDATE_MODE_DEFAULT) {
+      setAccountForm({
+        ...accountForm,
+        update_mode: ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION,
+      });
+    } else {
+      setAccountForm({
+        ...accountForm,
+        update_mode: ACCOUNT_UPDATE_MODE_DEFAULT,
+      });
+    }
   };
 
   const isFormLoading = () => {
@@ -174,14 +181,8 @@ const AccountForm = ({ route }) => {
       return;
     }
 
-    if (isBalanceUpdated && !isModalVisible) {
-      toggleModal();
-      return;
-    }
-
     updateAccount.mutate({
       ...accountForm,
-      account_id: accountID,
       balance: balance,
     });
   };
@@ -240,17 +241,31 @@ const AccountForm = ({ route }) => {
         />
 
         {canSetBalance() && (
-          <BaseCurrencyInput
-            label={
-              isAccountTypeAsset(accountForm.account_type)
-                ? 'Balance'
-                : 'Amount Owed'
-            }
-            hide={shouldDisableBalance()}
-            value={accountForm.balance === null ? 0 : accountForm.balance}
-            onChangeText={onBalanceChange}
-            isNegative={isAccountTypeDebt(accountForm.account_type)}
-          />
+          <>
+            <BaseCurrencyInput
+              label={
+                isAccountTypeAsset(accountForm.account_type)
+                  ? 'Balance'
+                  : 'Amount Owed'
+              }
+              hide={shouldDisableBalance()}
+              value={accountForm.balance === null ? 0 : accountForm.balance}
+              onChangeText={onBalanceChange}
+              isNegative={isAccountTypeDebt(accountForm.account_type)}
+            />
+
+            {!isAddAccount() && (
+              <BaseCheckbox
+                title={'Add difference in balance as new transaction'}
+                containerStyle={styles.checkBox}
+                checked={
+                  accountForm.update_mode ===
+                  ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION
+                }
+                onPress={toggleUpdateMode}
+              />
+            )}
+          </>
         )}
 
         <View style={styles.btnContainer}>
@@ -262,35 +277,6 @@ const AccountForm = ({ route }) => {
             loading={isFormButtonLoading()}
           />
         </View>
-
-        <BaseOverlay isVisible={isModalVisible}>
-          <View style={styles.overlay}>
-            <BaseText>
-              The difference in balance will be registered as an expense/income.
-            </BaseText>
-            <BaseText margin={{ vertical: 15 }}>
-              Do you want to proceed?
-            </BaseText>
-
-            <View style={styles.overlayBtnContainer}>
-              <BaseButton
-                title="Yes"
-                size="lg"
-                width={200}
-                onPress={onSave}
-                loading={isFormButtonLoading()}
-              />
-            </View>
-
-            <BaseButton
-              title="No"
-              type="outline"
-              size="lg"
-              width={200}
-              onPress={toggleModal}
-            />
-          </View>
-        </BaseOverlay>
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
@@ -302,13 +288,7 @@ const getStyles = theme =>
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.md,
     },
-    overlayBtnContainer: {
-      marginBottom: theme.spacing.lg,
-      marginTop: theme.spacing.sm,
-    },
-    overlay: {
-      alignItems: 'center',
-    },
+    checkBox: { marginTop: 0, marginBottom: 20 },
   });
 
 export default AccountForm;

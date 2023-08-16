@@ -69,6 +69,7 @@ export const updateAccount = async ({
   account_name = 0,
   balance = '',
   note = '',
+  update_mode = 0,
 } = {}) => {
   try {
     const body = await sendPostRequest(UPDATE_ACCOUNT, {
@@ -76,6 +77,7 @@ export const updateAccount = async ({
       account_name: account_name,
       balance: balance,
       note: note,
+      update_mode: update_mode,
     });
     return body;
   } catch (e) {
