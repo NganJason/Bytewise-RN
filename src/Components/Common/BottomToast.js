@@ -1,11 +1,7 @@
 import { BottomSheet, useTheme } from '@rneui/themed';
 import { useContext } from 'react';
-import { StyleSheet } from 'react-native';
-import { View } from 'react-native';
-import {
-  BottomToastContext,
-  ToastTypeInfo,
-} from '../../_shared/context/BottomToastContext';
+import { StyleSheet, View } from 'react-native';
+import { BottomToastContext, ToastTypeInfo } from '../../_shared/context';
 import { useDimension } from '../../_shared/hooks';
 import { BaseText } from '../Text';
 import { IconButton } from '../Touch';

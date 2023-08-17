@@ -1,4 +1,4 @@
-import { tsToDateTimeStr } from '../util/date';
+import { tsToDateTimeStr } from '../util';
 
 export const genStockUpdateTimeMsg = updateTime => {
   let formattedTime = 'NA';

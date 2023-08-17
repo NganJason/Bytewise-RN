@@ -17,8 +17,7 @@ import {
 } from '../../Components';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
-import { useError } from '../../_shared/hooks/error';
-import { capitalize } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util';
 import {
   DonutChartColors,
   EmptyContentConfig,
@@ -31,7 +30,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { useTimeRange } from '../../_shared/hooks';
+import { useTimeRange, useError } from '../../_shared/hooks';
 
 const CategoryOverviewScreen = ({ route }) => {
   const { theme } = useTheme();

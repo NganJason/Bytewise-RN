@@ -17,19 +17,12 @@ import {
   HOLDING_TYPE_CUSTOM,
   HOLDING_TYPE_DEFAULT,
 } from '../../../_shared/apis/enum';
-import { useValidation } from '../../../_shared/hooks/validation';
-import {
-  useCreateHolding,
-  useUpdateHolding,
-} from '../../../_shared/mutations/investment';
-import {
-  useGetHolding,
-  useSearchSecurities,
-} from '../../../_shared/query/investment';
-import { useError } from '../../../_shared/hooks/error';
-import { validateHolding } from '../../../_shared/validator/investment';
+import { useCreateHolding, useUpdateHolding } from '../../../_shared/mutations';
+import { useGetHolding, useSearchSecurities } from '../../../_shared/query';
+import { useError, useValidation } from '../../../_shared/hooks';
+import { validateHolding } from '../../../_shared/validator';
 import { toolTipMessage } from '../../../_shared/constant/message';
-import { CURRENCY_USD } from '../../../_shared/util/currency';
+import { CURRENCY_USD } from '../../../_shared/util';
 
 const scrollableTabs = [
   { name: 'Common stocks', iconName: 'line-graph', iconType: 'entypo' },

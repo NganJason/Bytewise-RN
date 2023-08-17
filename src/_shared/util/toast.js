@@ -29,7 +29,7 @@ export const toastError = (queryErrors = []) => {
   }
 };
 
-export const getErrors = (queryErrors = []) => {
+const getErrors = (queryErrors = []) => {
   for (let i = 0; i < queryErrors.length; i++) {
     const { isError = false } = queryErrors[i];
     if (isError) {

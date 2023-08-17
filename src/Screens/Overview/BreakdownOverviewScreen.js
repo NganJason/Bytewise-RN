@@ -15,7 +15,7 @@ import {
 } from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
-import { BottomToastContext } from '../../_shared/context/BottomToastContext';
+import { BottomToastContext } from '../../_shared/context';
 import { useAggrTransactions } from '../../_shared/query';
 
 const BreakdownOverviewScreen = ({

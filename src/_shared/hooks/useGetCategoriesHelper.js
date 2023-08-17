@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useGetCategories } from '../query/category';
-import { useGetCategoriesBudget } from '../query/budget';
+import { useGetCategories, useGetCategoriesBudget } from '../query';
 import * as Localization from 'expo-localization';
-import { getDateStringWithoutDelim } from '../util/date';
+import { getDateStringWithoutDelim } from '../util';
 
 const useGetCategoriesHelper = ({ budgetDate = new Date() } = {}) => {
   const [categoryIDs, setCategoryIDs] = useState([]);

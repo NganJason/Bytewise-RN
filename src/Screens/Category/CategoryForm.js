@@ -18,9 +18,8 @@ import {
 } from '../../_shared/apis/enum';
 import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
-import { useValidation } from '../../_shared/hooks/validation';
-import { validateCategory } from '../../_shared/validator/category';
-import { useError } from '../../_shared/hooks/error';
+import { validateCategory } from '../../_shared/validator';
+import { useError, useValidation } from '../../_shared/hooks';
 
 const categoryTypes = [
   {

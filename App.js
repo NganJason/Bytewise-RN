@@ -20,8 +20,11 @@ import { CustomDrawer } from './src/Components/Common';
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
 import { initAxios } from './src/_shared/apis/http';
-import { AuthContext, AuthProvider } from './src/_shared/context/AuthContext';
-import BudgetScreen from './src/Screens/Budget/BudgetScreen';
+import {
+  AuthContext,
+  AuthProvider,
+  BottomToastProvider,
+} from './src/_shared/context';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
 import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 import AccountForm from './src/Screens/Account/AccountForm';
@@ -30,7 +33,6 @@ import InvestmentBreakdownScreen from './src/Screens/Account/Investment/Investme
 import HoldingForm from './src/Screens/Account/Investment/HoldingForm';
 import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
 import LotForm from './src/Screens/Account/Investment/LotForm';
-import { BottomToastProvider } from './src/_shared/context/BottomToastContext';
 import BottomToast from './src/Components/Common/BottomToast';
 import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 
@@ -133,7 +135,6 @@ function Main() {
                 name={ROUTES.categoryForm}
                 component={CategoryForm}
               />
-              <Stack.Screen name={ROUTES.budgetList} component={BudgetScreen} />
               <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
               <Stack.Screen
                 name={ROUTES.transactionForm}

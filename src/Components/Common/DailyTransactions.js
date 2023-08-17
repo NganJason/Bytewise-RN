@@ -8,9 +8,8 @@ import BaseListItem from '../View/BaseListItem';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
-import { getDate, getDay } from '../../_shared/util/date';
+import { getDate, getDay, capitalize } from '../../_shared/util';
 import { BaseChip } from '../View';
-import { capitalize } from '../../_shared/util/string';
 
 const DailyTransactions = ({
   timestamp = 0,

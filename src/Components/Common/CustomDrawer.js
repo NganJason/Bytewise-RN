@@ -5,10 +5,10 @@ import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
-import { AuthContext } from '../../_shared/context/AuthContext';
+import { AuthContext } from '../../_shared/context';
 
-import { useGetUser } from '../../_shared/query/user';
-import { capitalize } from '../../_shared/util/string';
+import { useGetUser } from '../../_shared/query';
+import { capitalize } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
 

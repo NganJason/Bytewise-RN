@@ -5,14 +5,14 @@ import {
   useGetTransaction,
   useGetTransactions,
 } from '../query';
-import { getIDToAccountMap } from '../util/account';
-import { getIDToCategoryMap } from '../util/category';
 import {
+  getIDToAccountMap,
+  getIDToCategoryMap,
   mergeTransactionAccount,
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionsCategory,
-} from '../util/transaction';
+} from '../util';
 
 export const useGetTransactionsHook = (
   {

@@ -1,4 +1,4 @@
-import { isTsLargerThanCurrTime } from '../util/date';
+import { isTsLargerThanCurrTime } from '../util';
 
 export const validateHolding = ({ symbol = '' } = {}) => {
   const errors = {};
@@ -8,12 +8,7 @@ export const validateHolding = ({ symbol = '' } = {}) => {
   return errors;
 };
 
-export const validateLot = ({
-  holding_id = '',
-  shares = 0,
-  cost_per_share = 0,
-  trade_date = 0,
-}) => {
+export const validateLot = ({ shares = 0, trade_date = 0 }) => {
   const errors = {};
   if (shares === 0) {
     errors.shares = 'Shares cannot be empty';

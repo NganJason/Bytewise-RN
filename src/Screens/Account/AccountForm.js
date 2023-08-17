@@ -3,6 +3,7 @@ import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import {
+  BaseKeyboardAwareScrollView,
   BaseBottomSheet,
   BaseButton,
   BaseCheckbox,
@@ -20,21 +21,16 @@ import {
   ACCOUNT_UPDATE_MODE_DEFAULT,
   ACCOUNT_UPDATE_MODE_OFFSET_TRANSACTION,
 } from '../../_shared/apis/enum';
-import { getAccountTypes } from '../../_shared/util/budget';
-import { useGetAccount } from '../../_shared/query/account';
+import { useGetAccount } from '../../_shared/query';
 import { useCreateAccount, useUpdateAccount } from '../../_shared/mutations';
-import {
-  BaseKeyboardAwareScrollView,
-  BaseOverlay,
-} from '../../Components/View';
-import { useValidation } from '../../_shared/hooks/validation';
-import { validateAccount } from '../../_shared/validator/account';
 import ROUTES from '../../_shared/constant/routes';
-import { useError } from '../../_shared/hooks/error';
+import { validateAccount } from '../../_shared/validator';
+import { useError, useValidation } from '../../_shared/hooks';
 import {
   isAccountTypeAsset,
   isAccountTypeDebt,
-} from '../../_shared/util/account';
+  getAccountTypes,
+} from '../../_shared/util';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();

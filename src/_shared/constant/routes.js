@@ -4,15 +4,14 @@ const ROUTES = {
 
   homeWithDrawer: 'Home with drawer',
   home: 'Home',
-  overview: 'Breakdown',
+
+  overview: 'Overview',
+  budgetForm: 'Budget Form',
+  categoriesOverview: 'Categories Overview',
 
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',
-  categoriesOverview: 'Categories Overview',
   categoryBreakdown: 'Category Breakdown',
-
-  budgetList: 'Budget List',
-  budgetForm: 'Budget Form',
 
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',

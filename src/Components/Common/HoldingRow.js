@@ -6,7 +6,7 @@ import {
   HOLDING_TYPE_DEFAULT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { CURRENCY_USD } from '../../_shared/util/currency';
+import { CURRENCY_USD } from '../../_shared/util';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseChip, BaseRow } from '../View';
 

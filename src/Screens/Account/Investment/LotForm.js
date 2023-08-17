@@ -12,20 +12,19 @@ import {
   BaseText,
   TouchInput,
 } from '../../../Components';
-import { useValidation } from '../../../_shared/hooks/validation';
 import {
   useCreateLot,
   useDeleteLot,
   useUpdateLot,
-} from '../../../_shared/mutations/investment';
-import { useGetLot } from '../../../_shared/query/investment';
+} from '../../../_shared/mutations';
+import { useGetLot } from '../../../_shared/query';
 import {
   getDateStringFromTs,
   renderCalendarTs,
-} from '../../../_shared/util/date';
-import { validateLot } from '../../../_shared/validator/investment';
-import { useError } from '../../../_shared/hooks/error';
-import { CURRENCY_USD } from '../../../_shared/util/currency';
+  CURRENCY_USD,
+} from '../../../_shared/util';
+import { validateLot } from '../../../_shared/validator';
+import { useError, useValidation } from '../../../_shared/hooks';
 
 const LotForm = ({ route }) => {
   const { theme } = useTheme();

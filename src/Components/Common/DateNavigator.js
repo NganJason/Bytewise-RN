@@ -5,7 +5,7 @@ import { useTheme } from '@rneui/themed';
 import BaseText from '../Text/BaseText';
 import IconButton from '../Touch/IconButton';
 
-import { moveMonth, getYear, getMonth } from '../../_shared/util/date';
+import { moveMonth, getYear, getMonth } from '../../_shared/util';
 import { MONTHS } from '../../_shared/constant/constant';
 
 const DateNavigator = ({

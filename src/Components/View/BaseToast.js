@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import Toast, { ErrorToast, SuccessToast } from 'react-native-toast-message';
-import { capitalizeFirstWord } from '../../_shared/util/string';
+import { capitalizeFirstWord } from '../../_shared/util';
 
 const BaseSuccessToast = props => {
   const { theme } = useTheme();

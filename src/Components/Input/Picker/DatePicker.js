@@ -5,7 +5,7 @@ import {
   getDaysInMonth,
   getMonth,
   getYear,
-} from '../../../_shared/util/date';
+} from '../../../_shared/util';
 import { useState } from 'react';
 
 export const DatePickerMode = {

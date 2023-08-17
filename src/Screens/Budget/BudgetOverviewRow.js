@@ -11,8 +11,7 @@ import {
 } from '../../Components';
 import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { getProgress } from '../../_shared/util/common';
-import { capitalize } from '../../_shared/util/string';
+import { getProgress, capitalize } from '../../_shared/util';
 
 const BudgetOverviewRow = ({
   categoryWithBudget = {},

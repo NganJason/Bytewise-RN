@@ -20,7 +20,7 @@ import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { BaseRow, BaseTabView } from '../../Components/View';
 import { useState } from 'react';
-import { useError } from '../../_shared/hooks/error';
+import { useError } from '../../_shared/hooks';
 
 const CategoryEditScreen = ({ route }) => {
   const { theme } = useTheme();

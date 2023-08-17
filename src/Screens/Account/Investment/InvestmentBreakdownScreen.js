@@ -19,7 +19,7 @@ import {
 } from '../../../Components';
 import { useGetAccount } from '../../../_shared/query';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
-import { getStockUpdateTime } from '../../../_shared/util/investment';
+import { getStockUpdateTime } from '../../../_shared/util';
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();

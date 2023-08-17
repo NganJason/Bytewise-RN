@@ -16,8 +16,11 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
-import { useDimension, useGetCategoriesHelper } from '../../_shared/hooks';
-import { useError } from '../../_shared/hooks/error';
+import {
+  useDimension,
+  useGetCategoriesHelper,
+  useError,
+} from '../../_shared/hooks';
 import BudgetOverviewRow from './BudgetOverviewRow';
 
 const BudgetOverview = ({ activeDate = new Date() }) => {

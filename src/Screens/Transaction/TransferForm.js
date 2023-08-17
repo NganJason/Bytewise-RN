@@ -16,8 +16,8 @@ import ROUTES from '../../_shared/constant/routes';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransaction } from '../../_shared/query';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useValidation } from '../../_shared/hooks/validation';
-import { validateTransfer } from '../../_shared/validator/transfer';
+import { useValidation } from '../../_shared/hooks';
+import { validateTransfer } from '../../_shared/validator';
 
 const mockAccounts = [
   {

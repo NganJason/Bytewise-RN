@@ -14,12 +14,10 @@ import {
 
 import { signupHero } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
-import { useDimension } from '../../_shared/hooks';
-import { AuthContext } from '../../_shared/context/AuthContext';
+import { AuthContext } from '../../_shared/context';
 import { useNavigation } from '@react-navigation/native';
-import { validateSignUp } from '../../_shared/validator/signup';
-import { useValidation } from '../../_shared/hooks/validation';
-import { useError } from '../../_shared/hooks/error';
+import { validateSignUp } from '../../_shared/validator';
+import { useError, useValidation, useDimension } from '../../_shared/hooks';
 
 const SignupScreen = () => {
   const { theme } = useTheme();

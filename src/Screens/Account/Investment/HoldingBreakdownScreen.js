@@ -16,8 +16,8 @@ import {
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
-import { useGetHolding, useGetLots } from '../../../_shared/query/investment';
-import { CURRENCY_USD } from '../../../_shared/util/currency';
+import { useGetHolding, useGetLots } from '../../../_shared/query';
+import { CURRENCY_USD } from '../../../_shared/util';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();

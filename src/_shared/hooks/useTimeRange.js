@@ -5,7 +5,7 @@ import {
   getUnixRangeOfMonth,
   getUnixRangeOfYear,
   getYear,
-} from '../util/date';
+} from '../util';
 
 const useTimeRange = (activeTs = 0, rangeType = TIME_RANGE_MONTHLY) => {
   const [timeRangeType, setTimeRangeType] = useState(rangeType);

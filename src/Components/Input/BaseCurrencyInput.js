@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react';
 
 import BaseInput from './BaseInput';
-import { CURRENCY_SGD, getCurrencySymbol } from '../../_shared/util/currency';
+import { CURRENCY_SGD, getCurrencySymbol } from '../../_shared/util';
 
 const BaseCurrencyInput = forwardRef(
   (

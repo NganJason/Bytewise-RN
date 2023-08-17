@@ -14,12 +14,11 @@ import {
   ACCOUNT_TYPE_CASH,
   ACCOUNT_TYPE_CREDIT_CARD,
   ACCOUNT_TYPE_INVESTMENT,
-  ACCOUNT_TYPE_LOAN,
   EQUITY_TYPE_ASSET,
   EQUITY_TYPE_DEBT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { capitalize } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util';
 
 const assets = [
   ACCOUNT_TYPE_CASH,

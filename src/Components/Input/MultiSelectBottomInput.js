@@ -5,7 +5,7 @@ import { useDimension } from '../../_shared/hooks';
 import { BaseButton } from '../Touch';
 import BaseCheckbox from './BaseCheckbox';
 import TouchInput from './TouchInput';
-import { capitalize } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util';
 import { BaseDivider } from '../View';
 
 const MultiSelectBottomInput = ({

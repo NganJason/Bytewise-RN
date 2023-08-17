@@ -2,8 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
-import { getDateStringFromTs } from '../../_shared/util/date';
-import { getTotalInvestmentCost } from '../../_shared/util/investment';
+import {
+  getDateStringFromTs,
+  getTotalInvestmentCost,
+} from '../../_shared/util';
 import { AmountText, BaseText } from '../Text';
 import { BaseRow } from '../View';
 

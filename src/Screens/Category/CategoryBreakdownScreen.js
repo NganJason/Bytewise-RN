@@ -29,11 +29,12 @@ import {
   useDimension,
   useGetTransactionsHook,
   useTimeRange,
+  useGetCategoriesHelper,
+  useError,
 } from '../../_shared/hooks';
-import { useError } from '../../_shared/hooks/error';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useGetCategoriesHelper } from '../../_shared/hooks';
-import { getProgress } from '../../_shared/util/common';
+import { getProgress } from '../../_shared/util';
 import { useAggrTransactions } from '../../_shared/query';
 
 const PAGING_LIMIT = 500;

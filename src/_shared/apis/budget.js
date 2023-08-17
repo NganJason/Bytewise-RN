@@ -6,27 +6,10 @@ export class BudgetError extends AppError {
   }
 }
 
-const GET_BUDGET = '/get_budget';
 const GET_CATEGORIES_BUDGET = '/get_categories_budget';
 const CREATE_BUDGET = '/create_budget';
 const UPDATE_BUDGET = '/update_budget';
 const DELETE_BUDGET = '/delete_budget';
-
-export const getBudget = async ({ budget_id = '', date = '' } = {}) => {
-  try {
-    const body = await sendPostRequest(GET_BUDGET, {
-      budget_id: budget_id,
-      date: date,
-    });
-    return body;
-  } catch (e) {
-    throw new BudgetError({
-      requestID: e.requestID,
-      message: e.message,
-      code: e.code,
-    });
-  }
-};
 
 export const getCategoriesBudget = async ({
   category_ids = [],

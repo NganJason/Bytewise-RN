@@ -2,7 +2,7 @@ import { BottomSheet, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDimension } from '../../_shared/hooks';
-import { getYearMonthString, getYearString } from '../../_shared/util/date';
+import { getYearMonthString, getYearString } from '../../_shared/util';
 import { BaseButton } from '../Touch';
 import DatePicker, { DatePickerMode } from './Picker/DatePicker';
 import TouchInput from './TouchInput';

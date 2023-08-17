@@ -26,13 +26,12 @@ import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '../../_shared/mutations';
-import { validateTransaction } from '../../_shared/validator/transaction';
-import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util/date';
+import { validateTransaction } from '../../_shared/validator';
+import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
 import { useGetTransactionHook } from '../../_shared/hooks/transaction';
-import { useValidation } from '../../_shared/hooks/validation';
-import { useError } from '../../_shared/hooks/error';
-import { useDeleteTransaction } from '../../_shared/mutations/transaction';
+import { useError, useValidation } from '../../_shared/hooks';
+import { useDeleteTransaction } from '../../_shared/mutations';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;

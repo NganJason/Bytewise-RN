@@ -12,17 +12,15 @@ import {
 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
-import { useDimension } from '../../_shared/hooks';
 import { loginHero } from '../../_shared/constant/asset';
-import { AuthContext } from '../../_shared/context/AuthContext';
-import { useValidation } from '../../_shared/hooks/validation';
-import { validateLogin } from '../../_shared/validator/login';
+import { AuthContext } from '../../_shared/context';
+import { validateLogin } from '../../_shared/validator';
 import { useNavigation } from '@react-navigation/native';
-import { useError } from '../../_shared/hooks/error';
+import { useError, useValidation, useDimension } from '../../_shared/hooks';
 
 const LoginScreen = () => {
   const { theme } = useTheme();
-  const { screenWidth, screenHeight } = useDimension();
+  const { screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 

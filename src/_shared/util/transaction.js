@@ -38,6 +38,7 @@ export const groupTransactionDatesByMonth = (transactionDates = []) => {
 
   return { transactionMonths, transactionMonthToDates };
 };
+
 export const mergeTransactionsCategory = (
   transactions = [],
   categoryMap = {},

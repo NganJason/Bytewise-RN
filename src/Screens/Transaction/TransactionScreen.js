@@ -8,11 +8,7 @@ import {
   BaseLoadableView,
   Transactions,
 } from '../../Components';
-import {
-  getUnixRangeOfMonth,
-  getYear,
-  getMonth,
-} from '../../_shared/util/date';
+import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
 import { useAggrTransactions } from '../../_shared/query';
 import {
@@ -21,8 +17,7 @@ import {
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
-import { useError } from '../../_shared/hooks/error';
-import { useDimension } from '../../_shared/hooks';
+import { useError, useDimension } from '../../_shared/hooks';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;

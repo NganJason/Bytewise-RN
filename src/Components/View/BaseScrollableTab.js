@@ -2,7 +2,7 @@ import { Icon } from '@rneui/base';
 import { useTheme } from '@rneui/themed';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { capitalize } from '../../_shared/util/string';
+import { capitalize } from '../../_shared/util';
 import { BaseText } from '../Text';
 
 const BaseScrollableTab = ({

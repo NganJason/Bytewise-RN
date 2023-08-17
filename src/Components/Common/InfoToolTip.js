@@ -1,6 +1,6 @@
 import { useTheme } from '@rneui/themed';
 import { useContext } from 'react';
-import { BottomToastContext } from '../../_shared/context/BottomToastContext';
+import { BottomToastContext } from '../../_shared/context';
 import { IconButton } from '../Touch';
 
 const InfoToolTip = ({ iconSize = 15, title = '', message = '' }) => {

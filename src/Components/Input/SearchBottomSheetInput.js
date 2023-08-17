@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDimension } from '../../_shared/hooks';
 
-import { debounce } from '../../_shared/util/common';
+import { debounce } from '../../_shared/util';
 import BaseSearchBar from './BaseSearchBar';
 import TouchInput from './TouchInput';
 import { BaseScrollView } from '../View';

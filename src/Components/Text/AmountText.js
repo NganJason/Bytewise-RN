@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
-import { getCurrencySymbol, CURRENCY_SGD } from '../../_shared/util/currency';
+import { getCurrencySymbol, CURRENCY_SGD } from '../../_shared/util';
 
 const AmountText = ({
   children = 0,

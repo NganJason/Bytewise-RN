@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useValidation = () => {
+const useValidation = () => {
   const [showValidation, setShowValidation] = useState(false);
   const [timerID, setTimerID] = useState(0);
 
@@ -17,3 +17,5 @@ export const useValidation = () => {
 
   return { validate, showValidation };
 };
+
+export default useValidation;
