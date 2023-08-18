@@ -13,6 +13,7 @@ import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScr
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
 import LoginScreen from './src/Screens/User/LoginScreen';
 import SignupScreen from './src/Screens/User/SignupScreen';
+import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
 import { CustomDrawer } from './src/Components/Common';
@@ -103,8 +104,6 @@ function Main() {
         // TODO: Handle error
         console.log(err);
       } finally {
-        // clearTimeout(timer);
-        // setShowSplashScreen(false);
         setIsAppReady(true);
       }
     }
@@ -174,6 +173,10 @@ function Main() {
             </>
           ) : (
             <>
+              <Stack.Screen
+                name={ROUTES.onboarding}
+                component={OnboardingScreen}
+              />
               <Stack.Screen name={ROUTES.login} component={LoginScreen} />
               <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
             </>

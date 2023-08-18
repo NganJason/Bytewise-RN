@@ -15,13 +15,30 @@ const BaseRow = ({
   const styles = getStyles();
 
   return (
-    <TouchableOpacity
-      style={{ ...styles.container, ...containerStyle }}
-      onPress={onPress}
-      disabled={disabled}>
+    <RowContainer
+      disabled={disabled}
+      containerStyle={containerStyle}
+      onPress={onPress}>
       <BaseListItem showDivider={showDivider} dividerMargin={dividerMargin}>
         <View style={styles.textGroup}>{children}</View>
       </BaseListItem>
+    </RowContainer>
+  );
+};
+
+const RowContainer = ({ disabled, containerStyle, onPress, children }) => {
+  const styles = getStyles();
+  // If use disabled property in TouchableOpacity,
+  // it will affect ScrollableView
+  if (disabled) {
+    return <View>{children}</View>;
+  }
+
+  return (
+    <TouchableOpacity
+      style={{ ...styles.container, ...containerStyle }}
+      onPress={onPress}>
+      {children}
     </TouchableOpacity>
   );
 };

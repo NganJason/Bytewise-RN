@@ -16,6 +16,7 @@ import BaseGrid from './BaseGrid';
 import BaseCard from './BaseCard';
 import BaseKeyboardAwareScrollView from './BaseKeyboardAwareScrollView';
 import BaseBottomSelectTab from './BaseBottomSelectTab';
+import BaseProgressTab from './BaseProgressTab';
 
 export {
   BaseBottomSheet,
@@ -36,4 +37,5 @@ export {
   BaseCard,
   BaseKeyboardAwareScrollView,
   BaseBottomSelectTab,
+  BaseProgressTab,
 };

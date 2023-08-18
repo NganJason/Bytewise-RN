@@ -42,6 +42,7 @@ import {
   BaseScrollableTab,
   BaseKeyboardAwareScrollView,
   BaseBottomSelectTab,
+  BaseProgressTab,
 } from './View';
 
 // Common
@@ -105,4 +106,5 @@ export {
   InfoToolTip,
   BaseDonutChart,
   ChartLegend,
+  BaseProgressTab,
 };

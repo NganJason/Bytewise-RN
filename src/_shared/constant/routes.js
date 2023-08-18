@@ -1,6 +1,7 @@
 const ROUTES = {
   login: 'Login',
   signup: 'Signup',
+  onboarding: 'Onboarding',
 
   homeWithDrawer: 'Home with drawer',
   home: 'Home',

@@ -144,7 +144,7 @@ const getStyles = (theme, screenHeight) =>
       backgroundColor: theme.colors.white,
       paddingHorizontal: 26,
       borderBottomWidth: 0,
-      paddingVertical: 22,
+      paddingVertical: screenHeight * 0.02,
     },
     body: {
       flex: 1,
