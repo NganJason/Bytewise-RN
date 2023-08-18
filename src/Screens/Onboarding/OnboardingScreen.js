@@ -1,22 +1,43 @@
 import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   BaseButton,
   BaseProgressTab,
   BaseScreen,
   BaseText,
 } from '../../Components';
+import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
 import { useDimension } from '../../_shared/hooks';
 import CategoryOnboarding from './CategoryOnboarding';
 
 const DefaultCategories = [
-  'Food',
-  'Rental',
-  'Entertainment',
-  'Groceries',
-  'Travel',
+  {
+    category_name: 'Food',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  },
+  {
+    category_name: 'Rental',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  },
+  {
+    category_name: 'Entertainment',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  },
+  {
+    category_name: 'Groceries',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  },
+  {
+    category_name: 'Travel',
+    category_type: TRANSACTION_TYPE_EXPENSE,
+  },
 ];
+
+const defaultData = {
+  categories: DefaultCategories,
+};
 
 const OnboardingScreen = () => {
   const { theme } = useTheme();
@@ -26,11 +47,14 @@ const OnboardingScreen = () => {
   const [activeTab, setActiveTab] = useState(0);
   const onNext = () => {
     setActiveTab(activeTab + 1);
+    setCommittedData({ ...data });
+  };
+  const onSkip = () => {
+    setActiveTab(activeTab + 1);
   };
 
-  const [data, setData] = useState({
-    categories: DefaultCategories,
-  });
+  const [data, setData] = useState(defaultData);
+  const [committedData, setCommittedData] = useState(defaultData);
 
   return (
     <BaseScreen headerProps={{ allowBack: true }}>
@@ -40,9 +64,11 @@ const OnboardingScreen = () => {
       </View>
       <View style={styles.footer}>
         <BaseButton title="Next" size="lg" width={200} onPress={onNext} />
-        <BaseText text2 style={styles.skipText}>
-          Skip
-        </BaseText>
+        <TouchableOpacity onPress={onSkip}>
+          <BaseText text2 style={styles.skipText}>
+            Skip
+          </BaseText>
+        </TouchableOpacity>
       </View>
     </BaseScreen>
   );

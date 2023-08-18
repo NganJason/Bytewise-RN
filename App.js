@@ -130,10 +130,6 @@ function Main() {
                 name={ROUTES.homeWithDrawer}
                 component={HomeWithDrawer}
               />
-              <Stack.Screen
-                name={ROUTES.categoryForm}
-                component={CategoryForm}
-              />
               <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
               <Stack.Screen
                 name={ROUTES.transactionForm}
@@ -181,6 +177,7 @@ function Main() {
               <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
             </>
           )}
+          <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
         </Stack.Navigator>
       );
     }

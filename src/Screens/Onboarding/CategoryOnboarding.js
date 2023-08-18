@@ -19,8 +19,11 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
 
   const onDelete = idx => {
     const newCategories = categories.filter((_, index) => index !== idx);
+    setData({ ...data, categories: newCategories });
+  };
 
-    console.log(newCategories);
+  const onAdd = e => {
+    const newCategories = [...categories, e];
     setData({ ...data, categories: newCategories });
   };
 
@@ -30,7 +33,7 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
     categories.map((category, idx) => {
       rows.push(
         <BaseRow key={idx} disabled>
-          <BaseText>{category}</BaseText>
+          <BaseText>{category.category_name}</BaseText>
           <IconButton
             iconName="circle-with-minus"
             iconType="entypo"
@@ -64,7 +67,9 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
           type="secondary"
           align="flex-end"
           size="sm"
-          onPress={() => navigation.navigate(ROUTES.categoryForm)}
+          onPress={() =>
+            navigation.navigate(ROUTES.categoryForm, { onAdd: onAdd })
+          }
         />
       </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>

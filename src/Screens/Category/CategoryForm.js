@@ -39,6 +39,7 @@ const CategoryForm = ({ route }) => {
   const {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
     category_id: categoryID = '',
+    onAdd = null,
   } = route?.params || {};
   const isAddCategory = () => {
     return categoryID === '';
@@ -88,6 +89,12 @@ const CategoryForm = ({ route }) => {
     validate();
     let isValidationPassed = Object.keys(formErrors).length === 0;
     if (!isValidationPassed) {
+      return;
+    }
+
+    if (onAdd !== null) {
+      onAdd(categoryForm);
+      navigation.goBack();
       return;
     }
 
