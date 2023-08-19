@@ -21,6 +21,7 @@ const BaseScreen = ({
   },
   headerProps = {
     allowBack: false,
+    onBack: null, // default to go back to previous page
     allowDrawer: false,
     leftComponent: null,
     centerComponent: null,
@@ -66,7 +67,7 @@ const BaseScreen = ({
     if (headerProps.allowDrawer) {
       return <DrawerIcon />;
     } else if (headerProps.allowBack) {
-      return <BackIcon />;
+      return <BackIcon onBack={headerProps.onBack} />;
     }
 
     return headerProps.leftComponent;

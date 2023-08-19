@@ -3,13 +3,16 @@ import { useGetCategories, useGetCategoriesBudget } from '../query';
 import * as Localization from 'expo-localization';
 import { getDateStringWithoutDelim } from '../util';
 
-const useGetCategoriesHelper = ({ budgetDate = new Date() } = {}) => {
+const useGetCategoriesHelper = ({
+  budgetDate = new Date(),
+  enabled = true,
+} = {}) => {
   const [categoryIDs, setCategoryIDs] = useState([]);
   const [categoriesWithBudget, setCategoriesWithBudget] = useState([]);
   const [categoriesWithoutBudget, setCategoriesWithoutBudget] = useState([]);
   const [categoryIDToCategoryMap, setCategoryIDToCategoryMap] = useState({});
 
-  const getCategories = useGetCategories({});
+  const getCategories = useGetCategories({}, { enabled: enabled });
   useEffect(() => {
     const { categories = [] } = getCategories.data || {};
     let ids = [];
@@ -27,7 +30,7 @@ const useGetCategoriesHelper = ({ budgetDate = new Date() } = {}) => {
       timezone: Localization.timezone,
     },
     {
-      enabled: categoryIDs.length > 0,
+      enabled: categoryIDs.length > 0 && enabled,
     },
   );
   useEffect(() => {

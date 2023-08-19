@@ -15,25 +15,27 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { categories = [] } = data;
+  const { categoryBudgets = [] } = data;
 
   const onDelete = idx => {
-    const newCategories = categories.filter((_, index) => index !== idx);
-    setData({ ...data, categories: newCategories });
+    const newCategoryBudgets = categoryBudgets.filter(
+      (_, index) => index !== idx,
+    );
+    setData({ ...data, categoryBudgets: newCategoryBudgets });
   };
 
   const onAdd = e => {
-    const newCategories = [...categories, e];
-    setData({ ...data, categories: newCategories });
+    const newCategoryBudgets = [...categoryBudgets, e];
+    setData({ ...data, categoryBudgets: newCategoryBudgets });
   };
 
   const renderRows = () => {
     let rows = [];
 
-    categories.map((category, idx) => {
+    categoryBudgets.map((cb, idx) => {
       rows.push(
         <BaseRow key={idx} disabled>
-          <BaseText>{category.category_name}</BaseText>
+          <BaseText>{cb.category_name}</BaseText>
           <IconButton
             iconName="circle-with-minus"
             iconType="entypo"
@@ -51,6 +53,7 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
 
     return rows;
   };
+
   return (
     <View style={styles.container}>
       <View>

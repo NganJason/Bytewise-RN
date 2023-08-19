@@ -26,7 +26,6 @@ import {
   AuthProvider,
   BottomToastProvider,
 } from './src/_shared/context';
-import BudgetForm from './src/Screens/Budget/BudgetForm';
 import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 import AccountForm from './src/Screens/Account/AccountForm';
 import AccountBreakdownScreen from './src/Screens/Account/AccountBreakdownScreen';
@@ -36,6 +35,7 @@ import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBrea
 import LotForm from './src/Screens/Account/Investment/LotForm';
 import BottomToast from './src/Components/Common/BottomToast';
 import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
+import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
@@ -130,7 +130,6 @@ function Main() {
                 name={ROUTES.homeWithDrawer}
                 component={HomeWithDrawer}
               />
-              <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
               <Stack.Screen
                 name={ROUTES.transactionForm}
                 component={TransactionForm}
@@ -178,6 +177,10 @@ function Main() {
             </>
           )}
           <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
+          <Stack.Screen
+            name={ROUTES.budgetOnboardingForm}
+            component={BudgetOnboardingForm}
+          />
         </Stack.Navigator>
       );
     }
