@@ -113,7 +113,7 @@ const ExampleRows = () => {
         <BaseText style={{ color: theme.colors.color8 }}>
           Eg: Tuition Fee Loan
         </BaseText>
-        <AmountText style={{ color: theme.colors.color8 }}>300</AmountText>
+        <AmountText style={{ color: theme.colors.color8 }}>4000</AmountText>
       </BaseRow>
     </>
   );

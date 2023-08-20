@@ -21,3 +21,24 @@ export const validateLot = ({ shares = 0, trade_date = 0 }) => {
   }
   return errors;
 };
+
+export const validateOnboardingHolding = ({
+  symbol = '',
+  shares = 0,
+  trade_date = 0,
+}) => {
+  const errors = {};
+  // if (symbol === '') {
+  //   errors.symbol = 'Symbol cannot be empty';
+  // }
+  if (shares === 0) {
+    errors.shares = 'Shares cannot be empty';
+  }
+  if (trade_date === 0) {
+    errors.trade_date = 'Trade date cannot be empty';
+  }
+  if (isTsLargerThanCurrTime(trade_date)) {
+    errors.trade_date = 'Trade date cannot be larger than current date';
+  }
+  return errors;
+};

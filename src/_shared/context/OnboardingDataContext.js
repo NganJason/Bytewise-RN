@@ -32,6 +32,10 @@ const DefaultCategoryBudgets = [
 const defaultData = {
   categoryBudgets: DefaultCategoryBudgets,
   accounts: [],
+  investmentAccount: {
+    accountName: '',
+    holdings: [],
+  },
 };
 
 const OnboardingDataContext = createContext();
@@ -97,6 +101,23 @@ const OnboardingDataProvider = ({ children }) => {
     setData({ ...data, accounts: newAccounts });
   };
 
+  const setInvestmentAccountName = (name = '') => {
+    setData({
+      ...data,
+      investmentAccount: { ...data.investmentAccount, accountName: name },
+    });
+  };
+
+  const addInvestmentHolding = (holding = {}) => {
+    const { holdings = [] } = data?.investmentAccount || {};
+    const newHoldings = [...holdings];
+    newHoldings.push(holding);
+    setData({
+      ...data,
+      investmentAccount: { ...data.investmentAccount, holdings: newHoldings },
+    });
+  };
+
   return (
     <OnboardingDataContext.Provider
       value={{
@@ -113,6 +134,8 @@ const OnboardingDataProvider = ({ children }) => {
         addBudget,
         addAccount,
         updateAccount,
+        setInvestmentAccountName,
+        addInvestmentHolding,
       }}>
       {children}
     </OnboardingDataContext.Provider>

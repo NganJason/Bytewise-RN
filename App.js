@@ -37,6 +37,7 @@ import LotForm from './src/Screens/Account/Investment/LotForm';
 import BottomToast from './src/Components/Common/BottomToast';
 import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
+import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
@@ -176,6 +177,10 @@ function Main() {
           <Stack.Screen
             name={ROUTES.budgetOnboardingForm}
             component={BudgetOnboardingForm}
+          />
+          <Stack.Screen
+            name={ROUTES.investmentOnboardingForm}
+            component={InvestmentOnboardingForm}
           />
           <Stack.Screen
             name={ROUTES.accountSelection}

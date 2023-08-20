@@ -16,6 +16,8 @@ import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
 import InvestmentOnboarding from './InvestmentOnboarding';
 
+const tabs = ['category', 'budget', 'account', 'investment'];
+
 const OnboardingScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
@@ -40,15 +42,22 @@ const OnboardingScreen = () => {
     rollbackData();
   };
 
+  const onSubmit = () => {};
+
+  const isLastTab = () => {
+    return activeTab === tabs.length - 1;
+  };
+
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 0:
+    let tabValue = tabs[activeTab];
+    switch (tabValue) {
+      case 'category':
         return <CategoryOnboarding />;
-      case 1:
+      case 'budget':
         return <BudgetOnboarding />;
-      case 2:
+      case 'account':
         return <AccountOnboarding />;
-      case 3:
+      case 'investment':
         return <InvestmentOnboarding />;
       default:
         return <CategoryOnboarding />;
@@ -60,12 +69,20 @@ const OnboardingScreen = () => {
       <BaseProgressTab numTab={4} activeTab={activeTab} />
       <View style={styles.body}>{renderTabContent()}</View>
       <View style={styles.footer}>
-        <BaseButton title="Next" size="lg" width={200} onPress={onNext} />
-        <TouchableOpacity onPress={onSkip}>
-          <BaseText text2 style={styles.skipText}>
-            Skip
-          </BaseText>
-        </TouchableOpacity>
+        <BaseButton
+          title={isLastTab() ? 'Submit' : 'Next'}
+          size="lg"
+          width={200}
+          onPress={isLastTab() ? onSubmit : onNext}
+        />
+
+        {!isLastTab() && (
+          <TouchableOpacity onPress={onSkip}>
+            <BaseText text2 style={styles.skipText}>
+              Skip
+            </BaseText>
+          </TouchableOpacity>
+        )}
       </View>
     </BaseScreen>
   );
@@ -78,7 +95,7 @@ const getStyles = (theme, screenHeight) => {
       paddingTop: screenHeight * 0.015,
     },
     footer: {
-      minHeight: screenHeight * 0.1,
+      minHeight: screenHeight * 0.15,
       paddingTop: 20,
       paddingBottom: screenHeight * 0.025,
       alignItems: 'center',

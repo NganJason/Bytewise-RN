@@ -4,6 +4,7 @@ const ROUTES = {
 
   onboarding: 'Onboarding',
   budgetOnboardingForm: 'Budget Onboarding Form',
+  investmentOnboardingForm: 'Investment Onboarding Form',
 
   homeWithDrawer: 'Home With Drawer',
   home: 'Home',
