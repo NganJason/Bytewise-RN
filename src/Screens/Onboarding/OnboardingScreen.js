@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -9,58 +9,24 @@ import {
   BaseScreen,
   BaseText,
 } from '../../Components';
-import { TRANSACTION_TYPE_EXPENSE } from '../../_shared/apis/enum';
+import { OnboardingDataContext } from '../../_shared/context';
 import { useDimension } from '../../_shared/hooks';
 import AccountOnboarding from './AccountOnboarding';
 import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
 import InvestmentOnboarding from './InvestmentOnboarding';
 
-const DefaultCategoryBudgets = [
-  {
-    category_name: 'Food',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-    budget: null,
-  },
-  {
-    category_name: 'Rental',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-    budget: null,
-  },
-  {
-    category_name: 'Entertainment',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-    budget: null,
-  },
-  {
-    category_name: 'Groceries',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-    budget: null,
-  },
-  {
-    category_name: 'Travel',
-    category_type: TRANSACTION_TYPE_EXPENSE,
-    budget: null,
-  },
-];
-
-const defaultData = {
-  categoryBudgets: DefaultCategoryBudgets,
-};
-
 const OnboardingScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
-
-  const [data, setData] = useState(defaultData);
-  const [committedData, setCommittedData] = useState(defaultData);
+  const { commitData, rollbackData } = useContext(OnboardingDataContext);
 
   const [activeTab, setActiveTab] = useState(0);
   const onNext = () => {
     setActiveTab(activeTab + 1);
-    setCommittedData({ ...data });
+    commitData();
   };
   const onBack = () => {
     if (activeTab === 0) {
@@ -71,21 +37,21 @@ const OnboardingScreen = () => {
   };
   const onSkip = () => {
     setActiveTab(activeTab + 1);
-    setData({ ...committedData });
+    rollbackData();
   };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <CategoryOnboarding data={data} setData={setData} />;
+        return <CategoryOnboarding />;
       case 1:
-        return <BudgetOnboarding data={data} setData={setData} />;
+        return <BudgetOnboarding />;
       case 2:
-        return <AccountOnboarding data={data} setData={setData} />;
+        return <AccountOnboarding />;
       case 3:
-        return <InvestmentOnboarding data={data} setData={setData} />;
+        return <InvestmentOnboarding />;
       default:
-        return <CategoryOnboarding data={data} setData={setData} />;
+        return <CategoryOnboarding />;
     }
   };
 

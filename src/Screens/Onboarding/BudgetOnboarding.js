@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
@@ -8,25 +9,44 @@ import {
   BaseText,
   IconButton,
 } from '../../Components';
-import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
+import { BaseChip } from '../../Components/View';
+import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
+import { OnboardingDataContext } from '../../_shared/context';
 
-const BudgetOnboarding = ({ data = {}, setData = function () {} }) => {
+const BudgetOnboarding = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const { data } = useContext(OnboardingDataContext);
   const { categoryBudgets = [] } = data;
 
   const renderRows = () => {
     let rows = [];
 
     categoryBudgets.map((cb, idx) => {
-      let { amount = 0, budget_type = BUDGET_TYPE_MONTHLY } = cb?.budget || {};
+      let { amount = 0, budget_type: budgetType = null } = cb?.budget || {};
 
       rows.push(
-        <BaseRow key={idx} disabled>
-          <BaseText>{cb.category_name}</BaseText>
+        <BaseRow
+          key={idx}
+          onPress={() => {
+            navigation.navigate(ROUTES.budgetOnboardingForm, {
+              categoryIdx: idx,
+            });
+          }}>
+          <View style={styles.category}>
+            <BaseText>{cb.category_name}</BaseText>
+            {budgetType !== null && (
+              <BaseChip
+                type={
+                  budgetType === BUDGET_TYPE_MONTHLY ? 'primary' : 'secondary'
+                }>
+                {BUDGET_TYPES[budgetType]}
+              </BaseChip>
+            )}
+          </View>
 
           {amount === 0 ? (
             <IconButton
@@ -37,7 +57,9 @@ const BudgetOnboarding = ({ data = {}, setData = function () {} }) => {
               iconSize={20}
               align="flex-start"
               onPress={() => {
-                navigation.navigate(ROUTES.budgetOnboardingForm);
+                navigation.navigate(ROUTES.budgetOnboardingForm, {
+                  categoryIdx: idx,
+                });
               }}
             />
           ) : (
@@ -70,6 +92,10 @@ const getStyles = theme => {
   return StyleSheet.create({
     container: {
       flex: 1,
+    },
+    category: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     subtitle: {
       marginTop: 10,

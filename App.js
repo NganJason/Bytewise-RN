@@ -25,6 +25,7 @@ import {
   AuthContext,
   AuthProvider,
   BottomToastProvider,
+  OnboardingDataProvider,
 } from './src/_shared/context';
 import AccountSelectionScreen from './src/Screens/Account/AccountSelectionScreen';
 import AccountForm from './src/Screens/Account/AccountForm';
@@ -191,10 +192,12 @@ function Main() {
   return (
     <ThemeProvider theme={THEME}>
       <BottomToastProvider>
-        <SafeAreaProvider>
-          <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
-          <BottomToast />
-        </SafeAreaProvider>
+        <OnboardingDataProvider>
+          <SafeAreaProvider>
+            <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+            <BottomToast />
+          </SafeAreaProvider>
+        </OnboardingDataProvider>
       </BottomToastProvider>
     </ThemeProvider>
   );

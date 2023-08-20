@@ -33,6 +33,9 @@ export const toolTipMessage = {
     title: 'Cash Flow',
     text: 'Cash flow = Income - Expense',
   },
+  budgetTypeDesc: {
+    text: 'Monthly Budget\n\nBudget for your monthly expenses.\n\nEg: Food, Rental, etc.\n\n\nAnnual Budget\n\nBudget allocated for one-time or annual big expenses.\n\nEg: Travel, Skin-Care, Supplement, etc.',
+  },
 };
 
 export const defaultErrorText1 = 'Ops, something went wrong.';

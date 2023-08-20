@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseButton,
@@ -9,25 +10,15 @@ import {
   IconButton,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
+import { OnboardingDataContext } from '../../_shared/context';
 
-const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
+const CategoryOnboarding = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
+  const { data, deleteCategory } = useContext(OnboardingDataContext);
   const { categoryBudgets = [] } = data;
-
-  const onDelete = idx => {
-    const newCategoryBudgets = categoryBudgets.filter(
-      (_, index) => index !== idx,
-    );
-    setData({ ...data, categoryBudgets: newCategoryBudgets });
-  };
-
-  const onAdd = e => {
-    const newCategoryBudgets = [...categoryBudgets, e];
-    setData({ ...data, categoryBudgets: newCategoryBudgets });
-  };
 
   const renderRows = () => {
     let rows = [];
@@ -44,7 +35,7 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
             iconSize={20}
             align="flex-start"
             onPress={() => {
-              onDelete(idx);
+              deleteCategory(idx);
             }}
           />
         </BaseRow>,
@@ -71,7 +62,7 @@ const CategoryOnboarding = ({ data = {}, setData = function () {} }) => {
           align="flex-end"
           size="sm"
           onPress={() =>
-            navigation.navigate(ROUTES.categoryForm, { onAdd: onAdd })
+            navigation.navigate(ROUTES.categoryForm, { isOnboarding: true })
           }
         />
       </View>

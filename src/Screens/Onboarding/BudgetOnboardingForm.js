@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
@@ -12,26 +12,56 @@ import {
   TouchInput,
 } from '../../Components';
 import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
+import {
+  BottomToastContext,
+  OnboardingDataContext,
+} from '../../_shared/context';
 import { getBudgetTypes } from '../../_shared/util';
 
 const BudgetOnboardingForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { toast } = useContext(BottomToastContext);
 
-  const { budgetForm = {}, setBudgetForm = function () {} } =
-    route?.params || {};
+  const { categoryIdx = 0 } = route?.params || {};
 
-  const {
-    category_name: categoryName,
-    budget_type: budgetType = BUDGET_TYPE_MONTHLY,
-    amount = 0,
-  } = budgetForm;
+  const { data, addBudget, shouldShowBudgetTypeDesc, markBudgetTypeDesc } =
+    useContext(OnboardingDataContext);
+  const { categoryBudgets = [] } = data;
+  const { category_name: categoryName = '', budget = {} } =
+    categoryBudgets[categoryIdx] || {};
+
+  const [budgetForm, setBudgetForm] = useState({
+    amount: budget?.amount || 0,
+    budget_type: budget?.budget_type || BUDGET_TYPE_MONTHLY,
+  });
+
+  useEffect(() => {
+    if (shouldShowBudgetTypeDesc()) {
+      toast.info('budget...', 'Budget Type');
+      markBudgetTypeDesc();
+    }
+  }, []);
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);
   const toggleBudgetTypeModal = () => {
     setIsBudgetTypeModalVisible(!isBudgetTypeModalVisible);
+  };
+
+  const onAmountChange = e => {
+    setBudgetForm({ ...budgetForm, amount: e });
+  };
+
+  const onBudgetTypeChange = e => {
+    setBudgetForm({ ...budgetForm, budget_type: e.value });
+    toggleBudgetTypeModal();
+  };
+
+  const onAdd = () => {
+    addBudget(categoryIdx, budgetForm);
+    navigation.goBack();
   };
 
   return (
@@ -54,7 +84,7 @@ const BudgetOnboardingForm = ({ route }) => {
 
         <TouchInput
           label="Budget Type"
-          value={BUDGET_TYPES[budgetType]}
+          value={BUDGET_TYPES[budgetForm.budget_type]}
           onPress={toggleBudgetTypeModal}
         />
         <BaseBottomSheet
@@ -63,11 +93,16 @@ const BudgetOnboardingForm = ({ route }) => {
           onBackdropPress={toggleBudgetTypeModal}
           close={toggleBudgetTypeModal}
           items={getBudgetTypes()}
+          onSelect={onBudgetTypeChange}
         />
 
-        <BaseCurrencyInput label="Amount" value={budgetForm.amount} />
+        <BaseCurrencyInput
+          label="Amount"
+          value={budgetForm.amount}
+          onChangeText={onAmountChange}
+        />
 
-        <BaseButton title="Add" size="lg" width={200} />
+        <BaseButton title="Add" size="lg" width={200} onPress={onAdd} />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );

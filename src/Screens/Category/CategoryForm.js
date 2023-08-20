@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +20,7 @@ import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
 import { validateCategory } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
+import { OnboardingDataContext } from '../../_shared/context';
 
 const categoryTypes = [
   {
@@ -39,7 +40,7 @@ const CategoryForm = ({ route }) => {
   const {
     category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
     category_id: categoryID = '',
-    onAdd = null,
+    isOnboarding = false,
   } = route?.params || {};
   const isAddCategory = () => {
     return categoryID === '';
@@ -51,6 +52,9 @@ const CategoryForm = ({ route }) => {
     category_name: '',
     category_type: categoryType,
   });
+
+  // For onboardingForm
+  const { addCategory } = useContext(OnboardingDataContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -92,8 +96,8 @@ const CategoryForm = ({ route }) => {
       return;
     }
 
-    if (onAdd !== null) {
-      onAdd(categoryForm);
+    if (isOnboarding) {
+      addCategory(categoryForm);
       navigation.goBack();
       return;
     }

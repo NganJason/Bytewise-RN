@@ -4,6 +4,10 @@ import {
   BottomToastProvider,
   ToastTypeInfo,
 } from './BottomToastContext';
+import {
+  OnboardingDataContext,
+  OnboardingDataProvider,
+} from './OnboardingDataContext';
 
 export {
   AuthContext,
@@ -11,4 +15,6 @@ export {
   BottomToastContext,
   BottomToastProvider,
   ToastTypeInfo,
+  OnboardingDataContext,
+  OnboardingDataProvider,
 };
