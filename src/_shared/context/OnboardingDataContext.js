@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { BUDGET_TYPE_MONTHLY, TRANSACTION_TYPE_EXPENSE } from '../apis/enum';
 
 const DefaultCategoryBudgets = [
@@ -31,6 +31,7 @@ const DefaultCategoryBudgets = [
 
 const defaultData = {
   categoryBudgets: DefaultCategoryBudgets,
+  accounts: [],
 };
 
 const OnboardingDataContext = createContext();
@@ -56,7 +57,7 @@ const OnboardingDataProvider = ({ children }) => {
   };
 
   const markBudgetTypeDesc = () => {
-    return (meta.budgetTypeDescShowed = true);
+    setMeta({ ...meta, budgetTypeDescShowed: true });
   };
 
   const addCategory = e => {
@@ -83,6 +84,19 @@ const OnboardingDataProvider = ({ children }) => {
     setData({ ...data, categoryBudgets: newCategoryBudgets });
   };
 
+  const addAccount = e => {
+    const { accounts = [] } = data;
+    const newAccounts = [...accounts, e];
+    setData({ ...data, accounts: newAccounts });
+  };
+
+  const updateAccount = (idx = 0, account = {}) => {
+    const { accounts = [] } = data;
+    const newAccounts = [...accounts];
+    newAccounts[idx] = account;
+    setData({ ...data, accounts: newAccounts });
+  };
+
   return (
     <OnboardingDataContext.Provider
       value={{
@@ -97,6 +111,8 @@ const OnboardingDataProvider = ({ children }) => {
         addCategory,
         deleteCategory,
         addBudget,
+        addAccount,
+        updateAccount,
       }}>
       {children}
     </OnboardingDataContext.Provider>

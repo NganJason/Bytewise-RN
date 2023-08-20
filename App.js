@@ -148,11 +148,6 @@ function Main() {
                 component={CategoryOverviewScreen}
               />
               <Stack.Screen
-                name={ROUTES.accountSelection}
-                component={AccountSelectionScreen}
-              />
-              <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
-              <Stack.Screen
                 name={ROUTES.accountBreakdown}
                 component={AccountBreakdownScreen}
               />
@@ -182,6 +177,11 @@ function Main() {
             name={ROUTES.budgetOnboardingForm}
             component={BudgetOnboardingForm}
           />
+          <Stack.Screen
+            name={ROUTES.accountSelection}
+            component={AccountSelectionScreen}
+          />
+          <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
         </Stack.Navigator>
       );
     }

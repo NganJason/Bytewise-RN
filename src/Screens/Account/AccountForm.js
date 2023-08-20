@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
@@ -31,6 +31,7 @@ import {
   isAccountTypeDebt,
   getAccountTypes,
 } from '../../_shared/util';
+import { OnboardingDataContext } from '../../_shared/context';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -40,6 +41,8 @@ const AccountForm = ({ route }) => {
   const {
     account_id: accountID = '',
     account_type: accountType = ACCOUNT_TYPE_BANK_ACCOUNT,
+    is_onboarding: isOnboarding = false,
+    account_onboarding_idx: accountOnboardingIdx = null,
   } = route?.params || {};
   const isAddAccount = () => {
     return accountID === '';
@@ -59,6 +62,13 @@ const AccountForm = ({ route }) => {
     setFormErrors(validateAccount(accountForm));
   }, [accountForm]);
 
+  // For account onboarding
+  const {
+    data,
+    addAccount: addOnboardingAccount,
+    updateAccount: updateOnboardingAccount,
+  } = useContext(OnboardingDataContext);
+
   const getAccount = useGetAccount(
     { account_id: accountID },
     { enabled: accountID !== '' },
@@ -68,6 +78,7 @@ const AccountForm = ({ route }) => {
     onSuccess: resp => {
       const { account_id: newAccountID = '' } = resp?.account || [];
 
+      // If it's investment account, redirect to investment breakdown screen
       if (
         accountForm.account_type === ACCOUNT_TYPE_INVESTMENT &&
         newAccountID !== ''
@@ -114,6 +125,25 @@ const AccountForm = ({ route }) => {
       });
     }
   }, [getAccount.data]);
+
+  // For account onboarding update
+  useEffect(() => {
+    if (accountOnboardingIdx === null) {
+      return;
+    }
+
+    let { accounts = [] } = data;
+    let account = accounts[accountOnboardingIdx];
+    if (!account || account === null) {
+      return;
+    }
+
+    setAccountForm({
+      account_name: account.account_name,
+      account_type: account.account_type,
+      balance: account.balance,
+    });
+  }, [data, accountOnboardingIdx]);
 
   const [accountTypeModalVisible, setAccountTypeModalVisible] = useState(false);
   const toggleAccountTypeModal = () => {
@@ -167,6 +197,24 @@ const AccountForm = ({ route }) => {
       balance = null;
     } else {
       balance = String(accountForm.balance);
+    }
+
+    if (isOnboarding) {
+      let isOnboardingUpdate = accountOnboardingIdx !== null;
+
+      if (isOnboardingUpdate) {
+        updateOnboardingAccount(accountOnboardingIdx, {
+          ...accountForm,
+          balance: balance,
+        });
+        navigation.goBack();
+      } else {
+        addOnboardingAccount({ ...accountForm, balance: balance });
+        navigation.goBack();
+        navigation.goBack();
+      }
+
+      return;
     }
 
     if (isAddAccount()) {

@@ -25,20 +25,26 @@ const assets = [
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
 ];
+const onboardingAssets = [ACCOUNT_TYPE_CASH, ACCOUNT_TYPE_BANK_ACCOUNT];
 const debts = [
   ACCOUNT_TYPE_CREDIT_CARD,
   // ACCOUNT_TYPE_LOAN,
 ];
 
-const AccountSelectionScreen = () => {
+const AccountSelectionScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { is_onboarding: isOnboarding = false } = route?.params || {};
 
   const renderContent = (type = EQUITY_TYPE_ASSET) => {
     let items = [];
     if (type === EQUITY_TYPE_ASSET) {
-      items = assets;
+      if (isOnboarding) {
+        items = onboardingAssets;
+      } else {
+        items = assets;
+      }
     } else {
       items = debts;
     }
@@ -52,7 +58,10 @@ const AccountSelectionScreen = () => {
           <BaseCard
             key={item.account_id}
             onPress={() => {
-              navigation.navigate(ROUTES.accountForm, { account_type: item });
+              navigation.navigate(ROUTES.accountForm, {
+                account_type: item,
+                is_onboarding: isOnboarding,
+              });
             }}
             color={
               type === EQUITY_TYPE_ASSET
