@@ -2,6 +2,7 @@ const ROUTES = {
   login: 'Login',
   signup: 'Signup',
 
+  welcome: 'Welcome',
   onboarding: 'Onboarding',
   budgetOnboardingForm: 'Budget Onboarding Form',
   investmentOnboardingForm: 'Investment Onboarding Form',
