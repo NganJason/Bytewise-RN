@@ -28,7 +28,7 @@ const LoginScreen = () => {
   const { validate, showValidation } = useValidation();
 
   const [loginForm, setLoginForm] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -36,8 +36,8 @@ const LoginScreen = () => {
     setFormErrors(validateLogin(loginForm));
   }, [loginForm]);
 
-  const onUsernameChange = e => {
-    setLoginForm({ ...loginForm, username: e });
+  const onEmailChange = e => {
+    setLoginForm({ ...loginForm, email: e });
   };
 
   const onPasswordChange = e => {
@@ -83,7 +83,7 @@ const LoginScreen = () => {
 
           <View>
             <BaseInput
-              placeholder="Username"
+              placeholder="Email"
               leftIcon={
                 <Icon
                   name="email-outline"
@@ -91,10 +91,10 @@ const LoginScreen = () => {
                   color={theme.colors.color8}
                 />
               }
-              value={loginForm.username}
-              onChangeText={onUsernameChange}
+              value={loginForm.email}
+              onChangeText={onEmailChange}
               maxLength={60}
-              errorMessage={showValidation && formErrors.username}
+              errorMessage={showValidation && formErrors.email}
               containerStyle={styles.input}
             />
             <BaseInput

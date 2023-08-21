@@ -10,10 +10,10 @@ const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';
 
-export const login = async ({ username = '', password = '' }) => {
+export const login = async ({ email = '', password = '' }) => {
   try {
     const body = await sendPostRequest(LOG_IN, {
-      username: username,
+      email: email,
       password: password,
     });
     return body;
@@ -26,10 +26,10 @@ export const login = async ({ username = '', password = '' }) => {
   }
 };
 
-export const signup = async ({ username = '', password = '' }) => {
+export const signup = async ({ email = '', password = '' }) => {
   try {
     const body = await sendPostRequest(SIGN_UP, {
-      username: username,
+      email: email,
       password: password,
     });
     return body;

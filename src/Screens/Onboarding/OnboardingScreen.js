@@ -9,6 +9,7 @@ import {
   BaseScreen,
   BaseText,
 } from '../../Components';
+import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
 import { useDimension } from '../../_shared/hooks';
 import AccountOnboarding from './AccountOnboarding';
@@ -31,11 +32,12 @@ const OnboardingScreen = () => {
     commitData();
   };
   const onBack = () => {
-    if (activeTab === 0) {
-      navigation.goBack();
-    } else {
-      setActiveTab(activeTab - 1);
-    }
+    // if (activeTab === 0) {
+    //   navigation.goBack();
+    // } else {
+    //   setActiveTab(activeTab - 1);
+    // }
+    navigation.goBack(ROUTES.signup);
   };
   const onSkip = () => {
     setActiveTab(activeTab + 1);

@@ -28,7 +28,7 @@ const SignupScreen = () => {
   const { validate, showValidation } = useValidation();
 
   const [signupForm, setSignupForm] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -36,8 +36,8 @@ const SignupScreen = () => {
     setFormErrors(validateSignUp(signupForm));
   }, [signupForm]);
 
-  const onUsernameChange = e => {
-    setSignupForm({ ...signupForm, username: e });
+  const onEmailChange = e => {
+    setSignupForm({ ...signupForm, email: e });
   };
 
   const onPasswordChange = e => {
@@ -84,7 +84,7 @@ const SignupScreen = () => {
 
         <View>
           <BaseInput
-            placeholder="Username"
+            placeholder="Email"
             leftIcon={
               <Icon
                 name="email-outline"
@@ -92,10 +92,10 @@ const SignupScreen = () => {
                 color={theme.colors.color8}
               />
             }
-            value={signupForm.username}
-            onChangeText={onUsernameChange}
+            value={signupForm.email}
+            onChangeText={onEmailChange}
             maxLength={60}
-            errorMessage={showValidation && formErrors.username}
+            errorMessage={showValidation && formErrors.email}
             containerStyle={styles.input}
           />
           <BaseInput

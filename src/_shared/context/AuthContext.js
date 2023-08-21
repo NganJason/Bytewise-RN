@@ -21,9 +21,9 @@ const AuthProvider = ({ children }) => {
 
   const [isLogin, setIsLogin] = useState(false);
 
-  const login = ({ username = '', password = '' }) => {
+  const login = ({ email = '', password = '' }) => {
     loginMutation.mutate(
-      { username, password },
+      { email, password },
       {
         onSuccess: async data => {
           try {
@@ -37,12 +37,12 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const signup = ({ username = '', password = '' }) => {
+  const signup = ({ email = '', password = '' }) => {
     signupMutation.mutate(
-      { username, password },
+      { email, password },
       {
         onSuccess: () => {
-          login({ username, password });
+          login({ email, password });
         },
       },
     );

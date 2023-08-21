@@ -1,10 +1,10 @@
-export const validateSignUp = ({ username = '', password = '' } = {}) => {
+export const validateSignUp = ({ email = '', password = '' } = {}) => {
   const errors = {};
 
-  if (username === '') {
-    errors.username = 'Username cannot be empty';
-  } else if (username.length > 60) {
-    errors.username = 'Username cannot be more than 60 characters';
+  if (email === '') {
+    errors.email = 'Email address cannot be empty';
+  } else if (email.length > 60) {
+    errors.email = 'Email address cannot be more than 60 characters';
   }
 
   if (password === '') {

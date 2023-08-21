@@ -43,7 +43,7 @@ import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboard
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
-const BASE_URL = TEST_BASE_URL;
+const BASE_URL = LOCAL_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -134,6 +134,12 @@ function Main() {
                 name={ROUTES.homeWithDrawer}
                 component={HomeWithDrawer}
               />
+              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
+              <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
+              <Stack.Screen
+                name={ROUTES.onboarding}
+                component={OnboardingScreen}
+              />
               <Stack.Screen
                 name={ROUTES.transactionForm}
                 component={TransactionForm}
@@ -167,12 +173,6 @@ function Main() {
             </>
           ) : (
             <>
-              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
-              <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
-              <Stack.Screen
-                name={ROUTES.onboarding}
-                component={OnboardingScreen}
-              />
               <Stack.Screen name={ROUTES.login} component={LoginScreen} />
               <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
             </>

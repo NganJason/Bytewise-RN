@@ -38,8 +38,12 @@ const OtpScreen = ({ route }) => {
     }, 2000);
   };
 
+  const onBack = () => {
+    navigation.navigate(ROUTES.signup);
+  };
+
   return (
-    <BaseScreen headerProps={{ allowBack: true }}>
+    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
       <View style={styles.screen}>
         <View style={styles.header}>
           <BaseText h3>Let's verify your</BaseText>

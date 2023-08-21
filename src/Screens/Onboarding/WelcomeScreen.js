@@ -39,6 +39,10 @@ const WelcomeScreen = () => {
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
 
+  const onBack = () => {
+    navigation.navigate(ROUTES.signup);
+  };
+
   const renderItems = () => {
     let rows = [];
 
@@ -60,7 +64,7 @@ const WelcomeScreen = () => {
     return rows;
   };
   return (
-    <BaseScreen headerProps={{ allowBack: true }}>
+    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
       <View>
         <BaseText h1>Welcome!</BaseText>
         <BaseText h2 margin={{ vertical: 10 }}>
