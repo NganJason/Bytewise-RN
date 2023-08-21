@@ -29,6 +29,8 @@ const BaseText = ({
   isLoading = false,
   loadingLen = 5,
   shadow = false,
+  bold = false,
+  semibold = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -113,6 +115,8 @@ const BaseText = ({
           { color: color },
           style,
           shadow && styles.textShadow,
+          semibold && { fontFamily: theme.fontFamily.semibold },
+          bold && { fontFamily: theme.fontFamily.bold },
         ]}
         adjustsFontSizeToFit={adjustsFontSizeToFit}
         numberOfLines={numberOfLines}

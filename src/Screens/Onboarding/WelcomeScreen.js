@@ -34,10 +34,10 @@ const items = [
 ];
 
 const WelcomeScreen = () => {
-  const navigation = useNavigation();
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
+  const navigation = useNavigation();
 
   const renderItems = () => {
     let rows = [];
@@ -77,7 +77,7 @@ const WelcomeScreen = () => {
 
       <View style={styles.footer}>
         <BaseButton
-          title="Let's go!"
+          title="Let's Go!"
           size="lg"
           width={200}
           onPress={() => {

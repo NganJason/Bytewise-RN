@@ -82,6 +82,13 @@ export const THEME = createTheme({
     warning: COLORS.warning,
     inactive: COLORS.color6,
   },
+  fontFamily: {
+    bold: FONT_FAMILY.bold,
+    semiBold: FONT_FAMILY.semiBold,
+    medium: FONT_FAMILY.medium,
+    regular: FONT_FAMILY.regular,
+    light: FONT_FAMILY.light,
+  },
   fontStyles: {
     // Header
     h1: {

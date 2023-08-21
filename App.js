@@ -13,6 +13,7 @@ import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScr
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
 import LoginScreen from './src/Screens/User/LoginScreen';
 import SignupScreen from './src/Screens/User/SignupScreen';
+import OtpScreen from './src/Screens/User/OtpScreen';
 import WelcomeScreen from './src/Screens/Onboarding/WelcomeScreen';
 import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
@@ -166,6 +167,7 @@ function Main() {
             </>
           ) : (
             <>
+              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
               <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
               <Stack.Screen
                 name={ROUTES.onboarding}

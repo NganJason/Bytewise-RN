@@ -7,6 +7,7 @@ import {
   BaseToggle,
   SearchBottomSheetInput,
   BaseCheckboxInput,
+  BaseNumInputBox,
 } from './Input';
 
 // Screen
@@ -63,6 +64,7 @@ import { BaseDonutChart, ChartLegend } from './Chart';
 export {
   BaseCheckbox,
   BaseCheckboxInput,
+  BaseNumInputBox,
   TouchInput,
   BaseDivider,
   BaseText,

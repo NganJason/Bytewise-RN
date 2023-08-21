@@ -1,6 +1,7 @@
 const ROUTES = {
   login: 'Login',
   signup: 'Signup',
+  otp: 'OTP',
 
   welcome: 'Welcome',
   onboarding: 'Onboarding',

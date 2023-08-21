@@ -5,6 +5,7 @@ import BaseCheckbox from './BaseCheckbox';
 import BaseToggle from './BaseToggle';
 import SearchBottomSheetInput from './SearchBottomSheetInput';
 import BaseCheckboxInput from './BaseCheckboxInput';
+import BaseNumInputBox from './BaseNumInputBox';
 
 export {
   BaseCurrencyInput,
@@ -14,4 +15,5 @@ export {
   BaseCheckboxInput,
   BaseToggle,
   SearchBottomSheetInput,
+  BaseNumInputBox,
 };
