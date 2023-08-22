@@ -8,6 +8,7 @@ import {
   setAxiosResponseInterceptors,
   unsetAxiosAccessToken,
 } from '../apis/http';
+import { useVerifyEmail } from '../mutations/user';
 
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
 const AuthContext = createContext();
@@ -15,9 +16,11 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
+  const verifyEmailMutation = useVerifyEmail();
 
   const { isLoading: isLoginLoading } = loginMutation;
   const { isLoading: isSignupLoading } = signupMutation;
+  const { isLoading: isVerifyEmailLoading } = verifyEmailMutation;
 
   const [isLogin, setIsLogin] = useState(false);
 
@@ -25,10 +28,10 @@ const AuthProvider = ({ children }) => {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: async data => {
+        onSuccess: async resp => {
           try {
-            await AsyncStorage.setItem(ACCESS_TOKEN, data.access_token);
-            onLoginSuccess(data.access_token);
+            await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
+            onLoginSuccess(resp.access_token);
           } catch {
             throw new UserError('set access token error');
           }
@@ -37,12 +40,31 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const signup = ({ email = '', password = '' }) => {
+  const signup = (
+    { email = '', password = '' },
+    onSuccess = function () {},
+  ) => {
     signupMutation.mutate(
       { email, password },
       {
-        onSuccess: () => {
-          login({ email, password });
+        onSuccess: resp => {
+          onSuccess(resp);
+        },
+      },
+    );
+  };
+
+  const verifyEmail = ({ email = '', code = '' }) => {
+    verifyEmailMutation.mutate(
+      { email, code },
+      {
+        onSuccess: async resp => {
+          try {
+            await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
+            onLoginSuccess(resp.access_token);
+          } catch {
+            throw new UserError('set access token error');
+          }
         },
       },
     );
@@ -93,6 +115,14 @@ const AuthProvider = ({ children }) => {
     };
   };
 
+  const getVerifyEmailError = () => {
+    return {
+      isError: verifyEmailMutation.isError,
+      error: verifyEmailMutation.error,
+      reset: verifyEmailMutation.reset,
+    };
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -104,6 +134,9 @@ const AuthProvider = ({ children }) => {
         signup,
         isSignupLoading,
         getSignupError,
+        verifyEmail,
+        isVerifyEmailLoading,
+        getVerifyEmailError,
       }}>
       {children}
     </AuthContext.Provider>

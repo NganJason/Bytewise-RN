@@ -134,7 +134,6 @@ function Main() {
                 name={ROUTES.homeWithDrawer}
                 component={HomeWithDrawer}
               />
-              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
               <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
               <Stack.Screen
                 name={ROUTES.onboarding}
@@ -175,6 +174,7 @@ function Main() {
             <>
               <Stack.Screen name={ROUTES.login} component={LoginScreen} />
               <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
+              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
             </>
           )}
 

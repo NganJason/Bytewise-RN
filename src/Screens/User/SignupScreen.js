@@ -54,7 +54,9 @@ const SignupScreen = () => {
     if (!isValidationPassed) {
       return;
     }
-    signup(signupForm);
+    signup(signupForm, resp => {
+      navigation.navigate(ROUTES.otp, { email: resp?.user?.email || '' });
+    });
   };
 
   const signupError = getSignupError();

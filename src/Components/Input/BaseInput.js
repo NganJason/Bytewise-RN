@@ -54,6 +54,7 @@ const BaseInput = forwardRef(
     return (
       <Input
         ref={ref}
+        autoCapitalize="none"
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         onBlur={handleBlur}

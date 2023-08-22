@@ -1,6 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseButton,
@@ -8,49 +7,54 @@ import {
   BaseScreen,
   BaseText,
 } from '../../Components';
-import ROUTES from '../../_shared/constant/routes';
+import { AuthContext } from '../../_shared/context';
+import { useError } from '../../_shared/hooks';
 
 const OtpScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const navigation = useNavigation();
 
-  const { email = 'jason.ngan@hotmail.com' } = route?.params || {};
+  const { email = 'your email' } = route?.params || {};
+  const { verifyEmail, isVerifyEmailLoading, getVerifyEmailError } =
+    useContext(AuthContext);
 
-  const [otp, setOtp] = useState('');
+  // Make the loading longer to enhance UI
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const onOtpChange = e => {
-    setOtp(e);
-    if (e.length === 4) {
+    if (e.length === 6) {
       setIsOtpLoading(true);
       setTimeout(() => {
-        navigation.navigate(ROUTES.welcome);
+        verifyEmail({ email: email, code: e });
       }, 2000);
     }
   };
+  useEffect(() => {
+    if (!isVerifyEmailLoading) {
+      setIsOtpLoading(false);
+    }
+  }, [isVerifyEmailLoading]);
 
-  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  // Visual cue to indicate that users have successfully pressed resend
+  const [isResendLoading, setIsResendLoading] = useState(false);
   const onResend = () => {
-    // Visual cue to indicate that users have successfully pressed resend
-    setIsButtonLoading(true);
+    setIsResendLoading(true);
     setTimeout(() => {
-      setIsButtonLoading(false);
-    }, 2000);
+      setIsResendLoading(false);
+    }, 1000);
   };
 
-  const onBack = () => {
-    navigation.navigate(ROUTES.signup);
-  };
+  const verifyEmailError = getVerifyEmailError();
+  useError([verifyEmailError]);
 
   return (
-    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
+    <BaseScreen headerProps={{ allowBack: true }}>
       <View style={styles.screen}>
         <View style={styles.header}>
           <BaseText h3>Let's verify your</BaseText>
           <BaseText h3>email address</BaseText>
 
           <BaseText text3 margin={{ top: 10 }} color={theme.colors.color7}>
-            Please input the 4-digit code sent to
+            Please enter the 6-digit code sent to
           </BaseText>
           <BaseText text3 color={theme.colors.color7} bold>
             {email}
@@ -59,16 +63,16 @@ const OtpScreen = ({ route }) => {
 
         <View style={styles.otpContainer}>
           <BaseNumInputBox
-            numDigit={4}
+            numDigit={6}
             onChange={onOtpChange}
-            isLoading={isOtpLoading}
+            isLoading={isVerifyEmailLoading || isOtpLoading}
           />
         </View>
 
         <BaseButton
           type="clear"
           title="Resend"
-          loading={isButtonLoading}
+          loading={isResendLoading}
           onPress={onResend}
         />
       </View>

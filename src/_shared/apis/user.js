@@ -9,6 +9,7 @@ export class UserError extends AppError {
 const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';
+const VERIFY_EMAIL = '/verify_email';
 
 export const login = async ({ email = '', password = '' }) => {
   try {
@@ -45,6 +46,22 @@ export const signup = async ({ email = '', password = '' }) => {
 export const getUser = async () => {
   try {
     const body = await sendPostRequest(GET_USER, {});
+    return body;
+  } catch (e) {
+    throw new UserError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const verifyEmail = async ({ email = '', code = '' }) => {
+  try {
+    const body = await sendPostRequest(VERIFY_EMAIL, {
+      email: email,
+      code: code,
+    });
     return body;
   } catch (e) {
     throw new UserError({
