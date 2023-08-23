@@ -17,7 +17,7 @@ import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
 import { useGetHolding, useGetLots } from '../../../_shared/query';
-import { CURRENCY_USD } from '../../../_shared/util';
+import { CURRENCY_USD, tsToDateTimeStr } from '../../../_shared/util';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -89,7 +89,7 @@ const HoldingBreakdownScreen = ({ route }) => {
           </BaseText>
           <InfoToolTip
             iconSize={18}
-            message={genStockUpdateTimeMsg(quote.update_time)}
+            message={genStockUpdateTimeMsg(tsToDateTimeStr(quote.update_time))}
           />
         </View>
         <BaseText text5 margin={{ top: 8, bottom: 4 }}>

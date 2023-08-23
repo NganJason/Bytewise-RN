@@ -19,7 +19,7 @@ import {
 } from '../../../Components';
 import { useGetAccount } from '../../../_shared/query';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
-import { getStockUpdateTime } from '../../../_shared/util';
+import { getStockUpdateTime, tsToDateTimeStr } from '../../../_shared/util';
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -86,7 +86,9 @@ const InvestmentBreakdownScreen = ({ route }) => {
             </BaseText>
             {getStockUpdateTime(holdings) !== 0 && (
               <InfoToolTip
-                message={genStockUpdateTimeMsg(getStockUpdateTime(holdings))}
+                message={genStockUpdateTimeMsg(
+                  tsToDateTimeStr(getStockUpdateTime(holdings)),
+                )}
               />
             )}
           </View>

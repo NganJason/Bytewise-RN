@@ -1,11 +1,5 @@
-import { tsToDateTimeStr } from '../util';
-
-export const genStockUpdateTimeMsg = updateTime => {
-  let formattedTime = 'NA';
-  if (updateTime !== 0) {
-    formattedTime = tsToDateTimeStr(updateTime);
-  }
-  return `Stock market info is updated every 30 minutes.\n\nLast updated at: ${formattedTime}`;
+export const genStockUpdateTimeMsg = dateTimeStr => {
+  return `Stock market info is updated every 30 minutes.\n\nLast updated at: ${dateTimeStr}`;
 };
 
 export const toolTipMessage = {
