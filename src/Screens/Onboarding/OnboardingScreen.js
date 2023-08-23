@@ -12,6 +12,7 @@ import {
 import { OnboardingDataContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import { useDimension, useError } from '../../_shared/hooks';
+import { useInitUser } from '../../_shared/mutations/user';
 import AccountOnboarding from './AccountOnboarding';
 import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
@@ -25,7 +26,8 @@ const OnboardingScreen = () => {
   const styles = getStyles(theme, screenHeight);
   const { commitCategories, commitBudgets, commitAccounts, commitInvestment } =
     useContext(OnboardingDataContext);
-  const { markUserOnboarded } = useContext(UserMetaContext);
+  const { setOnboardingStatus } = useContext(UserMetaContext);
+  const initUser = useInitUser();
 
   const [activeTab, setActiveTab] = useState(0);
   const onButtonPress = () => {
@@ -61,6 +63,17 @@ const OnboardingScreen = () => {
       return;
     }
     setActiveTab(activeTab + 1);
+  };
+
+  const markUserOnboarded = () => {
+    initUser.mutate(
+      {},
+      {
+        onSuccess: () => {
+          setOnboardingStatus(true);
+        },
+      },
+    );
   };
 
   const renderTabContent = () => {

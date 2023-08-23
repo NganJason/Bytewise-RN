@@ -1,7 +1,7 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
-import { useContext } from 'react';
+import { useContext, createContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
@@ -27,7 +27,7 @@ const CustomDrawer = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { logout } = useContext(AuthContext);
+  const { logout = function () {} } = useContext(AuthContext) || {};
 
   const getUserQuery = useGetUser({});
   const getUsername = () => {

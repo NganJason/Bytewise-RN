@@ -57,7 +57,7 @@ const WAIT_TIME_FOR_SPLASH_SCREEN = 2000;
 
 function Main() {
   const { isLogin } = useContext(AuthContext);
-  const { isUserNew } = useContext(UserMetaContext);
+  const { isUserOnboarded } = useContext(UserMetaContext);
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -134,7 +134,7 @@ function Main() {
       );
     }
 
-    if (isUserNew) {
+    if (!isUserOnboarded()) {
       return (
         <>
           <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />

@@ -1,42 +1,50 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useEffect, useState } from 'react';
 import { UserError } from '../apis/user';
-import { useInitUser } from '../mutations/user';
-import { checkIsUserNew } from '../util';
-import { useGetUser } from '../query';
 
 const USER_META = 'USER_META';
 const UserMetaContext = createContext();
 
 const UserMetaProvider = ({ children }) => {
-  const [isUserNew, setIsUserNew] = useState(false);
-  // const getUser = useGetUser();
-  const initUser = useInitUser();
+  const [userMeta, setUserMeta] = useState({ onboardingCompleted: false });
 
-  // useEffect(() => {
-  //   const { user = null } = getUser?.data || {};
-  //   if (user !== null) {
-  //     console.log(checkIsUserNew(user.user_flag));
-  //     setIsUserNew(checkIsUserNew(user.user_flag));
-  //   }
-  // }, [getUser.data]);
-
-  const markUserOnboarded = () => {
-    initUser.mutate(
-      {},
-      {
-        onSuccess: () => {
-          setIsUserNew(false);
-        },
-      },
-    );
+  const isUserOnboarded = () => {
+    return userMeta.onboardingCompleted;
   };
+
+  const setOnboardingStatus = status => {
+    let newMeta = { ...userMeta, onboardingCompleted: status };
+    setUserMeta(newMeta);
+    save(newMeta);
+  };
+
+  const save = async meta => {
+    try {
+      await AsyncStorage.setItem(USER_META, JSON.stringify(meta));
+    } catch {
+      throw new UserError('set user meta error');
+    }
+  };
+
+  useEffect(() => {
+    async function getMeta() {
+      try {
+        const meta = await AsyncStorage.getItem(USER_META);
+        if (meta !== null) {
+          setUserMeta(JSON.parse(meta));
+        }
+      } catch {
+        throw new UserError('get user meta error');
+      }
+    }
+    getMeta();
+  }, []);
 
   return (
     <UserMetaContext.Provider
       value={{
-        isUserNew,
-        markUserOnboarded,
+        isUserOnboarded,
+        setOnboardingStatus,
       }}>
       {children}
     </UserMetaContext.Provider>

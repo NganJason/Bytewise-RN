@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseButton,
@@ -8,6 +9,7 @@ import {
   BaseText,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
+import { AuthContext } from '../../_shared/context';
 import { useDimension } from '../../_shared/hooks';
 
 const items = [
@@ -38,6 +40,7 @@ const WelcomeScreen = () => {
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
+  const { logout } = useContext(AuthContext);
 
   const renderItems = () => {
     let rows = [];
@@ -59,8 +62,13 @@ const WelcomeScreen = () => {
 
     return rows;
   };
+
+  const onBack = () => {
+    logout();
+  };
+
   return (
-    <BaseScreen>
+    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
       <View style={styles.screen}>
         <View>
           <BaseText h1>Welcome!</BaseText>
@@ -95,7 +103,7 @@ const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     screen: {
       flex: 1,
-      paddingTop: screenHeight * 0.1,
+      // paddingTop: screenHeight * 0.1,
     },
     body: {
       flex: 1,

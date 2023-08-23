@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useLogin, useSignup } from '../mutations';
@@ -9,6 +9,8 @@ import {
   unsetAxiosAccessToken,
 } from '../apis/http';
 import { useVerifyEmail } from '../mutations/user';
+import { UserMetaContext } from './UserMetaContext';
+import { checkIsUserOnboarded } from '../util/user';
 
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
 const AuthContext = createContext();
@@ -17,6 +19,7 @@ const AuthProvider = ({ children }) => {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
   const verifyEmailMutation = useVerifyEmail();
+  const { setOnboardingStatus } = useContext(UserMetaContext);
 
   const { isLoading: isLoginLoading } = loginMutation;
   const { isLoading: isSignupLoading } = signupMutation;
@@ -32,6 +35,9 @@ const AuthProvider = ({ children }) => {
           try {
             await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
             onLoginSuccess(resp.access_token);
+            setOnboardingStatus(
+              checkIsUserOnboarded(resp?.user?.user_flag || 0),
+            );
           } catch {
             throw new UserError('set access token error');
           }
