@@ -10,6 +10,7 @@ const GET_ACCOUNTS = '/get_accounts';
 const GET_ACCOUNT = '/get_account';
 const CREATE_ACCOUNT = '/create_account';
 const UPDATE_ACCOUNT = '/update_account';
+const CREATE_ACCOUNTS = '/create_accounts';
 
 export const getAccount = async ({ account_id = '' } = {}) => {
   try {
@@ -78,6 +79,21 @@ export const updateAccount = async ({
       balance: balance,
       note: note,
       update_mode: update_mode,
+    });
+    return body;
+  } catch (e) {
+    throw new AccountError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const createAccounts = async ({ accounts = [] } = {}) => {
+  try {
+    const body = await sendPostRequest(CREATE_ACCOUNTS, {
+      accounts: accounts,
     });
     return body;
   } catch (e) {

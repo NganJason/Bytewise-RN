@@ -47,6 +47,7 @@ import {
   mergeTransactionsAccount,
   mergeTransactionAccount,
 } from './transaction';
+import { checkIsUserNew } from './user';
 
 export {
   getEquityType,
@@ -95,4 +96,5 @@ export {
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
+  checkIsUserNew,
 };

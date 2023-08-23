@@ -39,10 +39,6 @@ const WelcomeScreen = () => {
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
 
-  const onBack = () => {
-    navigation.navigate(ROUTES.signup);
-  };
-
   const renderItems = () => {
     let rows = [];
 
@@ -64,30 +60,32 @@ const WelcomeScreen = () => {
     return rows;
   };
   return (
-    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
-      <View>
-        <BaseText h1>Welcome!</BaseText>
-        <BaseText h2 margin={{ vertical: 10 }}>
-          Let's get your started
-        </BaseText>
+    <BaseScreen>
+      <View style={styles.screen}>
+        <View>
+          <BaseText h1>Welcome!</BaseText>
+          <BaseText h2 margin={{ vertical: 10 }}>
+            Let's get you started
+          </BaseText>
 
-        <BaseText text2 margin={{ top: 40 }}>
-          Here's what we're gonna do next
-        </BaseText>
-        <BaseDivider margin={10} />
-      </View>
+          <BaseText text2 margin={{ top: 40 }}>
+            Here's what we're gonna do next
+          </BaseText>
+          <BaseDivider margin={10} />
+        </View>
 
-      <View style={styles.body}>{renderItems()}</View>
+        <View style={styles.body}>{renderItems()}</View>
 
-      <View style={styles.footer}>
-        <BaseButton
-          title="Let's Go!"
-          size="lg"
-          width={200}
-          onPress={() => {
-            navigation.navigate(ROUTES.onboarding);
-          }}
-        />
+        <View style={styles.footer}>
+          <BaseButton
+            title="Let's go!"
+            size="lg"
+            width={200}
+            onPress={() => {
+              navigation.navigate(ROUTES.onboarding);
+            }}
+          />
+        </View>
       </View>
     </BaseScreen>
   );
@@ -95,6 +93,10 @@ const WelcomeScreen = () => {
 
 const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
+    screen: {
+      flex: 1,
+      paddingTop: screenHeight * 0.1,
+    },
     body: {
       flex: 1,
       paddingTop: screenHeight * 0.015,

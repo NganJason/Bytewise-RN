@@ -10,6 +10,7 @@ const LOG_IN = '/log_in';
 const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';
 const VERIFY_EMAIL = '/verify_email';
+const INIT_USER = '/init_user';
 
 export const login = async ({ email = '', password = '' }) => {
   try {
@@ -62,6 +63,19 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
       email: email,
       code: code,
     });
+    return body;
+  } catch (e) {
+    throw new UserError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const initUser = async ({}) => {
+  try {
+    const body = await sendPostRequest(INIT_USER, {});
     return body;
   } catch (e) {
     throw new UserError({

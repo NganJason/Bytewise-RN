@@ -1,5 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
-import { login, signup, verifyEmail } from '../apis/user';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { initUser, login, signup, verifyEmail } from '../apis/user';
+import { queryKeys } from '../query';
 
 export const useLogin = (opts = {}) => {
   return useMutation({
@@ -24,6 +25,18 @@ export const useVerifyEmail = (opts = {}) => {
     mutationFn: verifyEmail,
     onSuccess: () => {
       opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useInitUser = (opts = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: initUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.user]);
+      opts.onSuccess && opts.onSuccess;
     },
   });
 };

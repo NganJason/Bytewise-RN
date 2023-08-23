@@ -9,9 +9,9 @@ import {
   BaseScreen,
   BaseText,
 } from '../../Components';
-import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
-import { useDimension } from '../../_shared/hooks';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
+import { useDimension, useError } from '../../_shared/hooks';
 import AccountOnboarding from './AccountOnboarding';
 import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
@@ -23,31 +23,44 @@ const OnboardingScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
-  const navigation = useNavigation();
-  const { commitData, rollbackData } = useContext(OnboardingDataContext);
+  const { commitCategories, commitBudgets, commitAccounts, commitInvestment } =
+    useContext(OnboardingDataContext);
+  const { markUserOnboarded } = useContext(UserMetaContext);
 
   const [activeTab, setActiveTab] = useState(0);
-  const onNext = () => {
-    setActiveTab(activeTab + 1);
-    commitData();
-  };
-  const onBack = () => {
-    // if (activeTab === 0) {
-    //   navigation.goBack();
-    // } else {
-    //   setActiveTab(activeTab - 1);
-    // }
-    navigation.goBack(ROUTES.signup);
-  };
-  const onSkip = () => {
-    setActiveTab(activeTab + 1);
-    rollbackData();
+  const onButtonPress = () => {
+    let tabValue = tabs[activeTab];
+    switch (tabValue) {
+      case 'category':
+        commitCategories(nextPage);
+        break;
+      case 'budget':
+        commitBudgets(nextPage);
+        break;
+      case 'account':
+        commitAccounts(nextPage);
+        break;
+      case 'investment':
+        commitInvestment(markUserOnboarded);
+        break;
+      default:
+        break;
+    }
   };
 
-  const onSubmit = () => {};
+  const onSkip = () => {
+    nextPage();
+  };
 
   const isLastTab = () => {
     return activeTab === tabs.length - 1;
+  };
+
+  const nextPage = () => {
+    if (isLastTab()) {
+      return;
+    }
+    setActiveTab(activeTab + 1);
   };
 
   const renderTabContent = () => {
@@ -66,25 +79,34 @@ const OnboardingScreen = () => {
     }
   };
 
-  return (
-    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
-      <BaseProgressTab numTab={4} activeTab={activeTab} />
-      <View style={styles.body}>{renderTabContent()}</View>
-      <View style={styles.footer}>
-        <BaseButton
-          title={isLastTab() ? 'Submit' : 'Next'}
-          size="lg"
-          width={200}
-          onPress={isLastTab() ? onSubmit : onNext}
-        />
+  const isSubmitButtonLoading = () => {
+    return false;
+  };
 
-        {!isLastTab() && (
-          <TouchableOpacity onPress={onSkip}>
-            <BaseText text2 style={styles.skipText}>
-              Skip
-            </BaseText>
-          </TouchableOpacity>
-        )}
+  return (
+    <BaseScreen>
+      <View style={styles.screen}>
+        <BaseProgressTab numTab={4} activeTab={activeTab} />
+        <View style={styles.body}>{renderTabContent()}</View>
+        <View style={styles.footer}>
+          <BaseButton
+            title={isLastTab() ? 'Submit' : 'Next'}
+            size="lg"
+            width={200}
+            onPress={onButtonPress}
+            // isLoading={
+            //   isLastTab() ? isSubmitButtonLoading() : isNextButtonLoading()
+            // }
+          />
+
+          {!isLastTab() && (
+            <TouchableOpacity onPress={onSkip}>
+              <BaseText text2 style={styles.skipText}>
+                Skip
+              </BaseText>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </BaseScreen>
   );
@@ -92,6 +114,10 @@ const OnboardingScreen = () => {
 
 const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
+    screen: {
+      flex: 1,
+      paddingTop: screenHeight * 0.12,
+    },
     body: {
       flex: 1,
       paddingTop: screenHeight * 0.015,

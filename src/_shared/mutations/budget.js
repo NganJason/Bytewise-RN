@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createBudget, deleteBudget, updateBudget } from '../apis/budget';
+import {
+  createBudget,
+  createBudgets,
+  deleteBudget,
+  updateBudget,
+} from '../apis/budget';
 import { queryKeys } from '../query';
 
 export const useCreateBudget = (opts = {}) => {
@@ -30,6 +35,14 @@ export const useDeleteBudget = (opts = {}) => {
   return useMutation(deleteBudget, {
     onSuccess: resp => {
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);
+      opts.onSuccess && opts.onSuccess(resp);
+    },
+  });
+};
+
+export const useCreateBudgets = (opts = {}) => {
+  return useMutation(createBudgets, {
+    onSuccess: resp => {
       opts.onSuccess && opts.onSuccess(resp);
     },
   });

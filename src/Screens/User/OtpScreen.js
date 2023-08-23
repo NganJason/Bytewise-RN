@@ -18,7 +18,7 @@ const OtpScreen = ({ route }) => {
   const { verifyEmail, isVerifyEmailLoading, getVerifyEmailError } =
     useContext(AuthContext);
 
-  // Make the loading longer to enhance UI
+  // Set loading longer to prevent flickering
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const onOtpChange = e => {
     if (e.length === 6) {

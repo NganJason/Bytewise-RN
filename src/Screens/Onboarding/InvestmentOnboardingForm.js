@@ -14,6 +14,7 @@ import {
   SearchBottomSheetInput,
   TouchInput,
 } from '../../Components';
+import { HOLDING_TYPE_DEFAULT } from '../../_shared/apis/enum';
 import { toolTipMessage } from '../../_shared/constant/message';
 import { OnboardingDataContext } from '../../_shared/context';
 import { useValidation } from '../../_shared/hooks';
@@ -41,6 +42,7 @@ const InvestmentOnboardingForm = () => {
     cost_per_share: 0,
     shares: 0,
     trade_date: new Date().valueOf(),
+    holding_type: HOLDING_TYPE_DEFAULT,
   });
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();

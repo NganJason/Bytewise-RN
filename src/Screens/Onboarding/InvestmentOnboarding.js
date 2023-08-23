@@ -19,11 +19,12 @@ const AccountOnboarding = () => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { setInvestmentAccountName, data } = useContext(OnboardingDataContext);
-  let { accountName = '', holdings = [] } = data?.investmentAccount || {};
+  const { addInvestmentAccountName, data } = useContext(OnboardingDataContext);
+  let { account_name: accountName = '', holdings = [] } =
+    data?.investmentAccount || {};
 
   const onAccountNameChange = e => {
-    setInvestmentAccountName(e);
+    addInvestmentAccountName(e);
   };
 
   const renderHoldings = () => {

@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../query';
-import { createCategory, updateCategory } from '../apis/category';
+import {
+  createCategories,
+  createCategory,
+  updateCategory,
+} from '../apis/category';
 
 export const useCreateCategory = (opts = {}) => {
   const queryClient = useQueryClient();
@@ -31,6 +35,14 @@ export const useUpdateCategory = (opts = {}) => {
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);
 
       opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useCreateCategories = (opts = {}) => {
+  return useMutation(createCategories, {
+    onSuccess: resp => {
+      opts.onSuccess && opts.onSuccess(resp);
     },
   });
 };

@@ -74,3 +74,11 @@ export const BUDGET_REPEATS = {
   [BUDGET_REPEAT_NOW_TO_FUTURE]: 'This month and future months',
   [BUDGET_REPEAT_ALL_TIME]: 'All past and future months',
 };
+
+export const USER_FLAG_DEFAULT = 0;
+export const USER_FLAG_NEW_USER = 1;
+
+export const USER_FLAGS = {
+  [USER_FLAG_DEFAULT]: 'Default user',
+  [USER_FLAG_NEW_USER]: 'New user',
+};

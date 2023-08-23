@@ -10,6 +10,7 @@ const GET_CATEGORIES_BUDGET = '/get_categories_budget';
 const CREATE_BUDGET = '/create_budget';
 const UPDATE_BUDGET = '/update_budget';
 const DELETE_BUDGET = '/delete_budget';
+const CREATE_BUDGETS = '/create_budgets';
 
 export const getCategoriesBudget = async ({
   category_ids = [],
@@ -92,6 +93,21 @@ export const deleteBudget = async ({
       budget_date: budget_date,
       category_id: category_id,
       budget_repeat: budget_repeat,
+    });
+    return body;
+  } catch (e) {
+    throw new BudgetError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const createBudgets = async ({ budgets = [] } = {}) => {
+  try {
+    const body = await sendPostRequest(CREATE_BUDGETS, {
+      budgets: budgets,
     });
     return body;
   } catch (e) {

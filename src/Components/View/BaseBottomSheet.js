@@ -6,6 +6,7 @@ import { BaseText } from '../Text';
 import { BaseButton } from '../Touch';
 import { useDimension } from '../../_shared/hooks';
 import BaseRow from './BaseRow';
+import BaseScrollView from './BaseScrollView';
 
 const BaseBottomSheet = ({
   isVisible = false,
@@ -72,7 +73,11 @@ const BaseBottomSheet = ({
             onPress={close}
           />
         </View>
-        <View style={styles.body}>{renderRows()}</View>
+        <BaseScrollView
+          style={styles.body}
+          showsVerticalScrollIndicator={false}>
+          {renderRows()}
+        </BaseScrollView>
       </View>
     </BottomSheet>
   );
@@ -84,6 +89,7 @@ const getStyles = (theme, screenHeight) =>
   StyleSheet.create({
     container: {
       minHeight: screenHeight * 0.3,
+      maxHeight: screenHeight * 0.5,
       backgroundColor: theme.colors.white,
       borderRadius: 15,
       paddingTop: theme.spacing.md,

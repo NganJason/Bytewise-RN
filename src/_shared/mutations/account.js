@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createAccount, updateAccount } from '../apis/account';
+import { createAccount, createAccounts, updateAccount } from '../apis/account';
 import { queryKeys } from '../query';
 
 export const useCreateAccount = (opts = {}) => {
@@ -30,6 +30,14 @@ export const useUpdateAccount = (opts = {}) => {
 
       // refetch all transactions since account name might have changed
       opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useCreateAccounts = (opts = {}) => {
+  return useMutation(createAccounts, {
+    onSuccess: resp => {
+      opts.onSuccess && opts.onSuccess(resp);
     },
   });
 };

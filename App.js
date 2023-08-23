@@ -40,6 +40,10 @@ import BottomToast from './src/Components/Common/BottomToast';
 import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
+import {
+  UserMetaContext,
+  UserMetaProvider,
+} from './src/_shared/context/UserMetaContext';
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
@@ -53,6 +57,7 @@ const WAIT_TIME_FOR_SPLASH_SCREEN = 2000;
 
 function Main() {
   const { isLogin } = useContext(AuthContext);
+  const { isUserNew } = useContext(UserMetaContext);
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -118,6 +123,63 @@ function Main() {
     };
   }, []);
 
+  const renderPrivateRoute = () => {
+    if (!isLogin) {
+      return (
+        <>
+          <Stack.Screen name={ROUTES.login} component={LoginScreen} />
+          <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
+          <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
+        </>
+      );
+    }
+
+    if (isUserNew) {
+      return (
+        <>
+          <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
+          <Stack.Screen name={ROUTES.onboarding} component={OnboardingScreen} />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Stack.Screen name={ROUTES.homeWithDrawer} component={HomeWithDrawer} />
+        <Stack.Screen
+          name={ROUTES.transactionForm}
+          component={TransactionForm}
+        />
+        <Stack.Screen
+          name={ROUTES.categoryEdit}
+          component={CategoryEditScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.categoryBreakdown}
+          component={CategoryBreakdownScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.categoriesOverview}
+          component={CategoryOverviewScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.accountBreakdown}
+          component={AccountBreakdownScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.investmentBreakdown}
+          component={InvestmentBreakdownScreen}
+        />
+        <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
+        <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
+        <Stack.Screen
+          name={ROUTES.holdingBreakdown}
+          component={HoldingBreakdownScreen}
+        />
+      </>
+    );
+  };
+
   const render = () => {
     if (showSplashScreen) {
       return <SplashScreen />;
@@ -128,56 +190,7 @@ function Main() {
         <Stack.Navigator
           initialRouteName={ROUTES.homeWithDrawer}
           screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-          {isLogin ? (
-            <>
-              <Stack.Screen
-                name={ROUTES.homeWithDrawer}
-                component={HomeWithDrawer}
-              />
-              <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
-              <Stack.Screen
-                name={ROUTES.onboarding}
-                component={OnboardingScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.transactionForm}
-                component={TransactionForm}
-              />
-              <Stack.Screen
-                name={ROUTES.categoryEdit}
-                component={CategoryEditScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.categoryBreakdown}
-                component={CategoryBreakdownScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.categoriesOverview}
-                component={CategoryOverviewScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.accountBreakdown}
-                component={AccountBreakdownScreen}
-              />
-              <Stack.Screen
-                name={ROUTES.investmentBreakdown}
-                component={InvestmentBreakdownScreen}
-              />
-              <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
-              <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
-              <Stack.Screen
-                name={ROUTES.holdingBreakdown}
-                component={HoldingBreakdownScreen}
-              />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name={ROUTES.login} component={LoginScreen} />
-              <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
-              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
-            </>
-          )}
-
+          {renderPrivateRoute()}
           <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
           <Stack.Screen
             name={ROUTES.budgetOnboardingForm}
@@ -220,9 +233,11 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Main />
-      </AuthProvider>
+      <UserMetaProvider>
+        <AuthProvider>
+          <Main />
+        </AuthProvider>
+      </UserMetaProvider>
     </QueryClientProvider>
   );
 };

@@ -1,5 +1,14 @@
 import { createContext, useState } from 'react';
-import { BUDGET_TYPE_MONTHLY, TRANSACTION_TYPE_EXPENSE } from '../apis/enum';
+import {
+  ACCOUNT_TYPE_INVESTMENT,
+  BUDGET_REPEAT_ALL_TIME,
+  BUDGET_TYPE_MONTHLY,
+  TRANSACTION_TYPE_EXPENSE,
+} from '../apis/enum';
+import { useCreateAccounts } from '../mutations/account';
+import { useCreateBudgets } from '../mutations/budget';
+import { useCreateCategories } from '../mutations/category';
+import { getDateStringWithoutDelim } from '../util';
 
 const DefaultCategoryBudgets = [
   {
@@ -33,28 +42,17 @@ const defaultData = {
   categoryBudgets: DefaultCategoryBudgets,
   accounts: [],
   investmentAccount: {
-    accountName: '',
+    account_name: '',
     holdings: [],
   },
 };
 
 const OnboardingDataContext = createContext();
 const OnboardingDataProvider = ({ children }) => {
+  // ---------------- Meta ----------------
   const [meta, setMeta] = useState({
     budgetTypeDescShowed: false,
   });
-  const [data, setData] = useState(defaultData);
-  const [committedData, setCommittedData] = useState(
-    JSON.stringify(defaultData),
-  );
-
-  const commitData = () => {
-    setCommittedData(JSON.stringify(data));
-  };
-
-  const rollbackData = () => {
-    setData(JSON.parse(committedData));
-  };
 
   const shouldShowBudgetTypeDesc = () => {
     return !meta.budgetTypeDescShowed;
@@ -63,6 +61,9 @@ const OnboardingDataProvider = ({ children }) => {
   const markBudgetTypeDesc = () => {
     setMeta({ ...meta, budgetTypeDescShowed: true });
   };
+
+  // ---------------- Data ----------------
+  const [data, setData] = useState(defaultData);
 
   const addCategory = e => {
     const { categoryBudgets = [] } = data;
@@ -84,7 +85,12 @@ const OnboardingDataProvider = ({ children }) => {
   ) => {
     const { categoryBudgets = [] } = data;
     const newCategoryBudgets = [...categoryBudgets];
-    newCategoryBudgets[idx].budget = budget;
+    newCategoryBudgets[idx].budget = {
+      ...budget,
+      budget_date: getDateStringWithoutDelim(),
+      category_id: newCategoryBudgets[idx]?.category_id || '',
+      budget_repeat: BUDGET_REPEAT_ALL_TIME,
+    };
     setData({ ...data, categoryBudgets: newCategoryBudgets });
   };
 
@@ -101,10 +107,10 @@ const OnboardingDataProvider = ({ children }) => {
     setData({ ...data, accounts: newAccounts });
   };
 
-  const setInvestmentAccountName = (name = '') => {
+  const addInvestmentAccountName = (name = '') => {
     setData({
       ...data,
-      investmentAccount: { ...data.investmentAccount, accountName: name },
+      investmentAccount: { ...data.investmentAccount, account_name: name },
     });
   };
 
@@ -118,15 +124,76 @@ const OnboardingDataProvider = ({ children }) => {
     });
   };
 
+  // ---------------- Commit data ----------------
+  const createCategories = useCreateCategories();
+  const createBudgets = useCreateBudgets();
+  const createAccounts = useCreateAccounts();
+
+  const commitCategories = (onSuccess = function () {}) => {
+    createCategories.mutate(
+      { categories: data.categoryBudgets },
+      {
+        onSuccess: resp => {
+          const { categories = [] } = resp || {};
+          let newCategories = categories.map(category => {
+            return { ...category, budget: null };
+          });
+          setData({ ...data, categoryBudgets: newCategories });
+
+          onSuccess();
+        },
+      },
+    );
+  };
+
+  const commitBudgets = onSuccess => {
+    let budgets = [];
+    data.categoryBudgets.map(cb => {
+      if (cb.budget !== null) {
+        budgets.push(cb?.budget);
+      }
+    });
+
+    if (budgets.length > 0) {
+      createBudgets.mutate({ budgets: budgets }, { onSuccess: onSuccess });
+    } else {
+      onSuccess();
+    }
+  };
+
+  const commitAccounts = onSuccess => {
+    let { accounts = [] } = data;
+    if (accounts.length > 0) {
+      createAccounts.mutate({ accounts: accounts }, { onSuccess: onSuccess });
+    } else {
+      onSuccess();
+    }
+  };
+
+  const commitInvestment = onSuccess => {
+    let { investmentAccount = { account_name: '', holdings: [] } } = data;
+
+    if (investmentAccount.account_name !== '') {
+      let investmentAccountReq = {
+        account_name: investmentAccount.account_name,
+        account_type: ACCOUNT_TYPE_INVESTMENT,
+        holdings: investmentAccount.holdings,
+      };
+
+      createAccounts.mutate(
+        { accounts: [investmentAccountReq] },
+        { onSuccess: onSuccess },
+      );
+    } else {
+      onSuccess();
+    }
+  };
+
   return (
     <OnboardingDataContext.Provider
       value={{
         data,
         setData,
-        committedData,
-        setCommittedData,
-        commitData,
-        rollbackData,
         shouldShowBudgetTypeDesc,
         markBudgetTypeDesc,
         addCategory,
@@ -134,8 +201,12 @@ const OnboardingDataProvider = ({ children }) => {
         addBudget,
         addAccount,
         updateAccount,
-        setInvestmentAccountName,
+        addInvestmentAccountName,
         addInvestmentHolding,
+        commitCategories,
+        commitBudgets,
+        commitAccounts,
+        commitInvestment,
       }}>
       {children}
     </OnboardingDataContext.Provider>
