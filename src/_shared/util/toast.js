@@ -1,4 +1,4 @@
-import { BaseToast } from '../../Components/View';
+import { BaseToast } from '../../Components/View/BaseToast';
 import { ErrCode } from '../constant/errcode';
 import { defaultErrorText1, defaultErrorText2 } from '../constant/message';
 
