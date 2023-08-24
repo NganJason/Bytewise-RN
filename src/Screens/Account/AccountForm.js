@@ -26,11 +26,7 @@ import { useCreateAccount, useUpdateAccount } from '../../_shared/mutations';
 import ROUTES from '../../_shared/constant/routes';
 import { validateAccount } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
-import {
-  isAccountTypeAsset,
-  isAccountTypeDebt,
-  getAccountTypes,
-} from '../../_shared/util';
+import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 import { OnboardingDataContext } from '../../_shared/context';
 
 const AccountForm = ({ route }) => {
@@ -239,6 +235,24 @@ const AccountForm = ({ route }) => {
     return accountForm.account_type === ACCOUNT_TYPE_LOAN && !isAddAccount();
   };
 
+  const getAccountTypes = () => {
+    let accountTypes = [];
+    for (const account_enum in ACCOUNT_TYPES) {
+      if (isOnboarding) {
+        if (account_enum == ACCOUNT_TYPE_INVESTMENT) {
+          continue;
+        }
+      }
+
+      accountTypes.push({
+        name: ACCOUNT_TYPES[account_enum],
+        value: Number(account_enum),
+      });
+    }
+
+    return accountTypes;
+  };
+
   useError([getAccount, createAccount, updateAccount]);
 
   return (
@@ -267,6 +281,7 @@ const AccountForm = ({ route }) => {
           clearButtonMode="always"
           maxLength={120}
           errorMessage={showValidation && formErrors.account_name}
+          autoFocus
         />
 
         <TouchInput

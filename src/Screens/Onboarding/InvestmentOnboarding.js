@@ -93,6 +93,7 @@ const AccountOnboarding = () => {
           onChangeText={onAccountNameChange}
           placeholder="My US Stocks"
           containerStyle={styles.accountInput}
+          autoFocus
         />
 
         <BaseRow dividerMargin={0} disabled>

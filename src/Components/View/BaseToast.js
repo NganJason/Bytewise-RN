@@ -38,7 +38,7 @@ const BaseErrorToast = props => {
   );
 };
 
-const BaseToast = () => {
+export const BaseToast = () => {
   const toastTheme = {
     error: BaseErrorToast,
     success: BaseSuccessToast,

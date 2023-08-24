@@ -7,7 +7,6 @@ import {
 import {
   getBudgetTypes,
   getDefaultMonthlyBudgetBreakdown,
-  getAccountTypes,
   getBudgetAmountFromBreakdown,
 } from './budget';
 import { getIDToCategoryMap } from './category';
@@ -56,7 +55,6 @@ export {
   getIDToAccountMap,
   getBudgetTypes,
   getDefaultMonthlyBudgetBreakdown,
-  getAccountTypes,
   getBudgetAmountFromBreakdown,
   getIDToCategoryMap,
   debounce,

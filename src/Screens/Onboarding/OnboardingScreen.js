@@ -28,8 +28,14 @@ const OnboardingScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
-  const { commitCategories, commitBudgets, commitAccounts, commitInvestment } =
-    useContext(OnboardingDataContext);
+  const {
+    commitCategories,
+    commitBudgets,
+    commitAccounts,
+    commitInvestment,
+    getWithErrors,
+    isCommitLoading,
+  } = useContext(OnboardingDataContext);
   const { setOnboardingStatus } = useContext(UserMetaContext);
   const initUser = useInitUser();
 
@@ -100,9 +106,7 @@ const OnboardingScreen = () => {
     return !isLastTab() && tabs[activeTab].canSkip;
   };
 
-  const isSubmitButtonLoading = () => {
-    return false;
-  };
+  useError([...getWithErrors(), initUser]);
 
   return (
     <BaseScreen>
@@ -115,9 +119,7 @@ const OnboardingScreen = () => {
             size="lg"
             width={200}
             onPress={onButtonPress}
-            // isLoading={
-            //   isLastTab() ? isSubmitButtonLoading() : isNextButtonLoading()
-            // }
+            isLoading={isCommitLoading}
           />
 
           {canSkip() && (
@@ -137,7 +139,7 @@ const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     screen: {
       flex: 1,
-      paddingTop: screenHeight * 0.12,
+      paddingTop: screenHeight * 0.1,
     },
     body: {
       flex: 1,

@@ -103,7 +103,6 @@ const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     screen: {
       flex: 1,
-      // paddingTop: screenHeight * 0.1,
     },
     body: {
       flex: 1,

@@ -12,12 +12,16 @@ import {
   BudgetTypeDesc,
   TouchInput,
 } from '../../Components';
-import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
+import {
+  BUDGET_REPEAT_ALL_TIME,
+  BUDGET_TYPES,
+  BUDGET_TYPE_MONTHLY,
+} from '../../_shared/apis/enum';
 import {
   BottomToastContext,
   OnboardingDataContext,
 } from '../../_shared/context';
-import { getBudgetTypes } from '../../_shared/util';
+import { getBudgetTypes, getDateStringWithoutDelim } from '../../_shared/util';
 
 const BudgetOnboardingForm = ({ route }) => {
   const { theme } = useTheme();
@@ -27,7 +31,7 @@ const BudgetOnboardingForm = ({ route }) => {
 
   const { categoryIdx = 0 } = route?.params || {};
 
-  const { data, addBudget, shouldShowBudgetTypeDesc, markBudgetTypeDesc } =
+  const { data, addBudget, isBudgetTypeDescShown, markBudgetTypeDesc } =
     useContext(OnboardingDataContext);
   const { categoryBudgets = [] } = data;
   const { category_name: categoryName = '', budget = {} } =
@@ -36,10 +40,12 @@ const BudgetOnboardingForm = ({ route }) => {
   const [budgetForm, setBudgetForm] = useState({
     amount: budget?.amount || 0,
     budget_type: budget?.budget_type || BUDGET_TYPE_MONTHLY,
+    budget_repeat: BUDGET_REPEAT_ALL_TIME,
+    budget_date: getDateStringWithoutDelim(),
   });
 
   useEffect(() => {
-    if (shouldShowBudgetTypeDesc()) {
+    if (!isBudgetTypeDescShown()) {
       toast.custom(<BudgetTypeDesc />);
       markBudgetTypeDesc();
     }
@@ -102,7 +108,7 @@ const BudgetOnboardingForm = ({ route }) => {
           label="Amount"
           value={budgetForm.amount}
           onChangeText={onAmountChange}
-          autoFocus={!shouldShowBudgetTypeDesc()}
+          autoFocus={isBudgetTypeDescShown()}
         />
 
         <BaseButton title="Add" size="lg" width={200} onPress={onAdd} />

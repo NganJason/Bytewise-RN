@@ -9,10 +9,10 @@ import {
   BaseScrollView,
   BaseText,
 } from '../../Components';
-import { BaseChip } from '../../Components/View';
+import { EQUITY_TYPE_ASSET, EQUITY_TYPE_DEBT } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
-import { isAccountTypeAsset } from '../../_shared/util';
+import { getEquityType } from '../../_shared/util';
 
 const AccountOnboarding = ({}) => {
   const { theme } = useTheme();
@@ -22,7 +22,7 @@ const AccountOnboarding = ({}) => {
   const { data } = useContext(OnboardingDataContext);
   const { accounts = [] } = data;
 
-  const renderRows = () => {
+  const renderRows = (equityType = EQUITY_TYPE_ASSET) => {
     let rows = [];
 
     accounts.map((a, idx) => {
@@ -31,7 +31,9 @@ const AccountOnboarding = ({}) => {
         account_type: accountType,
         balance = 0,
       } = a || {};
-      let isAsset = isAccountTypeAsset(accountType);
+      if (equityType !== getEquityType(accountType)) {
+        return;
+      }
 
       const onPress = () => {
         navigation.navigate(ROUTES.accountForm, {
@@ -41,7 +43,11 @@ const AccountOnboarding = ({}) => {
       };
 
       rows.push(
-        <BaseRow key={idx} onPress={onPress}>
+        <BaseRow
+          key={idx}
+          onPress={onPress}
+          dividerMargin={0}
+          showDivider={false}>
           <View style={styles.account}>
             <BaseText
               numberOfLines={1}
@@ -49,11 +55,6 @@ const AccountOnboarding = ({}) => {
               style={styles.accountName}>
               {accountName}
             </BaseText>
-            {accountType && (
-              <BaseChip type={isAsset ? 'primary' : 'secondary'}>
-                {isAsset ? 'Asset' : 'Debt'}
-              </BaseChip>
-            )}
           </View>
           <AmountText>{balance}</AmountText>
         </BaseRow>,
@@ -61,7 +62,7 @@ const AccountOnboarding = ({}) => {
     });
 
     if (rows.length === 0) {
-      rows.push(<ExampleRows key="example" />);
+      rows.push(<ExampleRow key="example" equityType={equityType} />);
     }
 
     return rows;
@@ -92,30 +93,45 @@ const AccountOnboarding = ({}) => {
       </View>
 
       <BaseScrollView showsVerticalScrollIndicator={false}>
-        {renderRows()}
+        <View style={styles.section}>
+          <BaseRow dividerMargin={0}>
+            <BaseText text1>Asset</BaseText>
+          </BaseRow>
+          {renderRows(EQUITY_TYPE_ASSET)}
+        </View>
+
+        <View style={styles.section}>
+          <BaseRow dividerMargin={0}>
+            <BaseText text1>Debt</BaseText>
+          </BaseRow>
+          {renderRows(EQUITY_TYPE_DEBT)}
+        </View>
       </BaseScrollView>
     </View>
   );
 };
 
-const ExampleRows = () => {
+const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   const { theme } = useTheme();
 
-  return (
-    <>
-      <BaseRow disabled={true}>
+  if (equityType === EQUITY_TYPE_ASSET) {
+    return (
+      <BaseRow disabled={true} showDivider={false}>
         <BaseText style={{ color: theme.colors.color8 }}>
           Eg: OCBC Savings Account
         </BaseText>
         <AmountText style={{ color: theme.colors.color8 }}>300</AmountText>
       </BaseRow>
-      <BaseRow disabled={true}>
-        <BaseText style={{ color: theme.colors.color8 }}>
-          Eg: Tuition Fee Loan
-        </BaseText>
-        <AmountText style={{ color: theme.colors.color8 }}>4000</AmountText>
-      </BaseRow>
-    </>
+    );
+  }
+
+  return (
+    <BaseRow disabled={true} showDivider={false}>
+      <BaseText style={{ color: theme.colors.color8 }}>
+        Eg: Tuition Fee Loan
+      </BaseText>
+      <AmountText style={{ color: theme.colors.color8 }}>4000</AmountText>
+    </BaseRow>
   );
 };
 
@@ -128,6 +144,9 @@ const getStyles = theme => {
       marginTop: 10,
       marginBottom: 12,
       color: theme.colors.color8,
+    },
+    section: {
+      marginBottom: 24,
     },
     buttonContainer: {
       marginBottom: 8,

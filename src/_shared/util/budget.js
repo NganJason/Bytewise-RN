@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPES, BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../apis/enum';
+import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../apis/enum';
 import { MONTHS } from '../constant/constant';
 import { getMonth, getYear } from './date';
 
@@ -28,18 +28,6 @@ export const getDefaultMonthlyBudgetBreakdown = (initialMonthlyBudget = []) => {
   });
 
   return defaultBudgets;
-};
-
-export const getAccountTypes = () => {
-  let accountTypes = [];
-  for (const account_enum in ACCOUNT_TYPES) {
-    accountTypes.push({
-      name: ACCOUNT_TYPES[account_enum],
-      value: Number(account_enum),
-    });
-  }
-
-  return accountTypes;
 };
 
 export const getBudgetAmountFromBreakdown = (
