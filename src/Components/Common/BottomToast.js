@@ -18,7 +18,7 @@ const BottomToast = () => {
       case ToastTypeInfo:
         return <InfoToast toastInfo={toastInfo} />;
       default:
-        return;
+        return <CustomToast toastInfo={toastInfo} />;
     }
   };
 
@@ -57,6 +57,10 @@ const InfoToast = ({ toastInfo = {} }) => {
       <BaseText text3>{toastInfo.text}</BaseText>
     </View>
   );
+};
+
+const CustomToast = ({ toastInfo = {} }) => {
+  return <View>{toastInfo.customChildren && toastInfo.customChildren}</View>;
 };
 
 export default BottomToast;

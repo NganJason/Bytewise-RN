@@ -7,6 +7,7 @@ import CustomDrawer from './CustomDrawer';
 import HoldingRow from './HoldingRow';
 import LotRow from './LotRow';
 import InfoToolTip from './InfoToolTip';
+import BudgetTypeDesc from './Messages/BudgetTypeDesc';
 
 export {
   DailyTransactions,
@@ -18,4 +19,5 @@ export {
   HoldingRow,
   LotRow,
   InfoToolTip,
+  BudgetTypeDesc,
 };

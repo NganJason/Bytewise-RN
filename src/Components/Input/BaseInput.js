@@ -9,9 +9,10 @@ const BaseInput = forwardRef(
   (
     {
       label = '',
-      desc = {
+      tooltip = {
         title: '',
-        text: '',
+        message: '',
+        customChildren: null,
       },
       value = '',
       placeholder = '',
@@ -25,6 +26,7 @@ const BaseInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
+      onPressIn = function () {},
       containerStyle = {},
       labelStyle = {},
       clearButtonMode = 'never', // IOS only
@@ -51,6 +53,18 @@ const BaseInput = forwardRef(
       onFocus();
     };
 
+    const showToolTip = () => {
+      if (
+        (tooltip.title === '',
+        tooltip.message === '',
+        tooltip.customChildren === null)
+      ) {
+        return false;
+      }
+
+      return true;
+    };
+
     return (
       <Input
         ref={ref}
@@ -59,14 +73,19 @@ const BaseInput = forwardRef(
         onChangeText={onChangeText}
         onBlur={handleBlur}
         placeholder={placeholder}
+        onPressIn={onPressIn}
         label={
           label !== '' && (
             <View style={styles.label}>
               <BaseText h4 style={labelStyle} margin={{ right: 6 }}>
                 {label}
               </BaseText>
-              {desc.text !== '' && (
-                <InfoToolTip title={desc.title} message={desc.text} />
+              {showToolTip() && (
+                <InfoToolTip
+                  title={tooltip.title}
+                  message={tooltip.message}
+                  customChildren={tooltip.customChildren}
+                />
               )}
             </View>
           )

@@ -92,7 +92,7 @@ const BreakdownOverviewScreen = ({
         onPress={() => {
           toast.info(
             toolTipMessage.cashFlowDesc.text,
-            toolTipMessage.cashFlowDesc.title,
+            toolTipMessage.cashFlowDesc.message,
           );
         }}>
         <BaseText text3>Cash Flow</BaseText>

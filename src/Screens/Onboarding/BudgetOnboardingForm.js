@@ -9,6 +9,7 @@ import {
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
+  BudgetTypeDesc,
   TouchInput,
 } from '../../Components';
 import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
@@ -39,7 +40,7 @@ const BudgetOnboardingForm = ({ route }) => {
 
   useEffect(() => {
     if (shouldShowBudgetTypeDesc()) {
-      toast.info('budget...', 'Budget Type');
+      toast.custom(<BudgetTypeDesc />);
       markBudgetTypeDesc();
     }
   }, []);
@@ -86,6 +87,7 @@ const BudgetOnboardingForm = ({ route }) => {
           label="Budget Type"
           value={BUDGET_TYPES[budgetForm.budget_type]}
           onPress={toggleBudgetTypeModal}
+          tooltip={{ customChildren: <BudgetTypeDesc /> }}
         />
         <BaseBottomSheet
           label="name"
@@ -100,6 +102,7 @@ const BudgetOnboardingForm = ({ route }) => {
           label="Amount"
           value={budgetForm.amount}
           onChangeText={onAmountChange}
+          autoFocus={!shouldShowBudgetTypeDesc()}
         />
 
         <BaseButton title="Add" size="lg" width={200} onPress={onAdd} />

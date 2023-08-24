@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -18,7 +17,12 @@ import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
 import InvestmentOnboarding from './InvestmentOnboarding';
 
-const tabs = ['category', 'budget', 'account', 'investment'];
+const tabs = [
+  { name: 'category', canSkip: false },
+  { name: 'budget', canSkip: true },
+  { name: 'account', canSkip: true },
+  { name: 'investment', canSkip: true },
+];
 
 const OnboardingScreen = () => {
   const { theme } = useTheme();
@@ -31,8 +35,8 @@ const OnboardingScreen = () => {
 
   const [activeTab, setActiveTab] = useState(0);
   const onButtonPress = () => {
-    let tabValue = tabs[activeTab];
-    switch (tabValue) {
+    let tab = tabs[activeTab];
+    switch (tab.name) {
       case 'category':
         commitCategories(nextPage);
         break;
@@ -77,8 +81,8 @@ const OnboardingScreen = () => {
   };
 
   const renderTabContent = () => {
-    let tabValue = tabs[activeTab];
-    switch (tabValue) {
+    let tab = tabs[activeTab];
+    switch (tab.name) {
       case 'category':
         return <CategoryOnboarding />;
       case 'budget':
@@ -90,6 +94,10 @@ const OnboardingScreen = () => {
       default:
         return <CategoryOnboarding />;
     }
+  };
+
+  const canSkip = () => {
+    return !isLastTab() && tabs[activeTab].canSkip;
   };
 
   const isSubmitButtonLoading = () => {
@@ -112,7 +120,7 @@ const OnboardingScreen = () => {
             // }
           />
 
-          {!isLastTab() && (
+          {canSkip() && (
             <TouchableOpacity onPress={onSkip}>
               <BaseText text2 style={styles.skipText}>
                 Skip

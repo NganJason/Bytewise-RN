@@ -99,7 +99,7 @@ const InvestmentOnboardingForm = () => {
         contentContainerStyle={styles.formBody}>
         <SearchBottomSheetInput
           label="Symbol"
-          desc={toolTipMessage.symbolDesc}
+          tooltip={toolTipMessage.symbolDesc}
           itemLabel="symbol"
           onChangeText={onSymbolChange}
           useQuery={useSearchSecurities}

@@ -1,5 +1,3 @@
-import { TouchableOpacity } from 'react-native';
-
 import BaseInput from './BaseInput';
 
 const TouchInput = ({
@@ -15,16 +13,14 @@ const TouchInput = ({
   }
 
   return (
-    <TouchableOpacity activeOpacity={1} onPress={onPress} disabled={disabled}>
-      <BaseInput
-        label={label}
-        pointerEvents="none"
-        value={value}
-        readOnly
-        disabled={disabled}
-        {...props}
-      />
-    </TouchableOpacity>
+    <BaseInput
+      label={label}
+      value={value}
+      readOnly
+      onPressIn={onPress}
+      disabled={disabled}
+      {...props}
+    />
   );
 };
 

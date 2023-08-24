@@ -177,7 +177,7 @@ const HoldingForm = ({ route }) => {
         {activeTab.name === scrollableTabs[0].name ? (
           <SearchBottomSheetInput
             label="Symbol"
-            desc={toolTipMessage.symbolDesc}
+            tooltip={toolTipMessage.message}
             itemLabel="symbol"
             onChangeText={onDefaultSymbolChange}
             useQuery={useSearchSecurities}
@@ -202,7 +202,7 @@ const HoldingForm = ({ route }) => {
           <View>
             <BaseInput
               label="Custom Symbol"
-              desc={toolTipMessage.customSymbolDesc}
+              tooltip={toolTipMessage.customSymbolDesc}
               value={holdingForm.symbol}
               onChangeText={onCustomSymbolChange}
               clearButtonMode="always"
@@ -212,7 +212,7 @@ const HoldingForm = ({ route }) => {
 
             <BaseCurrencyInput
               label="Latest Total Market Value"
-              desc={toolTipMessage.totalLatestMarketValueDesc}
+              tooltip={toolTipMessage.totalLatestMarketValueDesc}
               value={holdingForm.latest_value}
               onChangeText={onLatestValueChange}
               errorMessage={showValidation && formErrors.budget_amount}
@@ -221,7 +221,7 @@ const HoldingForm = ({ route }) => {
 
             <BaseCurrencyInput
               label="Total Invested Amount"
-              desc={toolTipMessage.totalInvestedAmount}
+              tooltip={toolTipMessage.totalInvestedAmount}
               value={holdingForm.total_cost}
               onChangeText={onTotalCostChange}
               errorMessage={showValidation && formErrors.budget_amount}

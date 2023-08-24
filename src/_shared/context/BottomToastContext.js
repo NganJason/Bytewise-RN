@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 
 export const ToastTypeInfo = 1;
+export const ToastTypeCustom = 2;
 
 const BottomToastContext = createContext();
 const BottomToastProvider = ({ children }) => {
@@ -9,6 +10,7 @@ const BottomToastProvider = ({ children }) => {
     toastType: 1,
     title: '',
     text: '',
+    customChildren: null,
   });
 
   const info = (text = '', title = '') => {
@@ -16,6 +18,14 @@ const BottomToastProvider = ({ children }) => {
       toastType: ToastTypeInfo,
       title: title,
       text: text,
+    });
+    setIsVisible(true);
+  };
+
+  const custom = (childrenComponent = null) => {
+    setToastInfo({
+      toastType: ToastTypeCustom,
+      customChildren: childrenComponent,
     });
     setIsVisible(true);
   };
@@ -32,6 +42,7 @@ const BottomToastProvider = ({ children }) => {
         toastInfo,
         toast: {
           info,
+          custom,
         },
       }}>
       {children}

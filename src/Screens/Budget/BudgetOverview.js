@@ -107,7 +107,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   const renderBudgetTypeContainer = (
     type = BUDGET_TYPE_MONTHLY,
-    desc = { title: '', text: '' },
+    desc = { title: '', message: '' },
   ) => {
     return (
       <View style={styles.container}>
@@ -116,8 +116,8 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
             <BaseText h3 margin={{ right: 8 }}>
               {type === BUDGET_TYPE_MONTHLY ? 'Monthly' : 'Annual'}
             </BaseText>
-            {desc.text !== '' && (
-              <InfoToolTip title={desc.title} message={desc.text} />
+            {desc.message !== '' && (
+              <InfoToolTip title={desc.title} message={desc.message} />
             )}
           </View>
 

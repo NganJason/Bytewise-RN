@@ -105,7 +105,7 @@ const ExampleRows = () => {
     <>
       <BaseRow disabled={true}>
         <BaseText style={{ color: theme.colors.color8 }}>
-          Eg: My OCBC Account
+          Eg: OCBC Savings Account
         </BaseText>
         <AmountText style={{ color: theme.colors.color8 }}>300</AmountText>
       </BaseRow>

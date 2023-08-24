@@ -57,6 +57,7 @@ import {
   HoldingRow,
   LotRow,
   InfoToolTip,
+  BudgetTypeDesc,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend } from './Chart';
@@ -106,6 +107,7 @@ export {
   HoldingRow,
   LotRow,
   InfoToolTip,
+  BudgetTypeDesc,
   BaseDonutChart,
   ChartLegend,
   BaseProgressTab,
