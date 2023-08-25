@@ -36,7 +36,8 @@ const OnboardingScreen = () => {
     getWithErrors,
     isCommitLoading,
   } = useContext(OnboardingDataContext);
-  const { setOnboardingStatus } = useContext(UserMetaContext);
+  const { setOnboardingStatus, setShowSetupSplashScreen } =
+    useContext(UserMetaContext);
   const initUser = useInitUser();
 
   const [activeTab, setActiveTab] = useState(0);
@@ -81,6 +82,7 @@ const OnboardingScreen = () => {
       {
         onSuccess: () => {
           setOnboardingStatus(true);
+          setShowSetupSplashScreen(true);
         },
       },
     );
@@ -119,7 +121,7 @@ const OnboardingScreen = () => {
             size="lg"
             width={200}
             onPress={onButtonPress}
-            isLoading={isCommitLoading}
+            isLoading={isCommitLoading || initUser.isLoading}
           />
 
           {canSkip() && (

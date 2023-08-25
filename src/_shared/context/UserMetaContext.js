@@ -6,16 +6,29 @@ const USER_META = 'USER_META';
 const UserMetaContext = createContext();
 
 const UserMetaProvider = ({ children }) => {
-  const [userMeta, setUserMeta] = useState({ onboardingCompleted: false });
+  const [userMeta, setUserMeta] = useState({
+    onboardingCompleted: true,
+    showSetupSplashScreen: false,
+  });
 
   const isUserOnboarded = () => {
     return userMeta.onboardingCompleted;
   };
 
   const setOnboardingStatus = status => {
-    let newMeta = { ...userMeta, onboardingCompleted: status };
-    setUserMeta(newMeta);
-    save(newMeta);
+    setUserMeta(prev => {
+      let newMeta = { ...prev, onboardingCompleted: status };
+      save(newMeta);
+      return newMeta;
+    });
+  };
+
+  const showSetupSplashScreen = () => {
+    return userMeta.showSetupSplashScreen;
+  };
+
+  const setShowSetupSplashScreen = status => {
+    setUserMeta(prev => ({ ...prev, showSetupSplashScreen: status }));
   };
 
   const save = async meta => {
@@ -45,6 +58,8 @@ const UserMetaProvider = ({ children }) => {
       value={{
         isUserOnboarded,
         setOnboardingStatus,
+        showSetupSplashScreen,
+        setShowSetupSplashScreen,
       }}>
       {children}
     </UserMetaContext.Provider>

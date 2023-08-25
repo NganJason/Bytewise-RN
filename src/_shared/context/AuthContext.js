@@ -67,6 +67,7 @@ const AuthProvider = ({ children }) => {
         onSuccess: async resp => {
           try {
             await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
+            setOnboardingStatus(false);
             onLoginSuccess(resp.access_token);
           } catch {
             throw new UserError('set access token error');

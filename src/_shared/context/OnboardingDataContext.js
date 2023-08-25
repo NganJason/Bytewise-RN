@@ -126,11 +126,7 @@ const OnboardingDataProvider = ({ children }) => {
         createBudgets.isLoading ||
         createAccounts.isLoading,
     );
-  }, [
-    createCategories.isLoading,
-    createBudgets.isLoading,
-    createAccounts.isLoading,
-  ]);
+  }, [createCategories, createBudgets, createAccounts]);
 
   const commitCategories = (onSuccess = function () {}) => {
     createCategories.mutate(

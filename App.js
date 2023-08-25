@@ -17,6 +17,7 @@ import OtpScreen from './src/Screens/User/OtpScreen';
 import WelcomeScreen from './src/Screens/Onboarding/WelcomeScreen';
 import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
+import BudgetForm from './src/Screens/Budget/BudgetForm';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
 import { CustomDrawer } from './src/Components/Common';
 
@@ -40,6 +41,7 @@ import BottomToast from './src/Components/Common/BottomToast';
 import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
+import SetupSplashScreen from './src/Screens/Onboarding/SetupSplashScreen';
 import {
   UserMetaContext,
   UserMetaProvider,
@@ -57,7 +59,8 @@ const WAIT_TIME_FOR_SPLASH_SCREEN = 2000;
 
 function Main() {
   const { isLogin } = useContext(AuthContext);
-  const { isUserOnboarded } = useContext(UserMetaContext);
+  const { isUserOnboarded, showSetupSplashScreen } =
+    useContext(UserMetaContext);
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -123,17 +126,7 @@ function Main() {
     };
   }, []);
 
-  const renderPrivateRoute = () => {
-    if (!isLogin) {
-      return (
-        <>
-          <Stack.Screen name={ROUTES.login} component={LoginScreen} />
-          <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
-          <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
-        </>
-      );
-    }
-
+  const renderOnboardingRoutes = () => {
     if (!isUserOnboarded()) {
       return (
         <>
@@ -143,41 +136,57 @@ function Main() {
       );
     }
 
-    return (
-      <>
-        <Stack.Screen name={ROUTES.homeWithDrawer} component={HomeWithDrawer} />
+    if (showSetupSplashScreen()) {
+      return (
         <Stack.Screen
-          name={ROUTES.transactionForm}
-          component={TransactionForm}
+          name={ROUTES.setupSplashScreen}
+          component={SetupSplashScreen}
         />
-        <Stack.Screen
-          name={ROUTES.categoryEdit}
-          component={CategoryEditScreen}
-        />
-        <Stack.Screen
-          name={ROUTES.categoryBreakdown}
-          component={CategoryBreakdownScreen}
-        />
-        <Stack.Screen
-          name={ROUTES.categoriesOverview}
-          component={CategoryOverviewScreen}
-        />
-        <Stack.Screen
-          name={ROUTES.accountBreakdown}
-          component={AccountBreakdownScreen}
-        />
-        <Stack.Screen
-          name={ROUTES.investmentBreakdown}
-          component={InvestmentBreakdownScreen}
-        />
-        <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
-        <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
-        <Stack.Screen
-          name={ROUTES.holdingBreakdown}
-          component={HoldingBreakdownScreen}
-        />
-      </>
-    );
+      );
+    }
+
+    if (isUserOnboarded() && !showSetupSplashScreen()) {
+      return (
+        <>
+          <Stack.Screen
+            name={ROUTES.homeWithDrawer}
+            component={HomeWithDrawer}
+          />
+          <Drawer.Screen name={ROUTES.home} component={HomeScreen} />
+
+          <Stack.Screen
+            name={ROUTES.categoryEdit}
+            component={CategoryEditScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.categoryBreakdown}
+            component={CategoryBreakdownScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.categoriesOverview}
+            component={CategoryOverviewScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.accountBreakdown}
+            component={AccountBreakdownScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.investmentBreakdown}
+            component={InvestmentBreakdownScreen}
+          />
+
+          <Stack.Screen
+            name={ROUTES.holdingBreakdown}
+            component={HoldingBreakdownScreen}
+          />
+
+          <Stack.Screen
+            name={ROUTES.accountSelection}
+            component={AccountSelectionScreen}
+          />
+        </>
+      );
+    }
   };
 
   const render = () => {
@@ -190,21 +199,38 @@ function Main() {
         <Stack.Navigator
           initialRouteName={ROUTES.homeWithDrawer}
           screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-          {renderPrivateRoute()}
-          <Stack.Screen name={ROUTES.categoryForm} component={CategoryForm} />
-          <Stack.Screen
-            name={ROUTES.budgetOnboardingForm}
-            component={BudgetOnboardingForm}
-          />
-          <Stack.Screen
-            name={ROUTES.investmentOnboardingForm}
-            component={InvestmentOnboardingForm}
-          />
-          <Stack.Screen
-            name={ROUTES.accountSelection}
-            component={AccountSelectionScreen}
-          />
-          <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
+          {!isLogin ? (
+            <>
+              <Stack.Screen name={ROUTES.login} component={LoginScreen} />
+              <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
+              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
+            </>
+          ) : (
+            <>
+              {renderOnboardingRoutes()}
+              <Stack.Screen
+                name={ROUTES.categoryForm}
+                component={CategoryForm}
+              />
+              <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
+              <Stack.Screen
+                name={ROUTES.transactionForm}
+                component={TransactionForm}
+              />
+              <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
+              <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
+              <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
+
+              <Stack.Screen
+                name={ROUTES.budgetOnboardingForm}
+                component={BudgetOnboardingForm}
+              />
+              <Stack.Screen
+                name={ROUTES.investmentOnboardingForm}
+                component={InvestmentOnboardingForm}
+              />
+            </>
+          )}
         </Stack.Navigator>
       );
     }

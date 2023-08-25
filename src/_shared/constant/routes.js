@@ -7,6 +7,7 @@ const ROUTES = {
   onboarding: 'Onboarding',
   budgetOnboardingForm: 'Budget Onboarding Form',
   investmentOnboardingForm: 'Investment Onboarding Form',
+  setupSplashScreen: 'Setup splash screen',
 
   homeWithDrawer: 'Home With Drawer',
   home: 'Home',
