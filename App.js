@@ -153,7 +153,6 @@ function Main() {
             component={HomeWithDrawer}
           />
           <Drawer.Screen name={ROUTES.home} component={HomeScreen} />
-
           <Stack.Screen
             name={ROUTES.categoryEdit}
             component={CategoryEditScreen}
@@ -174,15 +173,9 @@ function Main() {
             name={ROUTES.investmentBreakdown}
             component={InvestmentBreakdownScreen}
           />
-
           <Stack.Screen
             name={ROUTES.holdingBreakdown}
             component={HoldingBreakdownScreen}
-          />
-
-          <Stack.Screen
-            name={ROUTES.accountSelection}
-            component={AccountSelectionScreen}
           />
         </>
       );
@@ -218,6 +211,10 @@ function Main() {
                 component={TransactionForm}
               />
               <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
+              <Stack.Screen
+                name={ROUTES.accountSelection}
+                component={AccountSelectionScreen}
+              />
               <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
               <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
 
