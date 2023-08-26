@@ -106,7 +106,7 @@ const CategoryOverviewScreen = ({ route }) => {
           <View style={styles.header}>
             <BaseText h3>Breakdown</BaseText>
             <DateNavigator
-              startingDate={activeDate}
+              date={activeDate}
               onForward={onDateMove}
               onBackward={onDateMove}
               year={timeRangeType === TIME_RANGE_YEARLY}

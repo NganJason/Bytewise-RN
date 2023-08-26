@@ -150,7 +150,7 @@ const AccountBreakdownScreen = ({ route }) => {
       <>
         <View style={styles.dataNavigator}>
           <DateNavigator
-            startingDate={activeDate}
+            date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
           />

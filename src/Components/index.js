@@ -59,6 +59,9 @@ import {
   InfoToolTip,
   BudgetTypeDesc,
   ConnectionChecker,
+  BackIcon,
+  DrawerIcon,
+  BaseCalendar,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend } from './Chart';
@@ -110,6 +113,9 @@ export {
   InfoToolTip,
   BudgetTypeDesc,
   ConnectionChecker,
+  BackIcon,
+  DrawerIcon,
+  BaseCalendar,
   BaseDonutChart,
   ChartLegend,
   BaseProgressTab,

@@ -23,6 +23,7 @@ const ROUTES = {
 
   transaction: 'Transaction',
   transactionForm: 'Transaction Form',
+  transactionCalendar: 'Transaction Calendar',
 
   account: 'Account',
   accountSelection: 'Account Selection',

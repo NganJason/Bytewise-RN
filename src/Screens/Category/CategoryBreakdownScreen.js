@@ -265,7 +265,7 @@ const CategoryBreakdownScreen = ({ route }) => {
       <>
         <View style={styles.dateContainer}>
           <DateNavigator
-            startingDate={activeDate}
+            date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
             year={timeRangeType === TIME_RANGE_YEARLY}

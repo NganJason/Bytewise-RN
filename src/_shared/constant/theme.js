@@ -1,5 +1,6 @@
 import { createTheme } from '@rneui/themed';
 import { DefaultTheme } from '@react-navigation/native';
+import { LocaleConfig } from 'react-native-calendars';
 
 const COLORS = {
   green: '#00754A',
@@ -37,6 +38,8 @@ const FONT_SIZES = {
   h5: 17,
   h6: 15,
   h7: 13,
+  h8: 10,
+  h9: 9,
 };
 
 const FONT_FAMILY = {
@@ -138,6 +141,11 @@ export const THEME = createTheme({
       fontSize: FONT_SIZES.h7,
       color: COLORS.black,
     },
+    text6: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h9,
+      color: COLORS.black,
+    },
 
     // Button
     btn1: {
@@ -171,4 +179,60 @@ export const THEME = createTheme({
     sm: 4,
     xs: 2,
   },
+  calendar: {
+    monthTextColor: COLORS.black,
+    arrowColor: COLORS.regularGrey,
+
+    textDayHeaderFontSize: 12,
+    textDayHeaderFontFamily: FONT_FAMILY.semiBold,
+    textSectionTitleColor: COLORS.mediumGrey,
+
+    textDayFontSize: FONT_SIZES.h7,
+    textDayFontFamily: FONT_FAMILY.semiBold,
+    dayTextColor: COLORS.black,
+    todayTextColor: COLORS.black,
+    selectedDayTextColor: COLORS.green,
+    selectedDayBackgroundColor: COLORS.regularGreen,
+
+    textMonthFontSize: FONT_SIZES.h5,
+    textMonthFontFamily: FONT_FAMILY.medium,
+
+    textDisabledColor: '#d9e1e8',
+    dotColor: 'red',
+  },
 });
+
+LocaleConfig.locales['.'] = {
+  monthNames: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Oct',
+    'Dec',
+  ],
+  monthNamesShort: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Oct',
+    'Dec',
+  ],
+  dayNames: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
+  dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+};
+
+LocaleConfig.defaultLocale = '.';

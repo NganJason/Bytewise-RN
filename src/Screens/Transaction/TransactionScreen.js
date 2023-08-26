@@ -79,7 +79,7 @@ const TransactionScreen = ({ navigation }) => {
         allowDrawer: true,
         centerComponent: (
           <DateNavigator
-            startingDate={activeDate}
+            date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
           />

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
@@ -9,15 +8,13 @@ import { moveMonth, getYear, getMonth } from '../../_shared/util';
 import { MONTHS } from '../../_shared/constant/constant';
 
 const DateNavigator = ({
-  startingDate = new Date(),
+  date = new Date(),
   onForward = function () {},
   onBackward = function () {},
   year = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-
-  const [date, setDate] = useState(startingDate);
 
   const renderDate = () => {
     if (year) {
@@ -35,8 +32,6 @@ const DateNavigator = ({
     } else {
       newDate = moveMonth(date, 1);
     }
-
-    setDate(newDate);
     onForward(newDate);
   };
 
@@ -47,8 +42,6 @@ const DateNavigator = ({
     } else {
       newDate = moveMonth(date, -1);
     }
-
-    setDate(newDate);
     onBackward(newDate);
   };
 

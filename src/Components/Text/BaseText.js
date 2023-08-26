@@ -15,6 +15,7 @@ const BaseText = ({
   text3 = false,
   text4 = false,
   text5 = false,
+  text6 = false,
   btn1 = false,
   btn2 = false,
   btn3 = false,
@@ -56,6 +57,8 @@ const BaseText = ({
         return theme.fontStyles.text4;
       case text5:
         return theme.fontStyles.text5;
+      case text6:
+        return theme.fontStyles.text6;
 
       case btn1:
         return styles.btn1Style;

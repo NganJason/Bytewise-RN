@@ -9,6 +9,8 @@ import LotRow from './LotRow';
 import InfoToolTip from './InfoToolTip';
 import BudgetTypeDesc from './Messages/BudgetTypeDesc';
 import ConnectionChecker from './ConnectionChecker';
+import { BackIcon, DrawerIcon } from './Icon';
+import BaseCalendar from './BaseCalendar';
 
 export {
   DailyTransactions,
@@ -22,4 +24,7 @@ export {
   InfoToolTip,
   BudgetTypeDesc,
   ConnectionChecker,
+  BackIcon,
+  DrawerIcon,
+  BaseCalendar,
 };

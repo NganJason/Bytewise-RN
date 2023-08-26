@@ -3,7 +3,7 @@ import { useTheme } from '@rneui/themed';
 import { View } from 'react-native';
 import { IconButton } from '../Touch';
 
-export const BackIcon = ({ onBack = null }) => {
+export const BackIcon = ({ onBack = null, iconSize = 28 }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
@@ -17,7 +17,7 @@ export const BackIcon = ({ onBack = null }) => {
 
   return (
     <IconButton
-      buttonSize="xs"
+      iconSize={iconSize}
       type="clear"
       onPress={onPress}
       iconName="arrow-left"
@@ -28,14 +28,14 @@ export const BackIcon = ({ onBack = null }) => {
   );
 };
 
-export const DrawerIcon = () => {
+export const DrawerIcon = ({ iconSize = 28 }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   return (
     <View>
       <IconButton
-        buttonSize="sm"
+        iconSize={iconSize}
         type="clear"
         onPress={() => navigation.openDrawer()}
         iconName="menu"

@@ -142,10 +142,10 @@ const getStyles = (theme, screenHeight) =>
     },
     header: {
       minHeight: screenHeight * 0.1,
-      backgroundColor: theme.colors.white,
       paddingHorizontal: 26,
       borderBottomWidth: 0,
-      paddingVertical: screenHeight * 0.02,
+      paddingTop: screenHeight * 0.02,
+      paddingBottom: screenHeight * 0.005,
     },
     body: {
       flex: 1,

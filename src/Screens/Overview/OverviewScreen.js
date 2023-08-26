@@ -84,7 +84,7 @@ const OverviewScreen = ({ navigation }) => {
         allowDrawer: true,
         centerComponent: (
           <DateNavigator
-            startingDate={activeDate}
+            date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
             year={timeRangeType === TIME_RANGE_YEARLY}

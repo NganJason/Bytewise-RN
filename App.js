@@ -43,6 +43,7 @@ import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm'
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
 import SetupSplashScreen from './src/Screens/Onboarding/SetupSplashScreen';
 import FeedbackForm from './src/Screens/User/FeedbackForm';
+import TransactionCalendarScreen from './src/Screens/Transaction/TransactionCalendarScreen';
 import {
   UserMetaContext,
   UserMetaProvider,
@@ -151,7 +152,7 @@ function Main() {
         <>
           <Stack.Screen
             name={ROUTES.homeWithDrawer}
-            component={HomeWithDrawer}
+            component={TransactionCalendarScreen}
           />
           <Drawer.Screen name={ROUTES.home} component={HomeScreen} />
           <Stack.Screen
@@ -165,6 +166,10 @@ function Main() {
           <Stack.Screen
             name={ROUTES.categoriesOverview}
             component={CategoryOverviewScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.transactionCalendar}
+            component={TransactionCalendarScreen}
           />
           <Stack.Screen
             name={ROUTES.accountBreakdown}
@@ -197,7 +202,7 @@ function Main() {
               headerShown: false,
               animation: 'slide_from_right',
             }}>
-            {!isLogin ? (
+            {false ? (
               <>
                 <Stack.Screen name={ROUTES.login} component={LoginScreen} />
                 <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
