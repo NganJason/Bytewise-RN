@@ -35,6 +35,8 @@ const BaseInput = forwardRef(
       secureTextEntry = false,
       errorMessage = '',
       disabled = false,
+      longText = false,
+      ...props
     },
     ref,
   ) => {
@@ -63,6 +65,20 @@ const BaseInput = forwardRef(
       }
 
       return true;
+    };
+
+    const getFocusedStyle = () => {
+      if (longText) {
+        return isFocused && styles.longTextFocus;
+      }
+      return isFocused ? styles.focused : styles.blur;
+    };
+
+    const getInputContainerStyle = () => {
+      if (longText) {
+        return styles.longTextContainer;
+      }
+      return {};
     };
 
     return (
@@ -95,7 +111,8 @@ const BaseInput = forwardRef(
         onFocus={handleFocus}
         inputContainerStyle={[
           styles.inputContainer,
-          isFocused ? styles.focused : styles.blur,
+          getInputContainerStyle(),
+          getFocusedStyle(),
         ]}
         caretHidden={caretHidden}
         readOnly={readOnly}
@@ -103,7 +120,7 @@ const BaseInput = forwardRef(
         leftIcon={leftIcon !== null && leftIcon}
         rightIcon={rightIcon !== null && rightIcon}
         autoFocus={autoFocus}
-        containerStyle={{ ...styles.container, ...containerStyle }}
+        containerStyle={[styles.container, containerStyle]}
         clearButtonMode={clearButtonMode}
         inputStyle={[styles.input, disabled && styles.inputDisabled]}
         pointerEvents={pointerEvents}
@@ -111,6 +128,7 @@ const BaseInput = forwardRef(
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
         errorMessage={errorMessage}
+        {...props}
       />
     );
   },
@@ -120,14 +138,6 @@ export default BaseInput;
 
 const getStyles = theme =>
   StyleSheet.create({
-    focused: {
-      borderBottomColor: theme.colors.color1,
-      borderBottomWidth: 1,
-    },
-    blur: {
-      borderBottomColor: theme.colors.color8,
-      borderBottomWidth: 1,
-    },
     label: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -146,5 +156,26 @@ const getStyles = theme =>
     inputContainer: {
       paddingVertical: 4,
       paddingHorizontal: 2,
+    },
+    focused: {
+      borderBottomColor: theme.colors.color1,
+      borderBottomWidth: 1,
+    },
+    blur: {
+      borderBottomColor: theme.colors.color8,
+      borderBottomWidth: 1,
+    },
+    longTextContainer: {
+      paddingHorizontal: 10,
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      borderColor: theme.colors.color8,
+      borderWidth: 0.5,
+      borderRadius: 8,
+      height: 120,
+    },
+    longTextFocus: {
+      borderColor: theme.colors.color1,
+      borderWidth: 1,
     },
   });

@@ -1,7 +1,7 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
-import { useContext, createContext } from 'react';
+import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
@@ -20,6 +20,14 @@ const drawerRows = [
       name: 'grid',
     },
     route: ROUTES.categoryEdit,
+  },
+  {
+    name: 'Feedback',
+    icon: {
+      type: 'feather',
+      name: 'message-square',
+    },
+    route: ROUTES.feedbackForm,
   },
 ];
 

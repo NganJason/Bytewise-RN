@@ -11,6 +11,7 @@ const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';
 const VERIFY_EMAIL = '/verify_email';
 const INIT_USER = '/init_user';
+const CREATE_FEEDBACK = '/create_feedback';
 
 export const login = async ({ email = '', password = '' }) => {
   try {
@@ -76,6 +77,22 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
 export const initUser = async ({}) => {
   try {
     const body = await sendPostRequest(INIT_USER, {});
+    return body;
+  } catch (e) {
+    throw new UserError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const createFeedback = async ({ score = 0, text = '' }) => {
+  try {
+    const body = await sendPostRequest(CREATE_FEEDBACK, {
+      score: score,
+      text: text,
+    });
     return body;
   } catch (e) {
     throw new UserError({

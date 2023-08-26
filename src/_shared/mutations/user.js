@@ -1,5 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { initUser, login, signup, verifyEmail } from '../apis/user';
+import {
+  createFeedback,
+  initUser,
+  login,
+  signup,
+  verifyEmail,
+} from '../apis/user';
 import { queryKeys } from '../query';
 
 export const useLogin = (opts = {}) => {
@@ -36,7 +42,16 @@ export const useInitUser = (opts = {}) => {
     mutationFn: initUser,
     onSuccess: () => {
       queryClient.invalidateQueries([queryKeys.user]);
-      opts.onSuccess && opts.onSuccess;
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useCreateFeedback = (opts = {}) => {
+  return useMutation({
+    mutationFn: createFeedback,
+    onSuccess: () => {
+      opts.onSuccess && opts.onSuccess();
     },
   });
 };
