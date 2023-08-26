@@ -10,3 +10,4 @@ export const coinsack = require('../../../assets/images/coinsack.png');
 export const card = require('../../../assets/images/card.png');
 export const expenseIcon = require('../../../assets/images/expense_icon.png');
 export const incomeIcon = require('../../../assets/images/income_icon.png');
+export const connectionIcon = require('../../../assets/images/connection.png');

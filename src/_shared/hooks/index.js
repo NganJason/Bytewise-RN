@@ -4,6 +4,7 @@ import useGetCategoriesHelper from './useGetCategoriesHelper';
 import useKeyboard from './useKeyboard';
 import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
+import useConnection from './useConnection';
 import { useGetTransactionsHook } from './transaction';
 
 export {
@@ -14,4 +15,5 @@ export {
   useTimeRange,
   useValidation,
   useGetTransactionsHook,
+  useConnection,
 };

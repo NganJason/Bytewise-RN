@@ -19,7 +19,7 @@ import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
 import TransactionForm from './src/Screens/Transaction/TransactionForm';
-import { CustomDrawer } from './src/Components/Common';
+import { ConnectionChecker, CustomDrawer } from './src/Components/Common';
 
 import ROUTES from './src/_shared/constant/routes';
 import { THEME } from './src/_shared/constant/theme';
@@ -190,50 +190,62 @@ function Main() {
 
     if (isAppReady && !showSplashScreen) {
       return (
-        <Stack.Navigator
-          initialRouteName={ROUTES.homeWithDrawer}
-          screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-          {!isLogin ? (
-            <>
-              <Stack.Screen name={ROUTES.login} component={LoginScreen} />
-              <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
-              <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
-            </>
-          ) : (
-            <>
-              {renderOnboardingRoutes()}
-              <Stack.Screen
-                name={ROUTES.categoryForm}
-                component={CategoryForm}
-              />
-              <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
-              <Stack.Screen
-                name={ROUTES.transactionForm}
-                component={TransactionForm}
-              />
-              <Stack.Screen name={ROUTES.accountForm} component={AccountForm} />
-              <Stack.Screen
-                name={ROUTES.accountSelection}
-                component={AccountSelectionScreen}
-              />
-              <Stack.Screen name={ROUTES.holdingForm} component={HoldingForm} />
-              <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
+        <>
+          <Stack.Navigator
+            initialRouteName={ROUTES.homeWithDrawer}
+            screenOptions={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}>
+            {!isLogin ? (
+              <>
+                <Stack.Screen name={ROUTES.login} component={LoginScreen} />
+                <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
+                <Stack.Screen name={ROUTES.otp} component={OtpScreen} />
+              </>
+            ) : (
+              <>
+                {renderOnboardingRoutes()}
+                <Stack.Screen
+                  name={ROUTES.categoryForm}
+                  component={CategoryForm}
+                />
+                <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
+                <Stack.Screen
+                  name={ROUTES.transactionForm}
+                  component={TransactionForm}
+                />
+                <Stack.Screen
+                  name={ROUTES.accountForm}
+                  component={AccountForm}
+                />
+                <Stack.Screen
+                  name={ROUTES.accountSelection}
+                  component={AccountSelectionScreen}
+                />
+                <Stack.Screen
+                  name={ROUTES.holdingForm}
+                  component={HoldingForm}
+                />
+                <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
 
-              <Stack.Screen
-                name={ROUTES.budgetOnboardingForm}
-                component={BudgetOnboardingForm}
-              />
-              <Stack.Screen
-                name={ROUTES.investmentOnboardingForm}
-                component={InvestmentOnboardingForm}
-              />
-              <Stack.Screen
-                name={ROUTES.feedbackForm}
-                component={FeedbackForm}
-              />
-            </>
-          )}
-        </Stack.Navigator>
+                <Stack.Screen
+                  name={ROUTES.budgetOnboardingForm}
+                  component={BudgetOnboardingForm}
+                />
+                <Stack.Screen
+                  name={ROUTES.investmentOnboardingForm}
+                  component={InvestmentOnboardingForm}
+                />
+                <Stack.Screen
+                  name={ROUTES.feedbackForm}
+                  component={FeedbackForm}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+          <ConnectionChecker />
+        </>
       );
     }
 

@@ -58,6 +58,7 @@ import {
   LotRow,
   InfoToolTip,
   BudgetTypeDesc,
+  ConnectionChecker,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend } from './Chart';
@@ -108,6 +109,7 @@ export {
   LotRow,
   InfoToolTip,
   BudgetTypeDesc,
+  ConnectionChecker,
   BaseDonutChart,
   ChartLegend,
   BaseProgressTab,

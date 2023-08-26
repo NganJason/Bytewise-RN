@@ -8,6 +8,7 @@ import HoldingRow from './HoldingRow';
 import LotRow from './LotRow';
 import InfoToolTip from './InfoToolTip';
 import BudgetTypeDesc from './Messages/BudgetTypeDesc';
+import ConnectionChecker from './ConnectionChecker';
 
 export {
   DailyTransactions,
@@ -20,4 +21,5 @@ export {
   LotRow,
   InfoToolTip,
   BudgetTypeDesc,
+  ConnectionChecker,
 };
