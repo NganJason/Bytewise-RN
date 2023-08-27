@@ -34,6 +34,7 @@ import {
   tsToDateTimeStr,
   getCurrDatePercentage,
   getMonthPercentage,
+  getFirstDayOfMonthFormatted,
 } from './date';
 import { getTotalInvestmentCost, getStockUpdateTime } from './investment';
 import { capitalize, capitalizeFirstWord } from './string';
@@ -83,6 +84,7 @@ export {
   tsToDateTimeStr,
   getCurrDatePercentage,
   getMonthPercentage,
+  getFirstDayOfMonthFormatted,
   getTotalInvestmentCost,
   getStockUpdateTime,
   capitalize,

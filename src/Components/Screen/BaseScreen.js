@@ -168,7 +168,7 @@ const getStyles = (theme, screenHeight) =>
     rightComponentStyle: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      alignItems: 'flex-start',
+      alignItems: 'center',
     },
     fab: {
       backgroundColor: theme.colors.color1, // not the real backgroundColor, set to prevent warning

@@ -59,6 +59,15 @@ export const getFormattedDateString = (d = new Date()) => {
   return `${year}-${formattedMonth}-${formattedDay}`;
 };
 
+export const getFirstDayOfMonthFormatted = timestamp => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const formattedMonth = month < 10 ? `0${month}` : month;
+
+  return `${year}-${formattedMonth}-01`;
+};
+
 export const getDateStringWithoutDelim = (d = new Date()) => {
   const year = d.getFullYear();
   const month = d.getMonth() + 1;

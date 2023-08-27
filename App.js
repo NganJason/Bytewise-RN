@@ -152,7 +152,7 @@ function Main() {
         <>
           <Stack.Screen
             name={ROUTES.homeWithDrawer}
-            component={TransactionCalendarScreen}
+            component={HomeWithDrawer}
           />
           <Drawer.Screen name={ROUTES.home} component={HomeScreen} />
           <Stack.Screen

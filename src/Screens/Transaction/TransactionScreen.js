@@ -7,6 +7,7 @@ import {
   AggrSummary,
   BaseLoadableView,
   Transactions,
+  IconButton,
 } from '../../Components';
 import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
@@ -76,6 +77,15 @@ const TransactionScreen = ({ navigation }) => {
       headerProps={{
         allowBack: false,
         allowDrawer: true,
+        rightComponent: (
+          <IconButton
+            iconName="calendar"
+            iconType="font-awesome"
+            iconSize={22}
+            onPress={() => navigation.navigate(ROUTES.transactionCalendar)}
+            color={theme.colors.color7}
+          />
+        ),
         centerComponent: (
           <DateNavigator
             date={activeDate}

@@ -86,11 +86,7 @@ export const useGetTransactionsHook = (
     }
   };
 
-  const reset = () => {
-    getCategories.reset();
-    getTransactions.reset();
-    getAccounts.reset();
-  };
+  const reset = () => {};
 
   return {
     transactions: transactions,

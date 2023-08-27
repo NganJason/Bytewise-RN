@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import {
+  BaseButton,
   BaseCalendar,
   BaseLoadableView,
   BaseScreen,
@@ -9,7 +10,10 @@ import {
 } from '../../Components';
 import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
-import { getFormattedDateString } from '../../_shared/util';
+import {
+  getFirstDayOfMonthFormatted,
+  getFormattedDateString,
+} from '../../_shared/util';
 import { useDimension } from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
@@ -73,10 +77,16 @@ const TransactionCalendarScreen = () => {
 
   const onCurrMonthMove = e => {
     setCurrMonth(e);
+    setSelectedDate(getFirstDayOfMonthFormatted(e));
   };
 
   const onDatePress = e => {
     setSelectedDate(e.dateString);
+  };
+
+  const onTodayPress = () => {
+    setCurrMonth(new Date());
+    setSelectedDate(getFormattedDateString());
   };
 
   return (
@@ -91,6 +101,9 @@ const TransactionCalendarScreen = () => {
             onForward={onCurrMonthMove}
             onBackward={onCurrMonthMove}
           />
+        ),
+        rightComponent: (
+          <BaseButton title="T" type="secondary" onPress={onTodayPress} />
         ),
       }}
       fabProps={{
@@ -128,7 +141,7 @@ const TransactionCalendarScreen = () => {
 const getStyles = theme => {
   return StyleSheet.create({
     dayTextContainer: {
-      marginVertical: -6,
+      marginVertical: -8,
     },
     transactions: {
       marginTop: 12,
