@@ -88,6 +88,7 @@ const OverviewScreen = ({ navigation }) => {
             onForward={onDateMove}
             onBackward={onDateMove}
             year={timeRangeType === TIME_RANGE_YEARLY}
+            enablePicker
           />
         ),
       }}

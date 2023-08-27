@@ -91,6 +91,7 @@ const TransactionScreen = ({ navigation }) => {
             date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
+            enablePicker
           />
         ),
       }}

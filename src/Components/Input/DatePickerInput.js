@@ -1,10 +1,10 @@
-import { BottomSheet, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useDimension } from '../../_shared/hooks';
 import { getYearMonthString, getYearString } from '../../_shared/util';
-import { BaseButton } from '../Touch';
-import DatePicker, { DatePickerMode } from './Picker/DatePicker';
+import { DatePickerMode } from './Picker/DatePicker';
+import DatePickerBottomSheet from './Picker/DatePickerBottomSheet';
 import TouchInput from './TouchInput';
 
 const DatePickerInput = ({
@@ -60,35 +60,13 @@ const DatePickerInput = ({
         onPress={toggleModal}
         {...props}
       />
-      <BottomSheet
-        fullScreen={true}
-        scrollViewProps={{ style: { maxHeight: screenHeight / 2 } }}
+      <DatePickerBottomSheet
+        initialDate={selectedDate}
+        mode={mode}
         isVisible={isModalVisible}
-        onBackdropPress={toggleModal}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <BaseButton
-              title="Cancel"
-              type="clear"
-              align="flex-end"
-              size="md"
-              onPress={onCancel}
-            />
-            <BaseButton
-              title="Done"
-              type="clear"
-              align="flex-end"
-              size="md"
-              onPress={onDone}
-            />
-          </View>
-          <DatePicker
-            mode={mode}
-            startingDate={selectedDate}
-            onChange={onChangeHandler}
-          />
-        </View>
-      </BottomSheet>
+        close={toggleModal}
+        onChange={onChangeHandler}
+      />
     </>
   );
 };

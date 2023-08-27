@@ -110,6 +110,7 @@ const TransactionCalendarScreen = () => {
             date={currMonth}
             onForward={onCurrMonthMove}
             onBackward={onCurrMonthMove}
+            enablePicker
           />
         ),
         rightComponent: (
@@ -132,7 +133,10 @@ const TransactionCalendarScreen = () => {
         dayTextContainerStyle={styles.dayTextContainer}
         dayExtraInfo={renderDayExtraInfo}
       />
-      <BaseLoadableView containerStyle={styles.transactions} scrollable>
+      <BaseLoadableView
+        containerStyle={styles.transactions}
+        scrollable
+        isLoading={getTransactions.isLoading}>
         {getSelectedDateTransactions().length > 0 ? (
           <DailyTransactions
             timestamp={Date.parse(selectedDate)}

@@ -6,15 +6,29 @@ import IconButton from '../Touch/IconButton';
 
 import { moveMonth, getYear, getMonth } from '../../_shared/util';
 import { MONTHS } from '../../_shared/constant/constant';
+import DatePickerBottomSheet from '../Input/Picker/DatePickerBottomSheet';
+import { DatePickerMode } from '../Input/Picker/DatePicker';
+import { useState } from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const DateNavigator = ({
   date = new Date(),
   onForward = function () {},
   onBackward = function () {},
   year = false,
+  enablePicker = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const toggleDatePicker = () => {
+    setIsDatePickerVisible(!isDatePickerVisible);
+  };
+
+  const onDatePickerChange = e => {
+    onForward(e);
+  };
 
   const renderDate = () => {
     if (year) {
@@ -53,14 +67,23 @@ const DateNavigator = ({
         onPress={moveBackward}
         color={theme.colors.color8}
       />
-      <BaseText h3 style={styles.date}>
-        {renderDate()}
-      </BaseText>
+      <TouchableOpacity onPress={toggleDatePicker} disabled={!enablePicker}>
+        <BaseText h3 style={styles.date}>
+          {renderDate()}
+        </BaseText>
+      </TouchableOpacity>
       <IconButton
         iconName="chevron-right"
         type="entypo"
         onPress={moveForward}
         color={theme.colors.color8}
+      />
+      <DatePickerBottomSheet
+        mode={DatePickerMode.YearMonth}
+        initialDate={date}
+        isVisible={isDatePickerVisible}
+        close={toggleDatePicker}
+        onChange={onDatePickerChange}
       />
     </View>
   );
