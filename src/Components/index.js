@@ -65,7 +65,7 @@ import {
   BaseCalendar,
 } from './Common';
 
-import { BaseDonutChart, ChartLegend } from './Chart';
+import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
 
 export {
   BaseCheckbox,
@@ -119,6 +119,7 @@ export {
   BaseCalendar,
   BaseDonutChart,
   ChartLegend,
+  BaseDonutChartWithRows,
   BaseProgressTab,
   BaseSwipeableView,
 };

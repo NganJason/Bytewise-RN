@@ -3,21 +3,15 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import {
-  BaseDonutChart,
-  BaseLoadableView,
-  BaseRow,
-  ChartLegend,
   DateNavigator,
   EmptyContent,
   BaseText,
-  AmountText,
   BaseScreen,
-  BaseDivider,
   BaseBottomSelectTab,
+  BaseDonutChartWithRows,
 } from '../../Components';
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
-import { capitalize } from '../../_shared/util';
 import {
   DonutChartColors,
   EmptyContentConfig,
@@ -54,48 +48,31 @@ const CategoryOverviewScreen = ({ route }) => {
     categoryType,
   );
 
-  const renderRows = () => {
-    let rows = [];
-    categoriesInfo.forEach(category => {
-      rows.push(
-        <BaseRow
-          key={category.category_id}
-          onPress={() => {
-            navigation.navigate(ROUTES.categoryBreakdown, {
-              category_id: category.category_id,
-              active_ts: activeDate.valueOf(),
-              category_type: categoryType,
-            });
-          }}>
-          <ChartLegend
-            color={category.color}
-            text={capitalize(category.category_name)}
-            text3
-          />
-          <AmountText text3>{category.sum}</AmountText>
-        </BaseRow>,
-      );
-    });
-
-    if (rows.length === 0) {
-      return (
-        <EmptyContent
-          item={EmptyContentConfig.categoryOverview}
-          route={ROUTES.categoryForm}
-          routeParam={{ category_type: categoryType }}
-        />
-      );
-    }
-
-    return rows;
-  };
-
   const getCategoriesTotal = () => {
     let sum = 0;
     categoriesInfo.map(category => {
       sum += category.sum;
     });
     return sum.toFixed(2);
+  };
+
+  const chartItems = () => {
+    let items = [];
+
+    categoriesInfo.forEach(d => {
+      items.push({
+        name: d.category_name,
+        value: d.sum,
+        onPress: () => {
+          navigation.navigate(ROUTES.categoryBreakdown, {
+            category_id: d.category_id,
+            active_ts: activeDate.valueOf(),
+            category_type: categoryType,
+          });
+        },
+      });
+    });
+    return items;
   };
 
   return (
@@ -124,18 +101,21 @@ const CategoryOverviewScreen = ({ route }) => {
           />
         ),
       }}>
-      <BaseDonutChart
-        items={categoriesInfo}
-        innerLabel={{
+      <BaseDonutChartWithRows
+        items={chartItems()}
+        donutInnerLabel={{
           title: `S$ ${getCategoriesTotal()}`,
           subtitle: TRANSACTION_TYPES[categoryType],
         }}
+        isLoading={isScreenLoading()}
+        emptyContent={
+          <EmptyContent
+            item={EmptyContentConfig.categoryOverview}
+            route={ROUTES.categoryForm}
+            routeParam={{ category_type: categoryType }}
+          />
+        }
       />
-      {categoriesInfo.length === 0 && <BaseDivider margin={10} />}
-
-      <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
-        <View style={styles.body}>{renderRows()}</View>
-      </BaseLoadableView>
     </BaseScreen>
   );
 };

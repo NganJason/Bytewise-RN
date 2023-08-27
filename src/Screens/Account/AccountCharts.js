@@ -2,125 +2,110 @@ import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
-  AmountText,
   BaseBottomSelectTab,
-  BaseDonutChart,
-  BaseLoadableView,
-  BaseRow,
-  ChartLegend,
+  BaseDonutChartWithRows,
+  EmptyContent,
 } from '../../Components';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
+import ROUTES from '../../_shared/constant/routes';
 import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 
-const AccountCharts = ({ accounts = [], assetSum = 0, debtSum = 0 }) => {
+const assets = '1. Assets Breakdown';
+const debts = '2. Debts Breakdown';
+const chartTypes = [
+  { name: assets, value: 0 },
+  { name: debts, value: 1 },
+];
+
+const AccountCharts = ({
+  accounts = [],
+  assetSum = 0,
+  debtSum = 0,
+  onAccountPress = function (account) {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const [currChartType, setCurrChartType] = useState(1);
+  const [currChartIdx, setCurrChartIdx] = useState(chartTypes[0]?.value || 0);
 
-  const donutChartTitle = () => {
-    switch (currChartType) {
-      case 1:
-        return `S$ ${assetSum}`;
-      case 2:
-        return `S$ ${debtSum}`;
+  const donutChartLabel = () => {
+    let type = chartTypes[currChartIdx];
+    switch (type.name) {
+      case assets:
+        return {
+          title: `S$ ${assetSum}`,
+          subtitle: 'Assets',
+        };
+      case debts:
+        return {
+          title: `S$ ${debtSum}`,
+          subtitle: 'Debts',
+        };
       default:
-        return '';
-    }
-  };
-
-  const donutChartSubtitle = () => {
-    switch (currChartType) {
-      case 1:
-        return 'Assets';
-      case 2:
-        return 'Debts';
-      default:
-        return '';
+        return {};
     }
   };
 
   const donutChartItems = () => {
     let items = [];
-    switch (currChartType) {
-      case 1:
-        accounts.map(account => {
-          if (isAccountTypeAsset(account.account_type)) {
-            let value = account.latest_value || account.balance;
-            items.push({
-              value: Math.abs(value),
-            });
-          }
+
+    accounts.map(d => {
+      const { account_type: accountType, account_name: accountName } = d;
+      let value = d.latest_value || d.balance;
+
+      if (isAccountCurrChart(accountType)) {
+        items.push({
+          name: accountName,
+          value: Math.abs(value),
+          onPress: () => {
+            onAccountPress(d);
+          },
         });
-        return items;
-      case 2:
-        accounts.map(account => {
-          if (isAccountTypeDebt(account.account_type)) {
-            let value = account.latest_value || account.balance;
-            items.push({
-              value: Math.abs(value),
-            });
-          }
-        });
-        return items;
-
-      default:
-        return '';
-    }
-  };
-
-  const renderRows = () => {
-    let rows = [];
-
-    accounts.forEach(account => {
-      const { account_type: accountType } = account;
-      if (currChartType === 1 && isAccountTypeDebt(accountType)) {
-        return;
       }
-
-      if (currChartType === 2 && isAccountTypeAsset(accountType)) {
-        return;
-      }
-
-      rows.push(
-        <BaseRow key={account.account_id}>
-          <ChartLegend text3 text={account.account_name} />
-          <AmountText text3>
-            {account.balance || account.latest_value}
-          </AmountText>
-        </BaseRow>,
-      );
     });
 
-    return rows;
+    return items;
+  };
+
+  const isAccountCurrChart = accountType => {
+    let type = chartTypes[currChartIdx];
+    if (type.name === assets && isAccountTypeAsset(accountType)) {
+      return true;
+    }
+    if (type.name === debts && isAccountTypeDebt(accountType)) {
+      return true;
+    }
+    return false;
   };
 
   return (
     <View style={styles.body} scrollable>
       <View style={styles.bottomSelectTab}>
         <BaseBottomSelectTab
-          currTabText={currChartType}
-          items={[
-            { name: '1. Assets Breakdown', value: 1 },
-            { name: '2. Debts Breakdown', value: 2 },
-          ]}
-          onSelect={e => setCurrChartType(e.value)}
+          currTabText={chartTypes[currChartIdx][0]}
+          items={chartTypes}
+          onSelect={e => setCurrChartIdx(e.value)}
         />
       </View>
 
-      <BaseDonutChart
+      <BaseDonutChartWithRows
         items={donutChartItems()}
-        innerLabel={{
-          title: donutChartTitle(),
-          subtitle: donutChartSubtitle(),
-        }}
+        donutInnerLabel={donutChartLabel()}
+        emptyContent={
+          <EmptyContent
+            item={
+              chartTypes[currChartIdx].name === assets
+                ? EmptyContentConfig.asset
+                : EmptyContentConfig.debt
+            }
+            route={ROUTES.accountSelection}
+          />
+        }
       />
-      <BaseLoadableView scrollable containerStyle={{ flex: 1 }}>
-        {renderRows()}
-      </BaseLoadableView>
     </View>
   );
 };
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     body: {
       paddingHorizontal: 26,

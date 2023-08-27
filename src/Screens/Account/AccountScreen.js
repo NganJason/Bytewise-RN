@@ -197,6 +197,7 @@ const AccountScreen = () => {
             accounts={getAccounts?.data?.accounts || []}
             assetSum={computeEquitySum(EQUITY_TYPE_ASSET)}
             debtSum={computeEquitySum(EQUITY_TYPE_DEBT)}
+            onAccountPress={onAccountPress}
           />,
         ]}
         enableDotIndicator
