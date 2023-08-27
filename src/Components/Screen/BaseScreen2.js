@@ -32,6 +32,7 @@ const BaseScreen2 = ({
     message2: '',
     onHide: function () {},
   },
+  enablePadding = true,
 }) => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
@@ -69,7 +70,9 @@ const BaseScreen2 = ({
           </>
         </SafeAreaView>
 
-        <View style={styles.body}>{children}</View>
+        <View style={[styles.body, enablePadding && styles.paddingHori]}>
+          {children}
+        </View>
 
         {fabProps.show && (
           <FAB
@@ -114,7 +117,6 @@ const getStyles = (theme, screenHeight) =>
     body: {
       flex: 1,
       paddingVertical: theme.spacing.md,
-      paddingHorizontal: 26,
       backgroundColor: theme.colors.white,
       shadowColor: theme.colors.black,
       shadowOffset: {
@@ -124,6 +126,9 @@ const getStyles = (theme, screenHeight) =>
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    paddingHori: {
+      paddingHorizontal: 26,
     },
     fab: {
       backgroundColor: theme.colors.color1, // not the real backgroundColor, set to prevent warning

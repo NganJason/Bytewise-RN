@@ -44,6 +44,7 @@ import {
   BaseKeyboardAwareScrollView,
   BaseBottomSelectTab,
   BaseProgressTab,
+  BaseSwipeableView,
 } from './View';
 
 // Common
@@ -119,4 +120,5 @@ export {
   BaseDonutChart,
   ChartLegend,
   BaseProgressTab,
+  BaseSwipeableView,
 };

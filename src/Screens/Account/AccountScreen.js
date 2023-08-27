@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
@@ -7,11 +8,10 @@ import {
   BaseScreen2,
   BaseText,
   EmptyContent,
-  BaseCard,
-  BaseGrid,
   BaseImage,
   BaseLoadableView,
   BaseRow,
+  BaseSwipeableView,
 } from '../../Components';
 import {
   ACCOUNT_TYPES,
@@ -26,6 +26,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { capitalize, getEquityType } from '../../_shared/util';
 import { useGetAccounts } from '../../_shared/query';
 import { useError, useDimension } from '../../_shared/hooks';
+import AccountCharts from './AccountCharts';
 
 const AccountScreen = () => {
   const { theme } = useTheme();
@@ -73,60 +74,6 @@ const AccountScreen = () => {
   };
 
   const renderContent = (equityType = EQUITY_TYPE_ASSET) => {
-    const { accounts = [] } = getAccounts?.data || {};
-
-    let items = accounts.filter(
-      d => getEquityType(d.account_type) === equityType,
-    );
-
-    if (items.length === 0 && !getAccounts.isLoading) {
-      return (
-        <EmptyContent
-          item={
-            equityType === EQUITY_TYPE_ASSET
-              ? EmptyContentConfig.asset
-              : EmptyContentConfig.debt
-          }
-          route={ROUTES.accountSelection}
-        />
-      );
-    }
-
-    return (
-      <BaseGrid
-        items={items}
-        spacing={30}
-        renderItem={item => (
-          <BaseCard
-            key={item.account_id}
-            onPress={() => {
-              onAccountPress(item);
-            }}
-            color={
-              equityType === EQUITY_TYPE_ASSET
-                ? theme.colors.color2
-                : theme.colors.lightRed
-            }>
-            <BaseText text3 color={theme.colors.white}>
-              {item.account_name}
-            </BaseText>
-            <AmountText
-              text2
-              showNegativeOnly={equityType === EQUITY_TYPE_ASSET}
-              color={theme.colors.white}
-              margin={{ top: 16, bottom: 4 }}>
-              {item.latest_value || item.balance}
-            </AmountText>
-            <BaseText text4 color={theme.colors.white}>
-              {capitalize(ACCOUNT_TYPES[item.account_type])}
-            </BaseText>
-          </BaseCard>
-        )}
-      />
-    );
-  };
-
-  const renderContentV2 = (equityType = EQUITY_TYPE_ASSET) => {
     const { accounts = [] } = getAccounts?.data || {};
     let rows = [];
 
@@ -205,15 +152,12 @@ const AccountScreen = () => {
     );
   };
 
-  useError([getAccounts]);
-
-  return (
-    <BaseScreen2
-      headerProps={{
-        component: renderHeader(),
-        allowDrawer: true,
-      }}>
-      <BaseLoadableView scrollable={true} isLoading={getAccounts.isLoading}>
+  const renderAccountOverview = () => {
+    return (
+      <BaseLoadableView
+        scrollable={true}
+        isLoading={getAccounts.isLoading}
+        containerStyle={styles.body}>
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
@@ -221,7 +165,7 @@ const AccountScreen = () => {
               {computeEquitySum(EQUITY_TYPE_ASSET)}
             </AmountText>
           </BaseRow>
-          {renderContentV2(EQUITY_TYPE_ASSET)}
+          {renderContent(EQUITY_TYPE_ASSET)}
         </View>
 
         <View style={styles.contentContainer}>
@@ -231,15 +175,41 @@ const AccountScreen = () => {
               {computeEquitySum(EQUITY_TYPE_DEBT)}
             </AmountText>
           </BaseRow>
-          {renderContentV2(EQUITY_TYPE_DEBT)}
+          {renderContent(EQUITY_TYPE_DEBT)}
         </View>
       </BaseLoadableView>
+    );
+  };
+
+  useError([getAccounts]);
+
+  return (
+    <BaseScreen2
+      headerProps={{
+        component: renderHeader(),
+        allowDrawer: true,
+      }}
+      enablePadding={false}>
+      <BaseSwipeableView
+        items={[
+          renderAccountOverview(),
+          <AccountCharts
+            accounts={getAccounts?.data?.accounts || []}
+            assetSum={computeEquitySum(EQUITY_TYPE_ASSET)}
+            debtSum={computeEquitySum(EQUITY_TYPE_DEBT)}
+          />,
+        ]}
+        enableDotIndicator
+      />
     </BaseScreen2>
   );
 };
 
 const getStyles = (_, screenWidth, screenHeight) =>
   StyleSheet.create({
+    body: {
+      paddingHorizontal: 26,
+    },
     contentContainer: {
       marginBottom: 30,
     },

@@ -17,6 +17,7 @@ import BaseCard from './BaseCard';
 import BaseKeyboardAwareScrollView from './BaseKeyboardAwareScrollView';
 import BaseBottomSelectTab from './BaseBottomSelectTab';
 import BaseProgressTab from './BaseProgressTab';
+import BaseSwipeableView from './BaseSwipeableView';
 
 export {
   BaseBottomSheet,
@@ -38,4 +39,5 @@ export {
   BaseKeyboardAwareScrollView,
   BaseBottomSelectTab,
   BaseProgressTab,
+  BaseSwipeableView,
 };
