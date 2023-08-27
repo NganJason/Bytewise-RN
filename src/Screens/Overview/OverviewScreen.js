@@ -34,6 +34,7 @@ const OverviewScreen = ({ navigation }) => {
   const onTabChange = tab => {
     if (tab.name === 'Budget') {
       setTimeRangeType(TIME_RANGE_MONTHLY);
+      onDateMove(new Date());
     }
     setActiveTab(tab);
   };
