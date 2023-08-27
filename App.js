@@ -51,7 +51,7 @@ import {
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be.onrender.com/api/v1';
-const BASE_URL = LOCAL_BASE_URL;
+const BASE_URL = TEST_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -129,21 +129,21 @@ function Main() {
   }, []);
 
   const renderOnboardingRoutes = () => {
+    if (showSetupSplashScreen() && !isUserOnboarded()) {
+      return (
+        <Stack.Screen
+          name={ROUTES.setupSplashScreen}
+          component={SetupSplashScreen}
+        />
+      );
+    }
+
     if (!isUserOnboarded()) {
       return (
         <>
           <Stack.Screen name={ROUTES.welcome} component={WelcomeScreen} />
           <Stack.Screen name={ROUTES.onboarding} component={OnboardingScreen} />
         </>
-      );
-    }
-
-    if (showSetupSplashScreen()) {
-      return (
-        <Stack.Screen
-          name={ROUTES.setupSplashScreen}
-          component={SetupSplashScreen}
-        />
       );
     }
 
@@ -202,7 +202,7 @@ function Main() {
               headerShown: false,
               animation: 'slide_from_right',
             }}>
-            {false ? (
+            {!isLogin ? (
               <>
                 <Stack.Screen name={ROUTES.login} component={LoginScreen} />
                 <Stack.Screen name={ROUTES.signup} component={SignupScreen} />

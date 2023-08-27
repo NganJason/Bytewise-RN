@@ -42,9 +42,13 @@ const UserMetaProvider = ({ children }) => {
   useEffect(() => {
     async function getMeta() {
       try {
-        const meta = await AsyncStorage.getItem(USER_META);
+        const metaStr = await AsyncStorage.getItem(USER_META);
+        const meta = JSON.parse(metaStr);
         if (meta !== null) {
-          setUserMeta(JSON.parse(meta));
+          setUserMeta({
+            ...userMeta,
+            onboardingCompleted: meta.onboardingCompleted,
+          });
         }
       } catch {
         throw new UserError('get user meta error');

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -10,8 +11,7 @@ import {
 } from '../../Components';
 import { OnboardingDataContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
-import { useDimension, useError } from '../../_shared/hooks';
-import { useInitUser } from '../../_shared/mutations/user';
+import { useDimension } from '../../_shared/hooks';
 import AccountOnboarding from './AccountOnboarding';
 import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
@@ -28,45 +28,29 @@ const OnboardingScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
-  const {
-    commitCategories,
-    commitBudgets,
-    commitAccounts,
-    commitInvestment,
-    getWithErrors,
-    isCommitLoading,
-  } = useContext(OnboardingDataContext);
-  const { setOnboardingStatus, setShowSetupSplashScreen } =
-    useContext(UserMetaContext);
-  const initUser = useInitUser();
+  const { commitData, rollbackData, setupUser } = useContext(
+    OnboardingDataContext,
+  );
+  const { setShowSetupSplashScreen } = useContext(UserMetaContext);
+  const navigation = useNavigation();
 
   const [activeTab, setActiveTab] = useState(0);
   const onButtonPress = () => {
-    let tab = tabs[activeTab];
-    switch (tab.name) {
-      case 'category':
-        commitCategories(nextPage);
-        break;
-      case 'budget':
-        commitBudgets(nextPage);
-        break;
-      case 'account':
-        commitAccounts(nextPage);
-        break;
-      case 'investment':
-        commitInvestment(markUserOnboarded);
-        break;
-      default:
-        break;
+    commitData();
+    if (!isLastTab()) {
+      nextPage();
+    } else {
+      setupUser();
+      setShowSetupSplashScreen(true);
     }
-  };
-
-  const onSkip = () => {
-    nextPage();
   };
 
   const isLastTab = () => {
     return activeTab === tabs.length - 1;
+  };
+
+  const isFirstTab = () => {
+    return activeTab === 0;
   };
 
   const nextPage = () => {
@@ -76,16 +60,30 @@ const OnboardingScreen = () => {
     setActiveTab(activeTab + 1);
   };
 
-  const markUserOnboarded = () => {
-    initUser.mutate(
-      {},
-      {
-        onSuccess: () => {
-          setOnboardingStatus(true);
-          setShowSetupSplashScreen(true);
-        },
-      },
-    );
+  const prevPage = () => {
+    if (isFirstTab()) {
+      return;
+    }
+    setActiveTab(activeTab - 1);
+  };
+
+  const canSkip = () => {
+    return !isLastTab() && tabs[activeTab].canSkip;
+  };
+
+  const onSkip = () => {
+    if (!isLastTab()) {
+      rollbackData();
+      nextPage();
+    }
+  };
+
+  const onBack = () => {
+    if (isFirstTab()) {
+      navigation.goBack();
+      return;
+    }
+    prevPage();
   };
 
   const renderTabContent = () => {
@@ -104,14 +102,8 @@ const OnboardingScreen = () => {
     }
   };
 
-  const canSkip = () => {
-    return !isLastTab() && tabs[activeTab].canSkip;
-  };
-
-  useError([...getWithErrors(), initUser]);
-
   return (
-    <BaseScreen>
+    <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
       <View style={styles.screen}>
         <BaseProgressTab numTab={4} activeTab={activeTab} />
         <View style={styles.body}>{renderTabContent()}</View>
@@ -121,7 +113,6 @@ const OnboardingScreen = () => {
             size="lg"
             width={200}
             onPress={onButtonPress}
-            isLoading={isCommitLoading || initUser.isLoading}
           />
 
           {canSkip() && (
@@ -141,7 +132,6 @@ const getStyles = (theme, screenHeight) => {
   return StyleSheet.create({
     screen: {
       flex: 1,
-      paddingTop: screenHeight * 0.1,
     },
     body: {
       flex: 1,

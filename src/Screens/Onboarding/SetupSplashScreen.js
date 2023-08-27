@@ -1,11 +1,15 @@
 import { useTheme } from '@rneui/themed';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, StyleSheet } from 'react-native';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const SetupSplashScreen = () => {
   const { theme } = useTheme();
-  const { setShowSetupSplashScreen } = useContext(UserMetaContext);
+  const { setOnboardingStatus, setShowSetupSplashScreen, isSetupLoading } =
+    useContext(UserMetaContext);
+
+  // Setup screen should load at least n seconds to prevent flickering
+  const [minLoadingTimeDone, setMinLoadingTimeDone] = useState(false);
   const fadeAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -16,15 +20,21 @@ const SetupSplashScreen = () => {
         useNativeDriver: true,
       }).start();
     };
-
     fadeIn();
   }, []);
 
   useEffect(() => {
     setTimeout(() => {
-      setShowSetupSplashScreen(false);
+      setMinLoadingTimeDone(true);
     }, 2000);
   }, []);
+
+  useEffect(() => {
+    if (minLoadingTimeDone && !isSetupLoading) {
+      setShowSetupSplashScreen(false);
+      setOnboardingStatus(true);
+    }
+  }, [minLoadingTimeDone, isSetupLoading]);
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnimation }]}>

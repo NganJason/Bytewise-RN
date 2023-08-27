@@ -79,7 +79,7 @@ const DateNavigator = ({
         color={theme.colors.color8}
       />
       <DatePickerBottomSheet
-        mode={DatePickerMode.YearMonth}
+        mode={year ? DatePickerMode.Year : DatePickerMode.YearMonth}
         initialDate={date}
         isVisible={isDatePickerVisible}
         close={toggleDatePicker}

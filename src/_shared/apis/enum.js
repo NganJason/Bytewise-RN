@@ -65,9 +65,9 @@ export const BUDGET_TYPES = {
   [BUDGET_TYPE_ANNUAL]: 'Annual',
 };
 
-export const BUDGET_REPEAT_NOW = 0;
+export const BUDGET_REPEAT_ALL_TIME = 0;
 export const BUDGET_REPEAT_NOW_TO_FUTURE = 1;
-export const BUDGET_REPEAT_ALL_TIME = 2;
+export const BUDGET_REPEAT_NOW = 2;
 
 export const BUDGET_REPEATS = {
   [BUDGET_REPEAT_NOW]: 'This month only',

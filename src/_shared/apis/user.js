@@ -74,9 +74,12 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
   }
 };
 
-export const initUser = async ({}) => {
+export const initUser = async ({ accounts = [], categories = [] }) => {
   try {
-    const body = await sendPostRequest(INIT_USER, {});
+    const body = await sendPostRequest(INIT_USER, {
+      accounts: accounts,
+      categories: categories,
+    });
     return body;
   } catch (e) {
     throw new UserError({

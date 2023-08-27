@@ -1,13 +1,11 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import {
   ACCOUNT_TYPE_INVESTMENT,
   BUDGET_TYPE_MONTHLY,
   HOLDING_TYPE_DEFAULT,
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
-import { useCreateAccounts } from '../mutations/account';
-import { useCreateBudgets } from '../mutations/budget';
-import { useCreateCategories } from '../mutations/category';
+import { useInitUser } from '../mutations/user';
 
 const DefaultCategoryBudgets = [
   {
@@ -42,6 +40,7 @@ const defaultData = {
   accounts: [],
   investmentAccount: {
     account_name: '',
+    account_type: ACCOUNT_TYPE_INVESTMENT,
     holdings: [],
   },
 };
@@ -63,6 +62,9 @@ const OnboardingDataProvider = ({ children }) => {
 
   // ---------------- Data ----------------
   const [data, setData] = useState(defaultData);
+  const [committedData, setCommittedData] = useState(
+    JSON.stringify(defaultData),
+  );
 
   const addCategory = e => {
     const newCb = [...(data.categoryBudgets || []), e];
@@ -80,10 +82,7 @@ const OnboardingDataProvider = ({ children }) => {
     budget = { amount: 0, budget_type: BUDGET_TYPE_MONTHLY },
   ) => {
     const newCb = [...(data.categoryBudgets || [])];
-    newCb[idx].budget = {
-      ...budget,
-      category_id: newCb[idx]?.category_id || '',
-    };
+    newCb[idx].budget = budget;
     setData({ ...data, categoryBudgets: newCb });
   };
 
@@ -115,108 +114,65 @@ const OnboardingDataProvider = ({ children }) => {
   };
 
   // ---------------- Commit data ----------------
-  const createCategories = useCreateCategories();
-  const createBudgets = useCreateBudgets();
-  const createAccounts = useCreateAccounts();
+  const initUser = useInitUser();
 
-  const [isCommitLoading, setIsCommitLoading] = useState(false);
-  useEffect(() => {
-    setIsCommitLoading(
-      createCategories.isLoading ||
-        createBudgets.isLoading ||
-        createAccounts.isLoading,
-    );
-  }, [createCategories, createBudgets, createAccounts]);
+  const commitData = () => {
+    setCommittedData(JSON.stringify(data));
+  };
 
-  const commitCategories = (onSuccess = function () {}) => {
-    createCategories.mutate(
-      { categories: data.categoryBudgets },
-      {
-        onSuccess: ({ categories = [] }) => {
-          let newCb = categories.map(category => {
-            return { ...category, budget: null };
+  const rollbackData = () => {
+    setData(JSON.parse(committedData));
+  };
+
+  const setupUser = () => {
+    // Clone data
+    let dataStr = JSON.stringify(data);
+    let finalData = JSON.parse(dataStr);
+
+    let { investmentAccount = { account_name: '', holdings: [] } } = finalData;
+
+    if (investmentAccount.account_name !== '') {
+      let symbolToHoldingsMap = {};
+      investmentAccount.holdings.map(holding => {
+        if (!(holding.symbol in symbolToHoldingsMap)) {
+          symbolToHoldingsMap[holding.symbol] = [];
+        }
+        symbolToHoldingsMap[holding.symbol].push(holding);
+      });
+
+      let holdingsReq = [];
+      for (const symbol in symbolToHoldingsMap) {
+        let holdings = symbolToHoldingsMap[symbol];
+        let lots = [];
+
+        holdings.map(holding => {
+          lots.push({
+            shares: holding.shares,
+            cost_per_share: holding.cost_per_share,
+            trade_date: holding.trade_date,
           });
-          setData({ ...data, categoryBudgets: newCb });
-          onSuccess();
-        },
-      },
-    );
-  };
-
-  const commitBudgets = onSuccess => {
-    let budgets = [];
-    data.categoryBudgets.map(cb => {
-      if (cb.budget !== null) {
-        budgets.push(cb?.budget);
-      }
-    });
-
-    if (budgets.length > 0) {
-      createBudgets.mutate({ budgets: budgets }, { onSuccess: onSuccess });
-    } else {
-      onSuccess();
-    }
-  };
-
-  const commitAccounts = onSuccess => {
-    let { accounts = [] } = data;
-    if (accounts.length > 0) {
-      createAccounts.mutate({ accounts: accounts }, { onSuccess: onSuccess });
-    } else {
-      onSuccess();
-    }
-  };
-
-  const commitInvestment = onSuccess => {
-    let { investmentAccount = { account_name: '', holdings: [] } } = data;
-
-    if (investmentAccount.account_name === '') {
-      onSuccess();
-      return;
-    }
-
-    let symbolToHoldingsMap = {};
-    investmentAccount.holdings.map(holding => {
-      if (!(holding.symbol in symbolToHoldingsMap)) {
-        symbolToHoldingsMap[holding.symbol] = [];
-      }
-      symbolToHoldingsMap[holding.symbol].push(holding);
-    });
-
-    let holdingsReq = [];
-    for (const symbol in symbolToHoldingsMap) {
-      let holdings = symbolToHoldingsMap[symbol];
-      let lots = [];
-
-      holdings.map(holding => {
-        lots.push({
-          shares: holding.shares,
-          cost_per_share: holding.cost_per_share,
-          trade_date: holding.trade_date,
         });
-      });
 
-      holdingsReq.push({
-        symbol: symbol,
-        holding_type: holdings[0]?.holding_type || HOLDING_TYPE_DEFAULT,
-        lots: lots,
-      });
+        holdingsReq.push({
+          symbol: symbol,
+          holding_type: holdings[0]?.holding_type || HOLDING_TYPE_DEFAULT,
+          lots: lots,
+        });
+      }
+
+      let investmentAccountReq = {
+        account_name: investmentAccount.account_name,
+        account_type: ACCOUNT_TYPE_INVESTMENT,
+        holdings: holdingsReq,
+      };
+
+      finalData.accounts = [...finalData.accounts, investmentAccountReq];
     }
 
-    let investmentAccountReq = {
-      account_name: investmentAccount.account_name,
-      account_type: ACCOUNT_TYPE_INVESTMENT,
-      holdings: holdingsReq,
-    };
-
-    createAccounts.mutate(
-      { accounts: [investmentAccountReq] },
-      { onSuccess: onSuccess },
-    );
-  };
-
-  const getWithErrors = () => {
-    return [createCategories, createBudgets, createAccounts];
+    initUser.mutate({
+      accounts: finalData.accounts,
+      categories: finalData.categoryBudgets,
+    });
   };
 
   return (
@@ -233,12 +189,11 @@ const OnboardingDataProvider = ({ children }) => {
         updateAccount,
         addInvestmentAccountName,
         addInvestmentHolding,
-        commitCategories,
-        commitBudgets,
-        commitAccounts,
-        commitInvestment,
-        getWithErrors,
-        isCommitLoading,
+
+        commitData,
+        rollbackData,
+        setupUser,
+        isSetupLoading: initUser.isLoading,
       }}>
       {children}
     </OnboardingDataContext.Provider>
