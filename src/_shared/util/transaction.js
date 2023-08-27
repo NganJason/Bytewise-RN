@@ -2,6 +2,35 @@ import {
   ACCOUNT_TYPE_BANK_ACCOUNT,
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
+import { getFormattedDateString } from './date';
+
+export const groupTransactionsByDateStr = (transactions = []) => {
+  const dateStrToTransactions = {};
+  const { dateToTransactions } = groupTransactionsByDate(transactions);
+
+  for (let ts in dateToTransactions) {
+    let txns = dateToTransactions[ts];
+    let dateStr = getFormattedDateString(new Date(Number(ts)));
+    let totalExpense = 0;
+    let totalIncome = 0;
+
+    txns.map(d => {
+      if (d.transaction_type === TRANSACTION_TYPE_EXPENSE) {
+        totalExpense += Number(d.amount);
+      } else {
+        totalIncome += Number(d.amount);
+      }
+    });
+
+    dateStrToTransactions[dateStr] = {
+      transactions: dateToTransactions[ts],
+      totalExpense: totalExpense,
+      totalIncome: totalIncome,
+    };
+  }
+
+  return dateStrToTransactions;
+};
 
 export const groupTransactionsByDate = (transactions = []) => {
   const dateToTransactions = {};

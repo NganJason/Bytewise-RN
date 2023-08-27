@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   BaseButton,
   BaseCalendar,
@@ -7,64 +7,26 @@ import {
   BaseText,
   DailyTransactions,
   DateNavigator,
+  EmptyContent,
 } from '../../Components';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getFirstDayOfMonthFormatted,
   getFormattedDateString,
+  getMonth,
+  getUnixRangeOfMonth,
+  getYear,
+  groupTransactionsByDateStr,
 } from '../../_shared/util';
-import { useDimension } from '../../_shared/hooks';
+import { useDimension, useError } from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
+import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 
-const transactions = [
-  {
-    transaction_id: '1',
-    category: {
-      category_id: '1',
-      category_name: 'Food',
-    },
-    account: {
-      account_id: '1',
-      account_name: 'OCBC',
-    },
-    amount: '12',
-    note: 'Lunch',
-    transaction_time: 0,
-    transaction_type: 0,
-  },
-  {
-    transaction_id: '2',
-    category: {
-      category_id: '1',
-      category_name: 'Food',
-    },
-    account: {
-      account_id: '1',
-      account_name: 'OCBC',
-    },
-    amount: '15',
-    note: 'Breakfast',
-    transaction_time: 0,
-    transaction_type: 0,
-  },
-  {
-    transaction_id: '3',
-    category: {
-      category_id: '1',
-      category_name: 'Food',
-    },
-    account: {
-      account_id: '1',
-      account_name: 'OCBC',
-    },
-    amount: '20',
-    note: 'Dinner',
-    transaction_time: 0,
-    transaction_type: 0,
-  },
-];
+const PAGING_LIMIT = 500;
+const STARTING_PAGE = 1;
 
 const TransactionCalendarScreen = () => {
   const { theme } = useTheme();
@@ -73,6 +35,31 @@ const TransactionCalendarScreen = () => {
   const navigation = useNavigation();
 
   const [currMonth, setCurrMonth] = useState(new Date());
+  const [timeRange, setTimeRange] = useState(
+    getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)),
+  );
+  useEffect(() => {
+    setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
+  }, [currMonth]);
+
+  const getTransactions = useGetTransactionsHook({
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
+    },
+    paging: {
+      limit: PAGING_LIMIT,
+      page: STARTING_PAGE,
+    },
+  });
+
+  let dateStrToTransactions = groupTransactionsByDateStr(
+    getTransactions?.transactions || [],
+  );
+  const getSelectedDateTransactions = () => {
+    return dateStrToTransactions[selectedDate]?.transactions || [];
+  };
+
   const [selectedDate, setSelectedDate] = useState(getFormattedDateString());
 
   const onCurrMonthMove = e => {
@@ -87,6 +74,29 @@ const TransactionCalendarScreen = () => {
   const onTodayPress = () => {
     setCurrMonth(new Date());
     setSelectedDate(getFormattedDateString());
+  };
+
+  useError([getTransactions]);
+
+  const renderDayExtraInfo = date => {
+    let totalIncome = Math.abs(
+      dateStrToTransactions[date.dateString]?.totalIncome || 0,
+    );
+
+    let totalExpense = Math.abs(
+      dateStrToTransactions[date.dateString]?.totalExpense || 0,
+    );
+
+    return (
+      <>
+        <BaseText text6 margin={{ top: 6 }} color={theme.colors.regularRed}>
+          {totalExpense > 0 ? totalExpense.toFixed(2) : ''}
+        </BaseText>
+        <BaseText text6 color={theme.colors.color1}>
+          {totalIncome > 0 ? totalIncome.toFixed(2) : ''}
+        </BaseText>
+      </>
+    );
   };
 
   return (
@@ -120,19 +130,20 @@ const TransactionCalendarScreen = () => {
         selectedDate={selectedDate}
         onDayPress={onDatePress}
         dayTextContainerStyle={styles.dayTextContainer}
-        dayExtraInfo={
-          <>
-            <BaseText text6 margin={{ top: 6 }} color={theme.colors.regularRed}>
-              100
-            </BaseText>
-            <BaseText text6 color={theme.colors.color1}>
-              200
-            </BaseText>
-          </>
-        }
+        dayExtraInfo={renderDayExtraInfo}
       />
       <BaseLoadableView containerStyle={styles.transactions} scrollable>
-        <DailyTransactions transactions={transactions} />
+        {getSelectedDateTransactions().length > 0 ? (
+          <DailyTransactions
+            timestamp={Date.parse(selectedDate)}
+            transactions={getSelectedDateTransactions()}
+          />
+        ) : (
+          <EmptyContent
+            item={EmptyContentConfig.transaction}
+            route={ROUTES.transactionForm}
+          />
+        )}
       </BaseLoadableView>
     </BaseScreen>
   );

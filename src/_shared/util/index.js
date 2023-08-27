@@ -46,6 +46,7 @@ import {
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
+  groupTransactionsByDateStr,
 } from './transaction';
 import { checkIsUserNew } from './user';
 
@@ -96,5 +97,6 @@ export {
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
+  groupTransactionsByDateStr,
   checkIsUserNew,
 };

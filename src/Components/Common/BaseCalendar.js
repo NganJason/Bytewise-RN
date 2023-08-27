@@ -9,7 +9,7 @@ const BaseCalendar = ({
   currMonthStr = getFormattedDateString(),
   selectedDate = getFormattedDateString(),
   onDayPress = function (date) {},
-  dayExtraInfo = <></>,
+  dayExtraInfo = function (date) {},
   dayTextContainerStyle = {},
 }) => {
   const { theme } = useTheme();
@@ -43,7 +43,7 @@ const BaseCalendar = ({
             {date.day}
           </BaseText>
         </TouchableOpacity>
-        {dayExtraInfo}
+        {dayExtraInfo(date)}
       </View>
     );
   };
@@ -76,10 +76,6 @@ const getStyles = theme => {
       width: 28,
       height: 28,
       borderRadius: 100,
-      shadowColor: theme.colors.black,
-      shadowOffset: {},
-      shadowOpacity: 0.2,
-      shadowRadius: 2,
     },
     selectedDay: {
       backgroundColor: theme.colors.color3,
