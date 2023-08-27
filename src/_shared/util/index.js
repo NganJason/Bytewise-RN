@@ -49,6 +49,7 @@ import {
   groupTransactionsByDateStr,
 } from './transaction';
 import { checkIsUserNew } from './user';
+import { genColors } from './color';
 
 export {
   getEquityType,
@@ -99,4 +100,5 @@ export {
   mergeTransactionAccount,
   groupTransactionsByDateStr,
   checkIsUserNew,
+  genColors,
 };

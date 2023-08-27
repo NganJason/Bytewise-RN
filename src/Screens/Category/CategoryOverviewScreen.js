@@ -13,7 +13,6 @@ import {
 import { useGetCategories } from '../../_shared/query';
 import { useAggrTransactions } from '../../_shared/query';
 import {
-  DonutChartColors,
   EmptyContentConfig,
   TIME_RANGE_MONTHLY,
   TIME_RANGE_TYPES,
@@ -159,10 +158,6 @@ const useCategoryInfo = (timeRange, categoryType) => {
     });
 
     categories.sort((a, b) => a.category_name - b.category_name);
-    categories.map((category, idx) => {
-      category.color = DonutChartColors[idx];
-    });
-
     setCategoriesInfo(categories);
   }, [getCategoriesQuery.data, aggrTransactionsByCategoryQuery.data]);
 

@@ -99,7 +99,7 @@ export const EmptyContentConfig = {
   },
 };
 
-export const DonutChartColors = [
+export const DefaultChartColors = [
   '#4e79a7',
   '#f28e2c',
   '#e15759',

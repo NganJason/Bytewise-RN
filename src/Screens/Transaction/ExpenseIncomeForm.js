@@ -16,6 +16,7 @@ import {
 
 import {
   ACCOUNT_TYPE_INVESTMENT,
+  ACCOUNT_TYPE_LOAN,
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 
@@ -226,7 +227,11 @@ const ExpenseIncomeForm = ({
 
   const getAccountOptions = () => {
     let { accounts = [] } = getAccounts?.data || {};
-    accounts = accounts.filter(d => d.account_type !== ACCOUNT_TYPE_INVESTMENT);
+    accounts = accounts.filter(
+      d =>
+        d.account_type !== ACCOUNT_TYPE_INVESTMENT &&
+        d.account_type !== ACCOUNT_TYPE_LOAN,
+    );
     return accounts;
   };
 
@@ -294,6 +299,7 @@ const ExpenseIncomeForm = ({
           onChangeText={onAmountChange}
           onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           errorMessage={showValidation && formErrors.amount}
+          autoFocus
         />
 
         <BaseInput

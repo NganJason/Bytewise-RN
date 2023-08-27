@@ -189,7 +189,16 @@ const AccountScreen = () => {
         component: renderHeader(),
         allowDrawer: true,
       }}
-      enablePadding={false}>
+      enablePadding={false}
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'plus',
+        iconType: 'entypo',
+        iconColor: theme.colors.white,
+        color: theme.colors.color1,
+        onPress: () => navigation.navigate(ROUTES.accountSelection),
+      }}>
       <BaseSwipeableView
         items={[
           renderAccountOverview(),

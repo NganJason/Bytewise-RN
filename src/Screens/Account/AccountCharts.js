@@ -81,7 +81,7 @@ const AccountCharts = ({
     <View style={styles.body} scrollable>
       <View style={styles.bottomSelectTab}>
         <BaseBottomSelectTab
-          currTabText={chartTypes[currChartIdx][0]}
+          currTabText={chartTypes[currChartIdx].name[0]}
           items={chartTypes}
           onSelect={e => setCurrChartIdx(e.value)}
         />

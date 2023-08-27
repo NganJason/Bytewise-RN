@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { DonutChartColors } from '../../_shared/constant/constant';
+import { DefaultChartColors } from '../../_shared/constant/constant';
 import BaseDonutChart from './BaseDonutChart';
 import BaseRow from '../View/BaseRow';
 import ChartLegend from './ChartLegend';
 import { AmountText, BaseText } from '../Text';
 import { BaseDivider, BaseLoadableView } from '../View';
 import { useTheme } from '@rneui/themed';
+import { genColors } from '../../_shared/util';
 
 const BaseDonutChartWithRows = ({
   items = [{ name: '', value: 0, onPress: function () {} }],
@@ -18,16 +19,25 @@ const BaseDonutChartWithRows = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
+  function generateColors(numColors) {
+    if (numColors <= DefaultChartColors.length) {
+      return DefaultChartColors;
+    }
+    // Only gen colors if needed
+    return genColors(numColors);
+  }
+
   useEffect(() => {
     let p = [];
     let sum = 0;
     items.map(d => (sum += d.value));
+    let colors = generateColors(items.length);
 
     items.map((d, idx) => {
       if (d.name === '') {
         return;
       }
-      d.color = DonutChartColors[idx];
+      d.color = colors[idx];
       d.percentage = ((d.value / sum) * 100).toFixed(0);
       p.push(d);
     });
@@ -44,6 +54,7 @@ const BaseDonutChartWithRows = ({
           <View style={styles.rowValue}>
             <AmountText text3>{d.value}</AmountText>
             <BaseText
+              text5
               margin={{ left: 10 }}
               color={theme.colors.color7}>{`(${d.percentage}%)`}</BaseText>
           </View>
