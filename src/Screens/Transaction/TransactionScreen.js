@@ -70,7 +70,6 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <BaseScreen
-      isLoading={isScreenLoading()}
       allowLoadable={false}
       backgroundColor={theme.colors.color11}
       enablePadding={false}

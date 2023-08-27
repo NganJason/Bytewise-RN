@@ -182,6 +182,7 @@ export const THEME = createTheme({
   calendar: {
     monthTextColor: COLORS.black,
     arrowColor: COLORS.regularGrey,
+    calendarBackground: undefined, // To make it transparent
 
     textDayHeaderFontSize: 12,
     textDayHeaderFontFamily: FONT_FAMILY.semiBold,
