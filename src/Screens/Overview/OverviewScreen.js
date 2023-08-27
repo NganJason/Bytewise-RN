@@ -103,11 +103,13 @@ const OverviewScreen = ({ navigation }) => {
       }}>
       <>
         <View>
-          <BaseScrollableTab
-            tabs={scrollableTabs}
-            activeTab={activeTab}
-            onTabChange={onTabChange}
-          />
+          <View style={styles.scrollableTab}>
+            <BaseScrollableTab
+              tabs={scrollableTabs}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </View>
         </View>
         <View style={styles.body}>{getScreen()}</View>
       </>
@@ -119,5 +121,8 @@ export default OverviewScreen;
 
 const getStyles = _ =>
   StyleSheet.create({
+    scrollableTab: {
+      marginTop: 16,
+    },
     body: { marginTop: 12, flex: 1 },
   });

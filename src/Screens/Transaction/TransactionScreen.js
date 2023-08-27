@@ -136,6 +136,7 @@ const TransactionScreen = ({ navigation }) => {
 const getStyles = theme => {
   return StyleSheet.create({
     aggrContainer: {
+      marginTop: 16,
       marginBottom: 22,
     },
     body: {
