@@ -126,6 +126,50 @@ const AccountScreen = () => {
     );
   };
 
+  const renderContentV2 = (equityType = EQUITY_TYPE_ASSET) => {
+    const { accounts = [] } = getAccounts?.data || {};
+    let rows = [];
+
+    let items = accounts.filter(
+      d => getEquityType(d.account_type) === equityType,
+    );
+
+    if (items.length === 0 && !getAccounts.isLoading) {
+      return (
+        <EmptyContent
+          item={
+            equityType === EQUITY_TYPE_ASSET
+              ? EmptyContentConfig.asset
+              : EmptyContentConfig.debt
+          }
+          route={ROUTES.accountSelection}
+        />
+      );
+    }
+
+    items.map((item, idx) => {
+      rows.push(
+        <BaseRow
+          key={idx}
+          dividerMargin={0}
+          onPress={() => {
+            onAccountPress(item);
+          }}>
+          <View>
+            <BaseText text3>{item.account_name}</BaseText>
+            <BaseText text5 color={theme.colors.color8} margin={{ top: 4 }}>
+              {capitalize(ACCOUNT_TYPES[item.account_type])}
+            </BaseText>
+          </View>
+          <View style={styles.rowCol}>
+            <AmountText text4>{item.latest_value || item.balance}</AmountText>
+          </View>
+        </BaseRow>,
+      );
+    });
+    return rows;
+  };
+
   const renderHeader = () => {
     return (
       <>
@@ -177,7 +221,7 @@ const AccountScreen = () => {
               {computeEquitySum(EQUITY_TYPE_ASSET)}
             </AmountText>
           </BaseRow>
-          {renderContent(EQUITY_TYPE_ASSET)}
+          {renderContentV2(EQUITY_TYPE_ASSET)}
         </View>
 
         <View style={styles.contentContainer}>
@@ -187,7 +231,7 @@ const AccountScreen = () => {
               {computeEquitySum(EQUITY_TYPE_DEBT)}
             </AmountText>
           </BaseRow>
-          {renderContent(EQUITY_TYPE_DEBT)}
+          {renderContentV2(EQUITY_TYPE_DEBT)}
         </View>
       </BaseLoadableView>
     </BaseScreen2>
@@ -197,7 +241,7 @@ const AccountScreen = () => {
 const getStyles = (_, screenWidth, screenHeight) =>
   StyleSheet.create({
     contentContainer: {
-      flex: 1,
+      marginBottom: 30,
     },
     image: {
       width: screenHeight * 0.26,
@@ -206,6 +250,7 @@ const getStyles = (_, screenWidth, screenHeight) =>
       right: screenWidth * -0.2,
       zIndex: -1,
     },
+    rowCol: { justifyContent: 'center' },
   });
 
 export default AccountScreen;
