@@ -69,6 +69,12 @@ export const EmptyContentConfig = {
     text: ['Your everyday transactions'],
     image: paper,
   },
+  transactionv2: {
+    text: ['What gets measured,', 'gets managed'],
+    linkText: 'Track your transactions today!',
+    italic: true,
+    image: paper,
+  },
   investment: {
     text: ['No holding yet'],
     image: paper,

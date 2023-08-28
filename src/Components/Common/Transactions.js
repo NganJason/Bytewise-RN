@@ -12,7 +12,11 @@ import EmptyContent from './EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 
-const Transactions = ({ transactions = [], showMonthLabel = false }) => {
+const Transactions = ({
+  transactions = [],
+  showMonthLabel = false,
+  emptyContentConfig,
+}) => {
   const processTransactions = () => {
     let { transactionDates = [], dateToTransactions = {} } =
       groupTransactionsByDate(transactions);
@@ -54,7 +58,11 @@ const Transactions = ({ transactions = [], showMonthLabel = false }) => {
       if (rows.length === 0) {
         return (
           <EmptyContent
-            item={EmptyContentConfig.transaction}
+            item={
+              emptyContentConfig
+                ? emptyContentConfig
+                : EmptyContentConfig.transaction
+            }
             route={ROUTES.transactionForm}
           />
         );

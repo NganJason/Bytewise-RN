@@ -9,7 +9,9 @@ import { BaseImage } from '../View';
 const EmptyContent = ({
   item = {
     text: ['No data'],
+    linkText: '',
     image: paper,
+    italic: false,
   },
   route = '',
   routeParam = {},
@@ -37,13 +39,17 @@ const EmptyContent = ({
 
         <View style={styles.textContainer}>
           {item.text.map(d => (
-            <BaseText key={d} text3 style={styles.text}>
+            <BaseText
+              key={d}
+              text3
+              color={theme.colors.color7}
+              italic={item.italic || false}>
               {d}
             </BaseText>
           ))}
           {route !== '' && (
-            <LinkText text4 onPress={onPress}>
-              Add now!
+            <LinkText text3 onPress={onPress} margin={{ top: 8 }}>
+              {item.linkText !== undefined ? item.linkText : 'Add now!'}
             </LinkText>
           )}
         </View>
@@ -61,10 +67,6 @@ const getStyles = theme => {
     },
     textContainer: {
       alignItems: 'center',
-    },
-    text: {
-      marginBottom: theme.spacing.md,
-      color: theme.colors.color7,
     },
   });
 };

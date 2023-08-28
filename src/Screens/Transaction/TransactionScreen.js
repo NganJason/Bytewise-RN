@@ -19,6 +19,7 @@ import {
 } from '../../_shared/apis/enum';
 import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError, useDimension } from '../../_shared/hooks';
+import { EmptyContentConfig } from '../../_shared/constant/constant';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -64,7 +65,12 @@ const TransactionScreen = ({ navigation }) => {
 
   const renderRows = () => {
     let { transactions = [] } = getTransactions;
-    return <Transactions transactions={transactions} />;
+    return (
+      <Transactions
+        transactions={transactions}
+        emptyContentConfig={EmptyContentConfig.transactionv2}
+      />
+    );
   };
 
   useError([getTransactions, aggrTransactionsQuery]);
