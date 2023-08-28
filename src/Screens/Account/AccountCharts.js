@@ -8,6 +8,7 @@ import {
 } from '../../Components';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import { useDimension } from '../../_shared/hooks';
 import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 
 const assets = '1. Assets Breakdown';
@@ -25,6 +26,7 @@ const AccountCharts = ({
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const { screenHeight } = useDimension();
   const [currChartIdx, setCurrChartIdx] = useState(chartTypes[0]?.value || 0);
 
   const donutChartLabel = () => {
@@ -90,6 +92,7 @@ const AccountCharts = ({
       <BaseDonutChartWithRows
         items={donutChartItems()}
         donutInnerLabel={donutChartLabel()}
+        donutRadius={screenHeight * 0.125}
         emptyContent={
           <EmptyContent
             item={

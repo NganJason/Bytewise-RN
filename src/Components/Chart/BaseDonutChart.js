@@ -7,6 +7,7 @@ const BaseDonutChart = ({
   items = [], // {value: 0, color: ''}
   innerLabel = { title: '', subtitle: '' },
   shadow = false,
+  radius = 100,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles();
@@ -56,12 +57,12 @@ const BaseDonutChart = ({
       <PieChart
         data={processItems()}
         donut
-        radius={100}
+        radius={radius}
         showText
-        innerRadius={80}
+        innerRadius={radius * 0.8}
         backgroundColor="white"
-        shadow={false}
-        shadowColor="black"
+        shadow={shadow}
+        shadowColor="grey"
         strokeWidth={2}
         strokeColor="white"
         labelsPosition="mid"

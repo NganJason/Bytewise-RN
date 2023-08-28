@@ -12,6 +12,7 @@ import { genColors } from '../../_shared/util';
 const BaseDonutChartWithRows = ({
   items = [{ name: '', value: 0, onPress: function () {} }],
   donutInnerLabel = { title: '', subtitle: '' },
+  donutRadius = 100,
   isLoading = false,
   emptyContent = <></>,
 }) => {
@@ -71,7 +72,11 @@ const BaseDonutChartWithRows = ({
 
   return (
     <View style={styles.container}>
-      <BaseDonutChart items={processedItems} innerLabel={donutInnerLabel} />
+      <BaseDonutChart
+        items={processedItems}
+        innerLabel={donutInnerLabel}
+        radius={donutRadius}
+      />
       {processedItems.length === 0 && <BaseDivider margin={10} />}
       <BaseLoadableView
         scrollable
