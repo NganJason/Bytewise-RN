@@ -31,20 +31,21 @@ const BaseCalendar = ({
     };
 
     return (
-      <View style={styles.dayContainer}>
-        <TouchableOpacity
+      <TouchableOpacity
+        style={styles.dayContainer}
+        onPress={() => onDayPress(date)}>
+        <View
           style={[
             styles.dayTextContainer,
             isSelectedDate(date) && styles.selectedDay,
             dayTextContainerStyle,
-          ]}
-          onPress={() => onDayPress(date)}>
+          ]}>
           <BaseText text3 color={getDayColor()}>
             {date.day}
           </BaseText>
-        </TouchableOpacity>
+        </View>
         {dayExtraInfo(date)}
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -69,6 +70,7 @@ const getStyles = theme => {
   return StyleSheet.create({
     dayContainer: {
       alignItems: 'center',
+      marginBottom: 1,
     },
     dayTextContainer: {
       justifyContent: 'center',
@@ -76,6 +78,7 @@ const getStyles = theme => {
       width: 28,
       height: 28,
       borderRadius: 100,
+      marginBottom: 1,
     },
     selectedDay: {
       backgroundColor: theme.colors.color3,

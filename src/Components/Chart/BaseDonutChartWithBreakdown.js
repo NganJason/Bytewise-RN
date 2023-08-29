@@ -39,7 +39,11 @@ const BaseDonutChartWithRows = ({
         return;
       }
       d.color = colors[idx];
-      d.percentage = ((d.value / sum) * 100).toFixed(0);
+      let percentage = (d.value / sum) * 100;
+      if (isNaN(percentage)) {
+        percentage = 0;
+      }
+      d.percentage = percentage.toFixed(0);
       p.push(d);
     });
     setProcessedItems(p);
@@ -98,6 +102,7 @@ const getStyles = theme =>
     },
     rowValue: {
       flexDirection: 'row',
+      alignItems: 'center',
     },
   });
 

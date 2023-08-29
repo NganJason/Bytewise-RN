@@ -11,11 +11,11 @@ import ROUTES from '../../_shared/constant/routes';
 import { useDimension } from '../../_shared/hooks';
 import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 
-const assets = '1. Assets Breakdown';
-const debts = '2. Debts Breakdown';
+const assets = 'Assets Breakdown';
+const debts = 'Debts Breakdown';
 const chartTypes = [
-  { name: assets, value: 0 },
-  { name: debts, value: 1 },
+  { name: assets, short: 'Assets', value: 0 },
+  { name: debts, short: 'Debts', value: 1 },
 ];
 
 const AccountCharts = ({
@@ -34,12 +34,12 @@ const AccountCharts = ({
     switch (type.name) {
       case assets:
         return {
-          title: `S$ ${assetSum}`,
+          title: `S$ ${assetSum.toFixed(2)}`,
           subtitle: 'Assets',
         };
       case debts:
         return {
-          title: `S$ ${debtSum}`,
+          title: `S$ ${debtSum.toFixed(2)}`,
           subtitle: 'Debts',
         };
       default:
@@ -83,7 +83,7 @@ const AccountCharts = ({
     <View style={styles.body} scrollable>
       <View style={styles.bottomSelectTab}>
         <BaseBottomSelectTab
-          currTabText={chartTypes[currChartIdx].name[0]}
+          currTabText={chartTypes[currChartIdx].short}
           items={chartTypes}
           onSelect={e => setCurrChartIdx(e.value)}
         />

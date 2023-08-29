@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
   BaseButton,
   BaseCalendar,
@@ -88,14 +88,18 @@ const TransactionCalendarScreen = () => {
     );
 
     return (
-      <>
-        <BaseText text6 margin={{ top: 6 }} color={theme.colors.regularRed}>
-          {totalExpense > 0 ? totalExpense.toFixed(2) : ''}
-        </BaseText>
-        <BaseText text6 color={theme.colors.color1}>
-          {totalIncome > 0 ? totalIncome.toFixed(2) : ''}
-        </BaseText>
-      </>
+      <View style={styles.dayInfoContainer}>
+        {totalExpense > 0 && (
+          <BaseText text6 margin={{ top: 0 }} color={theme.colors.regularRed}>
+            {totalExpense.toFixed(2)}
+          </BaseText>
+        )}
+        {totalIncome > 0 && (
+          <BaseText text6 color={theme.colors.color1}>
+            {totalIncome.toFixed(2)}
+          </BaseText>
+        )}
+      </View>
     );
   };
 
@@ -114,7 +118,12 @@ const TransactionCalendarScreen = () => {
           />
         ),
         rightComponent: (
-          <BaseButton title="T" type="secondary" onPress={onTodayPress} />
+          <BaseButton
+            title="Today"
+            type="secondary"
+            size="sm"
+            onPress={onTodayPress}
+          />
         ),
       }}
       fabProps={{
@@ -130,33 +139,35 @@ const TransactionCalendarScreen = () => {
         currMonthStr={getFormattedDateString(currMonth)}
         selectedDate={selectedDate}
         onDayPress={onDatePress}
-        dayTextContainerStyle={styles.dayTextContainer}
         dayExtraInfo={renderDayExtraInfo}
       />
-      <BaseLoadableView
-        containerStyle={styles.transactions}
-        scrollable
-        isLoading={getTransactions.isLoading}>
-        {getSelectedDateTransactions().length > 0 ? (
-          <DailyTransactions
-            timestamp={Date.parse(selectedDate)}
-            transactions={getSelectedDateTransactions()}
-          />
-        ) : (
-          <EmptyContent
-            item={EmptyContentConfig.transaction}
-            route={ROUTES.transactionForm}
-          />
-        )}
-      </BaseLoadableView>
+      <View style={styles.transactions}>
+        <BaseLoadableView
+          containerStyle={styles.loadableContainer}
+          scrollable
+          isLoading={getTransactions.isLoading}>
+          {getSelectedDateTransactions().length > 0 ? (
+            <DailyTransactions
+              timestamp={Date.parse(selectedDate)}
+              transactions={getSelectedDateTransactions()}
+            />
+          ) : (
+            <EmptyContent
+              item={EmptyContentConfig.transaction}
+              route={ROUTES.transactionForm}
+            />
+          )}
+        </BaseLoadableView>
+      </View>
     </BaseScreen>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    dayTextContainer: {
-      marginVertical: -8,
+    dayInfoContainer: {
+      minHeight: 16,
+      alignItems: 'center',
     },
     transactions: {
       marginTop: 12,
@@ -172,6 +183,9 @@ const getStyles = theme => {
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    loadableContainer: {
+      flex: 1,
     },
   });
 };

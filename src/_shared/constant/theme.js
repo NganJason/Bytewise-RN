@@ -180,6 +180,20 @@ export const THEME = createTheme({
     xs: 2,
   },
   calendar: {
+    'stylesheet.calendar.header': {
+      week: {
+        marginBottom: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+    },
+    'stylesheet.calendar.main': {
+      week: {
+        marginVertical: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+      },
+    },
     monthTextColor: COLORS.black,
     arrowColor: COLORS.regularGrey,
     calendarBackground: undefined, // To make it transparent
