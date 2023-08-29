@@ -48,6 +48,10 @@ export const getDateObjFromTs = ts => {
   return d;
 };
 
+export const getDateObjFromDateStr = formattedDateStr => {
+  return new Date(Date.parse(formattedDateStr));
+};
+
 export const getFormattedDateString = (d = new Date()) => {
   const year = d.getFullYear();
   const month = d.getMonth() + 1;

@@ -12,6 +12,7 @@ import {
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import {
+  getDateObjFromDateStr,
   getFirstDayOfMonthFormatted,
   getFormattedDateString,
   getMonth,
@@ -34,6 +35,7 @@ const TransactionCalendarScreen = () => {
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
 
+  const [selectedDate, setSelectedDate] = useState(getFormattedDateString());
   const [currMonth, setCurrMonth] = useState(new Date());
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)),
@@ -59,8 +61,6 @@ const TransactionCalendarScreen = () => {
   const getSelectedDateTransactions = () => {
     return dateStrToTransactions[selectedDate]?.transactions || [];
   };
-
-  const [selectedDate, setSelectedDate] = useState(getFormattedDateString());
 
   const onCurrMonthMove = e => {
     setCurrMonth(e);
@@ -133,7 +133,10 @@ const TransactionCalendarScreen = () => {
         iconType: 'entypo',
         iconColor: theme.colors.white,
         color: theme.colors.color1,
-        onPress: () => navigation.navigate(ROUTES.transactionForm),
+        onPress: () =>
+          navigation.navigate(ROUTES.transactionForm, {
+            transaction_time: getDateObjFromDateStr(selectedDate).valueOf(),
+          }),
       }}>
       <BaseCalendar
         currMonthStr={getFormattedDateString(currMonth)}

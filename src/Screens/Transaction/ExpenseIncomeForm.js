@@ -48,6 +48,7 @@ const ExpenseIncomeForm = ({
     category_name: '',
   },
   transactionType = TRANSACTION_TYPE_EXPENSE,
+  transactionTime = new Date().valueOf(),
   onTransactionTypeChange = function () {},
 }) => {
   const { theme } = useTheme();
@@ -61,7 +62,7 @@ const ExpenseIncomeForm = ({
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: '',
     transaction_type: transactionType,
-    transaction_time: new Date().valueOf(),
+    transaction_time: transactionTime,
     amount: 0,
     note: '',
     category: {

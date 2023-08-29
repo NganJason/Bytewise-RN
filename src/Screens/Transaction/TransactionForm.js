@@ -39,6 +39,7 @@ const TransactionForm = ({ route }) => {
     transaction_id: transactionID = '',
     account = { account_id: '', account_name: '' },
     category = { category_id: '', category_name: '' },
+    transaction_time: transactionTime = new Date().valueOf(),
   } = route?.params || {};
   const isAddTransaction = () => {
     return transactionID === '';
@@ -83,6 +84,7 @@ const TransactionForm = ({ route }) => {
               account={account}
               category={category}
               transactionType={activeTab.val}
+              transactionTime={transactionTime}
               onTransactionTypeChange={onTransactionTypeChange}
             />
           )}

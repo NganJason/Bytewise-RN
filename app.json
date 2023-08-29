@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pocketeer",
-      "buildNumber": "15"
+      "buildNumber": "17"
     },
     "android": {
       "adaptiveIcon": {
