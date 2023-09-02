@@ -11,7 +11,7 @@ import {
 } from '../../Components';
 import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { getProgress, capitalize } from '../../_shared/util';
+import { getProgress } from '../../_shared/util';
 
 const BudgetOverviewRow = ({
   categoryWithBudget = {},
@@ -54,7 +54,7 @@ const BudgetOverviewRow = ({
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} disabled={isEdit}>
       <View style={styles.rowInfo}>
-        <BaseText text3>{capitalize(catgoryName)}</BaseText>
+        <BaseText text3>{catgoryName}</BaseText>
         {isEdit ? (
           <IconButton
             iconSize={16}

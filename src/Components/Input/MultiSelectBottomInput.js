@@ -5,7 +5,6 @@ import { useDimension } from '../../_shared/hooks';
 import { BaseButton } from '../Touch';
 import BaseCheckbox from './BaseCheckbox';
 import TouchInput from './TouchInput';
-import { capitalize } from '../../_shared/util';
 import { BaseDivider } from '../View';
 
 const MultiSelectBottomInput = ({
@@ -66,7 +65,7 @@ const MultiSelectBottomInput = ({
   const renderInput = () => {
     let allNames = [];
     selected.map(val => {
-      allNames.push(capitalize(val.name));
+      allNames.push(val.name);
     });
 
     return allNames.join(', ');
@@ -79,7 +78,7 @@ const MultiSelectBottomInput = ({
       rows.push(
         <View key={idx} style={styles.row}>
           <BaseCheckbox
-            title={capitalize(item.name)}
+            title={item.name}
             value={item}
             onPress={onSelect}
             checked={isSelected(item)}

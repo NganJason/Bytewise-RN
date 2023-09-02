@@ -5,6 +5,7 @@ export const queryKeys = {
 
   category: 'category',
   categories: 'categories',
+  categoryTransactions: 'categoryTransactions',
 
   transaction: 'transaction',
   transactions: 'transactions',

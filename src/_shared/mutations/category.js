@@ -3,6 +3,7 @@ import { queryKeys } from '../query';
 import {
   createCategories,
   createCategory,
+  deleteCategory,
   updateCategory,
 } from '../apis/category';
 
@@ -31,6 +32,21 @@ export const useUpdateCategory = (opts = {}) => {
 
       // refetch any single category record
       queryClient.invalidateQueries([queryKeys.category, category_id]);
+
+      queryClient.invalidateQueries([queryKeys.categoriesBudget]);
+
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useDeleteCategory = (opts = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deleteCategory, {
+    onSuccess: () => {
+      // refetch all categories
+      queryClient.invalidateQueries([queryKeys.categories]);
 
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);
 

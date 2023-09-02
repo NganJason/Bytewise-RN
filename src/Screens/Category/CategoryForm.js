@@ -16,7 +16,11 @@ import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
-import { useCreateCategory, useUpdateCategory } from '../../_shared/mutations';
+import {
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
+} from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
 import { validateCategory } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
@@ -89,6 +93,10 @@ const CategoryForm = ({ route }) => {
     onSuccess: navigation.goBack,
   });
 
+  const deleteCategory = useDeleteCategory({
+    onSuccess: navigation.goBack,
+  });
+
   const onFormSubmit = () => {
     validate();
     let isValidationPassed = Object.keys(formErrors).length === 0;
@@ -108,6 +116,10 @@ const CategoryForm = ({ route }) => {
     } else {
       createCategory.mutate(categoryForm);
     }
+  };
+
+  const onDelete = () => {
+    deleteCategory.mutate({ category_id: categoryID });
   };
 
   const isFormButtonLoading = () => {

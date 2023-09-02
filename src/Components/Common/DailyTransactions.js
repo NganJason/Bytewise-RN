@@ -8,7 +8,7 @@ import BaseListItem from '../View/BaseListItem';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
-import { getDate, getDay, capitalize } from '../../_shared/util';
+import { getDate, getDay } from '../../_shared/util';
 import { BaseChip } from '../View';
 
 const DailyTransactions = ({
@@ -57,7 +57,7 @@ const DailyTransactions = ({
     if (name === '') {
       return '-';
     }
-    return capitalize(name);
+    return name;
   };
 
   return (
@@ -94,7 +94,7 @@ const DailyTransactions = ({
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {t.note !== '' ? capitalize(t.note) : '-'}
+                    {t.note !== '' ? t.note : '-'}
                   </BaseText>
                   <BaseText
                     text5

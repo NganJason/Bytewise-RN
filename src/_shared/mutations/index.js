@@ -1,6 +1,10 @@
 import { useCreateAccount, useUpdateAccount } from './account';
 import { useCreateBudget, useUpdateBudget, useDeleteBudget } from './budget';
-import { useCreateCategory, useUpdateCategory } from './category';
+import {
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
+} from './category';
 import {
   useCreateTransaction,
   useUpdateTransaction,
@@ -23,6 +27,7 @@ export {
   useDeleteBudget,
   useCreateCategory,
   useUpdateCategory,
+  useDeleteCategory,
   useCreateTransaction,
   useUpdateTransaction,
   useDeleteTransaction,

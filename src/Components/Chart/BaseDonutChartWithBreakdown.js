@@ -31,7 +31,7 @@ const BaseDonutChartWithRows = ({
   useEffect(() => {
     let p = [];
     let sum = 0;
-    items.map(d => (sum += d.value));
+    items.map(d => (sum += Number(d.value)));
     let colors = generateColors(items.length);
 
     items.map((d, idx) => {
