@@ -56,8 +56,15 @@ const ProgressBar = ({
     setContainerWidth(width);
   };
 
+  const getProgressPercentage = () => {
+    if (progressPercentage > 100) {
+      return 100;
+    }
+    return progressPercentage;
+  };
+
   const progressBarStyle = {
-    width: `${progressPercentage}%`,
+    width: `${getProgressPercentage()}%`,
     backgroundColor: color,
   };
 

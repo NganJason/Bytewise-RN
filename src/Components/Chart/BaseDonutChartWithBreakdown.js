@@ -39,7 +39,7 @@ const BaseDonutChartWithRows = ({
         return;
       }
       d.color = colors[idx];
-      let percentage = (d.value / sum) * 100;
+      let percentage = (Math.abs(d.value) / sum) * 100;
       if (isNaN(percentage)) {
         percentage = 0;
       }
@@ -57,7 +57,9 @@ const BaseDonutChartWithRows = ({
         <BaseRow key={idx} onPress={d.onPress}>
           <ChartLegend color={d.color} text={d.name} text3 />
           <View style={styles.rowValue}>
-            <AmountText text3>{d.value}</AmountText>
+            <AmountText showNegativeOnly text3>
+              {d.value}
+            </AmountText>
             <BaseText
               text5
               margin={{ left: 10 }}

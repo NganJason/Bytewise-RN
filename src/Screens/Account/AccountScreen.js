@@ -23,7 +23,12 @@ import {
 import { loginHero } from '../../_shared/constant/asset';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
-import { capitalize, getEquityType } from '../../_shared/util';
+import {
+  capitalize,
+  getEquityType,
+  isAccountTypeAsset,
+  isAccountTypeDebt,
+} from '../../_shared/util';
 import { useGetAccounts } from '../../_shared/query';
 import { useError, useDimension } from '../../_shared/hooks';
 import AccountCharts from './AccountCharts';
@@ -39,7 +44,9 @@ const AccountScreen = () => {
   const computeSum = () => {
     let assets = computeEquitySum(EQUITY_TYPE_ASSET);
     let debts = computeEquitySum(EQUITY_TYPE_DEBT);
-    return assets - debts;
+
+    // Debt returned from BE is engative
+    return assets + debts;
   };
 
   const computeEquitySum = (equityType = EQUITY_TYPE_ASSET) => {
@@ -55,7 +62,8 @@ const AccountScreen = () => {
         sum += Number(amount);
       }
     });
-    return Math.abs(sum);
+
+    return sum;
   };
 
   const onAccountPress = account => {
@@ -109,7 +117,12 @@ const AccountScreen = () => {
             </BaseText>
           </View>
           <View style={styles.rowCol}>
-            <AmountText text4>{item.latest_value || item.balance}</AmountText>
+            <AmountText
+              text4
+              showNegativeOnly={isAccountTypeAsset(item.account_type)}
+              showPositiveOnly={isAccountTypeDebt(item.account_type)}>
+              {item.latest_value || item.balance}
+            </AmountText>
           </View>
         </BaseRow>,
       );
@@ -171,7 +184,7 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Debts</BaseText>
-            <AmountText showNegativeOnly text3>
+            <AmountText showPositiveOnly text3>
               {computeEquitySum(EQUITY_TYPE_DEBT)}
             </AmountText>
           </BaseRow>

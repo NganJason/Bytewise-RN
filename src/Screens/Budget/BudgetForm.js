@@ -116,6 +116,7 @@ const BudgetForm = ({ route }) => {
       ...budgetForm,
       category_name: categoryName,
       amount: budget.amount || 0,
+      budget_type: budget.budget_type || BUDGET_TYPE_MONTHLY,
     });
   }, [categoryIDToCategoryMap]);
 

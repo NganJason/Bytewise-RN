@@ -40,6 +40,7 @@ const BaseDonutChart = ({
   const processItems = () => {
     let noValue = true;
     items.map(item => {
+      item.value = Math.abs(item.value);
       if (item.value > 0) {
         noValue = false;
       }

@@ -45,12 +45,14 @@ const defaultData = {
   },
 };
 
+const defaultMeta = {
+  budgetTypeDescShown: false,
+};
+
 const OnboardingDataContext = createContext();
 const OnboardingDataProvider = ({ children }) => {
   // ---------------- Meta ----------------
-  const [meta, setMeta] = useState({
-    budgetTypeDescShown: false,
-  });
+  const [meta, setMeta] = useState(defaultMeta);
 
   const isBudgetTypeDescShown = () => {
     return meta.budgetTypeDescShown;
@@ -111,6 +113,14 @@ const OnboardingDataProvider = ({ children }) => {
       ...data,
       investmentAccount: { ...data.investmentAccount, holdings: newHoldings },
     });
+  };
+
+  // To reset all the state
+  // In case users signup, logout, resignup using different account
+  const reset = () => {
+    setMeta(defaultMeta);
+    setData(defaultData);
+    commitData();
   };
 
   // ---------------- Commit data ----------------
@@ -189,6 +199,7 @@ const OnboardingDataProvider = ({ children }) => {
         updateAccount,
         addInvestmentAccountName,
         addInvestmentHolding,
+        reset,
 
         commitData,
         rollbackData,

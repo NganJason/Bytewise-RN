@@ -9,6 +9,7 @@ const AmountText = ({
   showColor = false,
   showSymbol = false,
   showNegativeOnly = false,
+  showPositiveOnly = false,
   center = false,
   style = {},
   decimal = 2,
@@ -42,9 +43,19 @@ const AmountText = ({
 
     let currencySymbol = getCurrencySymbol(currency);
     text = `${currencySymbol} ${amountStr}`;
+    let shouldShowSymbol = false;
+
     if (showSymbol) {
-      text = `${symbol} ${text}`;
-    } else if (showNegativeOnly && symbol === '-') {
+      shouldShowSymbol = true;
+    }
+    if (showNegativeOnly && symbol === '-') {
+      shouldShowSymbol = true;
+    }
+    if (showPositiveOnly && symbol === '+') {
+      shouldShowSymbol = true;
+    }
+
+    if (shouldShowSymbol) {
       text = `${symbol} ${text}`;
     }
 

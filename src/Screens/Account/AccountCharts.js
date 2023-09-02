@@ -39,7 +39,7 @@ const AccountCharts = ({
         };
       case debts:
         return {
-          title: `S$ ${debtSum.toFixed(2)}`,
+          title: `S$ ${Math.abs(debtSum.toFixed(2))}`,
           subtitle: 'Debts',
         };
       default:
@@ -54,10 +54,16 @@ const AccountCharts = ({
       const { account_type: accountType, account_name: accountName } = d;
       let value = d.latest_value || d.balance;
 
+      // Only abs for debt
+      // For asset, there might be negative value and we will keep it
+      if (isAccountTypeDebt(accountType)) {
+        value = Math.abs(value);
+      }
+
       if (isAccountCurrChart(accountType)) {
         items.push({
           name: accountName,
-          value: Math.abs(value),
+          value: value,
           onPress: () => {
             onAccountPress(d);
           },

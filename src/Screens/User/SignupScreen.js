@@ -14,7 +14,7 @@ import {
 
 import { signupHero } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
-import { AuthContext } from '../../_shared/context';
+import { AuthContext, OnboardingDataContext } from '../../_shared/context';
 import { useNavigation } from '@react-navigation/native';
 import { validateSignUp } from '../../_shared/validator';
 import { useError, useValidation, useDimension } from '../../_shared/hooks';
@@ -23,6 +23,7 @@ const SignupScreen = () => {
   const { theme } = useTheme();
   const { screenHeight } = useDimension();
   const styles = getStyles(theme);
+  const { reset } = useContext(OnboardingDataContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -56,6 +57,7 @@ const SignupScreen = () => {
     }
     signup(signupForm, resp => {
       navigation.navigate(ROUTES.otp, { email: resp?.user?.email || '' });
+      reset();
     });
   };
 

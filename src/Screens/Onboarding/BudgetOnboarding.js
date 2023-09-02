@@ -10,7 +10,12 @@ import {
   IconButton,
 } from '../../Components';
 import { BaseChip } from '../../Components/View';
-import { BUDGET_TYPES, BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
+import {
+  BUDGET_TYPES,
+  BUDGET_TYPE_MONTHLY,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+} from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
 
@@ -26,7 +31,13 @@ const BudgetOnboarding = () => {
     let rows = [];
 
     categoryBudgets.map((cb, idx) => {
+      let { category_type: categoryType = TRANSACTION_TYPE_EXPENSE } = cb || {};
       let { amount = 0, budget_type: budgetType = null } = cb?.budget || {};
+
+      // Income cannot have budget
+      if (categoryType === TRANSACTION_TYPE_INCOME) {
+        return;
+      }
 
       rows.push(
         <BaseRow
