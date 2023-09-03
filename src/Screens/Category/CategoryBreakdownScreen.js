@@ -62,8 +62,8 @@ const CategoryBreakdownScreen = ({ route }) => {
     budgetDate: activeDate,
   });
   const {
-    category_name: categoryName = '',
-    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
+    category_name: categoryName = 'Uncategorised',
+    category_type: categoryType = TRANSACTION_TYPE_INCOME,
     budget = null,
   } = categoryIDToCategoryMap[categoryID] || {};
   const { amount: budgetAmount = 0, budget_type: budgetType } = budget || {};
@@ -80,13 +80,16 @@ const CategoryBreakdownScreen = ({ route }) => {
     );
   }, [budgetType]);
 
-  const aggrTransactionsQuery = useAggrTransactions({
-    category_ids: [categoryID],
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
+  const aggrTransactionsQuery = useAggrTransactions(
+    {
+      category_ids: [categoryID],
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
     },
-  });
+    { enabled: categoryID !== '' },
+  );
   const getCategoryUsedAmount = () => {
     return aggrTransactionsQuery.data?.results?.[categoryID].sum || 0;
   };

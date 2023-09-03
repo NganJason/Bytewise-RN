@@ -48,7 +48,6 @@ const CategoryOverviewScreen = ({ route }) => {
 
   const chartItems = () => {
     let items = [];
-
     categoriesInfo.forEach(d => {
       let item = { name: d.category_name, value: Math.abs(d.sum) };
       if (d.category_id) {
@@ -60,6 +59,16 @@ const CategoryOverviewScreen = ({ route }) => {
           });
         };
       }
+      // TODO
+      // else {
+      //   item.onPress = () => {
+      //     navigation.navigate(ROUTES.categoryBreakdown, {
+      //       category_id: '',
+      //       active_ts: activeDate.valueOf(),
+      //       category_type: categoryType,
+      //     });
+      //   };
+      // }
 
       items.push(item);
     });
