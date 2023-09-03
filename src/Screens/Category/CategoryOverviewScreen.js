@@ -10,8 +10,6 @@ import {
   BaseBottomSelectTab,
   BaseDonutChartWithRows,
 } from '../../Components';
-import { useGetCategories } from '../../_shared/query';
-import { useAggrTransactions } from '../../_shared/query';
 import {
   EmptyContentConfig,
   TIME_RANGE_MONTHLY,
@@ -24,6 +22,7 @@ import {
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { useTimeRange, useError } from '../../_shared/hooks';
+import { useSumCategoryTransactions } from '../../_shared/query/category';
 
 const CategoryOverviewScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -42,34 +41,27 @@ const CategoryOverviewScreen = ({ route }) => {
     setTimeRangeType(e.value);
   };
 
-  const { categoriesInfo, isScreenLoading } = useCategoryInfo(
+  const { categoriesInfo, totalSum, isLoading } = useCategoryInfo(
     timeRange,
     categoryType,
   );
-
-  const getCategoriesTotal = () => {
-    let sum = 0;
-    categoriesInfo.map(category => {
-      sum += category.sum;
-    });
-    return sum.toFixed(2);
-  };
 
   const chartItems = () => {
     let items = [];
 
     categoriesInfo.forEach(d => {
-      items.push({
-        name: d.category_name,
-        value: d.sum,
-        onPress: () => {
+      let item = { name: d.category_name, value: Math.abs(d.sum) };
+      if (d.category_id) {
+        item.onPress = () => {
           navigation.navigate(ROUTES.categoryBreakdown, {
             category_id: d.category_id,
             active_ts: activeDate.valueOf(),
             category_type: categoryType,
           });
-        },
-      });
+        };
+      }
+
+      items.push(item);
     });
     return items;
   };
@@ -103,10 +95,10 @@ const CategoryOverviewScreen = ({ route }) => {
       <BaseDonutChartWithRows
         items={chartItems()}
         donutInnerLabel={{
-          title: `S$ ${getCategoriesTotal()}`,
+          title: `S$ ${totalSum}`,
           subtitle: TRANSACTION_TYPES[categoryType],
         }}
-        isLoading={isScreenLoading()}
+        isLoading={isLoading}
         emptyContent={
           <EmptyContent
             item={EmptyContentConfig.categoryOverview}
@@ -121,57 +113,56 @@ const CategoryOverviewScreen = ({ route }) => {
 
 const useCategoryInfo = (timeRange, categoryType) => {
   const [categoriesInfo, setCategoriesInfo] = useState([]);
-  const getCategoriesQuery = useGetCategories({});
+  const [totalSum, setTotalSum] = useState(0);
 
-  const aggrTransactionsByCategoryQuery = useAggrTransactions(
-    {
-      category_ids: getCategoriesQuery.data?.categories?.map(
-        category => category.category_id,
-      ),
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
+  const sumCategoryTransactions = useSumCategoryTransactions({
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
     },
-    {
-      enabled:
-        (!getCategoriesQuery.isLoading &&
-          !getCategoriesQuery.isError &&
-          getCategoriesQuery.data?.categories?.length !== 0) ||
-        false,
-    },
-  );
+    transaction_type: categoryType,
+  });
 
   useEffect(() => {
-    let { categories = [] } = getCategoriesQuery.data || {};
-    categories = categories.filter(
-      category => category.category_type === categoryType,
-    );
+    const { sums = [] } = sumCategoryTransactions?.data || {};
 
-    categories.map(category => {
-      const sum =
-        aggrTransactionsByCategoryQuery.data?.results?.[category.category_id]
-          ?.sum || 0;
-
-      category.sum = Math.abs(sum);
-      category.value = Math.abs(sum); // for chart
+    let total = 0;
+    sums.map(d => {
+      total += Math.abs(d.sum);
     });
 
-    categories.sort((a, b) => a.category_name - b.category_name);
-    setCategoriesInfo(categories);
-  }, [getCategoriesQuery.data, aggrTransactionsByCategoryQuery.data]);
+    let info = [];
+    let uncategorisedCategory = null;
+    sums.map(d => {
+      if (d.category) {
+        info.push({
+          category_id: d.category.category_id,
+          category_name: d.category.category_name,
+          sum: Math.abs(d.sum).toFixed(2),
+        });
+      } else {
+        uncategorisedCategory = {
+          category_name: 'Uncategorised',
+          sum: Math.abs(d.sum).toFixed(2),
+        };
+      }
+    });
+    info.sort((a, b) => a.category_name.localeCompare(b.category_name));
 
-  const isScreenLoading = () => {
-    return (
-      getCategoriesQuery.isLoading || aggrTransactionsByCategoryQuery.isLoading
-    );
-  };
+    if (uncategorisedCategory) {
+      info.push(uncategorisedCategory);
+    }
 
-  useError([getCategoriesQuery, aggrTransactionsByCategoryQuery]);
+    setTotalSum(total.toFixed(2));
+    setCategoriesInfo(info);
+  }, [sumCategoryTransactions.data]);
+
+  useError([sumCategoryTransactions]);
 
   return {
     categoriesInfo,
-    isScreenLoading,
+    totalSum,
+    isLoading: sumCategoryTransactions.isLoading,
   };
 };
 

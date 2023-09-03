@@ -44,9 +44,15 @@ export const getCategories = async ({ category_type = 0 } = {}) => {
   }
 };
 
-export const sumCategoryTransactions = async ({}) => {
+export const sumCategoryTransactions = async ({
+  transaction_time: { gte = 0, lte = 0 } = {},
+  transaction_type = 0,
+}) => {
   try {
-    const body = await sendPostRequest(SUM_CATEGORY_TRANSACTIONS, {});
+    const body = await sendPostRequest(SUM_CATEGORY_TRANSACTIONS, {
+      transaction_time: { gte, lte },
+      transaction_type: transaction_type,
+    });
     return body;
   } catch (e) {
     throw new CategoryError({

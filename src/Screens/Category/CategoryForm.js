@@ -157,6 +157,16 @@ const CategoryForm = ({ route }) => {
             onToggle={onCategoryTypeChange}
           />
         )}
+
+        <BaseButton
+          title="Delete"
+          size="lg"
+          type="outline"
+          width={200}
+          onPress={onDelete}
+          loading={deleteCategory.isLoading}
+        />
+
         <View style={styles.btnContainer}>
           <BaseButton
             title="Save"

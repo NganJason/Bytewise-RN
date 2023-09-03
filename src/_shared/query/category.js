@@ -23,10 +23,22 @@ export const useGetCategory = ({ category_id = '' } = {}, opts = {}) => {
   });
 };
 
-export const useSumCategoryTransactions = ({}, opts = {}) => {
+export const useSumCategoryTransactions = (
+  { transaction_time: { gte = 0, lte = 0 } = {}, transaction_type = 0 } = {},
+  opts = {},
+) => {
   return useQueryWrapper({
-    queryFn: () => sumCategoryTransactions({}),
-    queryKey: [queryKeys.categoryTransactions],
+    queryFn: () =>
+      sumCategoryTransactions({
+        transaction_time: { gte, lte },
+        transaction_type: transaction_type,
+      }),
+    queryKey: [
+      queryKeys.categoryTransactions,
+      {
+        transaction_time: { gte, lte },
+      },
+    ],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });

@@ -54,7 +54,10 @@ const BaseDonutChartWithRows = ({
 
     processedItems.map((d, idx) => {
       rows.push(
-        <BaseRow key={idx} onPress={d.onPress}>
+        <BaseRow
+          key={idx}
+          disabled={!d.onPress}
+          onPress={d.onPress && d.onPress}>
           <ChartLegend color={d.color} text={d.name} text3 />
           <View style={styles.rowValue}>
             <AmountText showNegativeOnly text3>
