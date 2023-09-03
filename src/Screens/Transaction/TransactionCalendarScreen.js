@@ -23,8 +23,8 @@ import {
 import { useDimension, useError } from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
-import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { useGetTransactions } from '../../_shared/query';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -44,7 +44,7 @@ const TransactionCalendarScreen = () => {
     setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
   }, [currMonth]);
 
-  const getTransactions = useGetTransactionsHook({
+  const getTransactions = useGetTransactions({
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
@@ -56,7 +56,7 @@ const TransactionCalendarScreen = () => {
   });
 
   let dateStrToTransactions = groupTransactionsByDateStr(
-    getTransactions?.transactions || [],
+    getTransactions?.data?.transactions || [],
   );
   const getSelectedDateTransactions = () => {
     return dateStrToTransactions[selectedDate]?.transactions || [];

@@ -5,7 +5,6 @@ import useKeyboard from './useKeyboard';
 import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
 import useConnection from './useConnection';
-import { useGetTransactionsHook } from './transaction';
 
 export {
   useDimension,
@@ -14,6 +13,5 @@ export {
   useKeyboard,
   useTimeRange,
   useValidation,
-  useGetTransactionsHook,
   useConnection,
 };

@@ -86,7 +86,7 @@ const DailyTransactions = ({
                   style={styles.category}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {formatCategoryName(t.category.category_name)}
+                  {formatCategoryName(t?.category?.category_name || '')}
                 </BaseText>
                 <View style={styles.noteWrapper}>
                   <BaseText

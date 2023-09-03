@@ -50,8 +50,8 @@ export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
 
 export const useGetTransactions = (
   {
-    account_id = '',
-    category_id = '',
+    account_id = null,
+    category_id = null,
     transaction_type = 0,
     transaction_time: { gte = 0, lte = 0 } = {},
     paging: { limit = 500, page = 1 } = {},

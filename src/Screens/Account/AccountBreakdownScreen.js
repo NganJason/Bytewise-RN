@@ -19,7 +19,7 @@ import {
   ACCOUNT_TYPE_CREDIT_CARD,
 } from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
-import { useGetAccount } from '../../_shared/query';
+import { useGetAccount, useGetTransactions } from '../../_shared/query';
 import {
   getMonth,
   getUnixRangeOfMonth,
@@ -27,7 +27,6 @@ import {
   isAccountTypeAsset,
 } from '../../_shared/util';
 import { ACCOUNT_TYPE_LOAN } from '../../_shared/apis/enum';
-import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError, useDimension } from '../../_shared/hooks';
 import { sapiens3 } from '../../_shared/constant/asset';
 
@@ -55,7 +54,7 @@ const AccountBreakdownScreen = ({ route }) => {
     setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
 
-  const getTransactions = useGetTransactionsHook(
+  const getTransactions = useGetTransactions(
     {
       account_id: accountID,
       transaction_time: {
@@ -76,7 +75,7 @@ const AccountBreakdownScreen = ({ route }) => {
   );
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions;
+    let { transactions = [] } = getTransactions?.data || {};
     return <Transactions transactions={transactions} />;
   };
 

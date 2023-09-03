@@ -19,6 +19,8 @@ export const useCreateTransaction = (opts = {}) => {
       // recompute aggregations with new transaction amount
       queryClient.invalidateQueries([queryKeys.transactionsAggr]);
 
+      queryClient.invalidateQueries([queryKeys.categoryTransactions]);
+
       // refetch all accounts since the amount for a specific account has changed
       queryClient.invalidateQueries([queryKeys.accounts]);
 
@@ -45,6 +47,8 @@ export const useUpdateTransaction = (opts = {}) => {
       // recompute aggregations as transaction amount may have changed
       queryClient.invalidateQueries([queryKeys.transactionsAggr]);
 
+      queryClient.invalidateQueries([queryKeys.categoryTransactions]);
+
       // refetch any single transaction record
       queryClient.invalidateQueries([queryKeys.transaction, transaction_id]);
 
@@ -69,6 +73,7 @@ export const useDeleteTransaction = (opts = {}) => {
     onSuccess: () => {
       queryClient.invalidateQueries([queryKeys.transactions]);
       queryClient.invalidateQueries([queryKeys.transactionsAggr]);
+      queryClient.invalidateQueries([queryKeys.categoryTransactions]);
       queryClient.invalidateQueries([queryKeys.accounts]);
       queryClient.invalidateQueries([queryKeys.account, account_id]);
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);

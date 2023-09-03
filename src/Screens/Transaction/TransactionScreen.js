@@ -11,13 +11,12 @@ import {
 } from '../../Components';
 import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
-import { useAggrTransactions } from '../../_shared/query';
+import { useAggrTransactions, useGetTransactions } from '../../_shared/query';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useGetTransactionsHook } from '../../_shared/hooks/transaction';
 import { useError, useDimension } from '../../_shared/hooks';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 
@@ -36,16 +35,19 @@ const TransactionScreen = ({ navigation }) => {
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
 
-  const getTransactions = useGetTransactionsHook({
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
+  const getTransactions = useGetTransactions(
+    {
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+      paging: {
+        limit: PAGING_LIMIT,
+        page: STARTING_PAGE,
+      },
     },
-    paging: {
-      limit: PAGING_LIMIT,
-      page: STARTING_PAGE,
-    },
-  });
+    {},
+  );
 
   const aggrTransactionsQuery = useAggrTransactions({
     transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
@@ -64,7 +66,7 @@ const TransactionScreen = ({ navigation }) => {
     getTransactions.isLoading || aggrTransactionsQuery.isLoading;
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions;
+    let { transactions = [] } = getTransactions?.data || {};
     return (
       <Transactions
         transactions={transactions}

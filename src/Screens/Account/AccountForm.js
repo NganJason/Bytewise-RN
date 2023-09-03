@@ -28,6 +28,8 @@ import { validateAccount } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
 import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 import { OnboardingDataContext } from '../../_shared/context';
+import { useDeleteAccount } from '../../_shared/mutations/account';
+import { BaseOverlay } from '../../Components/View';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
@@ -51,6 +53,11 @@ const AccountForm = ({ route }) => {
     balance: 0,
     update_mode: ACCOUNT_UPDATE_MODE_DEFAULT,
   });
+
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const toggleDeleteModal = () => {
+    setIsDeleteModalVisible(!isDeleteModalVisible);
+  };
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -107,6 +114,16 @@ const AccountForm = ({ route }) => {
 
   const updateAccount = useUpdateAccount({
     onSuccess: () => {
+      navigation.goBack();
+    },
+  });
+
+  const deleteAccount = useDeleteAccount({
+    onSuccess: () => {
+      if (isDeleteModalVisible) {
+        toggleDeleteModal();
+      }
+      navigation.goBack();
       navigation.goBack();
     },
   });
@@ -239,7 +256,7 @@ const AccountForm = ({ route }) => {
     let accountTypes = [];
     for (const account_enum in ACCOUNT_TYPES) {
       if (isOnboarding) {
-        if (account_enum == ACCOUNT_TYPE_INVESTMENT) {
+        if (account_enum === ACCOUNT_TYPE_INVESTMENT) {
           continue;
         }
       }
@@ -253,7 +270,19 @@ const AccountForm = ({ route }) => {
     return accountTypes;
   };
 
-  useError([getAccount, createAccount, updateAccount]);
+  const onDelete = () => {
+    if (accountForm.account_type === ACCOUNT_TYPE_INVESTMENT) {
+      toggleDeleteModal();
+      return;
+    }
+    deleteAccount.mutate({ account_id: accountForm.account_id });
+  };
+
+  const onDeleteInvestmentAccount = () => {
+    deleteAccount.mutate({ account_id: accountForm.account_id });
+  };
+
+  useError([getAccount, createAccount, updateAccount, deleteAccount]);
 
   return (
     <BaseScreen
@@ -327,6 +356,17 @@ const AccountForm = ({ route }) => {
           </>
         )}
 
+        {!isAddAccount() && (
+          <BaseButton
+            title="Delete"
+            size="lg"
+            type="outline"
+            width={200}
+            onPress={onDelete}
+            loading={deleteAccount.isLoading}
+          />
+        )}
+
         <View style={styles.btnContainer}>
           <BaseButton
             title="Save"
@@ -336,6 +376,35 @@ const AccountForm = ({ route }) => {
             loading={isFormButtonLoading()}
           />
         </View>
+
+        <BaseOverlay
+          isVisible={isDeleteModalVisible}
+          onBackdropPress={toggleDeleteModal}>
+          <View style={styles.overlay}>
+            <BaseText text3>{'All holdings under this account'}</BaseText>
+            <BaseText text3>{'will be deleted'}</BaseText>
+            <BaseText margin={{ vertical: 15 }}>
+              Do you want to proceed?
+            </BaseText>
+
+            <View style={styles.overlayBtnContainer}>
+              <BaseButton
+                title="No"
+                type="outline"
+                size="lg"
+                width={200}
+                onPress={toggleDeleteModal}
+              />
+            </View>
+            <BaseButton
+              title="Yes"
+              size="lg"
+              width={200}
+              onPress={onDeleteInvestmentAccount}
+              loading={deleteAccount.isLoading}
+            />
+          </View>
+        </BaseOverlay>
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );
@@ -348,6 +417,13 @@ const getStyles = theme =>
       marginBottom: theme.spacing.md,
     },
     checkBox: { marginTop: 0, marginBottom: 20 },
+    overlayBtnContainer: {
+      marginBottom: theme.spacing.lg,
+      marginTop: theme.spacing.sm,
+    },
+    overlay: {
+      alignItems: 'center',
+    },
   });
 
 export default AccountForm;

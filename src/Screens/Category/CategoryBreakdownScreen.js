@@ -27,7 +27,6 @@ import {
 } from '../../_shared/constant/constant';
 import {
   useDimension,
-  useGetTransactionsHook,
   useTimeRange,
   useGetCategoriesHelper,
   useError,
@@ -35,7 +34,7 @@ import {
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getProgress } from '../../_shared/util';
-import { useAggrTransactions } from '../../_shared/query';
+import { useAggrTransactions, useGetTransactions } from '../../_shared/query';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -92,7 +91,7 @@ const CategoryBreakdownScreen = ({ route }) => {
     return aggrTransactionsQuery.data?.results?.[categoryID].sum || 0;
   };
 
-  const getTransactions = useGetTransactionsHook({
+  const getTransactions = useGetTransactions({
     category_id: categoryID,
     transaction_time: {
       gte: timeRange[0],
@@ -234,7 +233,7 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions;
+    let { transactions = [] } = getTransactions?.data || {};
     return (
       <Transactions
         transactions={transactions}

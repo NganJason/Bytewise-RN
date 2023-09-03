@@ -22,7 +22,11 @@ import {
 
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetCategories, useGetAccounts } from '../../_shared/query';
+import {
+  useGetCategories,
+  useGetAccounts,
+  useGetTransaction,
+} from '../../_shared/query';
 import {
   useCreateTransaction,
   useUpdateTransaction,
@@ -30,7 +34,6 @@ import {
 import { validateTransaction } from '../../_shared/validator';
 import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
-import { useGetTransactionHook } from '../../_shared/hooks/transaction';
 import { useError, useValidation } from '../../_shared/hooks';
 import { useDeleteTransaction } from '../../_shared/mutations';
 
@@ -79,11 +82,11 @@ const ExpenseIncomeForm = ({
     return transactionForm.transaction_id === '';
   };
 
-  const getTransaction = useGetTransactionHook(
+  const getTransaction = useGetTransaction(
     { transaction_id: transactionID },
     { enabled: transactionID !== '' },
   );
-  const { transaction } = getTransaction;
+  const { transaction } = getTransaction?.data || {};
 
   const getCategories = useGetCategories({
     category_type: transactionType,
@@ -109,8 +112,20 @@ const ExpenseIncomeForm = ({
   useEffect(() => {
     if (transaction) {
       setTransactionForm({
-        ...transaction,
+        transaction_id: transaction?.transaction_id || '',
+        transaction_type:
+          transaction?.transaction_type || TRANSACTION_TYPE_EXPENSE,
+        transaction_time: transaction?.transaction_time || new Date().valueOf(),
         amount: String(Math.abs(transaction.amount).toFixed(2)),
+        note: transaction?.note || '',
+        category: {
+          category_id: transaction?.category?.category_id || '',
+          category_name: transaction?.category?.category_name || '',
+        },
+        account: {
+          account_id: transaction?.account?.account_id || '',
+          account_name: transaction?.account?.account_name || '',
+        },
       });
     }
 
