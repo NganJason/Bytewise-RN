@@ -144,14 +144,14 @@ const TransactionScreen = ({ navigation }) => {
 const getStyles = theme => {
   return StyleSheet.create({
     aggrContainer: {
-      marginTop: 16,
       marginBottom: 22,
     },
     body: {
       flex: 1,
       padding: theme.spacing.xl,
       backgroundColor: theme.colors.white,
-      borderRadius: 20,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
       shadowColor: theme.colors.black,
       shadowOffset: {
         width: 2,

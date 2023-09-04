@@ -74,7 +74,7 @@ const BaseBottomSheet = ({
           />
         </View>
         <BaseScrollView
-          style={styles.body}
+          containerStyle={styles.body}
           showsVerticalScrollIndicator={false}>
           {renderRows()}
         </BaseScrollView>
@@ -104,6 +104,6 @@ const getStyles = (theme, screenHeight) =>
     },
     body: {
       flex: 1,
-      paddingHorizontal: theme.spacing.lg,
+      paddingHorizontal: 6,
     },
   });

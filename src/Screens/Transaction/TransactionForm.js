@@ -41,9 +41,6 @@ const TransactionForm = ({ route }) => {
     category = { category_id: '', category_name: '' },
     transaction_time: transactionTime = new Date().valueOf(),
   } = route?.params || {};
-  const isAddTransaction = () => {
-    return transactionID === '';
-  };
 
   const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
 
@@ -71,7 +68,6 @@ const TransactionForm = ({ route }) => {
             tabs={scrollableTabs}
             activeTab={activeTab}
             onTabChange={onTabChange}
-            hideNonActive={!isAddTransaction()}
           />
         </View>
 

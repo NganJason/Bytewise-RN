@@ -34,7 +34,8 @@ import {
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getProgress } from '../../_shared/util';
-import { useAggrTransactions, useGetTransactions } from '../../_shared/query';
+import { useGetTransactions } from '../../_shared/query';
+import { useSumCategoryTransactions } from '../../_shared/query/category';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -49,23 +50,22 @@ const CategoryBreakdownScreen = ({ route }) => {
   const {
     active_ts: activeTs = TODAY.valueOf(),
     category_id: categoryID = '',
+    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
   const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
     useTimeRange(new Date(activeTs), TIME_RANGE_MONTHLY);
 
   const {
-    categoryIDToCategoryMap,
-    isLoading: isCategoryBudgetLoading,
-    getQueries,
+    categoryIDToCategoryMap = {},
+    isLoading: isCategoryBudgetLoading = false,
+    getQueries = [],
   } = useGetCategoriesHelper({
     budgetDate: activeDate,
+    enabled: categoryID !== '',
   });
-  const {
-    category_name: categoryName = 'Uncategorised',
-    category_type: categoryType = TRANSACTION_TYPE_INCOME,
-    budget = null,
-  } = categoryIDToCategoryMap[categoryID] || {};
+  const { category_name: categoryName = 'Uncategorised', budget = null } =
+    categoryIDToCategoryMap[categoryID] || {};
   const { amount: budgetAmount = 0, budget_type: budgetType } = budget || {};
 
   useEffect(() => {
@@ -80,18 +80,23 @@ const CategoryBreakdownScreen = ({ route }) => {
     );
   }, [budgetType]);
 
-  const aggrTransactionsQuery = useAggrTransactions(
-    {
-      category_ids: [categoryID],
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
+  const sumCategoryTransactions = useSumCategoryTransactions({
+    transaction_time: {
+      gte: timeRange[0],
+      lte: timeRange[1],
     },
-    { enabled: categoryID !== '' },
-  );
+    transaction_type: categoryType,
+  });
+
   const getCategoryUsedAmount = () => {
-    return aggrTransactionsQuery.data?.results?.[categoryID].sum || 0;
+    const { sums = [] } = sumCategoryTransactions?.data || {};
+    for (let i = 0; i < sums.length; i++) {
+      let id = sums[i]?.category?.category_id || '';
+      if (categoryID === id) {
+        return Math.abs(sums[i].sum).toFixed(2);
+      }
+    }
+    return 0;
   };
 
   const getTransactions = useGetTransactions({
@@ -117,14 +122,14 @@ const CategoryBreakdownScreen = ({ route }) => {
     return (
       isCategoryBudgetLoading() ||
       getTransactions.isLoading ||
-      aggrTransactionsQuery.isLoading
+      sumCategoryTransactions.isLoading
     );
   };
 
-  useError([...getQueries(), getTransactions, aggrTransactionsQuery]);
+  useError([...getQueries(), getTransactions, sumCategoryTransactions]);
 
   const renderHeader = () => {
-    const noBudgetAggr = () => {
+    const addBudgetAggr = () => {
       return (
         <>
           <BaseText
@@ -183,7 +188,7 @@ const CategoryBreakdownScreen = ({ route }) => {
       );
     };
 
-    const incomeAggr = () => {
+    const noBudgetAggr = () => {
       return (
         <>
           <BaseText
@@ -200,11 +205,14 @@ const CategoryBreakdownScreen = ({ route }) => {
     };
 
     const getAggr = () => {
+      if (categoryID === '') {
+        return noBudgetAggr();
+      }
       if (categoryType === TRANSACTION_TYPE_INCOME) {
-        return incomeAggr();
+        return noBudgetAggr();
       }
       if (budget === null) {
-        return noBudgetAggr();
+        return addBudgetAggr();
       }
       return budgetAggr();
     };
@@ -237,6 +245,9 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     let { transactions = [] } = getTransactions?.data || {};
+    transactions = transactions.filter(
+      d => d.transaction_type === categoryType,
+    );
     return (
       <Transactions
         transactions={transactions}

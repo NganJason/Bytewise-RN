@@ -71,6 +71,7 @@ const ExpenseIncomeForm = ({
     category: {
       category_id: category.category_id,
       category_name: category.category_name,
+      category_type: transactionType,
     },
     account: {
       account_id: account.account_id,
@@ -91,6 +92,7 @@ const ExpenseIncomeForm = ({
   const getCategories = useGetCategories({
     category_type: transactionType,
   });
+  const { categories } = getCategories?.data || {};
 
   const getAccounts = useGetAccounts({});
 
@@ -112,15 +114,13 @@ const ExpenseIncomeForm = ({
   useEffect(() => {
     if (transaction) {
       setTransactionForm({
-        transaction_id: transaction?.transaction_id || '',
-        transaction_type:
-          transaction?.transaction_type || TRANSACTION_TYPE_EXPENSE,
-        transaction_time: transaction?.transaction_time || new Date().valueOf(),
+        ...transaction,
         amount: String(Math.abs(transaction.amount).toFixed(2)),
-        note: transaction?.note || '',
         category: {
           category_id: transaction?.category?.category_id || '',
           category_name: transaction?.category?.category_name || '',
+          category_type:
+            transaction.transaction_type || TRANSACTION_TYPE_EXPENSE,
         },
         account: {
           account_id: transaction?.account?.account_id || '',
@@ -134,6 +134,18 @@ const ExpenseIncomeForm = ({
       onTransactionTypeChange(transaction_type);
     }
   }, [transaction]);
+
+  useEffect(() => {
+    if (transactionForm.category.category_type !== transactionType) {
+      setTransactionForm({
+        ...transactionForm,
+        category: {
+          category_id: '',
+          category_name: '',
+        },
+      });
+    }
+  }, [transactionType]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {
@@ -172,6 +184,7 @@ const ExpenseIncomeForm = ({
       category: {
         category_id: e.category_id,
         category_name: e.category_name,
+        category_type: e.category_type,
       },
     });
     toggleCategoryModal();
@@ -339,7 +352,7 @@ const ExpenseIncomeForm = ({
           onBackdropPress={toggleCategoryModal}
           close={toggleCategoryModal}
           onSelect={onCategoryChange}
-          items={getCategories.data?.categories}
+          items={categories}
           label="category_name"
           headerProps={{
             leftComponent: (

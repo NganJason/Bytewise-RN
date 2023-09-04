@@ -144,8 +144,8 @@ const getStyles = (theme, screenHeight) =>
       minHeight: screenHeight * 0.1,
       paddingHorizontal: 26,
       borderBottomWidth: 0,
-      paddingTop: screenHeight * 0.02,
-      paddingBottom: screenHeight * 0.005,
+      paddingTop: 10,
+      paddingBottom: 20,
     },
     body: {
       flex: 1,

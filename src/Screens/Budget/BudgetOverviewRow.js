@@ -9,7 +9,10 @@ import {
   BaseText,
   IconButton,
 } from '../../Components';
-import { BUDGET_TYPE_MONTHLY } from '../../_shared/apis/enum';
+import {
+  BUDGET_TYPE_MONTHLY,
+  TRANSACTION_TYPE_EXPENSE,
+} from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { getProgress } from '../../_shared/util';
 
@@ -39,6 +42,7 @@ const BudgetOverviewRow = ({
     navigation.navigate(ROUTES.categoryBreakdown, {
       category_id: categoryID,
       active_ts: activeDate.valueOf(),
+      category_type: TRANSACTION_TYPE_EXPENSE,
     });
   };
 
