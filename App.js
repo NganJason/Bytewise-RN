@@ -51,7 +51,8 @@ import {
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be-test.onrender.com/api/v1';
-const BASE_URL = TEST_BASE_URL;
+const LIVE_BASE_URL = 'https://pocketeer-be-live.onrender.com/api/v1';
+const BASE_URL = LIVE_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

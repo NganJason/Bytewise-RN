@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Pocketeer",
+    "name": "Bytewise",
     "slug": "Pocketeer",
     "version": "1.0.1",
     "orientation": "portrait",
@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pocketeer",
-      "buildNumber": "22"
+      "buildNumber": "31"
     },
     "android": {
       "adaptiveIcon": {

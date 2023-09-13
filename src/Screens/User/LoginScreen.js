@@ -69,10 +69,10 @@ const LoginScreen = () => {
         <View>
           <View>
             <BaseText h2 style={styles.title}>
-              Pocketeer
+              Bytewise
             </BaseText>
             <BaseText h4 style={styles.tagline}>
-              Your personal financial companion
+              Organise Your Money In One Place
             </BaseText>
             <BaseImage
               width={'100%'}

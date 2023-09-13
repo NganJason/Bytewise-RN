@@ -1,3 +1,1 @@
-# Pocketeer Mobile
-
-Developed with React Native.
+# Bytewise Mobile
