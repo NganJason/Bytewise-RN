@@ -5,6 +5,7 @@ import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
 import { BackIcon, DrawerIcon } from '../Common/Icon';
 import { useDimension } from '../../_shared/hooks';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BaseScreen = ({
   children,
@@ -87,52 +88,65 @@ const BaseScreen = ({
         />
       )}
 
-      <HideKeyboard>
-        <View style={styles.body}>
-          {allowLoadable ? (
-            <BaseLoadableView
-              isLoading={isLoading}
-              containerStyle={[
-                enablePadding && styles.paddingHori,
-                styles.container,
-                { backgroundColor: backgroundColor },
-              ]}>
-              {children}
-            </BaseLoadableView>
-          ) : (
-            <View
-              style={[
-                enablePadding && styles.paddingHori,
-                styles.container,
-                { backgroundColor: backgroundColor },
-              ]}>
-              {children}
-            </View>
-          )}
-          {fabProps.show && (
-            <FAB
-              placement={fabProps.placement}
-              size={'medium'}
-              icon={
-                <Icon
-                  name={fabProps.iconName}
-                  color={fabProps.iconColor}
-                  type={fabProps.iconType}
-                />
-              }
-              color={fabProps.color}
-              onPress={fabProps.onPress}
-              style={[
-                styles.fab,
-                fabProps.marginBottom && { bottom: fabProps.marginBottom },
-              ]}
-            />
-          )}
-        </View>
-      </HideKeyboard>
+      <SafeAreaWrapper enableSafeArea={isEmptyHeader()}>
+        <HideKeyboard>
+          <View style={styles.body}>
+            {allowLoadable ? (
+              <BaseLoadableView
+                isLoading={isLoading}
+                containerStyle={[
+                  enablePadding && styles.paddingHori,
+                  styles.container,
+                  { backgroundColor: backgroundColor },
+                ]}>
+                {children}
+              </BaseLoadableView>
+            ) : (
+              <View
+                style={[
+                  enablePadding && styles.paddingHori,
+                  styles.container,
+                  { backgroundColor: backgroundColor },
+                ]}>
+                {children}
+              </View>
+            )}
+            {fabProps.show && (
+              <FAB
+                placement={fabProps.placement}
+                size={'medium'}
+                icon={
+                  <Icon
+                    name={fabProps.iconName}
+                    color={fabProps.iconColor}
+                    type={fabProps.iconType}
+                  />
+                }
+                color={fabProps.color}
+                onPress={fabProps.onPress}
+                style={[
+                  styles.fab,
+                  fabProps.marginBottom && { bottom: fabProps.marginBottom },
+                ]}
+              />
+            )}
+          </View>
+        </HideKeyboard>
+      </SafeAreaWrapper>
       <BaseToast />
     </>
   );
+};
+
+const SafeAreaWrapper = ({ children, enableSafeArea = false }) => {
+  const { theme } = useTheme();
+  const { screenHeight } = useDimension();
+  const styles = getStyles(theme, screenHeight);
+
+  if (enableSafeArea) {
+    return <SafeAreaView style={styles.safeAreaView}>{children}</SafeAreaView>;
+  }
+  return children;
 };
 
 const getStyles = (theme, screenHeight) =>
@@ -146,6 +160,9 @@ const getStyles = (theme, screenHeight) =>
       borderBottomWidth: 0,
       paddingTop: 10,
       paddingBottom: 20,
+    },
+    safeAreaView: {
+      flex: 1,
     },
     body: {
       flex: 1,
