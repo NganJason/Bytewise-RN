@@ -68,7 +68,7 @@ export const createAccount = async ({
 
 export const updateAccount = async ({
   account_id = '',
-  account_name = 0,
+  account_name = '',
   balance = '',
   note = '',
   update_mode = 0,

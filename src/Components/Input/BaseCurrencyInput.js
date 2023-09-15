@@ -13,7 +13,6 @@ const BaseCurrencyInput = forwardRef(
       onBlur = function () {},
       autoFocus = false,
       currency = CURRENCY_SGD,
-      isNegative = false,
       ...props
     },
     ref,

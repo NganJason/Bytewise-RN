@@ -208,8 +208,10 @@ const AccountForm = ({ route }) => {
     let balance;
     if (accountForm.account_type === ACCOUNT_TYPE_INVESTMENT) {
       balance = null;
-    } else {
+    } else if (isAccountTypeAsset(accountForm.account_type)) {
       balance = String(accountForm.balance);
+    } else {
+      balance = String(accountForm.balance * -1);
     }
 
     if (isOnboarding) {
@@ -337,9 +339,10 @@ const AccountForm = ({ route }) => {
                   : 'Amount Owed'
               }
               hide={shouldDisableBalance()}
-              value={accountForm.balance === null ? 0 : accountForm.balance}
+              value={
+                accountForm.balance === null ? 0 : Math.abs(accountForm.balance)
+              }
               onChangeText={onBalanceChange}
-              isNegative={isAccountTypeDebt(accountForm.account_type)}
             />
 
             {!isAddAccount() && (
