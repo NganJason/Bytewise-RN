@@ -17,7 +17,11 @@ import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
 import { useGetHolding, useGetLots } from '../../../_shared/query';
-import { CURRENCY_USD, tsToDateTimeStr } from '../../../_shared/util';
+import {
+  CURRENCY_SGD,
+  CURRENCY_USD,
+  tsToDateTimeStr,
+} from '../../../_shared/util';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -101,7 +105,7 @@ const HoldingBreakdownScreen = ({ route }) => {
           margin={{ bottom: 8 }}
           isLoading={getHolding.isLoading}
           loadingLen={10}
-          currency={CURRENCY_USD}>
+          currency={CURRENCY_SGD}>
           {latest_value}
         </AmountText>
 
@@ -110,7 +114,7 @@ const HoldingBreakdownScreen = ({ route }) => {
           <AmountText
             text5
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_USD}>
+            currency={CURRENCY_SGD}>
             {total_cost}
           </AmountText>
         </View>
@@ -122,7 +126,7 @@ const HoldingBreakdownScreen = ({ route }) => {
             initialVal={total_cost}
             text5
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_USD}
+            currency={CURRENCY_SGD}
           />
         </View>
 
@@ -148,7 +152,7 @@ const HoldingBreakdownScreen = ({ route }) => {
           <AmountText
             text5
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_USD}>
+            currency={CURRENCY_SGD}>
             {avg_cost_per_share}
           </AmountText>
         </View>

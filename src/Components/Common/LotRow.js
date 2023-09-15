@@ -3,6 +3,7 @@ import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
 import {
+  CURRENCY_USD,
   getDateStringFromTs,
   getTotalInvestmentCost,
 } from '../../_shared/util';
@@ -40,13 +41,14 @@ const LotRow = ({
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3>
+        <AmountText text3 currency={CURRENCY_USD}>
           {getTotalInvestmentCost(shares, cost_per_share)}
         </AmountText>
         <AmountText
           text5
           color={theme.colors.color8}
           margin={{ top: 4 }}
+          currency={CURRENCY_USD}
           suffix="/unit">
           {cost_per_share}
         </AmountText>
