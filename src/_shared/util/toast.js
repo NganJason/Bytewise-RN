@@ -13,7 +13,7 @@ export const toastError = (queryErrors = []) => {
   const { error = { message: '', code: 0 }, reset = function () {} } =
     err || {};
 
-  if (error.message !== '' || whitelistedErrCode.includes(error.code)) {
+  if (error.message !== '' && whitelistedErrCode.includes(error.code)) {
     BaseToast.show({
       type: 'error',
       text1: error.message,

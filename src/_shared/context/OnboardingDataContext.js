@@ -203,8 +203,11 @@ const OnboardingDataProvider = ({ children }) => {
 
         commitData,
         rollbackData,
+
+        initUserError: initUser,
         setupUser,
         isSetupLoading: initUser.isLoading,
+        isSetupSuccess: initUser.isSuccess,
       }}>
       {children}
     </OnboardingDataContext.Provider>
