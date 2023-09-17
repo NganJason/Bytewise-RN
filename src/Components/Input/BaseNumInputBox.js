@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import React, { createRef, useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
@@ -12,15 +11,6 @@ const BaseNumInputBox = ({
   const styles = getStyles(theme);
 
   const [input, setInput] = useState([]);
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setInput(
-  //       Array(numDigit)
-  //         .fill()
-  //         .map(() => ''),
-  //     );
-  //   }, []),
-  // );
 
   const inputRefs = Array(numDigit)
     .fill()

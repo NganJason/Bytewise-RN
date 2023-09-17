@@ -56,13 +56,15 @@ const SignupScreen = () => {
       return;
     }
     signup(signupForm, resp => {
-      navigation.navigate(ROUTES.otp, { email: resp?.user?.email || '' });
+      navigation.navigate(ROUTES.otp, {
+        email: signupForm.email,
+        password: signupForm.password,
+      });
       reset();
     });
   };
 
-  const signupError = getSignupError();
-  useError([signupError]);
+  useError([getSignupError()]);
 
   return (
     <BaseScreen>

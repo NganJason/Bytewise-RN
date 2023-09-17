@@ -10,13 +10,20 @@ import {
 import { AuthContext } from '../../_shared/context';
 import { useError } from '../../_shared/hooks';
 
+const OtpExpirationTime = 60;
 const OtpScreen = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const { email = 'your email' } = route?.params || {};
-  const { verifyEmail, isVerifyEmailLoading, getVerifyEmailError } =
-    useContext(AuthContext);
+  const { email = 'your email', password = '' } = route?.params || {};
+  const {
+    signup,
+    isSignupLoading,
+    getSignupError,
+    verifyEmail,
+    isVerifyEmailLoading,
+    getVerifyEmailError,
+  } = useContext(AuthContext);
 
   // Set loading longer to prevent flickering
   const [isOtpLoading, setIsOtpLoading] = useState(false);
@@ -34,17 +41,38 @@ const OtpScreen = ({ route }) => {
     }
   }, [isVerifyEmailLoading]);
 
-  // Visual cue to indicate that users have successfully pressed resend
-  const [isResendLoading, setIsResendLoading] = useState(false);
-  const onResend = () => {
-    setIsResendLoading(true);
-    setTimeout(() => {
-      setIsResendLoading(false);
+  const [expirationSecond, setExpirationSecond] = useState(OtpExpirationTime);
+  const resetTimer = () => {
+    setExpirationSecond(OtpExpirationTime);
+  };
+  useEffect(() => {
+    let id = setInterval(() => {
+      setExpirationSecond(prev => {
+        if (prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
     }, 1000);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
+  const onResend = () => {
+    signup(
+      {
+        email: email,
+        password: password,
+      },
+      resp => {
+        resetTimer();
+      },
+    );
   };
 
-  const verifyEmailError = getVerifyEmailError();
-  useError([verifyEmailError]);
+  useError([getVerifyEmailError(), getSignupError()]);
 
   return (
     <BaseScreen headerProps={{ allowBack: true }}>
@@ -69,12 +97,18 @@ const OtpScreen = ({ route }) => {
           />
         </View>
 
-        <BaseButton
-          type="clear"
-          title="Resend"
-          loading={isResendLoading}
-          onPress={onResend}
-        />
+        {expirationSecond > 0 ? (
+          <BaseText margin={{ top: 10 }} color={theme.colors.color7}>
+            Resend OTP in {expirationSecond}s
+          </BaseText>
+        ) : (
+          <BaseButton
+            type="clear"
+            title="Resend"
+            loading={isSignupLoading}
+            onPress={onResend}
+          />
+        )}
       </View>
     </BaseScreen>
   );
