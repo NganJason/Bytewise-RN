@@ -1,12 +1,17 @@
 import { useTheme } from '@rneui/themed';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, StyleSheet } from 'react-native';
+import { OnboardingDataContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
+import { useError } from '../../_shared/hooks';
 
 const SetupSplashScreen = () => {
   const { theme } = useTheme();
-  const { setOnboardingStatus, setShowSetupSplashScreen, isSetupLoading } =
+  const { setOnboardingStatus, setShowSetupSplashScreen } =
     useContext(UserMetaContext);
+  const { isSetupLoading, isSetupSuccess, initUserError } = useContext(
+    OnboardingDataContext,
+  );
 
   // Setup screen should load at least n seconds to prevent flickering
   const [minLoadingTimeDone, setMinLoadingTimeDone] = useState(false);
@@ -31,10 +36,16 @@ const SetupSplashScreen = () => {
 
   useEffect(() => {
     if (minLoadingTimeDone && !isSetupLoading) {
+      if (isSetupSuccess) {
+        setOnboardingStatus(true);
+      } else {
+        setOnboardingStatus(false);
+      }
       setShowSetupSplashScreen(false);
-      setOnboardingStatus(true);
     }
   }, [minLoadingTimeDone, isSetupLoading]);
+
+  useError([initUserError]);
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnimation }]}>

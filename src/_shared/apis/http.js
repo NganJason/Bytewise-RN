@@ -39,7 +39,7 @@ export const setAxiosResponseInterceptors = ({ on401 }) => {
       error => {
         if (error.response) {
           if (
-            error.response.status === ErrCode.Unauthorized &&
+            error.response.status === ErrCode.ErrUnauthorized &&
             on401 !== null
           ) {
             on401();
