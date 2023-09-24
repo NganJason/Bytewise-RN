@@ -74,9 +74,14 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
   }
 };
 
-export const initUser = async ({ accounts = [], categories = [] }) => {
+export const initUser = async ({
+  accounts = [],
+  categories = [],
+  currency = '',
+}) => {
   try {
     const body = await sendPostRequest(INIT_USER, {
+      currency: 'SGD',
       accounts: accounts,
       categories: categories,
     });
