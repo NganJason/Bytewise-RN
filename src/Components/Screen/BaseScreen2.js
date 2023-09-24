@@ -6,7 +6,7 @@ import HideKeyboard from './HideKeyboard';
 import { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDimension } from '../../_shared/hooks';
-import { BackIcon, DrawerIcon } from '../Common/Icon';
+import { BackIcon, DrawerIcon, HideInfoIcon } from '../Common/Icon';
 
 const BaseScreen2 = ({
   children,
@@ -15,6 +15,7 @@ const BaseScreen2 = ({
     backgroundColor: '#F3F7FB',
     allowBack: false,
     allowDrawer: false,
+    allowHideInfo: false,
   },
   fabProps = {
     show: false,
@@ -64,8 +65,23 @@ const BaseScreen2 = ({
             backgroundColor: backgroundColor,
           }}>
           <>
-            {headerProps.allowDrawer && <DrawerIcon />}
-            {headerProps.allowBack && <BackIcon />}
+            <View style={styles.iconContainer}>
+              {headerProps.allowDrawer && (
+                <View style={styles.icon}>
+                  <DrawerIcon />
+                </View>
+              )}
+              {headerProps.allowBack && (
+                <View style={styles.icon}>
+                  <BackIcon />
+                </View>
+              )}
+              {headerProps.allowHideInfo && (
+                <View style={styles.icon}>
+                  <HideInfoIcon />
+                </View>
+              )}
+            </View>
             <View style={styles.headerContent}>{headerProps.component}</View>
           </>
         </SafeAreaView>
@@ -114,6 +130,8 @@ const getStyles = (theme, screenHeight) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
     },
+    iconContainer: { flexDirection: 'row', alignItems: 'center' },
+    icon: { marginRight: 6 },
     body: {
       flex: 1,
       paddingVertical: theme.spacing.md,

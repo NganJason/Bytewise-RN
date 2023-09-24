@@ -55,7 +55,7 @@ const BreakdownOverviewScreen = ({
           });
         }}>
         <BaseText text3>Expense</BaseText>
-        <AmountText h2>
+        <AmountText h2 sensitive>
           {getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE)}
         </AmountText>
       </TouchableOpacity>
@@ -74,7 +74,7 @@ const BreakdownOverviewScreen = ({
           });
         }}>
         <BaseText text3>Income</BaseText>
-        <AmountText h2>
+        <AmountText h2 sensitive>
           {getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME)}
         </AmountText>
       </TouchableOpacity>
@@ -96,7 +96,7 @@ const BreakdownOverviewScreen = ({
           );
         }}>
         <BaseText text3>Cash Flow</BaseText>
-        <AmountText h2 showNegativeOnly showColor>
+        <AmountText h2 showNegativeOnly showColor sensitive>
           {cashFlow}
         </AmountText>
       </TouchableOpacity>

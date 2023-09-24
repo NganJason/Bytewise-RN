@@ -2,8 +2,10 @@ import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
+  AmountText,
   BaseBottomSelectTab,
   BaseDonutChartWithRows,
+  BaseText,
   EmptyContent,
 } from '../../Components';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
@@ -34,13 +36,29 @@ const AccountCharts = ({
     switch (type.name) {
       case assets:
         return {
-          title: `S$ ${assetSum.toFixed(2)}`,
-          subtitle: 'Assets',
+          title: (
+            <AmountText h1 sensitive adjustsFontSizeToFit numberOfLines={1}>
+              {assetSum}
+            </AmountText>
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              Assets
+            </BaseText>
+          ),
         };
       case debts:
         return {
-          title: `S$ ${Math.abs(debtSum.toFixed(2))}`,
-          subtitle: 'Debts',
+          title: (
+            <AmountText h1 sensitive adjustsFontSizeToFit numberOfLines={1}>
+              {debtSum}
+            </AmountText>
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              Debts
+            </BaseText>
+          ),
         };
       default:
         return {};
@@ -97,6 +115,7 @@ const AccountCharts = ({
 
       <BaseDonutChartWithRows
         items={donutChartItems()}
+        rowSensitive
         donutInnerLabel={donutChartLabel()}
         donutRadius={screenHeight * 0.125}
         emptyContent={

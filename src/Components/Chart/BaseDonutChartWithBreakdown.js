@@ -11,10 +11,11 @@ import { genColors } from '../../_shared/util';
 
 const BaseDonutChartWithRows = ({
   items = [{ name: '', value: 0, onPress: function () {} }],
-  donutInnerLabel = { title: '', subtitle: '' },
+  donutInnerLabel = { title: null, subtitle: null },
   donutRadius = 100,
   isLoading = false,
   emptyContent = <></>,
+  rowSensitive = false,
 }) => {
   const [processedItems, setProcessedItems] = useState([]);
   const { theme } = useTheme();
@@ -60,7 +61,7 @@ const BaseDonutChartWithRows = ({
           onPress={d.onPress && d.onPress}>
           <ChartLegend color={d.color} text={d.name} text3 />
           <View style={styles.rowValue}>
-            <AmountText showNegativeOnly text3>
+            <AmountText showNegativeOnly text3 sensitive={rowSensitive}>
               {d.value}
             </AmountText>
             <BaseText

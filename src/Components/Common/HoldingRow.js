@@ -56,7 +56,7 @@ const HoldingRow = ({
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3 currency={CURRENCY_SGD}>
+        <AmountText text3 currency={CURRENCY_SGD} sensitive>
           {latest_value}
         </AmountText>
 

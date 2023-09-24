@@ -121,6 +121,7 @@ const TransactionScreen = ({ navigation }) => {
                 aggrTransactionsQuery.data?.results?.[
                   String(TRANSACTION_TYPE_INCOME)
                 ]?.sum || 0,
+              sensitive: true,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
@@ -128,6 +129,7 @@ const TransactionScreen = ({ navigation }) => {
                 -aggrTransactionsQuery.data?.results?.[
                   String(TRANSACTION_TYPE_EXPENSE)
                 ]?.sum || 0,
+              sensitive: true,
             },
           ]}
         />

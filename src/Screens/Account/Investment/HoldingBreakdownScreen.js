@@ -105,7 +105,8 @@ const HoldingBreakdownScreen = ({ route }) => {
           margin={{ bottom: 8 }}
           isLoading={getHolding.isLoading}
           loadingLen={10}
-          currency={CURRENCY_SGD}>
+          currency={CURRENCY_SGD}
+          sensitive>
           {latest_value}
         </AmountText>
 
@@ -114,7 +115,8 @@ const HoldingBreakdownScreen = ({ route }) => {
           <AmountText
             text5
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_SGD}>
+            currency={CURRENCY_SGD}
+            sensitive>
             {total_cost}
           </AmountText>
         </View>

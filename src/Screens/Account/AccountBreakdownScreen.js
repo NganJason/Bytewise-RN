@@ -110,7 +110,8 @@ const AccountBreakdownScreen = ({ route }) => {
             h2
             showNegativeOnly={isAccountTypeAsset(accountType)}
             margin={{ top: 8, bottom: 6 }}
-            isLoading={getAccount.isLoading}>
+            isLoading={getAccount.isLoading}
+            sensitive>
             {balance}
           </AmountText>
           <BaseText

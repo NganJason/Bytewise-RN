@@ -6,46 +6,67 @@ import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
 import { AuthContext } from '../../_shared/context';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 import { useGetUser } from '../../_shared/query';
 import { capitalize } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
 
-const drawerRows = [
-  {
-    name: 'Manage categories',
-    icon: {
-      type: 'feather',
-      name: 'grid',
-    },
-    route: ROUTES.categoryEdit,
-  },
-  {
-    name: 'Feedback',
-    icon: {
-      type: 'feather',
-      name: 'message-square',
-    },
-    route: ROUTES.feedbackForm,
-  },
-];
-
 const CustomDrawer = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { logout = function () {} } = useContext(AuthContext) || {};
+  const {
+    shouldHideSensitiveInfo = function () {},
+    toggleHideUserInfo = function () {},
+  } = useContext(UserMetaContext) || {};
 
   const getUserQuery = useGetUser({});
   const getUsername = () => {
     return getUserQuery.data?.user?.username || '';
   };
 
-  const onNavigate = route => {
-    navigation.navigate(route);
+  const onPress = item => {
+    if (item.onPress) {
+      item.onPress(item);
+    } else if (item.route) {
+      navigation.navigate(item.route);
+    }
     navigation.dispatch(DrawerActions.closeDrawer());
   };
+
+  const drawerRows = [
+    {
+      name: 'Manage categories',
+      icon: {
+        type: 'feather',
+        name: 'grid',
+      },
+      route: ROUTES.categoryEdit,
+    },
+    {
+      name: shouldHideSensitiveInfo()
+        ? 'Show sentive info'
+        : 'Hide sensitive info',
+      icon: {
+        type: 'feather',
+        name: shouldHideSensitiveInfo() ? 'eye-off' : 'eye',
+      },
+      onPress: function (item) {
+        toggleHideUserInfo();
+      },
+    },
+    {
+      name: 'Feedback',
+      icon: {
+        type: 'feather',
+        name: 'message-square',
+      },
+      route: ROUTES.feedbackForm,
+    },
+  ];
 
   const renderRows = () => {
     let rows = [];
@@ -55,7 +76,7 @@ const CustomDrawer = () => {
         <BaseRow
           key={row.name}
           showDivider={false}
-          onPress={() => onNavigate(row.route)}>
+          onPress={() => onPress(row)}>
           <View style={styles.row}>
             <Icon
               name={row.icon.name}

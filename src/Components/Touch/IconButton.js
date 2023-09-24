@@ -15,7 +15,7 @@ const IconButton = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      buttonStyle={buttonStyle}
+      containerStyle={buttonStyle}
       style={{ alignItems: align }}>
       <Icon name={iconName} type={iconType} size={iconSize} color={color} />
     </TouchableOpacity>

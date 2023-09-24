@@ -120,7 +120,8 @@ const AccountScreen = () => {
             <AmountText
               text4
               showNegativeOnly={isAccountTypeAsset(item.account_type)}
-              showPositiveOnly={isAccountTypeDebt(item.account_type)}>
+              showPositiveOnly={isAccountTypeDebt(item.account_type)}
+              sensitive>
               {item.latest_value || item.balance}
             </AmountText>
           </View>
@@ -139,7 +140,8 @@ const AccountScreen = () => {
             h2
             showNegativeOnly
             margin={{ top: 8, bottom: 2 }}
-            isLoading={getAccounts.isLoading}>
+            isLoading={getAccounts.isLoading}
+            sensitive>
             {computeSum()}
           </AmountText>
           <BaseButton
@@ -174,7 +176,7 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
-            <AmountText showNegativeOnly text3>
+            <AmountText showNegativeOnly text3 sensitive>
               {computeEquitySum(EQUITY_TYPE_ASSET)}
             </AmountText>
           </BaseRow>
@@ -184,7 +186,7 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Debts</BaseText>
-            <AmountText showPositiveOnly text3>
+            <AmountText showPositiveOnly text3 sensitive>
               {computeEquitySum(EQUITY_TYPE_DEBT)}
             </AmountText>
           </BaseRow>
@@ -201,6 +203,7 @@ const AccountScreen = () => {
       headerProps={{
         component: renderHeader(),
         allowDrawer: true,
+        allowHideInfo: true,
       }}
       enablePadding={false}
       fabProps={{

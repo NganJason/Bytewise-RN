@@ -3,6 +3,8 @@ import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
 import { getCurrencySymbol, CURRENCY_SGD } from '../../_shared/util';
+import { useContext } from 'react';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const AmountText = ({
   children = 0,
@@ -15,10 +17,12 @@ const AmountText = ({
   decimal = 2,
   suffix = '',
   currency = CURRENCY_SGD,
+  sensitive = false,
   ...props
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const { shouldHideSensitiveInfo } = useContext(UserMetaContext);
 
   const getAmountAttr = amount => {
     if (amount > 0) {
@@ -40,6 +44,9 @@ const AmountText = ({
     // use symbol string to show negative
     children = Math.abs(children);
     let amountStr = children.toLocaleString(undefined, { style: 'decimal' });
+    if (sensitive && shouldHideSensitiveInfo()) {
+      amountStr = '*'.repeat(4);
+    }
 
     let currencySymbol = getCurrencySymbol(currency);
     text = `${currencySymbol} ${amountStr}`;

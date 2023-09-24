@@ -9,6 +9,7 @@ import {
   BaseScreen,
   BaseBottomSelectTab,
   BaseDonutChartWithRows,
+  AmountText,
 } from '../../Components';
 import {
   EmptyContentConfig,
@@ -92,9 +93,18 @@ const CategoryOverviewScreen = ({ route }) => {
       }}>
       <BaseDonutChartWithRows
         items={chartItems()}
+        rowSensitive={true}
         donutInnerLabel={{
-          title: `S$ ${totalSum}`,
-          subtitle: TRANSACTION_TYPES[categoryType],
+          title: (
+            <AmountText h1 sensitive adjustsFontSizeToFit numberOfLines={1}>
+              {totalSum}
+            </AmountText>
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              {TRANSACTION_TYPES[categoryType]}
+            </BaseText>
+          ),
         }}
         isLoading={isLoading}
         emptyContent={

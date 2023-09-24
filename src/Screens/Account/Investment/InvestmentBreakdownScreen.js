@@ -69,7 +69,8 @@ const InvestmentBreakdownScreen = ({ route }) => {
             style={styles.titleText}
             h2
             margin={{ top: 8 }}
-            isLoading={getAccount.isLoading}>
+            isLoading={getAccount.isLoading}
+            sensitive>
             {balance}
           </AmountText>
           <EarningText

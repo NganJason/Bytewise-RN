@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useEffect, useState } from 'react';
+import { useUpdateUserMeta } from '../mutations';
 import { queryKeys, useGetUser } from '../query';
 import { checkIsUserOnboarded } from '../util/user';
 
@@ -54,6 +55,13 @@ const UserMetaProvider = ({ children }) => {
     });
   };
 
+  const updateMetaMutation = useUpdateUserMeta();
+  const toggleHideUserInfo = () => {
+    updateMetaMutation.mutate({
+      hide_info: !shouldHideSensitiveInfo(),
+    });
+  };
+
   const isUserOnboarded = () => {
     const { user_flag: userFlag = 0 } = userMeta?.user || {};
     return checkIsUserOnboarded(userFlag);
@@ -61,6 +69,10 @@ const UserMetaProvider = ({ children }) => {
 
   const showSetupSplashScreen = () => {
     return userMeta?.appMeta?.showSetupSplashScreen || false;
+  };
+
+  const shouldHideSensitiveInfo = () => {
+    return userMeta?.user?.meta?.hide_info || false;
   };
 
   // const save = async meta => {
@@ -95,9 +107,11 @@ const UserMetaProvider = ({ children }) => {
         setIsUserLogin,
         updateUserMeta,
         clearUserMeta,
+        toggleHideUserInfo,
         isUserOnboarded,
         showSetupSplashScreen,
         setShowSetupSplashScreen,
+        shouldHideSensitiveInfo,
       }}>
       {children}
     </UserMetaContext.Provider>

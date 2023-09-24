@@ -4,6 +4,7 @@ import {
   initUser,
   login,
   signup,
+  updateUserMeta,
   verifyEmail,
 } from '../apis/user';
 import { queryKeys } from '../query';
@@ -51,6 +52,18 @@ export const useCreateFeedback = (opts = {}) => {
   return useMutation({
     mutationFn: createFeedback,
     onSuccess: () => {
+      opts.onSuccess && opts.onSuccess();
+    },
+  });
+};
+
+export const useUpdateUserMeta = (opts = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateUserMeta,
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.user]);
       opts.onSuccess && opts.onSuccess();
     },
   });

@@ -138,7 +138,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             isLoading={isCategoryBudgetLoading()}>
             Used
           </BaseText>
-          <AmountText h4 isLoading={isCategoryBudgetLoading()}>
+          <AmountText h4 isLoading={isCategoryBudgetLoading()} sensitive>
             {getCategoryUsedAmount()}
           </AmountText>
           <BaseButton
@@ -171,11 +171,11 @@ const CategoryBreakdownScreen = ({ route }) => {
           </BaseText>
           <TouchableOpacity onPress={onBudgetPress}>
             <View style={styles.headerAggr}>
-              <AmountText h4 isLoading={isCategoryBudgetLoading()}>
+              <AmountText h4 isLoading={isCategoryBudgetLoading()} sensitive>
                 {getCategoryUsedAmount()}
               </AmountText>
               <BaseDivider orientation="vertical" margin={6} />
-              <AmountText h4 isLoading={isCategoryBudgetLoading()}>
+              <AmountText h4 isLoading={isCategoryBudgetLoading()} sensitive>
                 {budgetAmount}
               </AmountText>
             </View>
@@ -197,7 +197,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             isLoading={isCategoryBudgetLoading()}>
             Total
           </BaseText>
-          <AmountText h4 isLoading={isCategoryBudgetLoading()}>
+          <AmountText h4 isLoading={isCategoryBudgetLoading()} sensitive>
             {getCategoryUsedAmount()}
           </AmountText>
         </>

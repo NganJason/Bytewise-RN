@@ -41,7 +41,7 @@ const LotRow = ({
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3 currency={CURRENCY_USD}>
+        <AmountText text3 currency={CURRENCY_USD} sensitive>
           {getTotalInvestmentCost(shares, cost_per_share)}
         </AmountText>
         <AmountText
