@@ -13,9 +13,10 @@ const BaseBottomSheet = ({
   items = [],
   label = '',
   onBackdropPress = function () {},
-  onSelect = function () {},
+  onSelect = function (item) {},
   close = function () {},
   renderEmptyItems = function () {},
+  showDone = true,
   headerProps = {
     leftComponent: null,
   },
@@ -42,7 +43,12 @@ const BaseBottomSheet = ({
     items.map((item, i) =>
       rows.push(
         <BaseRow key={i} onPress={() => onSelect(item)} dividerMargin={5}>
-          <BaseText text2>{item[label]}</BaseText>
+          <View style={styles.rowLeftContent}>
+            {item.leftIcon && (
+              <View style={styles.rowIcon}>{item.leftIcon}</View>
+            )}
+            <BaseText text2>{item[label]}</BaseText>
+          </View>
         </BaseRow>,
       ),
     );
@@ -65,13 +71,15 @@ const BaseBottomSheet = ({
       <View style={styles.container}>
         <View style={{ ...styles.header, ...getHeaderJustify() }}>
           {headerProps.leftComponent && headerProps.leftComponent}
-          <BaseButton
-            title="Done"
-            type="clear"
-            align="flex-end"
-            size="md"
-            onPress={close}
-          />
+          {showDone && (
+            <BaseButton
+              title="Done"
+              type="clear"
+              align="flex-end"
+              size="md"
+              onPress={close}
+            />
+          )}
         </View>
         <BaseScrollView
           containerStyle={styles.body}
@@ -105,5 +113,11 @@ const getStyles = (theme, screenHeight) =>
     body: {
       flex: 1,
       paddingHorizontal: 6,
+    },
+    rowLeftContent: {
+      flexDirection: 'row',
+    },
+    rowIcon: {
+      marginRight: 10,
     },
   });

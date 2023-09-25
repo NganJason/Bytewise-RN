@@ -131,7 +131,7 @@ const getStyles = (theme, screenHeight) =>
       alignItems: 'center',
     },
     iconContainer: { flexDirection: 'row', alignItems: 'center' },
-    icon: { marginRight: 6 },
+    icon: { marginRight: 8 },
     body: {
       flex: 1,
       paddingVertical: theme.spacing.md,

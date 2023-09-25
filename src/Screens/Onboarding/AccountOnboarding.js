@@ -94,14 +94,14 @@ const AccountOnboarding = ({}) => {
 
       <BaseScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <BaseRow dividerMargin={0}>
+          <BaseRow dividerMargin={0} disabled>
             <BaseText text1>Asset</BaseText>
           </BaseRow>
           {renderRows(EQUITY_TYPE_ASSET)}
         </View>
 
         <View style={styles.section}>
-          <BaseRow dividerMargin={0}>
+          <BaseRow dividerMargin={0} disabled>
             <BaseText text1>Debt</BaseText>
           </BaseRow>
           {renderRows(EQUITY_TYPE_DEBT)}
@@ -113,10 +113,17 @@ const AccountOnboarding = ({}) => {
 
 const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation();
 
   if (equityType === EQUITY_TYPE_ASSET) {
     return (
-      <BaseRow disabled={true} showDivider={false}>
+      <BaseRow
+        showDivider={false}
+        onPress={() =>
+          navigation.navigate(ROUTES.accountSelection, {
+            is_onboarding: true,
+          })
+        }>
         <BaseText style={{ color: theme.colors.color8 }}>
           Eg: OCBC Savings Account
         </BaseText>
@@ -126,7 +133,13 @@ const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   }
 
   return (
-    <BaseRow disabled={true} showDivider={false}>
+    <BaseRow
+      showDivider={false}
+      onPress={() =>
+        navigation.navigate(ROUTES.accountSelection, {
+          is_onboarding: true,
+        })
+      }>
       <BaseText style={{ color: theme.colors.color8 }}>
         Eg: Tuition Fee Loan
       </BaseText>

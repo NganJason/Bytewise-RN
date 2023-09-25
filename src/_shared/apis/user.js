@@ -76,15 +76,15 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
 };
 
 export const initUser = async ({
-  accounts = [],
   categories = [],
+  accounts = [],
   currency = '',
 }) => {
   try {
     const body = await sendPostRequest(INIT_USER, {
-      currency: 'SGD',
-      accounts: accounts,
       categories: categories,
+      accounts: accounts,
+      currency: currency,
     });
     return body;
   } catch (e) {

@@ -11,7 +11,13 @@ import {
 } from './budget';
 import { getIDToCategoryMap } from './category';
 import { debounce, getProgress } from './common';
-import { getCurrencySymbol, CURRENCY_USD, CURRENCY_SGD } from './currency';
+import {
+  getCurrencySymbol,
+  CURRENCY_USD,
+  CURRENCY_SGD,
+  currencies,
+  supportedBaseCurrencies,
+} from './currency';
 import {
   moveMonth,
   getMonth,
@@ -66,6 +72,8 @@ export {
   getCurrencySymbol,
   CURRENCY_USD,
   CURRENCY_SGD,
+  currencies,
+  supportedBaseCurrencies,
   moveMonth,
   getMonth,
   getYear,

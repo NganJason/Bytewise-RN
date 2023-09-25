@@ -33,6 +33,11 @@ const items = [
     iconName: 'line-graph',
     iconType: 'entypo',
   },
+  {
+    desc: 'Setup your base currency',
+    iconName: 'dollar-sign',
+    iconType: 'feather',
+  },
 ];
 
 const WelcomeScreen = () => {

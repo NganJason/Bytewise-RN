@@ -15,6 +15,7 @@ import { useDimension } from '../../_shared/hooks';
 import AccountOnboarding from './AccountOnboarding';
 import BudgetOnboarding from './BudgetOnboarding';
 import CategoryOnboarding from './CategoryOnboarding';
+import CurrencyOnboarding from './CurrencyOnboarding';
 import InvestmentOnboarding from './InvestmentOnboarding';
 
 const tabs = [
@@ -22,6 +23,7 @@ const tabs = [
   { name: 'budget', canSkip: true },
   { name: 'account', canSkip: true },
   { name: 'investment', canSkip: true },
+  { name: 'currency', canSkip: false },
 ];
 
 const OnboardingScreen = () => {
@@ -97,6 +99,8 @@ const OnboardingScreen = () => {
         return <AccountOnboarding />;
       case 'investment':
         return <InvestmentOnboarding />;
+      case 'currency':
+        return <CurrencyOnboarding />;
       default:
         return <CategoryOnboarding />;
     }
@@ -105,7 +109,7 @@ const OnboardingScreen = () => {
   return (
     <BaseScreen headerProps={{ allowBack: true, onBack: onBack }}>
       <View style={styles.screen}>
-        <BaseProgressTab numTab={4} activeTab={activeTab} />
+        <BaseProgressTab numTab={tabs.length} activeTab={activeTab} />
         <View style={styles.body}>{renderTabContent()}</View>
         <View style={styles.footer}>
           <BaseButton
@@ -118,7 +122,7 @@ const OnboardingScreen = () => {
           {canSkip() && (
             <TouchableOpacity onPress={onSkip}>
               <BaseText text2 style={styles.skipText}>
-                Skip
+                Skip this
               </BaseText>
             </TouchableOpacity>
           )}

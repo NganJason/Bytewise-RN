@@ -33,6 +33,7 @@
     "react-native": "0.71.8",
     "react-native-calendars": "^1.1300.0",
     "react-native-collapsible": "^1.6.1",
+    "react-native-country-flag": "^2.0.2",
     "react-native-datepicker": "^1.7.2",
     "react-native-easy-content-loader": "^0.3.2",
     "react-native-flex-grid": "^1.0.0",

@@ -39,6 +39,7 @@ const AccountOnboarding = () => {
         trade_date: new Date().valueOf(),
         cost_per_share: 3000,
         shares: 10,
+        example: true,
       });
     }
 
@@ -48,10 +49,17 @@ const AccountOnboarding = () => {
         trade_date: tradeDate = '',
         cost_per_share: costPerShare = 0,
         shares = 0,
+        example = false,
       } = holding || {};
 
       rows.push(
-        <BaseRow key={idx} dividerMargin={0} disabled={true}>
+        <BaseRow
+          key={idx}
+          dividerMargin={0}
+          disabled={!example}
+          onPress={() => {
+            navigation.navigate(ROUTES.investmentOnboardingForm);
+          }}>
           <View>
             <BaseText text4 color={textColor}>
               {symbol}
