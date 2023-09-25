@@ -9,9 +9,10 @@ import { AuthContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 import { useGetUser } from '../../_shared/query';
-import { capitalize } from '../../_shared/util';
+import { capitalize, currencies } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
+import Currency from './Currency';
 
 const CustomDrawer = () => {
   const { theme } = useTheme();
@@ -21,6 +22,7 @@ const CustomDrawer = () => {
   const {
     shouldHideSensitiveInfo = function () {},
     toggleHideUserInfo = function () {},
+    getUserBaseCurrency = function () {},
   } = useContext(UserMetaContext) || {};
 
   const getUserQuery = useGetUser({});
@@ -97,9 +99,12 @@ const CustomDrawer = () => {
     <View style={styles.screen}>
       <DrawerContentScrollView>
         <View>
-          <BaseText h2>{capitalize(getUsername())}</BaseText>
+          <BaseText h2 margin={{ bottom: 18 }}>
+            {capitalize(getUsername())}
+          </BaseText>
         </View>
-        <BaseDivider margin={30} />
+        <Currency code={getUserBaseCurrency()} />
+        <BaseDivider margin={10} />
 
         <View style={styles.body}>{renderRows()}</View>
       </DrawerContentScrollView>

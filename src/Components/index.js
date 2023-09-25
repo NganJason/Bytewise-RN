@@ -63,6 +63,7 @@ import {
   BackIcon,
   DrawerIcon,
   BaseCalendar,
+  Currency,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
@@ -117,6 +118,7 @@ export {
   BackIcon,
   DrawerIcon,
   BaseCalendar,
+  Currency,
   BaseDonutChart,
   ChartLegend,
   BaseDonutChartWithRows,

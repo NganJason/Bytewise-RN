@@ -75,6 +75,10 @@ const UserMetaProvider = ({ children }) => {
     return userMeta?.user?.meta?.hide_info || false;
   };
 
+  const getUserBaseCurrency = () => {
+    return userMeta?.user?.meta?.currency || 'SGD';
+  };
+
   // const save = async meta => {
   //   try {
   //     await AsyncStorage.setItem(USER_META, JSON.stringify(meta));
@@ -112,6 +116,7 @@ const UserMetaProvider = ({ children }) => {
         showSetupSplashScreen,
         setShowSetupSplashScreen,
         shouldHideSensitiveInfo,
+        getUserBaseCurrency,
       }}>
       {children}
     </UserMetaContext.Provider>
