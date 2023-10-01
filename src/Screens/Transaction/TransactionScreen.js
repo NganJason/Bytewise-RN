@@ -13,7 +13,6 @@ import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
 import {
   useGetTransactionGroups,
-  useGetTransactions,
   useSumTransactions,
 } from '../../_shared/query';
 import {
@@ -24,7 +23,6 @@ import {
 import { useError, useDimension } from '../../_shared/hooks';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { Amount } from '../../_shared/object';
-import * as Localization from 'expo-localization';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -43,7 +41,6 @@ const TransactionScreen = ({ navigation }) => {
 
   const getTransactionGroups = useGetTransactionGroups(
     {
-      timezone: Localization.timezone,
       transaction_time: {
         gte: timeRange[0],
         lte: timeRange[1],

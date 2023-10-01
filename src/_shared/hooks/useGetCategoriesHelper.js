@@ -27,7 +27,6 @@ const useGetCategoriesHelper = ({
     {
       category_ids: categoryIDs,
       budget_date: getDateStringWithoutDelim(budgetDate),
-      timezone: Localization.timezone,
     },
     {
       enabled: categoryIDs.length > 0 && enabled,

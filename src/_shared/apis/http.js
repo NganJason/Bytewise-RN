@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ErrCode } from '../constant/errcode';
+import * as Localization from 'expo-localization';
 
 export class AppError extends Error {
   constructor({ requestID = '', message = '', code = 0 } = {}) {
@@ -57,7 +58,12 @@ export const setAxiosResponseInterceptors = ({ on401 }) => {
 
 export const sendPostRequest = async (endpoint = '', body = {}) => {
   try {
-    const { data } = await axiosInstance.post(endpoint, body);
+    const { data } = await axiosInstance.post(endpoint, {
+      app_meta: {
+        timezone: Localization.timezone,
+      },
+      ...body,
+    });
     return data?.body;
   } catch (e) {
     console.log(

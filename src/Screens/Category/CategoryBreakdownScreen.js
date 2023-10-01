@@ -106,7 +106,6 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const getTransactionGroups = useGetTransactionGroups({
-    timezone: Localization.timezone,
     category_id: categoryID,
     transaction_time: {
       gte: timeRange[0],

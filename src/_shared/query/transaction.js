@@ -105,7 +105,6 @@ export const useGetTransactions = (
 
 export const useGetTransactionGroups = (
   {
-    timezone = '',
     account_id = null,
     category_id = null,
     transaction_type = null,
@@ -117,7 +116,6 @@ export const useGetTransactionGroups = (
   return useQueryWrapper({
     queryFn: () =>
       getTransactionGroups({
-        timezone: timezone,
         account_id: account_id,
         category_id: category_id,
         transaction_type: transaction_type,
