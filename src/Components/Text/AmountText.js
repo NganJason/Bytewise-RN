@@ -41,17 +41,18 @@ const AmountText = ({
 
   const renderAmountText = () => {
     let text = '';
-    let value = Number(amount.getAmount());
     const { sign } = getAmountAttr();
+    let currencySymbol = getCurrencySymbol(amount.getCurrency());
 
-    // use sign string to show negative
-    value = Math.abs(value).toFixed(decimal);
-    let amountStr = value.toLocaleString(undefined, { style: 'decimal' });
     if (sensitive && shouldHideSensitiveInfo()) {
-      amountStr = '-'.repeat(1);
+      return `${currencySymbol} -`;
     }
 
-    let currencySymbol = getCurrencySymbol(amount.getCurrency());
+    // use sign string to show negative
+    let value = Number(amount.getAmount());
+    value = Math.abs(value).toFixed(decimal);
+    let amountStr = value.toLocaleString(undefined, { style: 'decimal' });
+
     text = `${currencySymbol} ${amountStr}`;
 
     let shouldShowSign = false;

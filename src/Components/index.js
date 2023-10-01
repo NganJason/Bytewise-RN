@@ -1,6 +1,6 @@
 // Input
 import {
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   TouchInput,
   BaseCheckbox,
@@ -76,7 +76,7 @@ export {
   BaseDivider,
   BaseText,
   BaseInput,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   SearchBottomSheetInput,
   BaseAccordion,
   AggrSummary,

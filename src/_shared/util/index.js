@@ -19,6 +19,7 @@ import {
   DEFAULT_INVESTMENT_CURRENCY,
   currencies,
   supportedBaseCurrencies,
+  getSupportedCurrencyOptions,
 } from './currency';
 import {
   moveMonth,
@@ -79,6 +80,7 @@ export {
   DEFAULT_INVESTMENT_CURRENCY,
   currencies,
   supportedBaseCurrencies,
+  getSupportedCurrencyOptions,
   moveMonth,
   getMonth,
   getYear,

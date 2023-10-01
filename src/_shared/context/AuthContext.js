@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLogin, useSignup } from '../mutations';
 import { UserError } from '../apis/user';
 import {
+  isAxiosTokenSet,
   setAxiosAccessToken,
   setAxiosResponseInterceptors,
   unsetAxiosAccessToken,
@@ -25,7 +26,7 @@ const AuthProvider = ({ children }) => {
   const { isLoading: isSignupLoading } = signupMutation;
   const { isLoading: isVerifyEmailLoading } = verifyEmailMutation;
 
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(isAxiosTokenSet());
   useEffect(() => {
     setIsUserLogin(isLogin);
   }, [isLogin]);

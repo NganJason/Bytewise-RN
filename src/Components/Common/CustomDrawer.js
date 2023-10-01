@@ -8,7 +8,6 @@ import ROUTES from '../../_shared/constant/routes';
 import { AuthContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
-import { useGetUser } from '../../_shared/query';
 import { capitalize } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
@@ -23,12 +22,8 @@ const CustomDrawer = () => {
     shouldHideSensitiveInfo = function () {},
     toggleHideUserInfo = function () {},
     getUserBaseCurrency = function () {},
+    getUserName = function () {},
   } = useContext(UserMetaContext) || {};
-
-  const getUserQuery = useGetUser({});
-  const getUsername = () => {
-    return getUserQuery.data?.user?.username || '';
-  };
 
   const onPress = item => {
     if (item.onPress) {
@@ -100,7 +95,7 @@ const CustomDrawer = () => {
       <DrawerContentScrollView>
         <View>
           <BaseText h2 margin={{ bottom: 18 }}>
-            {capitalize(getUsername())}
+            {capitalize(getUserName())}
           </BaseText>
         </View>
         <Currency code={getUserBaseCurrency()} />

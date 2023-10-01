@@ -14,7 +14,6 @@ import ROUTES from '../../_shared/constant/routes';
 import { Amount } from '../../_shared/object';
 
 const Transactions = ({
-  transactions = [],
   transactionGroups = [],
   showMonthLabel = false,
   emptyContentConfig,
@@ -27,8 +26,8 @@ const Transactions = ({
 
     transactionGroups.map(group => {
       dates.push(group.date);
-      dateToTransactions[group.date] = transactions;
-      dateToSum[group.date] = new Amount(group.amount, group.currency);
+      dateToTransactions[group.date] = group.transactions;
+      dateToSum[group.date] = new Amount(group.sum, group.currency);
     });
 
     let { months: transactionMonths = [], monthToDates = {} } =

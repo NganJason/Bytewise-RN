@@ -62,7 +62,9 @@ const BaseDonutChartWithRows = ({
           key={idx}
           disabled={!d.onPress}
           onPress={d.onPress && d.onPress}>
-          <ChartLegend color={d.color} text={d.name} text3 />
+          <View style={styles.legend}>
+            <ChartLegend color={d.color} text={d.name} text3 />
+          </View>
           <View style={styles.rowValue}>
             <AmountText
               text3
@@ -73,6 +75,8 @@ const BaseDonutChartWithRows = ({
             <BaseText
               text5
               margin={{ left: 10 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
               color={theme.colors.color7}>{`(${d.percentage}%)`}</BaseText>
           </View>
         </BaseRow>,
@@ -112,9 +116,14 @@ const getStyles = theme =>
     rowsContainer: {
       flex: 1,
     },
+    legend: {
+      flex: 1,
+    },
     rowValue: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'flex-end',
     },
   });
 

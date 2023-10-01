@@ -30,6 +30,10 @@ export const unsetAxiosAccessToken = () => {
   }
 };
 
+export const isAxiosTokenSet = () => {
+  return axiosInstance.defaults.headers.common.Authorization !== undefined;
+};
+
 export const setAxiosResponseInterceptors = ({ on401 }) => {
   if (axiosInstance != null) {
     axiosInstance.interceptors.response.use(

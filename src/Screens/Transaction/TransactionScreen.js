@@ -41,20 +41,6 @@ const TransactionScreen = ({ navigation }) => {
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
 
-  const getTransactions = useGetTransactions(
-    {
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
-    },
-    {},
-  );
-
   const getTransactionGroups = useGetTransactionGroups(
     {
       timezone: Localization.timezone,
@@ -95,21 +81,19 @@ const TransactionScreen = ({ navigation }) => {
   };
 
   const isScreenLoading = () =>
-    getTransactions.isLoading || sumTransactionsQuery.isLoading;
+    getTransactionGroups.isLoading || sumTransactionsQuery.isLoading;
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions?.data || {};
     let { transaction_groups: groups = [] } = getTransactionGroups?.data || {};
     return (
       <Transactions
         transactionGroups={groups}
-        transactions={transactions}
         emptyContentConfig={EmptyContentConfig.transactionv2}
       />
     );
   };
 
-  useError([getTransactions, sumTransactionsQuery]);
+  useError([getTransactionGroups, sumTransactionsQuery]);
 
   return (
     <BaseScreen

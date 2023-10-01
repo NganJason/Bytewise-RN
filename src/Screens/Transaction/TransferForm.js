@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon, useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import {
   BaseBottomSheet,
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
   BaseLoadableView,
   EmptyContent,
@@ -18,6 +18,7 @@ import { useGetTransaction } from '../../_shared/query';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useValidation } from '../../_shared/hooks';
 import { validateTransfer } from '../../_shared/validator';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const mockAccounts = [
   {
@@ -41,12 +42,14 @@ const TransferForm = ({ transactionID = '' }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const [accountFocus, setAccountFocus] = useState(fromAccountFocus);
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: '',
     transaction_time: new Date().valueOf(),
     amount: 0,
+    currency: getUserBaseCurrency(),
     from_account: {
       account_id: '',
       account_name: '',
@@ -87,6 +90,10 @@ const TransferForm = ({ transactionID = '' }) => {
 
   const onAmountChange = e => {
     setTransactionForm({ ...transactionForm, amount: e });
+  };
+
+  const onCurrencyChange = e => {
+    setTransactionForm({ ...transactionForm, currency: e.code });
   };
 
   const onAccountPress = focus => {
@@ -150,12 +157,15 @@ const TransferForm = ({ transactionID = '' }) => {
         enableOnAndroid={true}
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}>
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={transactionForm.amount}
+          currency={transactionForm.currency}
           onChangeText={onAmountChange}
+          onChangeCurrency={onCurrencyChange}
           autoFocus={transactionForm.transaction_id === ''}
           errorMessage={showValidation && formErrors.amount}
+          allowSelectCurrency
         />
 
         <TouchInput

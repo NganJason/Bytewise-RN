@@ -34,9 +34,10 @@ import {
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DEFAULT_CURRENCY, getProgress } from '../../_shared/util';
-import { useGetTransactions } from '../../_shared/query';
+import { useGetTransactionGroups } from '../../_shared/query';
 import { useSumCategoryTransactions } from '../../_shared/query/category';
 import { Amount } from '../../_shared/object';
+import * as Localization from 'expo-localization';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -95,7 +96,6 @@ const CategoryBreakdownScreen = ({ route }) => {
 
   const getCategoryUsedAmount = () => {
     const { sums = [] } = sumCategoryTransactions?.data || {};
-
     for (let i = 0; i < sums.length; i++) {
       let id = sums[i]?.category?.category_id || '';
       if (categoryID === id) {
@@ -105,7 +105,8 @@ const CategoryBreakdownScreen = ({ route }) => {
     return new Amount(0);
   };
 
-  const getTransactions = useGetTransactions({
+  const getTransactionGroups = useGetTransactionGroups({
+    timezone: Localization.timezone,
     category_id: categoryID,
     transaction_time: {
       gte: timeRange[0],
@@ -127,12 +128,12 @@ const CategoryBreakdownScreen = ({ route }) => {
   const isScreenLoading = () => {
     return (
       isCategoryBudgetLoading() ||
-      getTransactions.isLoading ||
+      getTransactionGroups.isLoading ||
       sumCategoryTransactions.isLoading
     );
   };
 
-  useError([...getQueries(), getTransactions, sumCategoryTransactions]);
+  useError([...getQueries(), getTransactionGroups, sumCategoryTransactions]);
 
   const renderHeader = () => {
     const addBudgetAggr = () => {
@@ -241,7 +242,11 @@ const CategoryBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.headerTitle}>
-          <BaseText h2 isLoading={isCategoryBudgetLoading()}>
+          <BaseText
+            h2
+            isLoading={isCategoryBudgetLoading()}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {categoryName}
           </BaseText>
           <IconButton
@@ -265,13 +270,10 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions?.data || {};
-    transactions = transactions.filter(
-      d => d.transaction_type === categoryType,
-    );
+    let { transaction_groups: groups = [] } = getTransactionGroups?.data || {};
     return (
       <Transactions
-        transactions={transactions}
+        transactionGroups={groups}
         showMonthLabel={budgetType === BUDGET_TYPE_ANNUAL}
       />
     );

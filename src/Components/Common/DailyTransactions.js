@@ -153,7 +153,7 @@ const getStyles = theme =>
       color: theme.colors.color7,
     },
     noteWrapper: {
-      flex: 2,
+      flex: 1,
       marginHorizontal: 10,
     },
     note: {

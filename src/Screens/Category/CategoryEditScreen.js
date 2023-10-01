@@ -49,7 +49,9 @@ const CategoryEditScreen = ({ route }) => {
                 category_id: category.category_id,
               });
             }}>
-            <BaseText text2>{category.category_name}</BaseText>
+            <BaseText text2 numberOfLines={1} ellipsizeMode="tail">
+              {category.category_name}
+            </BaseText>
           </BaseRow>,
         );
       }

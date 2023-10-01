@@ -1,87 +1,68 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { Icon, useTheme } from '@rneui/themed';
+import { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  currencies,
+  DEFAULT_CURRENCY,
+  getSupportedCurrencyOptions,
+} from '../../_shared/util';
+import { BaseText } from '../Text';
+import { BaseBottomSheet } from '../View';
 
-import BaseInput from './BaseInput';
-import { CURRENCY_SGD, getCurrencySymbol } from '../../_shared/util';
+const BaseCurrencyInput = ({
+  value = DEFAULT_CURRENCY,
+  allowSelect = true,
+  onSelect = function (currency) {},
+}) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
-const BaseCurrencyInput = forwardRef(
-  (
-    {
-      label = '',
-      value = 0,
-      placeholder = '',
-      onChangeText = function () {},
-      onBlur = function () {},
-      autoFocus = false,
-      currency = CURRENCY_SGD,
-      ...props
-    },
-    ref,
-  ) => {
-    const [inputStr, setInputStr] = useState(value);
-    const { onFocus = function () {} } = props || {};
-    let currencySymbol = getCurrencySymbol(currency);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
-    useEffect(() => {
-      if (isNaN(value) || value === null) {
-        setInputStr('0');
-      } else {
-        setInputStr(value);
-      }
-    }, [value]);
+  const onPress = item => {
+    onSelect(item);
+    toggleModal();
+  };
 
-    const formatAmount = () => {
-      let valueStr = String(inputStr);
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={toggleModal}
+      disabled={!allowSelect}>
+      {allowSelect && (
+        <Icon
+          name={'chevron-down'}
+          type={'entypo'}
+          size={20}
+          color={theme.colors.color7}
+        />
+      )}
 
-      let formattedAmount =
-        valueStr === ''
-          ? `${currencySymbol} `
-          : valueStr.startsWith('-')
-          ? `-${currencySymbol} ${valueStr.slice(1)}`
-          : `${currencySymbol} ${valueStr}`;
-      return formattedAmount;
-    };
-
-    const handleChangeText = e => {
-      e = e.replace(currencySymbol, '');
-      e = e.replace(' ', '');
-      const regex = /^-?\d*\.?\d*$/;
-
-      // Validate input: allow digits, optional minus sign, and optional decimal point
-      if (regex.test(e) || e === '' || e === '-') {
-        onChangeText(e);
-        setInputStr(e);
-      }
-    };
-
-    const onFocusHandler = () => {
-      if (Number(inputStr) === 0) {
-        setInputStr('');
-      }
-      onFocus();
-    };
-
-    const onBlurHandler = () => {
-      if (inputStr === '') {
-        setInputStr('0');
-      }
-      onBlur();
-    };
-
-    return (
-      <BaseInput
-        {...props}
-        ref={ref}
-        label={label}
-        value={formatAmount()}
-        placeholder={placeholder}
-        onBlur={onBlurHandler}
-        onFocus={onFocusHandler}
-        onChangeText={handleChangeText}
-        keyboardType="numeric"
-        autoFocus={autoFocus}
+      <BaseText text2 color={theme.colors.color6}>
+        {currencies[value].symbol}
+      </BaseText>
+      <BaseBottomSheet
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}
+        close={toggleModal}
+        onSelect={onPress}
+        items={getSupportedCurrencyOptions()}
+        label="name"
       />
-    );
-  },
-);
+    </TouchableOpacity>
+  );
+};
+
+const getStyles = theme =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  });
 
 export default BaseCurrencyInput;

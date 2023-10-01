@@ -86,6 +86,10 @@ const UserMetaProvider = ({ children }) => {
     return userMeta?.user?.meta?.currency || 'SGD';
   };
 
+  const getUserName = () => {
+    return userMeta?.user?.username || '';
+  };
+
   return (
     <UserMetaContext.Provider
       value={{
@@ -97,6 +101,7 @@ const UserMetaProvider = ({ children }) => {
         showSetupSplashScreen,
         setShowSetupSplashScreen,
         shouldHideSensitiveInfo,
+        getUserName,
         getUserBaseCurrency,
       }}>
       {children}
