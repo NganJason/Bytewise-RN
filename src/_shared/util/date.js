@@ -105,8 +105,8 @@ export const getYearString = (d = new Date()) => {
 };
 
 export const getUnixRangeOfMonth = (year = getYear(), month = getMonth()) => {
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
+  const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 
   const startUnixTime = Math.floor(startDate.getTime());
   const endUnixTime = Math.floor(endDate.getTime());
