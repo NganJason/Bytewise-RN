@@ -11,7 +11,11 @@ import {
 } from '../../Components';
 import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
-import { useAggrTransactions, useGetTransactions } from '../../_shared/query';
+import {
+  useGetTransactionGroups,
+  useGetTransactions,
+  useSumTransactions,
+} from '../../_shared/query';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
@@ -19,6 +23,8 @@ import {
 } from '../../_shared/apis/enum';
 import { useError, useDimension } from '../../_shared/hooks';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
+import { Amount } from '../../_shared/object';
+import * as Localization from 'expo-localization';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -49,13 +55,39 @@ const TransactionScreen = ({ navigation }) => {
     {},
   );
 
-  const aggrTransactionsQuery = useAggrTransactions({
-    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+  const getTransactionGroups = useGetTransactionGroups(
+    {
+      timezone: Localization.timezone,
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+      paging: {
+        limit: PAGING_LIMIT,
+        page: STARTING_PAGE,
+      },
+    },
+    {},
+  );
+
+  const sumTransactionsQuery = useSumTransactions({
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
     },
   });
+
+  const getTransactionsSum = (transactionType = 0) => {
+    const { sums = [] } = sumTransactionsQuery?.data || [];
+
+    for (const sum of sums) {
+      if (sum.transaction_type === transactionType) {
+        return new Amount(sum.sum, sum.currency);
+      }
+    }
+
+    return new Amount();
+  };
 
   const onDateMove = newDate => {
     setActiveDate(newDate);
@@ -63,19 +95,21 @@ const TransactionScreen = ({ navigation }) => {
   };
 
   const isScreenLoading = () =>
-    getTransactions.isLoading || aggrTransactionsQuery.isLoading;
+    getTransactions.isLoading || sumTransactionsQuery.isLoading;
 
   const renderRows = () => {
     let { transactions = [] } = getTransactions?.data || {};
+    let { transaction_groups: groups = [] } = getTransactionGroups?.data || {};
     return (
       <Transactions
+        transactionGroups={groups}
         transactions={transactions}
         emptyContentConfig={EmptyContentConfig.transactionv2}
       />
     );
   };
 
-  useError([getTransactions, aggrTransactionsQuery]);
+  useError([getTransactions, sumTransactionsQuery]);
 
   return (
     <BaseScreen
@@ -117,18 +151,12 @@ const TransactionScreen = ({ navigation }) => {
           aggrs={[
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              amount:
-                aggrTransactionsQuery.data?.results?.[
-                  String(TRANSACTION_TYPE_INCOME)
-                ]?.sum || 0,
+              amount: getTransactionsSum(TRANSACTION_TYPE_INCOME),
               sensitive: true,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              amount:
-                -aggrTransactionsQuery.data?.results?.[
-                  String(TRANSACTION_TYPE_EXPENSE)
-                ]?.sum || 0,
+              amount: getTransactionsSum(TRANSACTION_TYPE_EXPENSE),
               sensitive: true,
             },
           ]}

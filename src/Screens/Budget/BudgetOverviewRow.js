@@ -14,7 +14,8 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { getProgress } from '../../_shared/util';
+import { Amount } from '../../_shared/object';
+import { DEFAULT_CURRENCY, getProgress } from '../../_shared/util';
 
 const BudgetOverviewRow = ({
   categoryWithBudget = {},
@@ -36,6 +37,7 @@ const BudgetOverviewRow = ({
     used_amount: usedAmount = 0,
     amount = 0,
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+    currency = DEFAULT_CURRENCY,
   } = budget;
 
   const onPress = () => {
@@ -70,13 +72,19 @@ const BudgetOverviewRow = ({
           />
         ) : (
           <View style={styles.aggr}>
-            <AmountText text4 style={{ color: theme.colors.color7 }} sensitive>
-              {usedAmount}
-            </AmountText>
+            <AmountText
+              text4
+              amount={new Amount(usedAmount, currency)}
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
             <BaseDivider orientation={'vertical'} margin={5} />
-            <AmountText text4 style={{ color: theme.colors.color7 }} sensitive>
-              {amount}
-            </AmountText>
+            <AmountText
+              text4
+              amount={new Amount(amount, currency)}
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
           </View>
         )}
       </View>

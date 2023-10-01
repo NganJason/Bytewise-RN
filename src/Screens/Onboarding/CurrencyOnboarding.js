@@ -9,9 +9,7 @@ import { currencies, supportedBaseCurrencies } from '../../_shared/util';
 const CurrencyOnboarding = () => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  const { addBaseCurrency } = useContext(OnboardingDataContext);
-
-  const [selectedCurrency, setSeletectedCurrency] = useState(currencies.SGD);
+  const { data, addBaseCurrency } = useContext(OnboardingDataContext);
 
   const [isCurrencySheetVisible, setIsCurrencySheetVisible] = useState(false);
   const toggleCurrencySheet = () => {
@@ -20,15 +18,22 @@ const CurrencyOnboarding = () => {
 
   const getCurrencyOptions = () => {
     let options = [];
+
     supportedBaseCurrencies.map(currency => {
-      currency.leftIcon = <CountryFlag isoCode={currency.iso_code} size={20} />;
+      currency.leftIcon = (
+        <CountryFlag
+          isoCode={currency.iso_code}
+          size={20}
+          style={styles.flag}
+        />
+      );
       options.push(currency);
     });
+    supportedBaseCurrencies.sort((a, b) => a.name.localeCompare(b.name));
     return options;
   };
 
   const onCurrencyChange = item => {
-    setSeletectedCurrency(item);
     addBaseCurrency(item.code);
     toggleCurrencySheet();
   };
@@ -46,9 +51,13 @@ const CurrencyOnboarding = () => {
       <View>
         <TouchInput
           leftIcon={
-            <CountryFlag isoCode={selectedCurrency.iso_code} size={20} />
+            <CountryFlag
+              isoCode={currencies[data.currency].iso_code}
+              size={20}
+              style={styles.flag}
+            />
           }
-          value={selectedCurrency.name}
+          value={currencies[data.currency].name}
           onPress={toggleCurrencySheet}
         />
         <BaseBottomSheet
@@ -73,6 +82,9 @@ const getStyles = theme => {
       marginTop: 10,
       marginBottom: 12,
       color: theme.colors.color8,
+    },
+    flag: {
+      marginRight: 10,
     },
   });
 };

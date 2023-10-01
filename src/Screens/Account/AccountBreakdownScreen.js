@@ -21,6 +21,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount, useGetTransactions } from '../../_shared/query';
 import {
+  DEFAULT_CURRENCY,
   getMonth,
   getUnixRangeOfMonth,
   getYear,
@@ -29,6 +30,7 @@ import {
 import { ACCOUNT_TYPE_LOAN } from '../../_shared/apis/enum';
 import { useError, useDimension } from '../../_shared/hooks';
 import { sapiens3 } from '../../_shared/constant/asset';
+import { Amount } from '../../_shared/object';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -84,6 +86,7 @@ const AccountBreakdownScreen = ({ route }) => {
       account_name = '',
       account_type = 0,
       balance = '0',
+      currency = DEFAULT_CURRENCY,
     } = getAccount?.data?.account || {};
 
     const textColor = isAccountTypeAsset(accountType)
@@ -108,12 +111,13 @@ const AccountBreakdownScreen = ({ route }) => {
           </BaseText>
           <AmountText
             h2
+            amount={new Amount(balance, currency)}
             showNegativeOnly={isAccountTypeAsset(accountType)}
             margin={{ top: 8, bottom: 6 }}
             isLoading={getAccount.isLoading}
-            sensitive>
-            {balance}
-          </AmountText>
+            sensitive
+          />
+
           <BaseText
             text4
             margin={{ bottom: 4 }}

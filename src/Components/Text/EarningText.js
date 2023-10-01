@@ -1,31 +1,24 @@
+import { Amount } from '../../_shared/object';
 import AmountText from './AmountText';
 
-const EarningText = ({ currVal = 0, initialVal = 0, ...props }) => {
-  const getEarning = () => {
-    return currVal - initialVal;
-  };
-
-  const getEarningPercentage = () => {
-    let percentage = (getEarning() / initialVal) * 100;
-    if (isNaN(percentage)) {
-      return 0;
-    }
-    return percentage.toFixed(2);
-  };
-
+const EarningText = ({ gain = new Amount(), percentGain = 0, ...props }) => {
   const getPercentageSuffix = () => {
-    let percentage = getEarningPercentage();
+    let percentage = Number(percentGain).toFixed(2);
     if (isFinite(percentage)) {
-      return `(${getEarningPercentage()}%)`;
+      return `(${percentage}%)`;
     }
 
     return '(N/A)';
   };
 
   return (
-    <AmountText suffix={getPercentageSuffix()} showColor showSymbol {...props}>
-      {getEarning()}
-    </AmountText>
+    <AmountText
+      amount={gain}
+      suffix={getPercentageSuffix()}
+      showColor
+      showSign
+      {...props}
+    />
   );
 };
 

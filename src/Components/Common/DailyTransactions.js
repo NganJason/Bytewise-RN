@@ -10,9 +10,11 @@ import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { getDate, getDay } from '../../_shared/util';
 import { BaseChip } from '../View';
+import { Amount } from '../../_shared/object';
 
 const DailyTransactions = ({
   timestamp = 0,
+  dailyTotal = new Amount(),
   transactions = [
     {
       transaction_id: '',
@@ -38,15 +40,6 @@ const DailyTransactions = ({
 
   const navigation = useNavigation();
 
-  const computeAmountSum = () => {
-    let sum = 0;
-    transactions.forEach(t => {
-      sum += Number(t.amount);
-    });
-
-    return sum;
-  };
-
   const navigateToForm = t => {
     navigation.navigate(ROUTES.transactionForm, {
       transaction_id: t.transaction_id,
@@ -69,9 +62,7 @@ const DailyTransactions = ({
           </BaseText>
           <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
         </View>
-        <AmountText showColor style={styles.sumText}>
-          {computeAmountSum()}
-        </AmountText>
+        <AmountText amount={dailyTotal} showColor style={styles.sumText} />
       </View>
       {transactions.map((t, i) => {
         return (
@@ -106,12 +97,12 @@ const DailyTransactions = ({
                 </View>
                 <AmountText
                   text5
+                  amount={new Amount(t.amount, t.currency)}
                   style={styles.amount}
                   numberOfLines={1}
-                  showSymbol
-                  ellipsizeMode="tail">
-                  {t.amount}
-                </AmountText>
+                  showSign
+                  ellipsizeMode="tail"
+                />
               </View>
             </BaseListItem>
           </TouchableOpacity>

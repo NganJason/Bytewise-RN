@@ -56,7 +56,15 @@ export const sendPostRequest = async (endpoint = '', body = {}) => {
     const { data } = await axiosInstance.post(endpoint, body);
     return data?.body;
   } catch (e) {
-    console.log(e);
+    console.log(
+      `
+      --------------------------
+      cmd=${endpoint}
+      token=${axiosInstance.defaults.headers.common.Authorization}
+      error=${e}
+      --------------------------
+      `,
+    );
     throw new AppError({
       requestID: e.response?.headers['request-id'], // request ID
       message: e.response?.data.error, // error message

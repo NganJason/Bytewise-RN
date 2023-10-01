@@ -12,6 +12,7 @@ import {
 import { EQUITY_TYPE_ASSET, EQUITY_TYPE_DEBT } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 import { getEquityType } from '../../_shared/util';
 
 const AccountOnboarding = ({}) => {
@@ -56,7 +57,7 @@ const AccountOnboarding = ({}) => {
               {accountName}
             </BaseText>
           </View>
-          <AmountText>{balance}</AmountText>
+          <AmountText amount={new Amount(balance, data.currency)} />
         </BaseRow>,
       );
     });
@@ -114,6 +115,7 @@ const AccountOnboarding = ({}) => {
 const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const { data } = useContext(OnboardingDataContext);
 
   if (equityType === EQUITY_TYPE_ASSET) {
     return (
@@ -127,7 +129,10 @@ const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
         <BaseText style={{ color: theme.colors.color8 }}>
           Eg: OCBC Savings Account
         </BaseText>
-        <AmountText style={{ color: theme.colors.color8 }}>300</AmountText>
+        <AmountText
+          amount={new Amount(300, data.currency)}
+          style={{ color: theme.colors.color8 }}
+        />
       </BaseRow>
     );
   }
@@ -143,7 +148,10 @@ const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
       <BaseText style={{ color: theme.colors.color8 }}>
         Eg: Tuition Fee Loan
       </BaseText>
-      <AmountText style={{ color: theme.colors.color8 }}>4000</AmountText>
+      <AmountText
+        amount={new Amount(4000, data.currency)}
+        style={{ color: theme.colors.color8 }}
+      />
     </BaseRow>
   );
 };

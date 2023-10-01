@@ -52,7 +52,7 @@ const BudgetForm = ({ route }) => {
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
     active_date: activeDate = TODAY.valueOf(),
   } = route?.params || {};
-  const [activeD, setActiveD] = useState(getDateObjFromTs(activeDate));
+  const [activeD] = useState(getDateObjFromTs(activeDate));
 
   const isAddBudget = () => {
     return categoryID === '';

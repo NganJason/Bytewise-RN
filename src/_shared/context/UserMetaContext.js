@@ -4,7 +4,6 @@ import { useUpdateUserMeta } from '../mutations';
 import { queryKeys, useGetUser } from '../query';
 import { checkIsUserOnboarded } from '../util/user';
 
-// const USER_META = 'USER_META';
 const UserMetaContext = createContext();
 const defaultMeta = {
   user: {
@@ -57,8 +56,16 @@ const UserMetaProvider = ({ children }) => {
 
   const updateMetaMutation = useUpdateUserMeta();
   const toggleHideUserInfo = () => {
+    let hideInfo = !shouldHideSensitiveInfo();
+    setUserMeta(prev => {
+      let newMeta = { ...prev };
+      newMeta.user.meta.hide_info = hideInfo;
+
+      return newMeta;
+    });
+
     updateMetaMutation.mutate({
-      hide_info: !shouldHideSensitiveInfo(),
+      hide_info: hideInfo,
     });
   };
 
@@ -78,32 +85,6 @@ const UserMetaProvider = ({ children }) => {
   const getUserBaseCurrency = () => {
     return userMeta?.user?.meta?.currency || 'SGD';
   };
-
-  // const save = async meta => {
-  //   try {
-  //     await AsyncStorage.setItem(USER_META, JSON.stringify(meta));
-  //   } catch {
-  //     throw new UserError('set user meta error');
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   async function getMeta() {
-  //     try {
-  //       const metaStr = await AsyncStorage.getItem(USER_META);
-  //       const meta = JSON.parse(metaStr);
-  //       if (meta !== null) {
-  //         setUserMeta({
-  //           ...userMeta,
-  //           onboardingCompleted: meta.onboardingCompleted,
-  //         });
-  //       }
-  //     } catch {
-  //       throw new UserError('get user meta error');
-  //     }
-  //   }
-  //   getMeta();
-  // }, []);
 
   return (
     <UserMetaContext.Provider

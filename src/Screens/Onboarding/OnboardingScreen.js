@@ -19,11 +19,11 @@ import CurrencyOnboarding from './CurrencyOnboarding';
 import InvestmentOnboarding from './InvestmentOnboarding';
 
 const tabs = [
+  { name: 'currency', canSkip: false },
   { name: 'category', canSkip: false },
   { name: 'budget', canSkip: true },
   { name: 'account', canSkip: true },
   { name: 'investment', canSkip: true },
-  { name: 'currency', canSkip: false },
 ];
 
 const OnboardingScreen = () => {
@@ -42,9 +42,13 @@ const OnboardingScreen = () => {
     if (!isLastTab()) {
       nextPage();
     } else {
-      setupUser();
-      setShowSetupSplashScreen(true);
+      submitUser();
     }
+  };
+
+  const submitUser = () => {
+    setupUser();
+    setShowSetupSplashScreen(true);
   };
 
   const isLastTab = () => {
@@ -69,14 +73,12 @@ const OnboardingScreen = () => {
     setActiveTab(activeTab - 1);
   };
 
-  const canSkip = () => {
-    return !isLastTab() && tabs[activeTab].canSkip;
-  };
-
   const onSkip = () => {
     if (!isLastTab()) {
       rollbackData();
       nextPage();
+    } else {
+      submitUser();
     }
   };
 
@@ -86,6 +88,10 @@ const OnboardingScreen = () => {
       return;
     }
     prevPage();
+  };
+
+  const canSkip = () => {
+    return tabs[activeTab].canSkip;
   };
 
   const renderTabContent = () => {

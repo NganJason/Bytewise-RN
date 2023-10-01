@@ -9,7 +9,7 @@ import { AuthContext } from '../../_shared/context';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 import { useGetUser } from '../../_shared/query';
-import { capitalize, currencies } from '../../_shared/util';
+import { capitalize } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseDivider, BaseRow } from '../View';
 import Currency from './Currency';

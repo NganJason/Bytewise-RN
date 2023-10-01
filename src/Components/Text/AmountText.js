@@ -2,21 +2,23 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
-import { getCurrencySymbol, CURRENCY_SGD } from '../../_shared/util';
+import { getCurrencySymbol, DEFAULT_CURRENCY } from '../../_shared/util';
 import { useContext } from 'react';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
+import { Amount } from '../../_shared/object';
 
 const AmountText = ({
   children = 0,
+  amount = new Amount(),
   showColor = false,
-  showSymbol = false,
+  showSign = false,
   showNegativeOnly = false,
   showPositiveOnly = false,
   center = false,
   style = {},
   decimal = 2,
   suffix = '',
-  currency = CURRENCY_SGD,
+  currency = DEFAULT_CURRENCY,
   sensitive = false,
   ...props
 }) => {
@@ -24,46 +26,47 @@ const AmountText = ({
   const styles = getStyles(theme);
   const { shouldHideSensitiveInfo } = useContext(UserMetaContext);
 
-  const getAmountAttr = amount => {
-    if (amount > 0) {
-      return { styles: showColor && styles.positive, symbol: '+' };
+  const getAmountAttr = () => {
+    let value = amount.getAmount();
+    if (value > 0) {
+      return { styles: showColor && styles.positive, sign: '+' };
     }
 
-    if (amount < 0) {
-      return { styles: showColor && styles.negative, symbol: '-' };
+    if (value < 0) {
+      return { styles: showColor && styles.negative, sign: '-' };
     }
 
-    return { styles: {}, symbol: '' };
+    return { styles: {}, sign: '' };
   };
 
   const renderAmountText = () => {
     let text = '';
-    children = Number(children);
-    const { symbol } = getAmountAttr(children);
+    let value = Number(amount.getAmount());
+    const { sign } = getAmountAttr();
 
-    // use symbol string to show negative
-    children = Math.abs(children);
-    let amountStr = children.toLocaleString(undefined, { style: 'decimal' });
+    // use sign string to show negative
+    value = Math.abs(value).toFixed(decimal);
+    let amountStr = value.toLocaleString(undefined, { style: 'decimal' });
     if (sensitive && shouldHideSensitiveInfo()) {
-      amountStr = '*'.repeat(4);
+      amountStr = '-'.repeat(1);
     }
 
-    let currencySymbol = getCurrencySymbol(currency);
+    let currencySymbol = getCurrencySymbol(amount.getCurrency());
     text = `${currencySymbol} ${amountStr}`;
-    let shouldShowSymbol = false;
 
-    if (showSymbol) {
-      shouldShowSymbol = true;
+    let shouldShowSign = false;
+    if (showSign) {
+      shouldShowSign = true;
     }
-    if (showNegativeOnly && symbol === '-') {
-      shouldShowSymbol = true;
+    if (showNegativeOnly && sign === '-') {
+      shouldShowSign = true;
     }
-    if (showPositiveOnly && symbol === '+') {
-      shouldShowSymbol = true;
+    if (showPositiveOnly && sign === '+') {
+      shouldShowSign = true;
     }
 
-    if (shouldShowSymbol) {
-      text = `${symbol} ${text}`;
+    if (shouldShowSign) {
+      text = `${sign} ${text}`;
     }
 
     if (suffix !== '') {
@@ -76,7 +79,7 @@ const AmountText = ({
   return (
     <BaseText
       center={center}
-      style={{ ...style, ...getAmountAttr(children)?.styles }}
+      style={{ ...style, ...getAmountAttr()?.styles }}
       numberOfLines={1}
       {...props}>
       {renderAmountText()}

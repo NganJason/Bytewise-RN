@@ -1,43 +1,54 @@
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import {
-  groupTransactionDatesByMonth,
-  groupTransactionsByDate,
+  groupDatesByMonth,
   getMonthStr,
   getYear,
+  parseDateStringWithoutDelim,
 } from '../../_shared/util';
 import DailyTransactions from './DailyTransactions';
 import { BaseText } from '../Text';
 import EmptyContent from './EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
+import { Amount } from '../../_shared/object';
 
 const Transactions = ({
   transactions = [],
+  transactionGroups = [],
   showMonthLabel = false,
   emptyContentConfig,
 }) => {
   const processTransactions = () => {
-    let { transactionDates = [], dateToTransactions = {} } =
-      groupTransactionsByDate(transactions);
+    transactionGroups.sort((a, b) => b.date - a.date);
+    let dates = [];
+    let dateToTransactions = {};
+    let dateToSum = {};
 
-    let { transactionMonths, transactionMonthToDates } =
-      groupTransactionDatesByMonth(transactionDates);
+    transactionGroups.map(group => {
+      dates.push(group.date);
+      dateToTransactions[group.date] = transactions;
+      dateToSum[group.date] = new Amount(group.amount, group.currency);
+    });
+
+    let { months: transactionMonths = [], monthToDates = {} } =
+      groupDatesByMonth(dates);
 
     return {
+      dateToSum,
       transactionMonths,
-      transactionMonthToDates,
+      monthToDates,
       dateToTransactions,
     };
   };
 
   const renderRows = () => {
     let rows = [];
-    let { transactionMonths, transactionMonthToDates, dateToTransactions } =
+    let { dateToSum, transactionMonths, monthToDates, dateToTransactions } =
       processTransactions();
 
     transactionMonths.map(month => {
-      let dates = transactionMonthToDates[month] || [];
+      let dates = monthToDates[month] || [];
       if (showMonthLabel) {
         rows.push(<MonthLabel key={month} ts={month} />);
       }
@@ -48,7 +59,8 @@ const Transactions = ({
           <DailyTransactions
             key={date}
             transactions={dailyTransactions}
-            timestamp={date}
+            dailyTotal={dateToSum[date]}
+            timestamp={parseDateStringWithoutDelim(date).valueOf()}
           />,
         );
       });

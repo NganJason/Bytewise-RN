@@ -35,7 +35,7 @@ export const useUpdateCategory = (opts = {}) => {
 
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);
 
-      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.transactionGroups]);
 
       opts.onSuccess && opts.onSuccess();
     },
@@ -52,7 +52,7 @@ export const useDeleteCategory = (opts = {}) => {
 
       queryClient.invalidateQueries([queryKeys.categoriesBudget]);
 
-      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.transactionGroups]);
 
       opts.onSuccess && opts.onSuccess();
     },

@@ -31,7 +31,7 @@ export const useUpdateAccount = (opts = {}) => {
       // refetch account info
       queryClient.invalidateQueries([queryKeys.account, account_id]);
 
-      queryClient.invalidateQueries([queryKeys.transactions]);
+      queryClient.invalidateQueries([queryKeys.transactionGroups]);
 
       // refetch all transactions since account name might have changed
       opts.onSuccess && opts.onSuccess();

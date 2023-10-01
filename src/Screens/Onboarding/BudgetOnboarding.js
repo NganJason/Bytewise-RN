@@ -18,6 +18,7 @@ import {
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 
 const BudgetOnboarding = () => {
   const { theme } = useTheme();
@@ -74,7 +75,7 @@ const BudgetOnboarding = () => {
               }}
             />
           ) : (
-            <AmountText>{amount}</AmountText>
+            <AmountText amount={new Amount(amount, data.currency)} />
           )}
         </BaseRow>,
       );

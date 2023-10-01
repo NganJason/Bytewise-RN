@@ -44,9 +44,7 @@ const BaseBottomSheet = ({
       rows.push(
         <BaseRow key={i} onPress={() => onSelect(item)} dividerMargin={5}>
           <View style={styles.rowLeftContent}>
-            {item.leftIcon && (
-              <View style={styles.rowIcon}>{item.leftIcon}</View>
-            )}
+            {item.leftIcon && item.leftIcon}
             <BaseText text2>{item[label]}</BaseText>
           </View>
         </BaseRow>,
@@ -116,8 +114,5 @@ const getStyles = (theme, screenHeight) =>
     },
     rowLeftContent: {
       flexDirection: 'row',
-    },
-    rowIcon: {
-      marginRight: 10,
     },
   });

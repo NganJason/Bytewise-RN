@@ -19,7 +19,12 @@ import {
 } from '../../../Components';
 import { useGetAccount } from '../../../_shared/query';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
-import { getStockUpdateTime, tsToDateTimeStr } from '../../../_shared/util';
+import {
+  DEFAULT_CURRENCY,
+  getStockUpdateTime,
+  tsToDateTimeStr,
+} from '../../../_shared/util';
+import { Amount } from '../../../_shared/object';
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -35,7 +40,9 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const {
     account_name = '',
     balance = 0,
-    total_cost = 0,
+    gain = 0,
+    percent_gain: percentGain,
+    currency = DEFAULT_CURRENCY,
     holdings = [],
   } = getAccount?.data?.account || {};
 
@@ -66,17 +73,17 @@ const InvestmentBreakdownScreen = ({ route }) => {
             {account_name}
           </BaseText>
           <AmountText
-            style={styles.titleText}
             h2
+            amount={new Amount(balance, currency)}
+            style={styles.titleText}
             margin={{ top: 8 }}
             isLoading={getAccount.isLoading}
-            sensitive>
-            {balance}
-          </AmountText>
+            sensitive
+          />
           <EarningText
-            currVal={balance}
-            initialVal={total_cost}
             text5
+            gain={new Amount(gain, currency)}
+            percentGain={percentGain}
             margin={{ vertical: 4 }}
             isLoading={getAccount.isLoading}
           />

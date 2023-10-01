@@ -7,10 +7,13 @@ import ChartLegend from './ChartLegend';
 import { AmountText, BaseText } from '../Text';
 import { BaseDivider, BaseLoadableView } from '../View';
 import { useTheme } from '@rneui/themed';
-import { genColors } from '../../_shared/util';
+import { DEFAULT_CURRENCY, genColors } from '../../_shared/util';
+import { Amount } from '../../_shared/object';
 
 const BaseDonutChartWithRows = ({
-  items = [{ name: '', value: 0, onPress: function () {} }],
+  items = [
+    { name: '', value: 0, currency: DEFAULT_CURRENCY, onPress: function () {} },
+  ],
   donutInnerLabel = { title: null, subtitle: null },
   donutRadius = 100,
   isLoading = false,
@@ -61,9 +64,12 @@ const BaseDonutChartWithRows = ({
           onPress={d.onPress && d.onPress}>
           <ChartLegend color={d.color} text={d.name} text3 />
           <View style={styles.rowValue}>
-            <AmountText showNegativeOnly text3 sensitive={rowSensitive}>
-              {d.value}
-            </AmountText>
+            <AmountText
+              text3
+              amount={new Amount(d.value, d.currency)}
+              showNegativeOnly
+              sensitive={rowSensitive}
+            />
             <BaseText
               text5
               margin={{ left: 10 }}

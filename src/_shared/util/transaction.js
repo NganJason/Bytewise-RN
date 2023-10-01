@@ -2,7 +2,7 @@ import {
   ACCOUNT_TYPE_BANK_ACCOUNT,
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
-import { getFormattedDateString } from './date';
+import { getFormattedDateString, parseDateStringWithoutDelim } from './date';
 
 export const groupTransactionsByDateStr = (transactions = []) => {
   const dateStrToTransactions = {};
@@ -49,23 +49,22 @@ export const groupTransactionsByDate = (transactions = []) => {
   return { transactionDates, dateToTransactions };
 };
 
-export const groupTransactionDatesByMonth = (transactionDates = []) => {
-  const transactionMonthToDates = {};
-  const transactionMonths = [];
+export const groupDatesByMonth = (dates = []) => {
+  const monthToDates = {};
+  const months = [];
 
-  transactionDates.forEach(d => {
-    const date = new Date(d);
+  dates.forEach(d => {
+    const date = parseDateStringWithoutDelim(d);
     date.setDate(1);
     let ts = date.setHours(0, 0, 0, 0);
 
-    if (!(ts in transactionMonthToDates)) {
-      transactionMonths.push(ts);
+    if (!(ts in monthToDates)) {
+      months.push(ts);
     }
-    transactionMonthToDates[ts] = [...(transactionMonthToDates[ts] || []), d];
+    monthToDates[ts] = [...(monthToDates[ts] || []), d];
   });
-  transactionMonths.sort().reverse();
-
-  return { transactionMonths, transactionMonthToDates };
+  months.sort().reverse();
+  return { months, monthToDates };
 };
 
 export const mergeTransactionsCategory = (

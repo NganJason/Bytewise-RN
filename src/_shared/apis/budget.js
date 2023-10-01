@@ -21,7 +21,9 @@ export const getCategoriesBudget = async ({
     const body = await sendPostRequest(GET_CATEGORIES_BUDGET, {
       category_ids: category_ids,
       budget_date: budget_date,
-      timezone: timezone,
+      app_meta: {
+        timezone: timezone,
+      },
     });
     return body;
   } catch (e) {

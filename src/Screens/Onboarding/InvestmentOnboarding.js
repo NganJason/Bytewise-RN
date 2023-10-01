@@ -12,7 +12,9 @@ import {
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 import { getDateStringFromTs } from '../../_shared/util';
+import { DEFAULT_INVESTMENT_CURRENCY } from '../../_shared/util';
 
 const AccountOnboarding = () => {
   const { theme } = useTheme();
@@ -70,9 +72,14 @@ const AccountOnboarding = () => {
           </View>
 
           <View style={styles.rightCol}>
-            <AmountText text4 color={textColor}>
-              {shares * costPerShare}
-            </AmountText>
+            <AmountText
+              text4
+              amount={
+                new Amount(shares * costPerShare, DEFAULT_INVESTMENT_CURRENCY)
+              }
+              color={textColor}
+            />
+
             <BaseText text4 color={textColor}>
               {shares} unit/s
             </BaseText>
