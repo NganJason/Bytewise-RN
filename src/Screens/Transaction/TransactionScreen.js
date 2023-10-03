@@ -12,20 +12,17 @@ import {
 import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
 import {
-  useGetTransactionGroups,
-  useSumTransactions,
-} from '../../_shared/query';
-import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useError, useDimension } from '../../_shared/hooks';
+import {
+  useError,
+  useDimension,
+  useTransactionGroups,
+} from '../../_shared/hooks';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { Amount } from '../../_shared/object';
-
-const PAGING_LIMIT = 500;
-const STARTING_PAGE = 1;
+import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
 
@@ -35,62 +32,32 @@ const TransactionScreen = ({ navigation }) => {
   const styles = getStyles(theme, screenHeight);
 
   const [activeDate, setActiveDate] = useState(TODAY);
-  const [timeRange, setTimeRange] = useState(
-    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-  );
-
-  const getTransactionGroups = useGetTransactionGroups(
-    {
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
-    },
-    {},
-  );
-
-  const sumTransactionsQuery = useSumTransactions({
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-  });
-
-  const getTransactionsSum = (transactionType = 0) => {
-    const { sums = [] } = sumTransactionsQuery?.data || [];
-
-    for (const sum of sums) {
-      if (sum.transaction_type === transactionType) {
-        return new Amount(sum.sum, sum.currency);
-      }
-    }
-
-    return new Amount();
-  };
+  const {
+    setTimeRange,
+    transactionGroups,
+    getTotalMonthlyIncome,
+    getTotalMonthlyExpense,
+    selectedFilters,
+    getFilterOptions,
+    onFilterChange,
+    isLoading,
+  } = useTransactionGroups(activeDate);
 
   const onDateMove = newDate => {
     setActiveDate(newDate);
     setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
 
-  const isScreenLoading = () =>
-    getTransactionGroups.isLoading || sumTransactionsQuery.isLoading;
-
   const renderRows = () => {
-    let { transaction_groups: groups = [] } = getTransactionGroups?.data || {};
     return (
       <Transactions
-        transactionGroups={groups}
+        transactionGroups={transactionGroups}
         emptyContentConfig={EmptyContentConfig.transactionv2}
       />
     );
   };
 
-  useError([getTransactionGroups, sumTransactionsQuery]);
+  useError([]);
 
   return (
     <BaseScreen
@@ -132,19 +99,26 @@ const TransactionScreen = ({ navigation }) => {
           aggrs={[
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              amount: getTransactionsSum(TRANSACTION_TYPE_INCOME),
+              amount: getTotalMonthlyIncome(),
               sensitive: true,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              amount: getTransactionsSum(TRANSACTION_TYPE_EXPENSE),
+              amount: getTotalMonthlyExpense(),
               sensitive: true,
             },
           ]}
         />
       </View>
       <View style={styles.body}>
-        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
+        <View style={styles.filter}>
+          <BaseFilter
+            options={getFilterOptions()}
+            selectedItems={selectedFilters}
+            onChange={onFilterChange}
+          />
+        </View>
+        <BaseLoadableView scrollable={true} isLoading={isLoading}>
           {renderRows()}
         </BaseLoadableView>
       </View>
@@ -160,6 +134,7 @@ const getStyles = theme => {
     body: {
       flex: 1,
       padding: theme.spacing.xl,
+      paddingTop: 16,
       backgroundColor: theme.colors.white,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
@@ -171,6 +146,9 @@ const getStyles = theme => {
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    filter: {
+      marginBottom: 8,
     },
   });
 };

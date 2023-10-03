@@ -103,6 +103,7 @@ export const getTransactions = async ({
 export const getTransactionGroups = async ({
   account_id = null,
   category_id = null,
+  category_ids = null,
   transaction_type = null,
   transaction_time: { gte = 0, lte = 0 } = {},
   paging: { limit = 500, page = 1 } = {},
@@ -111,6 +112,7 @@ export const getTransactionGroups = async ({
     const body = await sendPostRequest(GET_TRANSACTION_GROUPS, {
       account_id: account_id,
       category_id: category_id,
+      category_ids: category_ids,
       transaction_type: transaction_type,
       transaction_time: { gte, lte },
       paging: {

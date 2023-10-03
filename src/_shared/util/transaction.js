@@ -4,49 +4,30 @@ import {
 } from '../apis/enum';
 import { getFormattedDateString, parseDateStringWithoutDelim } from './date';
 
-export const groupTransactionsByDateStr = (transactions = []) => {
-  const dateStrToTransactions = {};
-  const { dateToTransactions } = groupTransactionsByDate(transactions);
+export const groupTransactionGroupsByDateStr = (transactionGroups = []) => {
+  const dateStrToTransactionGroup = {};
+  transactionGroups.map(d => {
+    let dateStr = getFormattedDateString(parseDateStringWithoutDelim(d.date));
+    dateStrToTransactionGroup[dateStr] = d;
+  });
 
-  for (let ts in dateToTransactions) {
-    let txns = dateToTransactions[ts];
-    let dateStr = getFormattedDateString(new Date(Number(ts)));
+  for (const dateStr in dateStrToTransactionGroup) {
+    let transactionGroup = dateStrToTransactionGroup[dateStr];
     let totalExpense = 0;
     let totalIncome = 0;
 
-    txns.map(d => {
-      if (d.transaction_type === TRANSACTION_TYPE_EXPENSE) {
-        totalExpense += Number(d.amount);
+    transactionGroup.transactions.map(t => {
+      if (t.transaction_type === TRANSACTION_TYPE_EXPENSE) {
+        totalExpense += Number(t.amount);
       } else {
-        totalIncome += Number(d.amount);
+        totalIncome += Number(t.amount);
       }
     });
-
-    dateStrToTransactions[dateStr] = {
-      transactions: dateToTransactions[ts],
-      totalExpense: totalExpense,
-      totalIncome: totalIncome,
-    };
+    dateStrToTransactionGroup[dateStr].totalExpense = totalExpense;
+    dateStrToTransactionGroup[dateStr].totalIncome = totalIncome;
   }
 
-  return dateStrToTransactions;
-};
-
-export const groupTransactionsByDate = (transactions = []) => {
-  const dateToTransactions = {};
-  const transactionDates = [];
-
-  transactions.forEach(t => {
-    // group by date
-    const tt = new Date(t.transaction_time).setHours(0, 0, 0, 0);
-    if (!(tt in dateToTransactions)) {
-      transactionDates.push(tt);
-    }
-    dateToTransactions[tt] = [...(dateToTransactions[tt] || []), t];
-  });
-  transactionDates.sort().reverse();
-
-  return { transactionDates, dateToTransactions };
+  return dateStrToTransactionGroup;
 };
 
 export const groupDatesByMonth = (dates = []) => {

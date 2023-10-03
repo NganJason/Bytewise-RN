@@ -51,13 +51,12 @@ import { getTotalInvestmentCost, getStockUpdateTime } from './investment';
 import { capitalize, capitalizeFirstWord } from './string';
 import { toastError } from './toast';
 import {
-  groupTransactionsByDate,
   groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
-  groupTransactionsByDateStr,
+  groupTransactionGroupsByDateStr,
 } from './transaction';
 import { checkIsUserNew } from './user';
 import { genColors } from './color';
@@ -110,13 +109,12 @@ export {
   capitalize,
   capitalizeFirstWord,
   toastError,
-  groupTransactionsByDate,
   groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
-  groupTransactionsByDateStr,
+  groupTransactionGroupsByDateStr,
   checkIsUserNew,
   genColors,
 };

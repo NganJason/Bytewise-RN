@@ -51,7 +51,9 @@ const BaseLoadableView = ({
           entering={FadeIn.duration(300)}
           style={[styles.container, containerStyle]}>
           {scrollable ? (
-            <BaseScrollView showsVerticalScrollIndicator={false}>
+            <BaseScrollView
+              containerStyle={containerStyle}
+              showsVerticalScrollIndicator={false}>
               {children}
             </BaseScrollView>
           ) : (

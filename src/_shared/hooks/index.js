@@ -5,6 +5,7 @@ import useKeyboard from './useKeyboard';
 import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
 import useConnection from './useConnection';
+import useTransactionGroups from './useTransactionGroups';
 
 export {
   useDimension,
@@ -14,4 +15,5 @@ export {
   useTimeRange,
   useValidation,
   useConnection,
+  useTransactionGroups,
 };

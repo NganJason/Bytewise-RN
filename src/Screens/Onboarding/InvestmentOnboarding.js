@@ -96,7 +96,7 @@ const AccountOnboarding = () => {
       <View>
         <BaseText h1>Track your</BaseText>
         <BaseText h1>investment</BaseText>
-        <BaseText text2 style={styles.subtitle}>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           Real-time stock prices update allows you to track your capital gain
         </BaseText>
       </View>

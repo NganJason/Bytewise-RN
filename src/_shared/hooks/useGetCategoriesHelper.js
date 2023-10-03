@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useGetCategories, useGetCategoriesBudget } from '../query';
-import * as Localization from 'expo-localization';
 import { getDateStringWithoutDelim } from '../util';
 
 const useGetCategoriesHelper = ({

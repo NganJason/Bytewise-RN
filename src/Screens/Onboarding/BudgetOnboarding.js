@@ -89,7 +89,7 @@ const BudgetOnboarding = () => {
       <View>
         <BaseText h1>Allocate budgets</BaseText>
         <BaseText h1>to your categories</BaseText>
-        <BaseText text2 style={styles.subtitle}>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           How much do you wish to spend for each category?
         </BaseText>
       </View>

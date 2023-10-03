@@ -1,7 +1,7 @@
-import { StyleSheet, View } from 'react-native';
-import { useTheme } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+import { Icon, useTheme } from '@rneui/themed';
 import { BaseText } from '../Text';
-import { IconButton } from '../Touch';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const BaseCheckbox = ({
   checked = false,
@@ -18,19 +18,20 @@ const BaseCheckbox = ({
   };
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <IconButton
-        iconName={checked ? 'radio-button-checked' : 'radio-button-unchecked'}
-        iconType="material"
-        color={checked ? 'green' : 'grey'}
-        iconSize={20}
-        iconStyle={styles.icon}
-        onPress={onCheck}
+    <TouchableOpacity
+      style={[styles.container, containerStyle]}
+      onPress={onCheck}>
+      <Icon
+        name={checked ? 'checkbox-marked' : 'checkbox-blank-outline'}
+        type="material-community"
+        color={checked ? theme.colors.color1 : theme.colors.color8}
+        size={22}
+        style={styles.icon}
       />
-      <BaseText text3 style={styles.checkBoxText} adjustsFontSizeToFit>
+      <BaseText text2 style={styles.checkBoxText} adjustsFontSizeToFit>
         {title}
       </BaseText>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -39,7 +40,7 @@ const getStyles = theme => {
     container: {
       marginVertical: 8,
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'center',
     },
     checkBoxText: {
       flex: 1,

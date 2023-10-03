@@ -107,6 +107,7 @@ export const useGetTransactionGroups = (
   {
     account_id = null,
     category_id = null,
+    category_ids = null,
     transaction_type = null,
     transaction_time: { gte = 0, lte = 0 } = {},
     paging: { limit = 500, page = 1 } = {},
@@ -118,6 +119,7 @@ export const useGetTransactionGroups = (
       getTransactionGroups({
         account_id: account_id,
         category_id: category_id,
+        category_ids: category_ids,
         transaction_type: transaction_type,
         transaction_time: { gte, lte },
         paging: { limit, page },
@@ -127,6 +129,7 @@ export const useGetTransactionGroups = (
       {
         account_id: account_id,
         category_id: category_id,
+        category_ids: category_ids,
         transaction_time: { gte, lte },
       },
     ],

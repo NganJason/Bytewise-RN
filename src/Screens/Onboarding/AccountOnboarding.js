@@ -74,7 +74,7 @@ const AccountOnboarding = ({}) => {
       <View>
         <BaseText h1>Setup your</BaseText>
         <BaseText h1>accounts</BaseText>
-        <BaseText text2 style={styles.subtitle}>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           Accounts keep track of your money and net worth
         </BaseText>
       </View>

@@ -41,7 +41,6 @@ const BaseCurrencyInput = ({
           color={theme.colors.color7}
         />
       )}
-
       <BaseText text2 color={theme.colors.color6}>
         {currencies[value].symbol}
       </BaseText>

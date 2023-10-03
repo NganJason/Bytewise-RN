@@ -12,6 +12,7 @@ import ConnectionChecker from './ConnectionChecker';
 import { BackIcon, DrawerIcon } from './Icon';
 import BaseCalendar from './BaseCalendar';
 import Currency from './Currency';
+import BaseFilter from './BaseFilter';
 
 export {
   DailyTransactions,
@@ -29,4 +30,5 @@ export {
   DrawerIcon,
   BaseCalendar,
   Currency,
+  BaseFilter,
 };

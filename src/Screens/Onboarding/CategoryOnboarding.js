@@ -50,7 +50,7 @@ const CategoryOnboarding = () => {
       <View>
         <BaseText h1>Customise your</BaseText>
         <BaseText h1>categories</BaseText>
-        <BaseText text2 style={styles.subtitle}>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           Categories group and track your daily transactions
         </BaseText>
       </View>
