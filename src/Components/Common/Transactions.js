@@ -19,12 +19,15 @@ const Transactions = ({
   emptyContentConfig,
 }) => {
   const processTransactions = () => {
-    transactionGroups.sort((a, b) => b.date - a.date);
+    let dateToSum = {};
     let dates = [];
     let dateToTransactions = {};
-    let dateToSum = {};
 
+    transactionGroups.sort((a, b) => b.date - a.date);
     transactionGroups.map(group => {
+      if (!group) {
+        return;
+      }
       dates.push(group.date);
       dateToTransactions[group.date] = group.transactions;
       dateToSum[group.date] = new Amount(group.sum, group.currency);
@@ -43,8 +46,12 @@ const Transactions = ({
 
   const renderRows = () => {
     let rows = [];
-    let { dateToSum, transactionMonths, monthToDates, dateToTransactions } =
-      processTransactions();
+    let {
+      dateToSum = {},
+      transactionMonths = [],
+      monthToDates = {},
+      dateToTransactions = {},
+    } = processTransactions() || {};
 
     transactionMonths.map(month => {
       let dates = monthToDates[month] || [];

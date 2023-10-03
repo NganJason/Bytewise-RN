@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EmptyContent } from '../../Components';
+import EmptyContent from '../../Components/Common/EmptyContent';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
@@ -13,7 +13,12 @@ import {
   useGetTransactionGroups,
   useSumTransactions,
 } from '../query';
-import { getMonth, getUnixRangeOfMonth, getYear } from '../util';
+import {
+  getMonth,
+  getUnixRangeOfMonth,
+  getYear,
+  groupTransactionGroupsByDateStr,
+} from '../util';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -53,6 +58,8 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
     },
     {},
   );
+  const { transaction_groups: transactionGroups } =
+    getTransactionGroups?.data || [];
 
   const sumTransactionsQuery = useSumTransactions({
     transaction_time: {
@@ -106,11 +113,11 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
     ];
   };
 
-  const getTotalMonthlyIncome = () => {
+  const getMonthlyTotalIncome = () => {
     return getMonthlyTransactionsSum(TRANSACTION_TYPE_INCOME);
   };
 
-  const getTotalMonthlyExpense = () => {
+  const getMonthlyTotalExpense = () => {
     return getMonthlyTransactionsSum(TRANSACTION_TYPE_EXPENSE);
   };
 
@@ -126,11 +133,37 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
     return new Amount();
   };
 
+  const getDailyTotalExpenseIncome = dateStr => {
+    let dateStrToTransactionGroup =
+      groupTransactionGroupsByDateStr(transactionGroups);
+
+    const expense = dateStrToTransactionGroup[dateStr]?.totalExpense || 0;
+    const income = dateStrToTransactionGroup[dateStr]?.totalIncome || 0;
+    return [expense, income];
+  };
+
+  const getTransactionGroupByDateStr = dateStr => {
+    let dateStrToTransactionGroup =
+      groupTransactionGroupsByDateStr(transactionGroups);
+    return dateStrToTransactionGroup[dateStr] || null;
+  };
+
+  const getErrors = () => {
+    return [
+      getCategories,
+      getAccounts,
+      getTransactionGroups,
+      sumTransactionsQuery,
+    ];
+  };
+
   return {
     setTimeRange,
-    transactionGroups: getTransactionGroups?.data?.transaction_groups || [],
-    getTotalMonthlyIncome,
-    getTotalMonthlyExpense,
+    transactionGroups: transactionGroups,
+    getMonthlyTotalIncome,
+    getMonthlyTotalExpense,
+    getDailyTotalExpenseIncome,
+    getTransactionGroupByDateStr,
     selectedFilters,
     onFilterChange,
     getFilterOptions,
@@ -139,6 +172,7 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
       getAccounts.isLoading ||
       getTransactionGroups.isLoading ||
       sumTransactionsQuery.isLoading,
+    getErrors,
   };
 };
 

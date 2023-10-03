@@ -184,7 +184,12 @@ export const THEME = createTheme({
       week: {
         marginBottom: 0,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+      },
+      dayHeader: {
+        width: 28,
+        height: 28,
+        textAlign: 'center',
       },
     },
     'stylesheet.calendar.main': {

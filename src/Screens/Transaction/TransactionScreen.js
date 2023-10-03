@@ -35,12 +35,13 @@ const TransactionScreen = ({ navigation }) => {
   const {
     setTimeRange,
     transactionGroups,
-    getTotalMonthlyIncome,
-    getTotalMonthlyExpense,
+    getMonthlyTotalIncome,
+    getMonthlyTotalExpense,
     selectedFilters,
     getFilterOptions,
     onFilterChange,
     isLoading,
+    getErrors,
   } = useTransactionGroups(activeDate);
 
   const onDateMove = newDate => {
@@ -57,7 +58,7 @@ const TransactionScreen = ({ navigation }) => {
     );
   };
 
-  useError([]);
+  useError(getErrors());
 
   return (
     <BaseScreen
@@ -99,12 +100,12 @@ const TransactionScreen = ({ navigation }) => {
           aggrs={[
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              amount: getTotalMonthlyIncome(),
+              amount: getMonthlyTotalIncome(),
               sensitive: true,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              amount: getTotalMonthlyExpense(),
+              amount: getMonthlyTotalExpense(),
               sensitive: true,
             },
           ]}
