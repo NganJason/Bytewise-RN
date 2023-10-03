@@ -29,7 +29,7 @@ const HoldingRow = ({
   const onPress = () => {
     if (holdingType === HOLDING_TYPE_DEFAULT) {
       navigation.navigate(ROUTES.holdingBreakdown, {
-        account_id: holdingID,
+        account_id: accountID,
         holding_id: holdingID,
         symbol: symbol,
       });
