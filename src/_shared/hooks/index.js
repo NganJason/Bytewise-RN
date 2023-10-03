@@ -6,6 +6,7 @@ import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
 import useConnection from './useConnection';
 import useTransactionGroups from './useTransactionGroups';
+import useInitApp from './useInitApp';
 
 export {
   useDimension,
@@ -16,4 +17,5 @@ export {
   useValidation,
   useConnection,
   useTransactionGroups,
+  useInitApp,
 };
