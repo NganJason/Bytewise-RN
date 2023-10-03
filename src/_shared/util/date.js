@@ -83,6 +83,14 @@ export const getDateStringWithoutDelim = (d = new Date()) => {
   return `${year}${formattedMonth}${formattedDay}`;
 };
 
+export const parseDateStringWithoutDelim = (dateStr = '') => {
+  const year = dateStr.slice(0, 4);
+  const month = dateStr.slice(4, 6) - 1; // Subtract 1 from month as months are 0-indexed
+  const day = dateStr.slice(6, 8);
+
+  return new Date(year, month, day);
+};
+
 export const getYearMonthString = (d = new Date()) => {
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
@@ -97,8 +105,8 @@ export const getYearString = (d = new Date()) => {
 };
 
 export const getUnixRangeOfMonth = (year = getYear(), month = getMonth()) => {
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
+  const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 
   const startUnixTime = Math.floor(startDate.getTime());
   const endUnixTime = Math.floor(endDate.getTime());

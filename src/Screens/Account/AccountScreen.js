@@ -25,6 +25,7 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import {
   capitalize,
+  DEFAULT_CURRENCY,
   getEquityType,
   isAccountTypeAsset,
   isAccountTypeDebt,
@@ -32,6 +33,7 @@ import {
 import { useGetAccounts } from '../../_shared/query';
 import { useError, useDimension } from '../../_shared/hooks';
 import AccountCharts from './AccountCharts';
+import { Amount } from '../../_shared/object';
 
 const AccountScreen = () => {
   const { theme } = useTheme();
@@ -40,44 +42,27 @@ const AccountScreen = () => {
   const navigation = useNavigation();
 
   const getAccounts = useGetAccounts({});
-
-  const computeSum = () => {
-    let assets = computeEquitySum(EQUITY_TYPE_ASSET);
-    let debts = computeEquitySum(EQUITY_TYPE_DEBT);
-
-    // Debt returned from BE is engative
-    return assets + debts;
-  };
-
-  const computeEquitySum = (equityType = EQUITY_TYPE_ASSET) => {
-    const { accounts = [] } = getAccounts?.data || {};
-    let sum = 0;
-
-    accounts.map(d => {
-      if (getEquityType(d.account_type) === equityType) {
-        let amount = d.latest_value || d.balance;
-        if (isNaN(amount)) {
-          return;
-        }
-        sum += Number(amount);
-      }
-    });
-
-    return sum;
-  };
+  const {
+    net_worth: netWorth = 0,
+    currency = DEFAULT_CURRENCY,
+    asset_value: assetValue,
+    debt_value: debtValue,
+  } = getAccounts?.data || {};
 
   const onAccountPress = account => {
-    const { account_id = '', account_type = ACCOUNT_TYPE_BANK_ACCOUNT } =
-      account;
+    const {
+      account_id: accountID = '',
+      account_type: accountType = ACCOUNT_TYPE_BANK_ACCOUNT,
+    } = account;
 
     let route = ROUTES.accountBreakdown;
-    if (account_type === ACCOUNT_TYPE_INVESTMENT) {
+    if (accountType === ACCOUNT_TYPE_INVESTMENT) {
       route = ROUTES.investmentBreakdown;
     }
 
     navigation.navigate(route, {
-      account_id: account_id,
-      account_type: account_type,
+      account_id: accountID,
+      account_type: accountType,
     });
   };
 
@@ -103,6 +88,7 @@ const AccountScreen = () => {
     }
 
     items.map((item, idx) => {
+      let amount = new Amount(item.latest_value || item.balance, item.currency);
       rows.push(
         <BaseRow
           key={idx}
@@ -119,10 +105,11 @@ const AccountScreen = () => {
           <View style={styles.rowCol}>
             <AmountText
               text4
+              amount={amount}
               showNegativeOnly={isAccountTypeAsset(item.account_type)}
-              showPositiveOnly={isAccountTypeDebt(item.account_type)}>
-              {item.latest_value || item.balance}
-            </AmountText>
+              showPositiveOnly={isAccountTypeDebt(item.account_type)}
+              sensitive
+            />
           </View>
         </BaseRow>,
       );
@@ -137,11 +124,13 @@ const AccountScreen = () => {
           <BaseText h1>Accounts</BaseText>
           <AmountText
             h2
+            amount={new Amount(netWorth, currency)}
             showNegativeOnly
             margin={{ top: 8, bottom: 2 }}
-            isLoading={getAccounts.isLoading}>
-            {computeSum()}
-          </AmountText>
+            isLoading={getAccounts.isLoading}
+            sensitive
+          />
+
           <BaseButton
             title="Add Account"
             type="clear"
@@ -174,9 +163,12 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Assets</BaseText>
-            <AmountText showNegativeOnly text3>
-              {computeEquitySum(EQUITY_TYPE_ASSET)}
-            </AmountText>
+            <AmountText
+              text3
+              amount={new Amount(assetValue, currency)}
+              showNegativeOnly
+              sensitive
+            />
           </BaseRow>
           {renderContent(EQUITY_TYPE_ASSET)}
         </View>
@@ -184,9 +176,12 @@ const AccountScreen = () => {
         <View style={styles.contentContainer}>
           <BaseRow showDivider={false} disabled={true}>
             <BaseText h3>Debts</BaseText>
-            <AmountText showPositiveOnly text3>
-              {computeEquitySum(EQUITY_TYPE_DEBT)}
-            </AmountText>
+            <AmountText
+              text3
+              amount={new Amount(debtValue, currency)}
+              showPositiveOnly
+              sensitive
+            />
           </BaseRow>
           {renderContent(EQUITY_TYPE_DEBT)}
         </View>
@@ -201,6 +196,7 @@ const AccountScreen = () => {
       headerProps={{
         component: renderHeader(),
         allowDrawer: true,
+        allowHideInfo: true,
       }}
       enablePadding={false}
       fabProps={{
@@ -217,8 +213,8 @@ const AccountScreen = () => {
           renderAccountOverview(),
           <AccountCharts
             accounts={getAccounts?.data?.accounts || []}
-            assetSum={computeEquitySum(EQUITY_TYPE_ASSET)}
-            debtSum={computeEquitySum(EQUITY_TYPE_DEBT)}
+            assetSum={new Amount(assetValue, currency)}
+            debtSum={new Amount(debtValue, currency)}
             onAccountPress={onAccountPress}
           />,
         ]}

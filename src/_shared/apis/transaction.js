@@ -6,12 +6,14 @@ export class TransactionError extends AppError {
   }
 }
 
+const AGGR_TRANSACTIONS = '/aggr_transactions';
+const SUM_TRANSACTIONS = '/sum_transactions';
 const CREATE_TRANSACTION = '/create_transaction';
 const GET_TRANSACTIONS = '/get_transactions';
 const UPDATE_TRANSACTION = '/update_transaction';
 const GET_TRANSACTION = '/get_transaction';
-const AGGR_TRANSACTIONS = '/aggr_transactions';
 const DELETE_TRANSACTION = '/delete_transaction';
+const GET_TRANSACTION_GROUPS = '/get_transaction_groups';
 
 export const aggrTransactions = async ({
   category_ids = [],
@@ -24,6 +26,25 @@ export const aggrTransactions = async ({
       category_ids: category_ids,
       budget_ids: budget_ids,
       transaction_types: transaction_types,
+      transaction_time: { gte, lte },
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const sumTransactions = async ({
+  transaction_type = null,
+  transaction_time: { gte = 0, lte = 0 } = {},
+} = {}) => {
+  try {
+    const body = await sendPostRequest(SUM_TRANSACTIONS, {
+      transaction_type: transaction_type,
       transaction_time: { gte, lte },
     });
     return body;
@@ -79,10 +100,41 @@ export const getTransactions = async ({
   }
 };
 
+export const getTransactionGroups = async ({
+  account_id = null,
+  category_id = null,
+  category_ids = null,
+  transaction_type = null,
+  transaction_time: { gte = 0, lte = 0 } = {},
+  paging: { limit = 500, page = 1 } = {},
+} = {}) => {
+  try {
+    const body = await sendPostRequest(GET_TRANSACTION_GROUPS, {
+      account_id: account_id,
+      category_id: category_id,
+      category_ids: category_ids,
+      transaction_type: transaction_type,
+      transaction_time: { gte, lte },
+      paging: {
+        limit: limit,
+        page: page,
+      },
+    });
+    return body;
+  } catch (e) {
+    throw new TransactionError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
 export const createTransaction = async ({
   category_id = '',
   account_id = '',
   amount = '',
+  currency = '',
   transaction_type = 0,
   transaction_time = 0,
   note = '',
@@ -92,6 +144,7 @@ export const createTransaction = async ({
       category_id: category_id,
       account_id: account_id,
       amount: amount,
+      currency: currency,
       transaction_type: transaction_type,
       transaction_time: transaction_time,
       note: note,
@@ -111,6 +164,7 @@ export const updateTransaction = async ({
   category_id = '',
   account_id = '',
   amount = '',
+  currency = '',
   transaction_type = 0,
   transaction_time = 0,
   note = '',
@@ -121,6 +175,7 @@ export const updateTransaction = async ({
       category_id: category_id,
       account_id: account_id,
       amount: amount,
+      currency: currency,
       transaction_type: transaction_type,
       transaction_time: transaction_time,
       note: note,

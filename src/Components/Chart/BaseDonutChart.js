@@ -1,11 +1,10 @@
 import { useTheme } from '@rneui/themed';
 import { View, StyleSheet } from 'react-native';
 import { PieChart } from './PieChart';
-import { BaseText } from '../Text';
 
 const BaseDonutChart = ({
   items = [], // {value: 0, color: ''}
-  innerLabel = { title: '', subtitle: '' },
+  innerLabel = { title: null, subtitle: null },
   shadow = false,
   radius = 100,
 }) => {
@@ -19,20 +18,8 @@ const BaseDonutChart = ({
 
     return (
       <View style={styles.centerContainer}>
-        <BaseText
-          h1
-          style={{ color: theme.colors.color1 }}
-          numberOfLines={1}
-          adjustsFontSizeToFit>
-          {innerLabel.title}
-        </BaseText>
-        <BaseText
-          text3
-          style={{ color: theme.colors.color7 }}
-          numberOfLines={1}
-          adjustsFontSizeToFit>
-          {innerLabel.subtitle}
-        </BaseText>
+        {innerLabel.title}
+        {innerLabel.subtitle}
       </View>
     );
   };

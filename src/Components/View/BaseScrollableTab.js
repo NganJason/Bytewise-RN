@@ -8,9 +8,12 @@ import { BaseText } from '../Text';
 const BaseScrollableTab = ({
   tabs = [{ name: '', iconName: '', iconType: '' }],
   activeTab = { name: '', iconName: '', iconType: '' },
-  onTabChange = function (tab) {},
+  onTabChange = function (tab, idx) {},
   disableNonActive = false,
+  highlightActiveTab = true,
   hideNonActive = false,
+  highlightedTabs = [],
+  highlightedColors = null,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -28,8 +31,10 @@ const BaseScrollableTab = ({
   };
 
   const getTextStyle = tabName => {
-    if (activeTab.name === tabName) {
-      return styles.activeTabText;
+    if (shouldHighlightTab(tabName)) {
+      return {
+        color: highlightedColors ? highlightedColors : theme.colors.color1,
+      };
     }
     if (shouldDisable(tabName)) {
       return styles.disabledTabText;
@@ -38,8 +43,8 @@ const BaseScrollableTab = ({
   };
 
   const getIconColor = tabName => {
-    if (activeTab.name === tabName) {
-      return theme.colors.color1;
+    if (shouldHighlightTab(tabName)) {
+      return highlightedColors ? highlightedColors : theme.colors.color1;
     }
     if (shouldDisable(tabName)) {
       return theme.colors.color8;
@@ -47,10 +52,22 @@ const BaseScrollableTab = ({
     return theme.colors.black;
   };
 
+  const shouldHighlightTab = tabName => {
+    if (activeTab.name === tabName && highlightActiveTab) {
+      return true;
+    }
+
+    if (highlightedTabs.some(d => d.name === tabName)) {
+      return true;
+    }
+
+    return false;
+  };
+
   const renderTabs = () => {
     let allTabs = [];
 
-    tabs.map(tab => {
+    tabs.map((tab, idx) => {
       if (tab.name === '') {
         return;
       }
@@ -62,7 +79,7 @@ const BaseScrollableTab = ({
       allTabs.push(
         <TouchableOpacity
           key={tab.name}
-          onPress={() => onTabChange(tab)}
+          onPress={() => onTabChange(tab, idx)}
           disabled={shouldDisable(tab.name)}
           style={styles.tab}>
           {tab.iconName !== '' && tab.iconType !== '' && (
@@ -121,9 +138,6 @@ const getStyles = theme =>
     icon: { marginRight: 6 },
     tabText: {
       color: theme.colors.black,
-    },
-    activeTabText: {
-      color: theme.colors.color1,
     },
     disabledTabText: {
       color: theme.colors.color8,

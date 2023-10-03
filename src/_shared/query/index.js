@@ -12,6 +12,8 @@ import {
   useGetTransaction,
   useGetTransactions,
   useAggrTransactions,
+  useSumTransactions,
+  useGetTransactionGroups,
 } from './transaction';
 import { useGetUser } from './user';
 
@@ -29,5 +31,7 @@ export {
   useGetTransaction,
   useGetTransactions,
   useAggrTransactions,
+  useSumTransactions,
+  useGetTransactionGroups,
   useGetUser,
 };

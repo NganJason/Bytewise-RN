@@ -2,14 +2,21 @@ import { useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
+  AmountText,
   BaseBottomSelectTab,
   BaseDonutChartWithRows,
+  BaseText,
   EmptyContent,
 } from '../../Components';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import { useDimension } from '../../_shared/hooks';
-import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
+import { Amount } from '../../_shared/object';
+import {
+  DEFAULT_CURRENCY,
+  isAccountTypeAsset,
+  isAccountTypeDebt,
+} from '../../_shared/util';
 
 const assets = 'Assets Breakdown';
 const debts = 'Debts Breakdown';
@@ -20,8 +27,8 @@ const chartTypes = [
 
 const AccountCharts = ({
   accounts = [],
-  assetSum = 0,
-  debtSum = 0,
+  assetSum = new Amount(),
+  debtSum = new Amount(),
   onAccountPress = function (account) {},
 }) => {
   const { theme } = useTheme();
@@ -34,13 +41,37 @@ const AccountCharts = ({
     switch (type.name) {
       case assets:
         return {
-          title: `S$ ${assetSum.toFixed(2)}`,
-          subtitle: 'Assets',
+          title: (
+            <AmountText
+              h1
+              amount={assetSum}
+              sensitive
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            />
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              Assets
+            </BaseText>
+          ),
         };
       case debts:
         return {
-          title: `S$ ${Math.abs(debtSum.toFixed(2))}`,
-          subtitle: 'Debts',
+          title: (
+            <AmountText
+              h1
+              amount={debtSum}
+              sensitive
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            />
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              Debts
+            </BaseText>
+          ),
         };
       default:
         return {};
@@ -51,10 +82,14 @@ const AccountCharts = ({
     let items = [];
 
     accounts.map(d => {
-      const { account_type: accountType, account_name: accountName } = d;
+      const {
+        account_type: accountType,
+        account_name: accountName,
+        currency = DEFAULT_CURRENCY,
+      } = d;
       let value = d.latest_value || d.balance;
 
-      // Only abs for debt
+      // Only absoute for debt
       // For asset, there might be negative value and we will keep it
       if (isAccountTypeDebt(accountType)) {
         value = Math.abs(value);
@@ -64,6 +99,7 @@ const AccountCharts = ({
         items.push({
           name: accountName,
           value: value,
+          currency: currency,
           onPress: () => {
             onAccountPress(d);
           },
@@ -97,6 +133,7 @@ const AccountCharts = ({
 
       <BaseDonutChartWithRows
         items={donutChartItems()}
+        rowSensitive
         donutInnerLabel={donutChartLabel()}
         donutRadius={screenHeight * 0.125}
         emptyContent={

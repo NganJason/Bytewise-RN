@@ -11,6 +11,7 @@ const SIGN_UP = '/sign_up';
 const GET_USER = '/get_user';
 const VERIFY_EMAIL = '/verify_email';
 const INIT_USER = '/init_user';
+const UPDATE_USER_META = '/update_user_meta';
 const CREATE_FEEDBACK = '/create_feedback';
 
 export const login = async ({ email = '', password = '' }) => {
@@ -74,11 +75,32 @@ export const verifyEmail = async ({ email = '', code = '' }) => {
   }
 };
 
-export const initUser = async ({ accounts = [], categories = [] }) => {
+export const initUser = async ({
+  categories = [],
+  accounts = [],
+  currency = '',
+}) => {
   try {
     const body = await sendPostRequest(INIT_USER, {
-      accounts: accounts,
       categories: categories,
+      accounts: accounts,
+      currency: currency,
+    });
+    return body;
+  } catch (e) {
+    throw new UserError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const updateUserMeta = async ({ currency = null, hide_info = null }) => {
+  try {
+    const body = await sendPostRequest(UPDATE_USER_META, {
+      currency: currency,
+      hide_info: hide_info,
     });
     return body;
   } catch (e) {

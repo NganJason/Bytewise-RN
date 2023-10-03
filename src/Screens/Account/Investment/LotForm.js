@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
@@ -155,7 +155,7 @@ const LotForm = ({ route }) => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Cost per share"
           value={lotForm.cost_per_share}
           onChangeText={onCostPerShareChange}

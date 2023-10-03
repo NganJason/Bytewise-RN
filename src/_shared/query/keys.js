@@ -9,7 +9,9 @@ export const queryKeys = {
 
   transaction: 'transaction',
   transactions: 'transactions',
+  transactionGroups: 'transaction_groups',
   transactionsAggr: 'transactions_aggr',
+  transactionsSum: 'transactions_sum',
 
   budget: 'budget',
   budgets: 'budgets',

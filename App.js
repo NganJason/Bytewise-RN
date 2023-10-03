@@ -130,7 +130,7 @@ function Main() {
   }, []);
 
   const renderOnboardingRoutes = () => {
-    if (showSetupSplashScreen() && !isUserOnboarded()) {
+    if (showSetupSplashScreen()) {
       return (
         <Stack.Screen
           name={ROUTES.setupSplashScreen}
@@ -148,7 +148,7 @@ function Main() {
       );
     }
 
-    if (isUserOnboarded() && !showSetupSplashScreen()) {
+    if (isUserOnboarded()) {
       return (
         <>
           <Stack.Screen

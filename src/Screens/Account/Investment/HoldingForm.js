@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   BaseKeyboardAwareScrollView,
   BaseRow,
@@ -210,7 +210,7 @@ const HoldingForm = ({ route }) => {
               errorMessage={showValidation && formErrors.symbol}
             />
 
-            <BaseCurrencyInput
+            <BaseMonetaryInput
               label="Latest Total Market Value"
               tooltip={toolTipMessage.totalLatestMarketValueDesc}
               value={holdingForm.latest_value}
@@ -219,7 +219,7 @@ const HoldingForm = ({ route }) => {
               currency={CURRENCY_USD}
             />
 
-            <BaseCurrencyInput
+            <BaseMonetaryInput
               label="Total Invested Amount"
               tooltip={toolTipMessage.totalInvestedAmount}
               value={holdingForm.total_cost}

@@ -6,6 +6,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
 import { useInitUser } from '../mutations/user';
+import { currencies } from '../util';
 
 const DefaultCategoryBudgets = [
   {
@@ -43,6 +44,7 @@ const defaultData = {
     account_type: ACCOUNT_TYPE_INVESTMENT,
     holdings: [],
   },
+  currency: currencies.SGD.code,
 };
 
 const defaultMeta = {
@@ -115,6 +117,10 @@ const OnboardingDataProvider = ({ children }) => {
     });
   };
 
+  const addBaseCurrency = (currency = currencies.SGD.code) => {
+    setData({ ...data, currency: currency });
+  };
+
   // To reset all the state
   // In case users signup, logout, resignup using different account
   const reset = () => {
@@ -180,8 +186,10 @@ const OnboardingDataProvider = ({ children }) => {
     }
 
     initUser.mutate({
-      accounts: finalData.accounts,
       categories: finalData.categoryBudgets,
+      accounts: finalData.accounts,
+      currency: finalData.currency,
+      ...finalData,
     });
   };
 
@@ -199,6 +207,7 @@ const OnboardingDataProvider = ({ children }) => {
         updateAccount,
         addInvestmentAccountName,
         addInvestmentHolding,
+        addBaseCurrency,
         reset,
 
         commitData,

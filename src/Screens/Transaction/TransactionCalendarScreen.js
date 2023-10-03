@@ -18,13 +18,19 @@ import {
   getMonth,
   getUnixRangeOfMonth,
   getYear,
-  groupTransactionsByDateStr,
+  groupTransactionGroupsByDateStr,
 } from '../../_shared/util';
 import { useDimension, useError } from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetTransactions } from '../../_shared/query';
+import {
+  useGetAccounts,
+  useGetCategories,
+  useGetTransactionGroups,
+} from '../../_shared/query';
+import { BaseFilter } from '../../Components/Common';
+import { Amount } from '../../_shared/object';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -44,22 +50,44 @@ const TransactionCalendarScreen = () => {
     setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
   }, [currMonth]);
 
-  const getTransactions = useGetTransactions({
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-    paging: {
-      limit: PAGING_LIMIT,
-      page: STARTING_PAGE,
-    },
+  const [selectedFilters, setSelectedFilters] = useState({
+    Category: [],
+    Account: [],
   });
 
-  let dateStrToTransactions = groupTransactionsByDateStr(
-    getTransactions?.data?.transactions || [],
+  const getTransactionGroups = useGetTransactionGroups(
+    {
+      category_ids: selectedFilters?.Category.map(d => d.category_id) || [],
+      account_id:
+        selectedFilters?.Account?.length || [] > 0
+          ? selectedFilters?.Account[0]?.account_id
+          : null,
+      transaction_time: {
+        gte: timeRange[0],
+        lte: timeRange[1],
+      },
+      paging: {
+        limit: PAGING_LIMIT,
+        page: STARTING_PAGE,
+      },
+    },
+    {},
+  );
+
+  const getCategories = useGetCategories({});
+  const { categories = [] } = getCategories?.data || {};
+
+  const getAccounts = useGetAccounts({});
+  let { accounts = [] } = getAccounts?.data || {};
+  let dateStrToTransactionGroup = groupTransactionGroupsByDateStr(
+    getTransactionGroups?.data?.transaction_groups || [],
   );
   const getSelectedDateTransactions = () => {
-    return dateStrToTransactions[selectedDate]?.transactions || [];
+    return dateStrToTransactionGroup[selectedDate]?.transactions || [];
+  };
+  const getSelectedDateDailyTotal = () => {
+    let { sum = 0, currency = null } = dateStrToTransactionGroup[selectedDate];
+    return new Amount(sum, currency);
   };
 
   const onCurrMonthMove = e => {
@@ -76,15 +104,60 @@ const TransactionCalendarScreen = () => {
     setSelectedDate(getFormattedDateString());
   };
 
-  useError([getTransactions]);
+  const onFilterChange = e => {
+    setSelectedFilters(e);
+  };
+
+  const getFilterOptions = () => {
+    let categoryOptions = categories.map(d => {
+      d.name = d.category_name;
+      return d;
+    });
+
+    let accountOptions = accounts.map(d => {
+      d.name = d.account_name;
+      return d;
+    });
+
+    return [
+      {
+        name: 'Category',
+        iconName: 'grid',
+        iconType: 'feather',
+        items: categoryOptions,
+        emptyContentWithCallback: onPress => (
+          <EmptyContent
+            item={EmptyContentConfig.category}
+            route={ROUTES.categoryForm}
+            onRedirect={onPress}
+          />
+        ),
+      },
+      {
+        name: 'Account',
+        iconName: 'credit-card',
+        iconType: 'feather',
+        items: accountOptions,
+        emptyContentWithCallback: onPress => (
+          <EmptyContent
+            item={EmptyContentConfig.account}
+            route={ROUTES.accountSelection}
+            onRedirect={onPress}
+          />
+        ),
+      },
+    ];
+  };
+
+  useError([getTransactionGroups]);
 
   const renderDayExtraInfo = date => {
     let totalIncome = Math.abs(
-      dateStrToTransactions[date.dateString]?.totalIncome || 0,
+      dateStrToTransactionGroup[date.dateString]?.totalIncome || 0,
     );
 
     let totalExpense = Math.abs(
-      dateStrToTransactions[date.dateString]?.totalExpense || 0,
+      dateStrToTransactionGroup[date.dateString]?.totalExpense || 0,
     );
 
     return (
@@ -118,12 +191,14 @@ const TransactionCalendarScreen = () => {
           />
         ),
         rightComponent: (
-          <BaseButton
-            title="Today"
-            type="secondary"
-            size="sm"
-            onPress={onTodayPress}
-          />
+          <>
+            <BaseButton
+              title="Today"
+              type="secondary"
+              size="sm"
+              onPress={onTodayPress}
+            />
+          </>
         ),
       }}
       fabProps={{
@@ -145,14 +220,22 @@ const TransactionCalendarScreen = () => {
         dayExtraInfo={renderDayExtraInfo}
       />
       <View style={styles.transactions}>
+        <View style={styles.filter}>
+          <BaseFilter
+            options={getFilterOptions()}
+            selectedItems={selectedFilters}
+            onChange={onFilterChange}
+          />
+        </View>
         <BaseLoadableView
           containerStyle={styles.loadableContainer}
           scrollable
-          isLoading={getTransactions.isLoading}>
+          isLoading={getTransactionGroups.isLoading}>
           {getSelectedDateTransactions().length > 0 ? (
             <DailyTransactions
               timestamp={Date.parse(selectedDate)}
               transactions={getSelectedDateTransactions()}
+              dailyTotal={getSelectedDateDailyTotal()}
             />
           ) : (
             <EmptyContent
@@ -176,6 +259,7 @@ const getStyles = theme => {
       marginTop: 12,
       flex: 1,
       padding: theme.spacing.xl,
+      paddingTop: 16,
       backgroundColor: theme.colors.white,
       borderRadius: 20,
       shadowColor: theme.colors.black,
@@ -186,6 +270,9 @@ const getStyles = theme => {
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    filter: {
+      marginBottom: 8,
     },
     loadableContainer: {
       flex: 1,

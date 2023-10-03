@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import {
   BaseInput,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseButton,
   BaseBottomSheet,
   TouchInput,
@@ -36,6 +36,7 @@ import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
 import { useError, useValidation } from '../../_shared/hooks';
 import { useDeleteTransaction } from '../../_shared/mutations';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const AMOUNT_SCROLL_HEIGHT = 0;
 const NOTE_SCROLL_HEIGHT = 300;
@@ -57,6 +58,7 @@ const ExpenseIncomeForm = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -67,6 +69,7 @@ const ExpenseIncomeForm = ({
     transaction_type: transactionType,
     transaction_time: transactionTime,
     amount: 0,
+    currency: getUserBaseCurrency(),
     note: '',
     category: {
       category_id: category.category_id,
@@ -213,6 +216,13 @@ const ExpenseIncomeForm = ({
     toggleAccountModal();
   };
 
+  const onCurrencyChange = e => {
+    setTransactionForm({
+      ...transactionForm,
+      currency: e.code,
+    });
+  };
+
   const onFormSubmit = () => {
     validate();
 
@@ -322,13 +332,16 @@ const ExpenseIncomeForm = ({
           />
         </Dialog>
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={transactionForm.amount}
+          currency={transactionForm.currency}
           onChangeText={onAmountChange}
+          onChangeCurrency={onCurrencyChange}
           onFocus={() => setScrollHeight(AMOUNT_SCROLL_HEIGHT)}
           errorMessage={showValidation && formErrors.amount}
           autoFocus
+          allowSelectCurrency
         />
 
         <BaseInput

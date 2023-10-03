@@ -14,6 +14,11 @@ import { useDimension } from '../../_shared/hooks';
 
 const items = [
   {
+    desc: 'Setup your base currency',
+    iconName: 'dollar-sign',
+    iconType: 'feather',
+  },
+  {
     desc: 'Create categories',
     iconName: 'grid',
     iconType: 'feather',
