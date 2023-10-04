@@ -47,7 +47,7 @@ const BaseDonutChartWithRows = ({
       if (isNaN(percentage)) {
         percentage = 0;
       }
-      d.percentage = percentage.toFixed(0);
+      d.percentage = percentage.toFixed(1);
       p.push(d);
     });
     setProcessedItems(p);

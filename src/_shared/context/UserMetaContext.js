@@ -3,13 +3,15 @@ import { createContext, useEffect, useState } from 'react';
 import { useUpdateUserMeta } from '../mutations';
 import { queryKeys, useGetUser } from '../query';
 import { checkIsUserOnboarded } from '../util/user';
+import { DEFAULT_CURRENCY } from '../util';
 
 const UserMetaContext = createContext();
 const defaultMeta = {
   user: {
     email: '',
     meta: {
-      currency: 'SGD',
+      currency: DEFAULT_CURRENCY,
+      last_transaction_currency: DEFAULT_CURRENCY,
       hide_info: false,
     },
     username: '',
@@ -35,7 +37,13 @@ const UserMetaProvider = ({ children }) => {
   const updateUserMeta = user => {
     setUserMeta({
       ...userMeta,
-      user: user,
+      user: {
+        ...user,
+        meta: {
+          ...(user?.meta || {}),
+          last_transaction_currency: user?.meta?.currency || DEFAULT_CURRENCY,
+        },
+      },
     });
   };
 
@@ -69,6 +77,21 @@ const UserMetaProvider = ({ children }) => {
     });
   };
 
+  const updateLastTransactionCurrency = (code = DEFAULT_CURRENCY) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_currency: code,
+          },
+        },
+      };
+    });
+  };
+
   const isUserOnboarded = () => {
     const { user_flag: userFlag = 0 } = userMeta?.user || {};
     return checkIsUserOnboarded(userFlag);
@@ -83,11 +106,17 @@ const UserMetaProvider = ({ children }) => {
   };
 
   const getUserBaseCurrency = () => {
-    return userMeta?.user?.meta?.currency || 'SGD';
+    return userMeta?.user?.meta?.currency || DEFAULT_CURRENCY;
   };
 
   const getUserName = () => {
     return userMeta?.user?.username || '';
+  };
+
+  const getLastTransactionCurrency = () => {
+    return (
+      userMeta?.user?.meta?.last_transaction_currency || getUserBaseCurrency()
+    );
   };
 
   return (
@@ -97,12 +126,14 @@ const UserMetaProvider = ({ children }) => {
         updateUserMeta,
         clearUserMeta,
         toggleHideUserInfo,
+        updateLastTransactionCurrency,
         isUserOnboarded,
         showSetupSplashScreen,
         setShowSetupSplashScreen,
         shouldHideSensitiveInfo,
         getUserName,
         getUserBaseCurrency,
+        getLastTransactionCurrency,
       }}>
       {children}
     </UserMetaContext.Provider>

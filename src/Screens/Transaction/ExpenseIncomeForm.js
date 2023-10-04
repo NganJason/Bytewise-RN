@@ -32,7 +32,11 @@ import {
   useUpdateTransaction,
 } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/validator';
-import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
+import {
+  renderCalendarTs,
+  getDateStringFromTs,
+  DEFAULT_CURRENCY,
+} from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
 import { useError, useValidation } from '../../_shared/hooks';
 import { useDeleteTransaction } from '../../_shared/mutations';
@@ -58,7 +62,8 @@ const ExpenseIncomeForm = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { getUserBaseCurrency } = useContext(UserMetaContext);
+  const { updateLastTransactionCurrency, getLastTransactionCurrency } =
+    useContext(UserMetaContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -69,7 +74,7 @@ const ExpenseIncomeForm = ({
     transaction_type: transactionType,
     transaction_time: transactionTime,
     amount: 0,
-    currency: getUserBaseCurrency(),
+    currency: getLastTransactionCurrency(),
     note: '',
     category: {
       category_id: category.category_id,
@@ -221,6 +226,7 @@ const ExpenseIncomeForm = ({
       ...transactionForm,
       currency: e.code,
     });
+    updateLastTransactionCurrency(e.code || DEFAULT_CURRENCY);
   };
 
   const onFormSubmit = () => {

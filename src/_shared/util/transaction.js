@@ -10,23 +10,6 @@ export const groupTransactionGroupsByDateStr = (transactionGroups = []) => {
     let dateStr = getFormattedDateString(parseDateStringWithoutDelim(d.date));
     dateStrToTransactionGroup[dateStr] = d;
   });
-
-  for (const dateStr in dateStrToTransactionGroup) {
-    let transactionGroup = dateStrToTransactionGroup[dateStr];
-    let totalExpense = 0;
-    let totalIncome = 0;
-
-    transactionGroup.transactions.map(t => {
-      if (t.transaction_type === TRANSACTION_TYPE_EXPENSE) {
-        totalExpense += Number(t.amount);
-      } else {
-        totalIncome += Number(t.amount);
-      }
-    });
-    dateStrToTransactionGroup[dateStr].totalExpense = totalExpense;
-    dateStrToTransactionGroup[dateStr].totalIncome = totalIncome;
-  }
-
   return dateStrToTransactionGroup;
 };
 

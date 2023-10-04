@@ -348,7 +348,7 @@ const AccountForm = ({ route }) => {
               value={
                 accountForm.balance === null ? 0 : Math.abs(accountForm.balance)
               }
-              currency={accountForm.currency}
+              currency={isOnboarding ? data.currency : accountForm.currency}
               onChangeText={onBalanceChange}
               onChangeCurrency={onCurrencyChange}
               hide={shouldDisableBalance()}

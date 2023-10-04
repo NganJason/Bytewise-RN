@@ -5,21 +5,15 @@ import { capitalize } from './string';
 
 export const CURRENCY_USD = 'USD';
 export const CURRENCY_SGD = 'SGD';
-export const DEFAULT_CURRENCY = 'SGD';
-export const DEFAULT_INVESTMENT_CURRENCY = 'USD';
+export const CURRENCY_MYR = 'MYR';
+export const DEFAULT_CURRENCY = CURRENCY_SGD;
+export const DEFAULT_INVESTMENT_CURRENCY = CURRENCY_USD;
 
-export const currencies = {
-  USD: {
-    iso_code: 'us',
-    name: 'United States Dollar',
-    code: 'USD',
-    symbol: '$',
-  },
-  MYR: { iso_code: 'my', name: 'Malaysian Ringgit', code: 'MYR', symbol: 'RM' },
-  SGD: { iso_code: 'sg', name: 'Singapore Dollar', code: 'SGD', symbol: 'S$' },
-};
-
-export const supportedBaseCurrencies = ['USD', 'SGD', 'MYR'];
+export const supportedBaseCurrencies = [
+  CURRENCY_USD,
+  CURRENCY_SGD,
+  CURRENCY_MYR,
+];
 
 export const getCurrencyMap = (code = DEFAULT_CURRENCY) => {
   if (code === '') {
@@ -29,7 +23,7 @@ export const getCurrencyMap = (code = DEFAULT_CURRENCY) => {
   let { name = '', symbol = '' } = currencyList.list()[code] || {};
   let isos = iso.getAllISOByCurrencyOrSymbol('currency', code) || [];
   let isoCode = isos.length > 0 ? isos[0] : '';
-  if (code === 'USD') {
+  if (code === CURRENCY_USD) {
     isoCode = 'US';
   }
   return {
