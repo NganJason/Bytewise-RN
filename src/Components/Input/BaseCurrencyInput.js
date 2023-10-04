@@ -2,11 +2,8 @@ import { Icon, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import {
-  currencies,
-  DEFAULT_CURRENCY,
-  getSupportedCurrencyOptions,
-} from '../../_shared/util';
+import { useGetCurrencyMap } from '../../_shared/hooks';
+import { DEFAULT_CURRENCY, getCurrencyMap } from '../../_shared/util';
 import { BaseText } from '../Text';
 import { BaseBottomSheet } from '../View';
 
@@ -28,6 +25,16 @@ const BaseCurrencyInput = ({
     toggleModal();
   };
 
+  const { getSupportedCurrencies } = useGetCurrencyMap();
+  const formatSupportedCurrencies = () => {
+    let supportedCurrencies = getSupportedCurrencies();
+    supportedCurrencies.map(d => {
+      d.leftIcon = d.countryFlag;
+    });
+
+    return supportedCurrencies;
+  };
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -42,14 +49,14 @@ const BaseCurrencyInput = ({
         />
       )}
       <BaseText text2 color={theme.colors.color6}>
-        {currencies[value].symbol}
+        {getCurrencyMap(value).symbol}
       </BaseText>
       <BaseBottomSheet
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}
         close={toggleModal}
         onSelect={onPress}
-        items={getSupportedCurrencyOptions()}
+        items={formatSupportedCurrencies()}
         label="name"
       />
     </TouchableOpacity>

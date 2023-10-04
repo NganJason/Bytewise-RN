@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 
 import BaseText from './BaseText';
-import { getCurrencySymbol, DEFAULT_CURRENCY } from '../../_shared/util';
+import { DEFAULT_CURRENCY, getCurrencyMap } from '../../_shared/util';
 import { useContext } from 'react';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import { Amount } from '../../_shared/object';
@@ -42,7 +42,7 @@ const AmountText = ({
   const renderAmountText = () => {
     let text = '';
     const { sign } = getAmountAttr();
-    let currencySymbol = getCurrencySymbol(amount.getCurrency());
+    let currencySymbol = getCurrencyMap(amount.getCurrency()).symbol;
 
     if (sensitive && shouldHideSensitiveInfo()) {
       return `${currencySymbol} -`;

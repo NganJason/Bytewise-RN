@@ -1,4 +1,6 @@
 import CountryFlag from 'react-native-country-flag';
+import currencyList from 'iso-currencies';
+import iso from 'iso-country-currency';
 
 export const CURRENCY_USD = 'USD';
 export const CURRENCY_SGD = 'SGD';
@@ -22,31 +24,18 @@ export const supportedBaseCurrencies = [
   currencies.SGD,
 ];
 
-export const supportedCurrencies = [
-  currencies.USD,
-  currencies.MYR,
-  currencies.SGD,
-];
-
-export const getCurrencySymbol = (code = DEFAULT_CURRENCY) => {
-  return currencies[code]?.symbol || currencies[DEFAULT_CURRENCY].code;
-};
-
-export const getSupportedCurrencyOptions = (baseCurrency = false) => {
-  let options = [];
-  let supported = baseCurrency ? supportedBaseCurrencies : supportedCurrencies;
-
-  supported.map(currency => {
-    currency.leftIcon = (
-      <CountryFlag
-        isoCode={currency.iso_code}
-        size={20}
-        style={{ marginRight: 10 }}
-      />
-    );
-    options.push(currency);
-  });
-  options.sort((a, b) => a.name.localeCompare(b.name));
-
-  return options;
+export const getCurrencyMap = code => {
+  let { name = '', symbol = '' } = currencyList.list()[code] || {};
+  let isos = iso.getAllISOByCurrencyOrSymbol('currency', code) || [];
+  let isoCode = isos.length > 0 ? isos[0] : '';
+  if (code === 'USD') {
+    isoCode = 'US';
+  }
+  return {
+    iso_code: isoCode,
+    name: name,
+    code: code,
+    symbol: symbol,
+    countryFlag: <CountryFlag isoCode={isoCode} size={20} />,
+  };
 };

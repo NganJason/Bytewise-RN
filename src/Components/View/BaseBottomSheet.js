@@ -44,7 +44,9 @@ const BaseBottomSheet = ({
       rows.push(
         <BaseRow key={i} onPress={() => onSelect(item)} dividerMargin={5}>
           <View style={styles.rowLeftContent}>
-            {item.leftIcon && item.leftIcon}
+            {item.leftIcon && (
+              <View style={{ marginRight: 10 }}>{item.leftIcon}</View>
+            )}
             <BaseText text2>{item[label]}</BaseText>
           </View>
         </BaseRow>,

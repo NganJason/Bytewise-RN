@@ -24,6 +24,8 @@ export const queryKeys = {
   holding: 'holding',
   lot: 'lot',
   lots: 'lots',
+
+  currencies: 'currencies',
 };
 
 export const useQueryWrapper = (queryOpts = {}) => {

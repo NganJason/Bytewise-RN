@@ -17,6 +17,8 @@ import {
 } from './transaction';
 import { useGetUser } from './user';
 
+import { useGetCurrencies } from './currency';
+
 export {
   queryKeys,
   useGetAccount,
@@ -34,4 +36,5 @@ export {
   useSumTransactions,
   useGetTransactionGroups,
   useGetUser,
+  useGetCurrencies,
 };
