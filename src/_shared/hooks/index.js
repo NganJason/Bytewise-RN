@@ -6,6 +6,8 @@ import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
 import useConnection from './useConnection';
 import useTransactionGroups from './useTransactionGroups';
+import useInitApp from './useInitApp';
+import useGetCurrencyMap from './useGetCurrencyMap';
 
 export {
   useDimension,
@@ -16,4 +18,6 @@ export {
   useValidation,
   useConnection,
   useTransactionGroups,
+  useInitApp,
+  useGetCurrencyMap,
 };

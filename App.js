@@ -48,6 +48,7 @@ import {
   UserMetaContext,
   UserMetaProvider,
 } from './src/_shared/context/UserMetaContext';
+import { useInitApp } from './src/_shared/hooks';
 
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be-test.onrender.com/api/v1';
@@ -67,6 +68,8 @@ function Main() {
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+
+  useInitApp();
 
   useEffect(() => {
     const timer = setTimeout(() => {

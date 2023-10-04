@@ -12,14 +12,13 @@ import {
 import { getIDToCategoryMap } from './category';
 import { debounce, getProgress } from './common';
 import {
-  getCurrencySymbol,
   CURRENCY_USD,
   CURRENCY_SGD,
   DEFAULT_CURRENCY,
   DEFAULT_INVESTMENT_CURRENCY,
   currencies,
   supportedBaseCurrencies,
-  getSupportedCurrencyOptions,
+  getCurrencyMap,
 } from './currency';
 import {
   moveMonth,
@@ -72,14 +71,13 @@ export {
   getIDToCategoryMap,
   debounce,
   getProgress,
-  getCurrencySymbol,
   CURRENCY_USD,
   CURRENCY_SGD,
   DEFAULT_CURRENCY,
   DEFAULT_INVESTMENT_CURRENCY,
   currencies,
   supportedBaseCurrencies,
-  getSupportedCurrencyOptions,
+  getCurrencyMap,
   moveMonth,
   getMonth,
   getYear,

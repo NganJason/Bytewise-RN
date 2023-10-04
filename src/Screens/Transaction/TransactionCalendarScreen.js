@@ -5,9 +5,7 @@ import {
   BaseLoadableView,
   BaseScreen,
   BaseText,
-  DailyTransactions,
   DateNavigator,
-  EmptyContent,
 } from '../../Components';
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
@@ -18,22 +16,15 @@ import {
   getMonth,
   getUnixRangeOfMonth,
   getYear,
-  groupTransactionGroupsByDateStr,
 } from '../../_shared/util';
-import { useDimension, useError } from '../../_shared/hooks';
+import {
+  useDimension,
+  useError,
+  useTransactionGroups,
+} from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
-import {
-  useGetAccounts,
-  useGetCategories,
-  useGetTransactionGroups,
-} from '../../_shared/query';
-import { BaseFilter } from '../../Components/Common';
-import { Amount } from '../../_shared/object';
-
-const PAGING_LIMIT = 500;
-const STARTING_PAGE = 1;
+import { BaseFilter, Transactions } from '../../Components/Common';
 
 const TransactionCalendarScreen = () => {
   const { theme } = useTheme();
@@ -43,52 +34,20 @@ const TransactionCalendarScreen = () => {
 
   const [selectedDate, setSelectedDate] = useState(getFormattedDateString());
   const [currMonth, setCurrMonth] = useState(new Date());
-  const [timeRange, setTimeRange] = useState(
-    getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)),
-  );
+
+  const {
+    setTimeRange,
+    selectedFilters,
+    getDailyTotalExpenseIncome,
+    getTransactionGroupByDateStr,
+    getFilterOptions,
+    onFilterChange,
+    isLoading,
+    getErrors,
+  } = useTransactionGroups(currMonth);
   useEffect(() => {
     setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
   }, [currMonth]);
-
-  const [selectedFilters, setSelectedFilters] = useState({
-    Category: [],
-    Account: [],
-  });
-
-  const getTransactionGroups = useGetTransactionGroups(
-    {
-      category_ids: selectedFilters?.Category.map(d => d.category_id) || [],
-      account_id:
-        selectedFilters?.Account?.length || [] > 0
-          ? selectedFilters?.Account[0]?.account_id
-          : null,
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
-    },
-    {},
-  );
-
-  const getCategories = useGetCategories({});
-  const { categories = [] } = getCategories?.data || {};
-
-  const getAccounts = useGetAccounts({});
-  let { accounts = [] } = getAccounts?.data || {};
-  let dateStrToTransactionGroup = groupTransactionGroupsByDateStr(
-    getTransactionGroups?.data?.transaction_groups || [],
-  );
-  const getSelectedDateTransactions = () => {
-    return dateStrToTransactionGroup[selectedDate]?.transactions || [];
-  };
-  const getSelectedDateDailyTotal = () => {
-    let { sum = 0, currency = null } = dateStrToTransactionGroup[selectedDate];
-    return new Amount(sum, currency);
-  };
 
   const onCurrMonthMove = e => {
     setCurrMonth(e);
@@ -104,72 +63,22 @@ const TransactionCalendarScreen = () => {
     setSelectedDate(getFormattedDateString());
   };
 
-  const onFilterChange = e => {
-    setSelectedFilters(e);
-  };
-
-  const getFilterOptions = () => {
-    let categoryOptions = categories.map(d => {
-      d.name = d.category_name;
-      return d;
-    });
-
-    let accountOptions = accounts.map(d => {
-      d.name = d.account_name;
-      return d;
-    });
-
-    return [
-      {
-        name: 'Category',
-        iconName: 'grid',
-        iconType: 'feather',
-        items: categoryOptions,
-        emptyContentWithCallback: onPress => (
-          <EmptyContent
-            item={EmptyContentConfig.category}
-            route={ROUTES.categoryForm}
-            onRedirect={onPress}
-          />
-        ),
-      },
-      {
-        name: 'Account',
-        iconName: 'credit-card',
-        iconType: 'feather',
-        items: accountOptions,
-        emptyContentWithCallback: onPress => (
-          <EmptyContent
-            item={EmptyContentConfig.account}
-            route={ROUTES.accountSelection}
-            onRedirect={onPress}
-          />
-        ),
-      },
-    ];
-  };
-
-  useError([getTransactionGroups]);
+  useError(getErrors());
 
   const renderDayExtraInfo = date => {
-    let totalIncome = Math.abs(
-      dateStrToTransactionGroup[date.dateString]?.totalIncome || 0,
-    );
-
-    let totalExpense = Math.abs(
-      dateStrToTransactionGroup[date.dateString]?.totalExpense || 0,
-    );
+    const { dateString } = date;
+    const [expense, income] = getDailyTotalExpenseIncome(dateString);
 
     return (
       <View style={styles.dayInfoContainer}>
-        {totalExpense > 0 && (
+        {Math.abs(expense) > 0 && (
           <BaseText text6 margin={{ top: 0 }} color={theme.colors.regularRed}>
-            {totalExpense.toFixed(2)}
+            {expense.toFixed(2)}
           </BaseText>
         )}
-        {totalIncome > 0 && (
+        {Math.abs(income) > 0 && (
           <BaseText text6 color={theme.colors.color1}>
-            {totalIncome.toFixed(2)}
+            {income.toFixed(2)}
           </BaseText>
         )}
       </View>
@@ -230,19 +139,10 @@ const TransactionCalendarScreen = () => {
         <BaseLoadableView
           containerStyle={styles.loadableContainer}
           scrollable
-          isLoading={getTransactionGroups.isLoading}>
-          {getSelectedDateTransactions().length > 0 ? (
-            <DailyTransactions
-              timestamp={Date.parse(selectedDate)}
-              transactions={getSelectedDateTransactions()}
-              dailyTotal={getSelectedDateDailyTotal()}
-            />
-          ) : (
-            <EmptyContent
-              item={EmptyContentConfig.transaction}
-              route={ROUTES.transactionForm}
-            />
-          )}
+          isLoading={isLoading}>
+          <Transactions
+            transactionGroups={[getTransactionGroupByDateStr(selectedDate)]}
+          />
         </BaseLoadableView>
       </View>
     </BaseScreen>
