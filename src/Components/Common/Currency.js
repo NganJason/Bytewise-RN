@@ -1,7 +1,7 @@
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
-import { currencies } from '../../_shared/util';
+import { getCurrencyMap } from '../../_shared/util';
 import { BaseText } from '../Text';
 
 const Currency = ({ code = 'SGD' }) => {
@@ -10,11 +10,11 @@ const Currency = ({ code = 'SGD' }) => {
   return (
     <View style={styles.container}>
       <CountryFlag
-        isoCode={currencies[code].iso_code}
+        isoCode={getCurrencyMap(code).iso_code}
         size={14}
         style={styles.icon}
       />
-      <BaseText text3>{currencies[code].name}</BaseText>
+      <BaseText text3>{getCurrencyMap(code).name}</BaseText>
     </View>
   );
 };

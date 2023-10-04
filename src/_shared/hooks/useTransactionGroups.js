@@ -14,6 +14,7 @@ import {
   useSumTransactions,
 } from '../query';
 import {
+  DEFAULT_CURRENCY,
   getMonth,
   getUnixRangeOfMonth,
   getYear,
@@ -122,23 +123,33 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
   };
 
   const getMonthlyTransactionsSum = (transactionType = 0) => {
-    const { sums = [] } = sumTransactionsQuery?.data || [];
+    let dateStrToTransactionGroup =
+      groupTransactionGroupsByDateStr(transactionGroups);
 
-    for (const sum of sums) {
-      if (sum.transaction_type === transactionType) {
-        return new Amount(sum.sum, sum.currency);
+    let sum = 0;
+    let currency = DEFAULT_CURRENCY;
+    for (let dateStr of Object.keys(dateStrToTransactionGroup)) {
+      let group = dateStrToTransactionGroup[dateStr];
+      if (transactionType === TRANSACTION_TYPE_EXPENSE) {
+        sum += Number(group?.total_expense || 0);
+      } else {
+        sum += Number(group?.total_income || 0);
       }
+      currency = group?.currency || DEFAULT_CURRENCY;
     }
-
-    return new Amount();
+    return new Amount(sum, currency);
   };
 
   const getDailyTotalExpenseIncome = dateStr => {
     let dateStrToTransactionGroup =
       groupTransactionGroupsByDateStr(transactionGroups);
 
-    const expense = dateStrToTransactionGroup[dateStr]?.totalExpense || 0;
-    const income = dateStrToTransactionGroup[dateStr]?.totalIncome || 0;
+    const expense = Number(
+      dateStrToTransactionGroup[dateStr]?.total_expense || 0,
+    );
+    const income = Number(
+      dateStrToTransactionGroup[dateStr]?.total_income || 0,
+    );
     return [expense, income];
   };
 

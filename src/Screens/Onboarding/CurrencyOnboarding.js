@@ -4,11 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { BaseBottomSheet, BaseText, TouchInput } from '../../Components';
 import CountryFlag from 'react-native-country-flag';
 import { OnboardingDataContext } from '../../_shared/context';
-import {
-  currencies,
-  getCurrencyMap,
-  supportedBaseCurrencies,
-} from '../../_shared/util';
+import { getCurrencyMap, supportedBaseCurrencies } from '../../_shared/util';
 
 const CurrencyOnboarding = () => {
   const { theme } = useTheme();
@@ -49,12 +45,12 @@ const CurrencyOnboarding = () => {
         <TouchInput
           leftIcon={
             <CountryFlag
-              isoCode={currencies[data.currency].iso_code}
+              isoCode={getCurrencyMap(data.currency).iso_code}
               size={20}
               style={styles.flag}
             />
           }
-          value={currencies[data.currency].name}
+          value={getCurrencyMap(data.currency).name}
           onPress={toggleCurrencySheet}
         />
         <BaseBottomSheet

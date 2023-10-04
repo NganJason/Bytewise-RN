@@ -16,7 +16,6 @@ import {
   CURRENCY_SGD,
   DEFAULT_CURRENCY,
   DEFAULT_INVESTMENT_CURRENCY,
-  currencies,
   supportedBaseCurrencies,
   getCurrencyMap,
 } from './currency';
@@ -75,7 +74,6 @@ export {
   CURRENCY_SGD,
   DEFAULT_CURRENCY,
   DEFAULT_INVESTMENT_CURRENCY,
-  currencies,
   supportedBaseCurrencies,
   getCurrencyMap,
   moveMonth,

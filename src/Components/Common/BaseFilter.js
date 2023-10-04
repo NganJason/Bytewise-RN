@@ -145,6 +145,7 @@ const BaseFilter = ({
             tabs={options}
             activeTab={options[activeTabIdx]}
             onTabChange={onTabChange}
+            highlightActiveTab={options.length > 1}
           />
           <BaseScrollView
             containerStyle={styles.rows}

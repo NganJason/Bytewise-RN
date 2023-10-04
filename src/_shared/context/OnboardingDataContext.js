@@ -6,7 +6,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
 import { useInitUser } from '../mutations/user';
-import { currencies } from '../util';
+import { DEFAULT_CURRENCY } from '../util';
 
 const DefaultCategoryBudgets = [
   {
@@ -44,7 +44,7 @@ const defaultData = {
     account_type: ACCOUNT_TYPE_INVESTMENT,
     holdings: [],
   },
-  currency: currencies.SGD.code,
+  currency: DEFAULT_CURRENCY,
 };
 
 const defaultMeta = {
@@ -117,7 +117,7 @@ const OnboardingDataProvider = ({ children }) => {
     });
   };
 
-  const addBaseCurrency = (currency = currencies.SGD.code) => {
+  const addBaseCurrency = (currency = DEFAULT_CURRENCY) => {
     setData({ ...data, currency: currency });
   };
 
