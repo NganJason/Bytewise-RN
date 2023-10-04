@@ -4,7 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import { BaseBottomSheet, BaseText, TouchInput } from '../../Components';
 import CountryFlag from 'react-native-country-flag';
 import { OnboardingDataContext } from '../../_shared/context';
-import { currencies, supportedBaseCurrencies } from '../../_shared/util';
+import {
+  currencies,
+  getCurrencyMap,
+  supportedBaseCurrencies,
+} from '../../_shared/util';
 
 const CurrencyOnboarding = () => {
   const { theme } = useTheme();
@@ -18,18 +22,11 @@ const CurrencyOnboarding = () => {
 
   const getCurrencyOptions = () => {
     let options = [];
-
     supportedBaseCurrencies.map(currency => {
-      currency.leftIcon = (
-        <CountryFlag
-          isoCode={currency.iso_code}
-          size={20}
-          style={styles.flag}
-        />
-      );
-      options.push(currency);
+      let c = getCurrencyMap(currency);
+      c.leftIcon = c.countryFlag;
+      options.push(c);
     });
-    supportedBaseCurrencies.sort((a, b) => a.name.localeCompare(b.name));
     return options;
   };
 

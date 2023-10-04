@@ -97,19 +97,19 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
           />
         ),
       },
-      {
-        name: 'Account',
-        iconName: 'credit-card',
-        iconType: 'feather',
-        items: accountOptions,
-        emptyContentWithCallback: onPress => (
-          <EmptyContent
-            item={EmptyContentConfig.account}
-            route={ROUTES.accountSelection}
-            onRedirect={onPress}
-          />
-        ),
-      },
+      // {
+      //   name: 'Account',
+      //   iconName: 'credit-card',
+      //   iconType: 'feather',
+      //   items: accountOptions,
+      //   emptyContentWithCallback: onPress => (
+      //     <EmptyContent
+      //       item={EmptyContentConfig.account}
+      //       route={ROUTES.accountSelection}
+      //       onRedirect={onPress}
+      //     />
+      //   ),
+      // },
     ];
   };
 

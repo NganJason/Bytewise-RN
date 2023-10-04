@@ -1,6 +1,7 @@
 import CountryFlag from 'react-native-country-flag';
 import currencyList from 'iso-currencies';
 import iso from 'iso-country-currency';
+import { capitalize } from './string';
 
 export const CURRENCY_USD = 'USD';
 export const CURRENCY_SGD = 'SGD';
@@ -14,17 +15,17 @@ export const currencies = {
     code: 'USD',
     symbol: '$',
   },
-  MYR: { iso_code: 'my', name: 'Malaysia Ringgit', code: 'MYR', symbol: 'RM' },
+  MYR: { iso_code: 'my', name: 'Malaysian Ringgit', code: 'MYR', symbol: 'RM' },
   SGD: { iso_code: 'sg', name: 'Singapore Dollar', code: 'SGD', symbol: 'S$' },
 };
 
-export const supportedBaseCurrencies = [
-  currencies.USD,
-  currencies.MYR,
-  currencies.SGD,
-];
+export const supportedBaseCurrencies = ['USD', 'SGD', 'MYR'];
 
-export const getCurrencyMap = code => {
+export const getCurrencyMap = (code = DEFAULT_CURRENCY) => {
+  if (code === '') {
+    code = DEFAULT_CURRENCY;
+  }
+
   let { name = '', symbol = '' } = currencyList.list()[code] || {};
   let isos = iso.getAllISOByCurrencyOrSymbol('currency', code) || [];
   let isoCode = isos.length > 0 ? isos[0] : '';
@@ -33,7 +34,7 @@ export const getCurrencyMap = code => {
   }
   return {
     iso_code: isoCode,
-    name: name,
+    name: capitalize(name),
     code: code,
     symbol: symbol,
     countryFlag: <CountryFlag isoCode={isoCode} size={20} />,
