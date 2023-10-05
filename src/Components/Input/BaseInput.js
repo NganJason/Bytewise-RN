@@ -3,7 +3,7 @@ import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
 import BaseText from '../Text/BaseText';
-import { InfoToolTip } from '../Common';
+import InfoToolTip from '../Common/InfoToolTip';
 
 const BaseInput = forwardRef(
   (

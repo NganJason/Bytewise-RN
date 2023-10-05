@@ -47,6 +47,7 @@ export const createAccount = async ({
   account_name = '',
   account_type = 0,
   balance = '',
+  currency = '',
   note = '',
 } = {}) => {
   try {
@@ -54,6 +55,7 @@ export const createAccount = async ({
       account_name: account_name,
       account_type: account_type,
       balance: balance,
+      currency: currency,
       note: note,
     });
     return body;

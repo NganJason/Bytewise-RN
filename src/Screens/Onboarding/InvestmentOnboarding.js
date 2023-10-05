@@ -12,7 +12,9 @@ import {
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 import { getDateStringFromTs } from '../../_shared/util';
+import { DEFAULT_INVESTMENT_CURRENCY } from '../../_shared/util';
 
 const AccountOnboarding = () => {
   const { theme } = useTheme();
@@ -39,6 +41,7 @@ const AccountOnboarding = () => {
         trade_date: new Date().valueOf(),
         cost_per_share: 3000,
         shares: 10,
+        example: true,
       });
     }
 
@@ -48,10 +51,17 @@ const AccountOnboarding = () => {
         trade_date: tradeDate = '',
         cost_per_share: costPerShare = 0,
         shares = 0,
+        example = false,
       } = holding || {};
 
       rows.push(
-        <BaseRow key={idx} dividerMargin={0} disabled={true}>
+        <BaseRow
+          key={idx}
+          dividerMargin={0}
+          disabled={!example}
+          onPress={() => {
+            navigation.navigate(ROUTES.investmentOnboardingForm);
+          }}>
           <View>
             <BaseText text4 color={textColor}>
               {symbol}
@@ -62,9 +72,14 @@ const AccountOnboarding = () => {
           </View>
 
           <View style={styles.rightCol}>
-            <AmountText text4 color={textColor}>
-              {shares * costPerShare}
-            </AmountText>
+            <AmountText
+              text4
+              amount={
+                new Amount(shares * costPerShare, DEFAULT_INVESTMENT_CURRENCY)
+              }
+              color={textColor}
+            />
+
             <BaseText text4 color={textColor}>
               {shares} unit/s
             </BaseText>
@@ -81,7 +96,7 @@ const AccountOnboarding = () => {
       <View>
         <BaseText h1>Track your</BaseText>
         <BaseText h1>investment</BaseText>
-        <BaseText text2 style={styles.subtitle}>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           Real-time stock prices update allows you to track your capital gain
         </BaseText>
       </View>

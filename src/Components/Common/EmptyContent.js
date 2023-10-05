@@ -2,9 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import { paper } from '../../_shared/constant/asset';
-import { useDimension } from '../../_shared/hooks';
+import useDimension from '../../_shared/hooks/useDimension';
 import { BaseText, LinkText } from '../Text';
-import { BaseImage } from '../View';
+import BaseImage from '../View/BaseImage';
 
 const EmptyContent = ({
   item = {

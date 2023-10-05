@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   BaseKeyboardAwareScrollView,
   BaseRow,
@@ -131,7 +131,7 @@ const InvestmentOnboardingForm = () => {
           errorMessage={showValidation && formErrors.shares}
         />
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Cost per share"
           value={holdingForm.cost_per_share}
           onChangeText={onCostPerShareChange}

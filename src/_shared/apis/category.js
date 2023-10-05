@@ -29,7 +29,7 @@ export const getCategory = async ({ category_id = '' } = {}) => {
   }
 };
 
-export const getCategories = async ({ category_type = 0 } = {}) => {
+export const getCategories = async ({ category_type = null } = {}) => {
   try {
     const body = await sendPostRequest(GET_CATEGORIES, {
       category_type: category_type,

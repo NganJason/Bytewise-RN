@@ -15,13 +15,11 @@ const CREATE_BUDGETS = '/create_budgets';
 export const getCategoriesBudget = async ({
   category_ids = [],
   budget_date = '',
-  timezone = '',
 } = {}) => {
   try {
     const body = await sendPostRequest(GET_CATEGORIES_BUDGET, {
       category_ids: category_ids,
       budget_date: budget_date,
-      timezone: timezone,
     });
     return body;
   } catch (e) {

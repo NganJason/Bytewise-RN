@@ -21,6 +21,8 @@ import {
   useGetCategoriesHelper,
   useError,
 } from '../../_shared/hooks';
+import { Amount } from '../../_shared/object';
+import { DEFAULT_CURRENCY } from '../../_shared/util';
 import BudgetOverviewRow from './BudgetOverviewRow';
 
 const BudgetOverview = ({ activeDate = new Date() }) => {
@@ -41,30 +43,40 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   const getBudgetSum = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
+    let budgetCurrency = DEFAULT_CURRENCY;
+
     categoriesWithBudget.map(category => {
-      const { budget_type: budgetType = BUDGET_TYPE_MONTHLY, amount = 0 } =
-        category?.budget || {};
+      const {
+        budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+        amount = 0,
+        currency = DEFAULT_CURRENCY,
+      } = category?.budget || {};
 
       if (budgetType === type) {
         sum += Number(amount);
       }
+      budgetCurrency = currency;
     });
-    return sum;
+    return new Amount(sum, budgetCurrency);
   };
 
   const getTotalUsedAmount = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
+    let budgetCurrency = DEFAULT_CURRENCY;
+
     categoriesWithBudget.map(category => {
       const {
         budget_type: budgetType = BUDGET_TYPE_MONTHLY,
         used_amount: usedAmount = 0,
+        currency = DEFAULT_CURRENCY,
       } = category?.budget || {};
 
       if (budgetType === type) {
         sum += Number(usedAmount);
       }
+      budgetCurrency = currency;
     });
-    return sum;
+    return new Amount(sum, budgetCurrency);
   };
 
   const renderRows = (type = BUDGET_TYPE_MONTHLY) => {
@@ -138,13 +150,19 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
             />
           ) : (
             <View style={styles.aggr}>
-              <AmountText text4 style={{ color: theme.colors.color7 }}>
-                {getTotalUsedAmount(type)}
-              </AmountText>
+              <AmountText
+                text4
+                amount={getTotalUsedAmount(type)}
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
               <BaseDivider orientation={'vertical'} margin={5} />
-              <AmountText text4 style={{ color: theme.colors.color7 }}>
-                {getBudgetSum(type)}
-              </AmountText>
+              <AmountText
+                text4
+                amount={getBudgetSum(type)}
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
             </View>
           )}
         </View>

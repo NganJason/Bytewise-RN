@@ -11,7 +11,14 @@ import {
 } from './budget';
 import { getIDToCategoryMap } from './category';
 import { debounce, getProgress } from './common';
-import { getCurrencySymbol, CURRENCY_USD, CURRENCY_SGD } from './currency';
+import {
+  CURRENCY_USD,
+  CURRENCY_SGD,
+  DEFAULT_CURRENCY,
+  DEFAULT_INVESTMENT_CURRENCY,
+  supportedBaseCurrencies,
+  getCurrencyMap,
+} from './currency';
 import {
   moveMonth,
   getMonth,
@@ -25,6 +32,7 @@ import {
   getDateObjFromDateStr,
   getFormattedDateString,
   getDateStringWithoutDelim,
+  parseDateStringWithoutDelim,
   getYearMonthString,
   getYearString,
   getUnixRangeOfMonth,
@@ -41,13 +49,12 @@ import { getTotalInvestmentCost, getStockUpdateTime } from './investment';
 import { capitalize, capitalizeFirstWord } from './string';
 import { toastError } from './toast';
 import {
-  groupTransactionsByDate,
-  groupTransactionDatesByMonth,
+  groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
-  groupTransactionsByDateStr,
+  groupTransactionGroupsByDateStr,
 } from './transaction';
 import { checkIsUserNew } from './user';
 import { genColors } from './color';
@@ -63,9 +70,12 @@ export {
   getIDToCategoryMap,
   debounce,
   getProgress,
-  getCurrencySymbol,
   CURRENCY_USD,
   CURRENCY_SGD,
+  DEFAULT_CURRENCY,
+  DEFAULT_INVESTMENT_CURRENCY,
+  supportedBaseCurrencies,
+  getCurrencyMap,
   moveMonth,
   getMonth,
   getYear,
@@ -78,6 +88,7 @@ export {
   getDateObjFromDateStr,
   getFormattedDateString,
   getDateStringWithoutDelim,
+  parseDateStringWithoutDelim,
   getYearMonthString,
   getYearString,
   getUnixRangeOfMonth,
@@ -94,13 +105,12 @@ export {
   capitalize,
   capitalizeFirstWord,
   toastError,
-  groupTransactionsByDate,
-  groupTransactionDatesByMonth,
+  groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,
   mergeTransactionsAccount,
   mergeTransactionAccount,
-  groupTransactionsByDateStr,
+  groupTransactionGroupsByDateStr,
   checkIsUserNew,
   genColors,
 };

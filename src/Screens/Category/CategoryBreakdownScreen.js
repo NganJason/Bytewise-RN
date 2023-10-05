@@ -33,9 +33,11 @@ import {
 } from '../../_shared/hooks';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getProgress } from '../../_shared/util';
-import { useGetTransactions } from '../../_shared/query';
+import { DEFAULT_CURRENCY, getProgress } from '../../_shared/util';
+import { useGetTransactionGroups } from '../../_shared/query';
 import { useSumCategoryTransactions } from '../../_shared/query/category';
+import { Amount } from '../../_shared/object';
+import * as Localization from 'expo-localization';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -66,7 +68,11 @@ const CategoryBreakdownScreen = ({ route }) => {
   });
   const { category_name: categoryName = 'Uncategorised', budget = null } =
     categoryIDToCategoryMap[categoryID] || {};
-  const { amount: budgetAmount = 0, budget_type: budgetType } = budget || {};
+  const {
+    amount: budgetAmount = 0,
+    budget_type: budgetType,
+    currency: budgetCurrency = DEFAULT_CURRENCY,
+  } = budget || {};
 
   useEffect(() => {
     if (!budgetType) {
@@ -93,13 +99,13 @@ const CategoryBreakdownScreen = ({ route }) => {
     for (let i = 0; i < sums.length; i++) {
       let id = sums[i]?.category?.category_id || '';
       if (categoryID === id) {
-        return Math.abs(sums[i].sum).toFixed(2);
+        return new Amount(Math.abs(sums[i].sum).toFixed(2), sums[i].currency);
       }
     }
-    return 0;
+    return new Amount(0);
   };
 
-  const getTransactions = useGetTransactions({
+  const getTransactionGroups = useGetTransactionGroups({
     category_id: categoryID,
     transaction_time: {
       gte: timeRange[0],
@@ -121,12 +127,12 @@ const CategoryBreakdownScreen = ({ route }) => {
   const isScreenLoading = () => {
     return (
       isCategoryBudgetLoading() ||
-      getTransactions.isLoading ||
+      getTransactionGroups.isLoading ||
       sumCategoryTransactions.isLoading
     );
   };
 
-  useError([...getQueries(), getTransactions, sumCategoryTransactions]);
+  useError([...getQueries(), getTransactionGroups, sumCategoryTransactions]);
 
   const renderHeader = () => {
     const addBudgetAggr = () => {
@@ -138,9 +144,12 @@ const CategoryBreakdownScreen = ({ route }) => {
             isLoading={isCategoryBudgetLoading()}>
             Used
           </BaseText>
-          <AmountText h4 isLoading={isCategoryBudgetLoading()}>
-            {getCategoryUsedAmount()}
-          </AmountText>
+          <AmountText
+            h4
+            amount={getCategoryUsedAmount()}
+            isLoading={isCategoryBudgetLoading()}
+            sensitive
+          />
           <BaseButton
             title="Add budget"
             type="clear"
@@ -171,16 +180,25 @@ const CategoryBreakdownScreen = ({ route }) => {
           </BaseText>
           <TouchableOpacity onPress={onBudgetPress}>
             <View style={styles.headerAggr}>
-              <AmountText h4 isLoading={isCategoryBudgetLoading()}>
-                {getCategoryUsedAmount()}
-              </AmountText>
+              <AmountText
+                h4
+                amount={getCategoryUsedAmount()}
+                isLoading={isCategoryBudgetLoading()}
+                sensitive
+              />
               <BaseDivider orientation="vertical" margin={6} />
-              <AmountText h4 isLoading={isCategoryBudgetLoading()}>
-                {budgetAmount}
-              </AmountText>
+              <AmountText
+                h4
+                amount={new Amount(budgetAmount, budgetCurrency)}
+                isLoading={isCategoryBudgetLoading()}
+                sensitive
+              />
             </View>
             <BaseLinearProgress
-              value={getProgress(getCategoryUsedAmount(), budget.amount)}
+              value={getProgress(
+                getCategoryUsedAmount().getAmount(),
+                budget.amount,
+              )}
               showPercentage
             />
           </TouchableOpacity>
@@ -197,9 +215,12 @@ const CategoryBreakdownScreen = ({ route }) => {
             isLoading={isCategoryBudgetLoading()}>
             Total
           </BaseText>
-          <AmountText h4 isLoading={isCategoryBudgetLoading()}>
-            {getCategoryUsedAmount()}
-          </AmountText>
+          <AmountText
+            h4
+            amount={getCategoryUsedAmount()}
+            isLoading={isCategoryBudgetLoading()}
+            sensitive
+          />
         </>
       );
     };
@@ -220,7 +241,11 @@ const CategoryBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.headerTitle}>
-          <BaseText h2 isLoading={isCategoryBudgetLoading()}>
+          <BaseText
+            h2
+            isLoading={isCategoryBudgetLoading()}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {categoryName}
           </BaseText>
           <IconButton
@@ -244,13 +269,10 @@ const CategoryBreakdownScreen = ({ route }) => {
   };
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions?.data || {};
-    transactions = transactions.filter(
-      d => d.transaction_type === categoryType,
-    );
+    let { transaction_groups: groups = [] } = getTransactionGroups?.data || {};
     return (
       <Transactions
-        transactions={transactions}
+        transactionGroups={groups}
         showMonthLabel={budgetType === BUDGET_TYPE_ANNUAL}
       />
     );

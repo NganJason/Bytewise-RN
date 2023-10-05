@@ -16,7 +16,8 @@ import {
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
 import { BottomToastContext } from '../../_shared/context';
-import { useAggrTransactions } from '../../_shared/query';
+import { Amount } from '../../_shared/object';
+import { useSumTransactions } from '../../_shared/query';
 
 const BreakdownOverviewScreen = ({
   activeTs = new Date().valueOf(),
@@ -29,18 +30,23 @@ const BreakdownOverviewScreen = ({
   const navigation = useNavigation();
   const { toast } = useContext(BottomToastContext);
 
-  const aggrTransactionsByTypeQuery = useAggrTransactions({
-    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
+  const sumTransactionsQuery = useSumTransactions({
     transaction_time: {
       gte: timeRange[0],
       lte: timeRange[1],
     },
   });
 
-  const getTotalAmountByCategoryType = (type = TRANSACTION_TYPE_EXPENSE) => {
-    return (
-      Math.abs(aggrTransactionsByTypeQuery?.data?.results?.[type]?.sum) || 0
-    );
+  const getTransactionsSum = (transactionType = 0) => {
+    const { sums = [] } = sumTransactionsQuery?.data || [];
+
+    for (const sum of sums) {
+      if (sum.transaction_type === transactionType) {
+        return new Amount(sum.sum, sum.currency);
+      }
+    }
+
+    return new Amount();
   };
 
   const expenseCard = () => {
@@ -55,9 +61,11 @@ const BreakdownOverviewScreen = ({
           });
         }}>
         <BaseText text3>Expense</BaseText>
-        <AmountText h2>
-          {getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE)}
-        </AmountText>
+        <AmountText
+          h2
+          amount={getTransactionsSum(TRANSACTION_TYPE_EXPENSE)}
+          sensitive
+        />
       </TouchableOpacity>
     );
   };
@@ -74,17 +82,19 @@ const BreakdownOverviewScreen = ({
           });
         }}>
         <BaseText text3>Income</BaseText>
-        <AmountText h2>
-          {getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME)}
-        </AmountText>
+        <AmountText
+          h2
+          amount={getTransactionsSum(TRANSACTION_TYPE_INCOME)}
+          sensitive
+        />
       </TouchableOpacity>
     );
   };
 
   const cashFlowCard = () => {
-    let cashFlow =
-      getTotalAmountByCategoryType(TRANSACTION_TYPE_INCOME) -
-      getTotalAmountByCategoryType(TRANSACTION_TYPE_EXPENSE);
+    let expense = getTransactionsSum(TRANSACTION_TYPE_EXPENSE);
+    let income = getTransactionsSum(TRANSACTION_TYPE_INCOME);
+    let cashFlow = income.getAmount() - expense.getAmount();
 
     return (
       <TouchableOpacity
@@ -96,9 +106,13 @@ const BreakdownOverviewScreen = ({
           );
         }}>
         <BaseText text3>Cash Flow</BaseText>
-        <AmountText h2 showNegativeOnly showColor>
-          {cashFlow}
-        </AmountText>
+        <AmountText
+          h2
+          amount={new Amount(cashFlow, expense.getCurrency())}
+          showNegativeOnly
+          showColor
+          sensitive
+        />
       </TouchableOpacity>
     );
   };

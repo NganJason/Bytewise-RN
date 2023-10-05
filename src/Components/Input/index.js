@@ -1,4 +1,4 @@
-import BaseCurrencyInput from './BaseCurrencyInput';
+import BaseMonetaryInput from './BaseMonetaryInput';
 import BaseInput from './BaseInput';
 import TouchInput from './TouchInput';
 import BaseCheckbox from './BaseCheckbox';
@@ -8,7 +8,7 @@ import BaseCheckboxInput from './BaseCheckboxInput';
 import BaseNumInputBox from './BaseNumInputBox';
 
 export {
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   TouchInput,
   BaseCheckbox,

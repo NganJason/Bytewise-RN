@@ -4,13 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLogin, useSignup } from '../mutations';
 import { UserError } from '../apis/user';
 import {
+  isAxiosTokenSet,
   setAxiosAccessToken,
   setAxiosResponseInterceptors,
   unsetAxiosAccessToken,
 } from '../apis/http';
 import { useVerifyEmail } from '../mutations/user';
 import { UserMetaContext } from './UserMetaContext';
-import { checkIsUserOnboarded } from '../util/user';
 
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
 const AuthContext = createContext();
@@ -19,13 +19,17 @@ const AuthProvider = ({ children }) => {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
   const verifyEmailMutation = useVerifyEmail();
-  const { setOnboardingStatus } = useContext(UserMetaContext);
+  const { clearUserMeta, setIsUserLogin, updateUserMeta } =
+    useContext(UserMetaContext);
 
   const { isLoading: isLoginLoading } = loginMutation;
   const { isLoading: isSignupLoading } = signupMutation;
   const { isLoading: isVerifyEmailLoading } = verifyEmailMutation;
 
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(isAxiosTokenSet());
+  useEffect(() => {
+    setIsUserLogin(isLogin);
+  }, [isLogin]);
 
   const login = ({ email = '', password = '' }) => {
     loginMutation.mutate(
@@ -35,9 +39,7 @@ const AuthProvider = ({ children }) => {
           try {
             await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
             onLoginSuccess(resp.access_token);
-            setOnboardingStatus(
-              checkIsUserOnboarded(resp?.user?.user_flag || 0),
-            );
+            updateUserMeta(resp?.user || {});
           } catch {
             throw new UserError('set access token error');
           }
@@ -67,7 +69,7 @@ const AuthProvider = ({ children }) => {
         onSuccess: async resp => {
           try {
             await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
-            setOnboardingStatus(false);
+            updateUserMeta(resp?.user || {});
             onLoginSuccess(resp.access_token);
           } catch {
             throw new UserError('set access token error');
@@ -79,6 +81,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     unsetAxiosAccessToken();
+    clearUserMeta();
     // ignore error
     await AsyncStorage.removeItem(ACCESS_TOKEN);
     setIsLogin(false);

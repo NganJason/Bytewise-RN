@@ -1,12 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
   BaseCheckboxInput,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
@@ -39,6 +39,7 @@ import {
   getMonthStr,
   getYear,
 } from '../../_shared/util';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const TODAY = new Date();
 
@@ -46,13 +47,14 @@ const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     category_id: categoryID = '',
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
     active_date: activeDate = TODAY.valueOf(),
   } = route?.params || {};
-  const [activeD, setActiveD] = useState(getDateObjFromTs(activeDate));
+  const [activeD] = useState(getDateObjFromTs(activeDate));
 
   const isAddBudget = () => {
     return categoryID === '';
@@ -289,11 +291,12 @@ const BudgetForm = ({ route }) => {
           label="name"
         />
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={budgetForm.amount}
           onChangeText={onBudgetAmountChange}
           errorMessage={showValidation && formErrors.amount}
+          currency={getUserBaseCurrency()}
         />
 
         <View style={{ marginBottom: 40 }}>

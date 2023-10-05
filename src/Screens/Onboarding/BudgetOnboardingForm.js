@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
@@ -104,9 +104,10 @@ const BudgetOnboardingForm = ({ route }) => {
           onSelect={onBudgetTypeChange}
         />
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={budgetForm.amount}
+          currency={data.currency}
           onChangeText={onAmountChange}
           autoFocus={isBudgetTypeDescShown()}
         />

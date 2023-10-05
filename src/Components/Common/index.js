@@ -11,6 +11,8 @@ import BudgetTypeDesc from './Messages/BudgetTypeDesc';
 import ConnectionChecker from './ConnectionChecker';
 import { BackIcon, DrawerIcon } from './Icon';
 import BaseCalendar from './BaseCalendar';
+import Currency from './Currency';
+import BaseFilter from './BaseFilter';
 
 export {
   DailyTransactions,
@@ -27,4 +29,6 @@ export {
   BackIcon,
   DrawerIcon,
   BaseCalendar,
+  Currency,
+  BaseFilter,
 };

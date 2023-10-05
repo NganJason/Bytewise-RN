@@ -12,8 +12,12 @@ import {
   useGetTransaction,
   useGetTransactions,
   useAggrTransactions,
+  useSumTransactions,
+  useGetTransactionGroups,
 } from './transaction';
 import { useGetUser } from './user';
+
+import { useGetCurrencies } from './currency';
 
 export {
   queryKeys,
@@ -29,5 +33,8 @@ export {
   useGetTransaction,
   useGetTransactions,
   useAggrTransactions,
+  useSumTransactions,
+  useGetTransactionGroups,
   useGetUser,
+  useGetCurrencies,
 };

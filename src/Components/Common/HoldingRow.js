@@ -6,34 +6,37 @@ import {
   HOLDING_TYPE_DEFAULT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { CURRENCY_SGD } from '../../_shared/util';
+import { Amount } from '../../_shared/object';
+import { DEFAULT_CURRENCY } from '../../_shared/util';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseChip, BaseRow } from '../View';
 
 const HoldingRow = ({
-  holding_id = '',
-  holding_type = HOLDING_TYPE_DEFAULT,
-  account_id = '',
+  holding_id: holdingID = '',
+  holding_type: holdingType = HOLDING_TYPE_DEFAULT,
+  account_id: accountID = '',
   symbol = '',
-  total_shares = 0,
-  latest_value = 0,
-  total_cost = 0,
+  total_shares: totalShares = 0,
+  latest_value: latestValue = 0,
+  currency = DEFAULT_CURRENCY,
+  gain = 0,
+  percent_gain: percentGain = 0,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
 
   const onPress = () => {
-    if (holding_type === HOLDING_TYPE_DEFAULT) {
+    if (holdingType === HOLDING_TYPE_DEFAULT) {
       navigation.navigate(ROUTES.holdingBreakdown, {
-        account_id: account_id,
-        holding_id: holding_id,
+        account_id: accountID,
+        holding_id: holdingID,
         symbol: symbol,
       });
     } else {
       navigation.navigate(ROUTES.holdingForm, {
-        account_id: account_id,
-        holding_id: holding_id,
+        account_id: accountID,
+        holding_id: holdingID,
       });
     }
   };
@@ -45,25 +48,25 @@ const HoldingRow = ({
           <BaseText text3 numberOfLines={1}>
             {symbol}
           </BaseText>
-          {holding_type === HOLDING_TYPE_CUSTOM && <BaseChip>Custom</BaseChip>}
+          {holdingType === HOLDING_TYPE_CUSTOM && <BaseChip>Custom</BaseChip>}
         </View>
 
-        {holding_type === HOLDING_TYPE_DEFAULT && (
+        {holdingType === HOLDING_TYPE_DEFAULT && (
           <BaseText text5 style={styles.subRow}>
-            {total_shares} {total_shares > 1 ? 'units' : 'unit'}
+            {totalShares} {totalShares > 1 ? 'units' : 'unit'}
           </BaseText>
         )}
       </View>
 
       <View style={styles.rightContainer}>
-        <AmountText text3 currency={CURRENCY_SGD}>
-          {latest_value}
-        </AmountText>
-
+        <AmountText
+          text3
+          amount={new Amount(latestValue, currency)}
+          sensitive
+        />
         <EarningText
-          currVal={latest_value}
-          initialVal={total_cost}
-          currency={CURRENCY_SGD}
+          gain={new Amount(gain, currency)}
+          percentGain={percentGain}
           text5
           style={styles.subRow}
         />

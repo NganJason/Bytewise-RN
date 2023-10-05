@@ -1,6 +1,6 @@
 // Input
 import {
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   TouchInput,
   BaseCheckbox,
@@ -63,6 +63,7 @@ import {
   BackIcon,
   DrawerIcon,
   BaseCalendar,
+  Currency,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
@@ -75,7 +76,7 @@ export {
   BaseDivider,
   BaseText,
   BaseInput,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   SearchBottomSheetInput,
   BaseAccordion,
   AggrSummary,
@@ -117,6 +118,7 @@ export {
   BackIcon,
   DrawerIcon,
   BaseCalendar,
+  Currency,
   BaseDonutChart,
   ChartLegend,
   BaseDonutChartWithRows,
