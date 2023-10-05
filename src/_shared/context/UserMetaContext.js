@@ -11,8 +11,10 @@ const defaultMeta = {
     email: '',
     meta: {
       currency: DEFAULT_CURRENCY,
-      last_transaction_currency: DEFAULT_CURRENCY,
       hide_info: false,
+      last_transaction_currency: DEFAULT_CURRENCY,
+      last_transaction_category: {},
+      last_transaction_account: {},
     },
     username: '',
   },
@@ -92,6 +94,36 @@ const UserMetaProvider = ({ children }) => {
     });
   };
 
+  const updateLastTransactionCategory = (category = {}) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_category: category,
+          },
+        },
+      };
+    });
+  };
+
+  const updateLastTransactionAccount = (account = {}) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_account: account,
+          },
+        },
+      };
+    });
+  };
+
   const isUserOnboarded = () => {
     const { user_flag: userFlag = 0 } = userMeta?.user || {};
     return checkIsUserOnboarded(userFlag);
@@ -119,6 +151,14 @@ const UserMetaProvider = ({ children }) => {
     );
   };
 
+  const getLastTransactionCategory = () => {
+    return userMeta?.user?.meta?.last_transaction_category || {};
+  };
+
+  const getLastTransactionAccount = () => {
+    return userMeta?.user?.meta?.last_transaction_account || {};
+  };
+
   return (
     <UserMetaContext.Provider
       value={{
@@ -127,6 +167,8 @@ const UserMetaProvider = ({ children }) => {
         clearUserMeta,
         toggleHideUserInfo,
         updateLastTransactionCurrency,
+        updateLastTransactionCategory,
+        updateLastTransactionAccount,
         isUserOnboarded,
         showSetupSplashScreen,
         setShowSetupSplashScreen,
@@ -134,6 +176,8 @@ const UserMetaProvider = ({ children }) => {
         getUserName,
         getUserBaseCurrency,
         getLastTransactionCurrency,
+        getLastTransactionCategory,
+        getLastTransactionAccount,
       }}>
       {children}
     </UserMetaContext.Provider>

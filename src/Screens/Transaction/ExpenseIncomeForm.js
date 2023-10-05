@@ -62,11 +62,40 @@ const ExpenseIncomeForm = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { updateLastTransactionCurrency, getLastTransactionCurrency } =
-    useContext(UserMetaContext);
+  const {
+    updateLastTransactionCurrency,
+    updateLastTransactionCategory,
+    updateLastTransactionAccount,
+    getLastTransactionCurrency,
+    getLastTransactionCategory,
+    getLastTransactionAccount,
+  } = useContext(UserMetaContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
+
+  const getInitialCategory = () => {
+    let lastCategory = getLastTransactionCategory();
+    if (category.category_id === '' && account.account_id === '') {
+      return { ...lastCategory, category_type: transactionType };
+    }
+    return {
+      category_id: category.category_id,
+      category_name: category.category_name,
+      category_type: transactionType,
+    };
+  };
+
+  const getInitialAccount = () => {
+    let lastAccount = getLastTransactionAccount();
+    if (category.category_id === '' && account.account_id === '') {
+      return lastAccount;
+    }
+    return {
+      account_id: account.account_id,
+      account_name: account.account_name,
+    };
+  };
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
   const [transactionForm, setTransactionForm] = useState({
@@ -76,15 +105,8 @@ const ExpenseIncomeForm = ({
     amount: 0,
     currency: getLastTransactionCurrency(),
     note: '',
-    category: {
-      category_id: category.category_id,
-      category_name: category.category_name,
-      category_type: transactionType,
-    },
-    account: {
-      account_id: account.account_id,
-      account_name: account.account_name,
-    },
+    category: getInitialCategory(),
+    account: getInitialAccount(),
   });
 
   const isAddTransaction = () => {
@@ -152,6 +174,7 @@ const ExpenseIncomeForm = ({
           category_name: '',
         },
       });
+      updateLastTransactionCategory({ category_id: '', category_name: '' });
     }
   }, [transactionType]);
 
@@ -187,14 +210,16 @@ const ExpenseIncomeForm = ({
   };
 
   const onCategoryChange = e => {
+    let c = {
+      category_id: e.category_id,
+      category_name: e.category_name,
+      category_type: e.category_type,
+    };
     setTransactionForm({
       ...transactionForm,
-      category: {
-        category_id: e.category_id,
-        category_name: e.category_name,
-        category_type: e.category_type,
-      },
+      category: c,
     });
+    updateLastTransactionCategory(c);
     toggleCategoryModal();
   };
 
@@ -211,13 +236,15 @@ const ExpenseIncomeForm = ({
   };
 
   const onAccountChange = e => {
+    let acc = {
+      account_id: e.account_id,
+      account_name: e.account_name,
+    };
     setTransactionForm({
       ...transactionForm,
-      account: {
-        account_id: e.account_id,
-        account_name: e.account_name,
-      },
+      account: acc,
     });
+    updateLastTransactionAccount(acc);
     toggleAccountModal();
   };
 
