@@ -225,6 +225,7 @@ const BudgetForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isLoading()}
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (

@@ -296,6 +296,7 @@ const AccountForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isFormLoading()}
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (

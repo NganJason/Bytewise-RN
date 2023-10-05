@@ -140,6 +140,7 @@ const LotForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       isLoading={getLot.isLoading}
       headerProps={{
         allowBack: true,

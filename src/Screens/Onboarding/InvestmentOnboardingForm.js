@@ -83,6 +83,7 @@ const InvestmentOnboardingForm = () => {
 
   return (
     <BaseScreen
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (

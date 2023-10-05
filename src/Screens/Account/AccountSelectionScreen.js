@@ -84,6 +84,7 @@ const AccountSelectionScreen = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -92,17 +93,15 @@ const AccountSelectionScreen = ({ route }) => {
           </View>
         ),
       }}>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
-        <View>
-          <BaseText h3>Assets</BaseText>
-          {renderContent(EQUITY_TYPE_ASSET)}
-        </View>
+      <View>
+        <BaseText h3>Assets</BaseText>
+        {renderContent(EQUITY_TYPE_ASSET)}
+      </View>
 
-        <View>
-          <BaseText h3>Debts</BaseText>
-          {renderContent(EQUITY_TYPE_DEBT)}
-        </View>
-      </BaseScrollView>
+      <View>
+        <BaseText h3>Debts</BaseText>
+        {renderContent(EQUITY_TYPE_DEBT)}
+      </View>
     </BaseScreen>
   );
 };

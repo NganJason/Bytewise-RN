@@ -131,6 +131,7 @@ const CategoryForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       isLoading={isFormLoading()}
       headerProps={{
         allowBack: true,

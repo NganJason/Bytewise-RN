@@ -7,6 +7,7 @@ import {
   BaseDivider,
   BaseScreen,
   BaseText,
+  BaseScrollView,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { AuthContext } from '../../_shared/context';
@@ -87,7 +88,11 @@ const WelcomeScreen = () => {
           <BaseDivider margin={10} />
         </View>
 
-        <View style={styles.body}>{renderItems()}</View>
+        <BaseScrollView
+          showsVerticalScrollIndicator={false}
+          containerStyle={styles.body}>
+          {renderItems()}
+        </BaseScrollView>
 
         <View style={styles.footer}>
           <BaseButton

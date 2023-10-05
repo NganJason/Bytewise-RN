@@ -41,7 +41,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <BaseScreen headerProps={{ allowBack: true }}>
+    <BaseScreen headerProps={{ allowBack: true }} scrollable>
       <View style={styles.screen}>
         {isSubmitted ? (
           <>

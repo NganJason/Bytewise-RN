@@ -150,6 +150,7 @@ const HoldingForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (

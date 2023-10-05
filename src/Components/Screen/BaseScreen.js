@@ -30,6 +30,7 @@ const BaseScreen = ({
   },
   allowLoadable = true,
   isLoading = false,
+  scrollable = false,
   enablePadding = true,
   errorToast = {
     show: false,
@@ -94,6 +95,7 @@ const BaseScreen = ({
             {allowLoadable ? (
               <BaseLoadableView
                 isLoading={isLoading}
+                scrollable={scrollable}
                 containerStyle={[
                   enablePadding && styles.paddingHori,
                   styles.container,
