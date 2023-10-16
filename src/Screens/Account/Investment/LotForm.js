@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {
-  BaseButton,
   BaseMonetaryInput,
   BaseInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
+  DeleteSaveButton,
 } from '../../../Components';
 import {
   useCreateLot,
@@ -203,28 +203,13 @@ const LotForm = ({ route }) => {
           />
         </Dialog>
 
-        {!isAddLot() && (
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Delete"
-              size="lg"
-              type="outline"
-              width={200}
-              onPress={onDelete}
-              loading={deleteLot.isLoading}
-            />
-          </View>
-        )}
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={createLot.isLoading}
-          />
-        </View>
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={createLot.isLoading}
+          onDelete={onDelete}
+          isDeleteLoading={deleteLot.isLoading}
+          allowDelete={!isAddLot()}
+        />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );

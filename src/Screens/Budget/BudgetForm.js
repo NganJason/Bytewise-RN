@@ -11,6 +11,7 @@ import {
   BaseScreen,
   BaseText,
   TouchInput,
+  DeleteSaveButton,
 } from '../../Components';
 import {
   BUDGET_REPEAT_ALL_TIME,
@@ -309,34 +310,20 @@ const BudgetForm = ({ route }) => {
           />
         </View>
 
-        {!isAddBudget() && (
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Delete"
-              size="lg"
-              type="outline"
-              width={200}
-              onPress={toggleDeleteModal}
-            />
-
-            <DeleteBudgetOverlay
-              isVisible={isDeleteModalVisible}
-              close={toggleDeleteModal}
-              onChange={onBudgetRepeatChange}
-              value={budgetForm.budget_repeat}
-              items={getEditEnums()}
-              onConfirm={onDelete}
-              isConfirmLoading={deleteBudget.isLoading}
-            />
-          </View>
-        )}
-
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onSave}
-          isLoading={createBudget.isLoading || updateBudget.isLoading}
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
+          onDelete={toggleDeleteModal}
+          allowDelete={!isAddBudget()}
+        />
+        <DeleteBudgetOverlay
+          isVisible={isDeleteModalVisible}
+          close={toggleDeleteModal}
+          onChange={onBudgetRepeatChange}
+          value={budgetForm.budget_repeat}
+          items={getEditEnums()}
+          onConfirm={onDelete}
+          isConfirmLoading={deleteBudget.isLoading}
         />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>

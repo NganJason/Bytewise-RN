@@ -7,7 +7,7 @@ import {
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { Amount } from '../../_shared/object';
-import { DEFAULT_CURRENCY } from '../../_shared/util';
+import { DEFAULT_INVESTMENT_CURRENCY } from '../../_shared/util';
 import { AmountText, BaseText, EarningText } from '../Text';
 import { BaseChip, BaseRow } from '../View';
 
@@ -18,7 +18,7 @@ const HoldingRow = ({
   symbol = '',
   total_shares: totalShares = 0,
   latest_value: latestValue = 0,
-  currency = DEFAULT_CURRENCY,
+  currency = DEFAULT_INVESTMENT_CURRENCY,
   gain = 0,
   percent_gain: percentGain = 0,
 }) => {

@@ -6,7 +6,7 @@ import { capitalize } from './string';
 export const CURRENCY_USD = 'USD';
 export const CURRENCY_SGD = 'SGD';
 export const CURRENCY_MYR = 'MYR';
-export const DEFAULT_CURRENCY = CURRENCY_SGD;
+export let DEFAULT_CURRENCY = CURRENCY_SGD;
 export const DEFAULT_INVESTMENT_CURRENCY = CURRENCY_USD;
 
 export const supportedBaseCurrencies = [

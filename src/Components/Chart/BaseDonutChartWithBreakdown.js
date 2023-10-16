@@ -36,7 +36,11 @@ const BaseDonutChartWithRows = ({
     let p = [];
     let sum = 0;
     items.map(d => (sum += Number(d.value)));
+
     let colors = generateColors(items.length);
+    items.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
 
     items.map((d, idx) => {
       if (d.name === '') {
@@ -50,6 +54,8 @@ const BaseDonutChartWithRows = ({
       d.percentage = percentage.toFixed(1);
       p.push(d);
     });
+
+    p.sort((a, b) => b.value - a.value);
     setProcessedItems(p);
   }, [items]);
 

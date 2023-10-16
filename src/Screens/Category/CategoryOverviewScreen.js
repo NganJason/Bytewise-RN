@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +25,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { useTimeRange, useError } from '../../_shared/hooks';
 import { useSumCategoryTransactions } from '../../_shared/query/category';
 import { Amount } from '../../_shared/object';
-import { DEFAULT_CURRENCY } from '../../_shared/util';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const CategoryOverviewScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -127,6 +127,7 @@ const CategoryOverviewScreen = ({ route }) => {
 };
 
 const useCategoryInfo = (timeRange, categoryType) => {
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
   const [categoriesInfo, setCategoriesInfo] = useState([]);
   const [totalSum, setTotalSum] = useState(new Amount(0));
 
@@ -142,7 +143,7 @@ const useCategoryInfo = (timeRange, categoryType) => {
     const { sums = [] } = sumCategoryTransactions?.data || {};
 
     let total = 0;
-    let totalSumCurrency = DEFAULT_CURRENCY;
+    let totalSumCurrency = getUserBaseCurrency();
     sums.map(d => {
       total += Math.abs(d.sum);
       totalSumCurrency = d.currency;

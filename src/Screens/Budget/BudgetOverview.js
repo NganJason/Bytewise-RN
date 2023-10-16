@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AmountText, BaseButton, BaseText, IconButton } from '../../Components';
 import { EmptyContent, InfoToolTip } from '../../Components/Common';
@@ -16,13 +16,13 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import {
   useDimension,
   useGetCategoriesHelper,
   useError,
 } from '../../_shared/hooks';
 import { Amount } from '../../_shared/object';
-import { DEFAULT_CURRENCY } from '../../_shared/util';
 import BudgetOverviewRow from './BudgetOverviewRow';
 
 const BudgetOverview = ({ activeDate = new Date() }) => {
@@ -30,6 +30,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const [isEdit, setIsEdit] = useState(false);
   const toggleEdit = () => {
@@ -43,13 +44,13 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   const getBudgetSum = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
-    let budgetCurrency = DEFAULT_CURRENCY;
+    let budgetCurrency = getUserBaseCurrency();
 
     categoriesWithBudget.map(category => {
       const {
         budget_type: budgetType = BUDGET_TYPE_MONTHLY,
         amount = 0,
-        currency = DEFAULT_CURRENCY,
+        currency = getUserBaseCurrency(),
       } = category?.budget || {};
 
       if (budgetType === type) {
@@ -62,13 +63,13 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   const getTotalUsedAmount = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
-    let budgetCurrency = DEFAULT_CURRENCY;
+    let budgetCurrency = getUserBaseCurrency();
 
     categoriesWithBudget.map(category => {
       const {
         budget_type: budgetType = BUDGET_TYPE_MONTHLY,
         used_amount: usedAmount = 0,
-        currency = DEFAULT_CURRENCY,
+        currency = getUserBaseCurrency(),
       } = category?.budget || {};
 
       if (budgetType === type) {

@@ -7,7 +7,7 @@ class Amount {
   }
 
   getAmount = () => {
-    return this.amount.toFixed(2);
+    return Number(this.amount.toFixed(2));
   };
 
   getCurrency = () => {

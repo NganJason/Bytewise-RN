@@ -234,7 +234,7 @@ LocaleConfig.locales['.'] = {
     'Aug',
     'Sep',
     'Oct',
-    'Oct',
+    'Nov',
     'Dec',
   ],
   monthNamesShort: [
@@ -248,7 +248,7 @@ LocaleConfig.locales['.'] = {
     'Aug',
     'Sep',
     'Oct',
-    'Oct',
+    'Nov',
     'Dec',
   ],
   dayNames: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],

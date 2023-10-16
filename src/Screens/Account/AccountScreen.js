@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
@@ -25,7 +25,6 @@ import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
 import {
   capitalize,
-  DEFAULT_CURRENCY,
   getEquityType,
   isAccountTypeAsset,
   isAccountTypeDebt,
@@ -34,6 +33,7 @@ import { useGetAccounts } from '../../_shared/query';
 import { useError, useDimension } from '../../_shared/hooks';
 import AccountCharts from './AccountCharts';
 import { Amount } from '../../_shared/object';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const AccountScreen = () => {
   const { theme } = useTheme();
@@ -41,10 +41,12 @@ const AccountScreen = () => {
   const styles = getStyles(theme, screenWidth, screenHeight);
   const navigation = useNavigation();
 
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
+
   const getAccounts = useGetAccounts({});
   const {
     net_worth: netWorth = 0,
-    currency = DEFAULT_CURRENCY,
+    currency = getUserBaseCurrency(),
     asset_value: assetValue,
     debt_value: debtValue,
   } = getAccounts?.data || {};

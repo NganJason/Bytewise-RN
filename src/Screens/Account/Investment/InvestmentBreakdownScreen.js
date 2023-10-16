@@ -20,7 +20,7 @@ import {
 import { useGetAccount } from '../../../_shared/query';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import {
-  DEFAULT_CURRENCY,
+  DEFAULT_INVESTMENT_CURRENCY,
   getStockUpdateTime,
   tsToDateTimeStr,
 } from '../../../_shared/util';
@@ -42,7 +42,7 @@ const InvestmentBreakdownScreen = ({ route }) => {
     balance = 0,
     gain = 0,
     percent_gain: percentGain,
-    currency = DEFAULT_CURRENCY,
+    currency = DEFAULT_INVESTMENT_CURRENCY,
     holdings = [],
   } = getAccount?.data?.account || {};
 

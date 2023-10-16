@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -14,8 +15,9 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import { Amount } from '../../_shared/object';
-import { DEFAULT_CURRENCY, getProgress } from '../../_shared/util';
+import { getProgress } from '../../_shared/util';
 
 const BudgetOverviewRow = ({
   categoryWithBudget = {},
@@ -26,6 +28,7 @@ const BudgetOverviewRow = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     category_id: categoryID = '',
@@ -37,7 +40,7 @@ const BudgetOverviewRow = ({
     used_amount: usedAmount = 0,
     amount = 0,
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
-    currency = DEFAULT_CURRENCY,
+    currency = getUserBaseCurrency(),
   } = budget;
 
   const onPress = () => {

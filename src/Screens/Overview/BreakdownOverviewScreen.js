@@ -94,7 +94,7 @@ const BreakdownOverviewScreen = ({
   const cashFlowCard = () => {
     let expense = getTransactionsSum(TRANSACTION_TYPE_EXPENSE);
     let income = getTransactionsSum(TRANSACTION_TYPE_INCOME);
-    let cashFlow = income.getAmount() - expense.getAmount();
+    let cashFlow = income.getAmount() + expense.getAmount();
 
     return (
       <TouchableOpacity

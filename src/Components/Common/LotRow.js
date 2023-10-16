@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import ROUTES from '../../_shared/constant/routes';
 import { Amount } from '../../_shared/object';
 import {
-  DEFAULT_CURRENCY,
+  DEFAULT_INVESTMENT_CURRENCY,
   getDateStringFromTs,
   getTotalInvestmentCost,
 } from '../../_shared/util';
@@ -16,7 +16,7 @@ const LotRow = ({
   holding_id: holdingID = '',
   lot_id: lotID = '',
   symbol = '',
-  currency = DEFAULT_CURRENCY,
+  currency = DEFAULT_INVESTMENT_CURRENCY,
   shares = 0,
   cost_per_share: costPerShare = 0,
   trade_date: tradeDate = '',

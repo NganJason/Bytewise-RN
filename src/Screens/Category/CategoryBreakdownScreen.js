@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Icon, useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -33,11 +33,11 @@ import {
 } from '../../_shared/hooks';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { DEFAULT_CURRENCY, getProgress } from '../../_shared/util';
+import { getProgress } from '../../_shared/util';
 import { useGetTransactionGroups } from '../../_shared/query';
 import { useSumCategoryTransactions } from '../../_shared/query/category';
 import { Amount } from '../../_shared/object';
-import * as Localization from 'expo-localization';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -48,6 +48,8 @@ const CategoryBreakdownScreen = ({ route }) => {
   const { screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     active_ts: activeTs = TODAY.valueOf(),
@@ -71,7 +73,7 @@ const CategoryBreakdownScreen = ({ route }) => {
   const {
     amount: budgetAmount = 0,
     budget_type: budgetType,
-    currency: budgetCurrency = DEFAULT_CURRENCY,
+    currency: budgetCurrency = getUserBaseCurrency(),
   } = budget || {};
 
   useEffect(() => {

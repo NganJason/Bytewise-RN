@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import {
   TouchInput,
   BaseLoadableView,
   BaseKeyboardAwareScrollView,
+  DeleteSaveButton,
 } from '../../Components';
 
 import {
@@ -32,11 +33,7 @@ import {
   useUpdateTransaction,
 } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/validator';
-import {
-  renderCalendarTs,
-  getDateStringFromTs,
-  DEFAULT_CURRENCY,
-} from '../../_shared/util';
+import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
 import { useError, useValidation } from '../../_shared/hooks';
 import { useDeleteTransaction } from '../../_shared/mutations';
@@ -69,6 +66,7 @@ const ExpenseIncomeForm = ({
     getLastTransactionCurrency,
     getLastTransactionCategory,
     getLastTransactionAccount,
+    getUserBaseCurrency,
   } = useContext(UserMetaContext);
 
   const [formErrors, setFormErrors] = useState({});
@@ -249,11 +247,13 @@ const ExpenseIncomeForm = ({
   };
 
   const onCurrencyChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      currency: e.code,
-    });
-    updateLastTransactionCurrency(e.code || DEFAULT_CURRENCY);
+    let currency = e?.code || getUserBaseCurrency();
+    e?.code ||
+      setTransactionForm({
+        ...transactionForm,
+        currency: currency,
+      });
+    updateLastTransactionCurrency(currency);
   };
 
   const onFormSubmit = () => {
@@ -454,24 +454,12 @@ const ExpenseIncomeForm = ({
           )}
         />
 
-        {!isAddTransaction() && (
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Delete"
-              size="lg"
-              type="outline"
-              width={200}
-              onPress={onDelete}
-              loading={deleteTransaction.isLoading}
-            />
-          </View>
-        )}
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onFormSubmit}
-          loading={isFormButtonLoading()}
+        <DeleteSaveButton
+          onSave={onFormSubmit}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteTransaction.isLoading}
+          allowDelete={!isAddTransaction()}
         />
       </BaseKeyboardAwareScrollView>
     </BaseLoadableView>
@@ -483,6 +471,6 @@ export default ExpenseIncomeForm;
 const getStyles = _ =>
   StyleSheet.create({
     btnContainer: {
-      marginBottom: 16,
+      flexDirection: 'row',
     },
   });
