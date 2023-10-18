@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -6,6 +6,7 @@ import {
 } from '../apis/enum';
 import { EmptyContentConfig } from '../constant/constant';
 import ROUTES from '../constant/routes';
+import { UserMetaContext } from '../context/UserMetaContext';
 import { Amount } from '../object';
 import {
   useGetAccounts,
@@ -14,7 +15,6 @@ import {
   useSumTransactions,
 } from '../query';
 import {
-  DEFAULT_CURRENCY,
   getMonth,
   getUnixRangeOfMonth,
   getYear,
@@ -24,7 +24,13 @@ import {
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
 
-const useTransactionGroups = ({ activeDate = new Date() }) => {
+const useTransactionGroups = (
+  activeDate = new Date(),
+  accountID = '',
+  categoryIDs = [],
+) => {
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
+
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
@@ -40,14 +46,28 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
   const getAccounts = useGetAccounts({});
   let { accounts = [] } = getAccounts?.data || {};
 
+  const getFilteredCategoryIDs = () => {
+    let catIDs = categoryIDs;
+    (selectedFilters?.Category || []).map(d => {
+      catIDs.push(d.category_id);
+    });
+    return catIDs;
+  };
+
+  const getFilteredAccountID = () => {
+    if (accountID !== '') {
+      return accountID;
+    }
+    if (selectedFilters?.Account?.length || [] > 0) {
+      return selectedFilters?.Account[0]?.account_id;
+    }
+    return null;
+  };
+
   const getTransactionGroups = useGetTransactionGroups(
     {
-      category_ids:
-        (selectedFilters?.Category || []).map(d => d.category_id) || [],
-      account_id:
-        selectedFilters?.Account?.length || [] > 0
-          ? selectedFilters?.Account[0]?.account_id
-          : null,
+      category_ids: getFilteredCategoryIDs(),
+      account_id: getFilteredAccountID(),
       transaction_time: {
         gte: timeRange[0],
         lte: timeRange[1],
@@ -127,7 +147,7 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
       groupTransactionGroupsByDateStr(transactionGroups);
 
     let sum = 0;
-    let currency = DEFAULT_CURRENCY;
+    let currency = getUserBaseCurrency();
     for (let dateStr of Object.keys(dateStrToTransactionGroup)) {
       let group = dateStrToTransactionGroup[dateStr];
       if (transactionType === TRANSACTION_TYPE_EXPENSE) {
@@ -135,7 +155,7 @@ const useTransactionGroups = ({ activeDate = new Date() }) => {
       } else {
         sum += Number(group?.total_income || 0);
       }
-      currency = group?.currency || DEFAULT_CURRENCY;
+      currency = group?.currency || getUserBaseCurrency();
     }
     return new Amount(sum, currency);
   };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import {
   TouchInput,
   BaseLoadableView,
   BaseKeyboardAwareScrollView,
+  DeleteSaveButton,
 } from '../../Components';
 
 import {
@@ -32,11 +33,7 @@ import {
   useUpdateTransaction,
 } from '../../_shared/mutations';
 import { validateTransaction } from '../../_shared/validator';
-import {
-  renderCalendarTs,
-  getDateStringFromTs,
-  DEFAULT_CURRENCY,
-} from '../../_shared/util';
+import { renderCalendarTs, getDateStringFromTs } from '../../_shared/util';
 import { EmptyContent } from '../../Components/Common';
 import { useError, useValidation } from '../../_shared/hooks';
 import { useDeleteTransaction } from '../../_shared/mutations';
@@ -62,11 +59,41 @@ const ExpenseIncomeForm = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { updateLastTransactionCurrency, getLastTransactionCurrency } =
-    useContext(UserMetaContext);
+  const {
+    updateLastTransactionCurrency,
+    updateLastTransactionCategory,
+    updateLastTransactionAccount,
+    getLastTransactionCurrency,
+    getLastTransactionCategory,
+    getLastTransactionAccount,
+    getUserBaseCurrency,
+  } = useContext(UserMetaContext);
 
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
+
+  const getInitialCategory = () => {
+    let lastCategory = getLastTransactionCategory();
+    if (category.category_id === '' && account.account_id === '') {
+      return { ...lastCategory, category_type: transactionType };
+    }
+    return {
+      category_id: category.category_id,
+      category_name: category.category_name,
+      category_type: transactionType,
+    };
+  };
+
+  const getInitialAccount = () => {
+    let lastAccount = getLastTransactionAccount();
+    if (category.category_id === '' && account.account_id === '') {
+      return lastAccount;
+    }
+    return {
+      account_id: account.account_id,
+      account_name: account.account_name,
+    };
+  };
 
   const [scrollHeight, setScrollHeight] = useState(AMOUNT_SCROLL_HEIGHT);
   const [transactionForm, setTransactionForm] = useState({
@@ -76,15 +103,8 @@ const ExpenseIncomeForm = ({
     amount: 0,
     currency: getLastTransactionCurrency(),
     note: '',
-    category: {
-      category_id: category.category_id,
-      category_name: category.category_name,
-      category_type: transactionType,
-    },
-    account: {
-      account_id: account.account_id,
-      account_name: account.account_name,
-    },
+    category: getInitialCategory(),
+    account: getInitialAccount(),
   });
 
   const isAddTransaction = () => {
@@ -152,6 +172,7 @@ const ExpenseIncomeForm = ({
           category_name: '',
         },
       });
+      updateLastTransactionCategory({ category_id: '', category_name: '' });
     }
   }, [transactionType]);
 
@@ -187,14 +208,16 @@ const ExpenseIncomeForm = ({
   };
 
   const onCategoryChange = e => {
+    let c = {
+      category_id: e.category_id,
+      category_name: e.category_name,
+      category_type: e.category_type,
+    };
     setTransactionForm({
       ...transactionForm,
-      category: {
-        category_id: e.category_id,
-        category_name: e.category_name,
-        category_type: e.category_type,
-      },
+      category: c,
     });
+    updateLastTransactionCategory(c);
     toggleCategoryModal();
   };
 
@@ -211,22 +234,26 @@ const ExpenseIncomeForm = ({
   };
 
   const onAccountChange = e => {
+    let acc = {
+      account_id: e.account_id,
+      account_name: e.account_name,
+    };
     setTransactionForm({
       ...transactionForm,
-      account: {
-        account_id: e.account_id,
-        account_name: e.account_name,
-      },
+      account: acc,
     });
+    updateLastTransactionAccount(acc);
     toggleAccountModal();
   };
 
   const onCurrencyChange = e => {
-    setTransactionForm({
-      ...transactionForm,
-      currency: e.code,
-    });
-    updateLastTransactionCurrency(e.code || DEFAULT_CURRENCY);
+    let currency = e?.code || getUserBaseCurrency();
+    e?.code ||
+      setTransactionForm({
+        ...transactionForm,
+        currency: currency,
+      });
+    updateLastTransactionCurrency(currency);
   };
 
   const onFormSubmit = () => {
@@ -427,24 +454,12 @@ const ExpenseIncomeForm = ({
           )}
         />
 
-        {!isAddTransaction() && (
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Delete"
-              size="lg"
-              type="outline"
-              width={200}
-              onPress={onDelete}
-              loading={deleteTransaction.isLoading}
-            />
-          </View>
-        )}
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onFormSubmit}
-          loading={isFormButtonLoading()}
+        <DeleteSaveButton
+          onSave={onFormSubmit}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteTransaction.isLoading}
+          allowDelete={!isAddTransaction()}
         />
       </BaseKeyboardAwareScrollView>
     </BaseLoadableView>
@@ -456,6 +471,6 @@ export default ExpenseIncomeForm;
 const getStyles = _ =>
   StyleSheet.create({
     btnContainer: {
-      marginBottom: 16,
+      flexDirection: 'row',
     },
   });

@@ -73,6 +73,7 @@ const BudgetOnboardingForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (

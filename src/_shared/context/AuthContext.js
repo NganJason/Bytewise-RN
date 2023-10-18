@@ -80,11 +80,11 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    setIsLogin(false);
     unsetAxiosAccessToken();
     clearUserMeta();
     // ignore error
     await AsyncStorage.removeItem(ACCESS_TOKEN);
-    setIsLogin(false);
   };
 
   useEffect(() => {

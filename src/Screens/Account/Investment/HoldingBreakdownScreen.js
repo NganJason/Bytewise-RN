@@ -18,7 +18,10 @@ import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
 import { Amount } from '../../../_shared/object';
 import { useGetHolding, useGetLots } from '../../../_shared/query';
-import { DEFAULT_CURRENCY, tsToDateTimeStr } from '../../../_shared/util';
+import {
+  DEFAULT_INVESTMENT_CURRENCY,
+  tsToDateTimeStr,
+} from '../../../_shared/util';
 
 const HoldingBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -38,7 +41,7 @@ const HoldingBreakdownScreen = ({ route }) => {
     avg_cost_per_share: avgCostPerShare = 0,
     gain = 0,
     percent_gain: percentGain = 0,
-    currency = DEFAULT_CURRENCY,
+    currency = DEFAULT_INVESTMENT_CURRENCY,
     quote = {
       latest_price: 0,
       update_time: 0,

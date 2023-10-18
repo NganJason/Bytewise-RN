@@ -67,7 +67,7 @@ const SignupScreen = () => {
   useError([getSignupError()]);
 
   return (
-    <BaseScreen>
+    <BaseScreen scrollable>
       <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}

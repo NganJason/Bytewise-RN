@@ -12,6 +12,7 @@ import {
   BaseScreen,
   BaseText,
   TouchInput,
+  DeleteSaveButton,
 } from '../../Components';
 import {
   ACCOUNT_TYPES,
@@ -296,6 +297,7 @@ const AccountForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isFormLoading()}
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -368,26 +370,13 @@ const AccountForm = ({ route }) => {
           </>
         )}
 
-        {!isAddAccount() && (
-          <BaseButton
-            title="Delete"
-            size="lg"
-            type="outline"
-            width={200}
-            onPress={onDelete}
-            loading={deleteAccount.isLoading}
-          />
-        )}
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={isFormButtonLoading()}
-          />
-        </View>
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteAccount.isLoading}
+          allowDelete={!isAddAccount()}
+        />
 
         <BaseOverlay
           isVisible={isDeleteModalVisible}

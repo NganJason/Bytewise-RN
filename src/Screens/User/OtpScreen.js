@@ -75,7 +75,7 @@ const OtpScreen = ({ route }) => {
   useError([getVerifyEmailError(), getSignupError()]);
 
   return (
-    <BaseScreen headerProps={{ allowBack: true }}>
+    <BaseScreen headerProps={{ allowBack: true }} scrollable>
       <View style={styles.screen}>
         <View style={styles.header}>
           <BaseText h3>Let's verify your</BaseText>

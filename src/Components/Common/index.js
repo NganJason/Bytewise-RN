@@ -13,6 +13,7 @@ import { BackIcon, DrawerIcon } from './Icon';
 import BaseCalendar from './BaseCalendar';
 import Currency from './Currency';
 import BaseFilter from './BaseFilter';
+import DeleteSaveButton from './DeleteSaveButton';
 
 export {
   DailyTransactions,
@@ -31,4 +32,5 @@ export {
   BaseCalendar,
   Currency,
   BaseFilter,
+  DeleteSaveButton,
 };

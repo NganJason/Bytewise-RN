@@ -1,7 +1,12 @@
 import { useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BaseBottomSheet, BaseText, TouchInput } from '../../Components';
+import {
+  BaseBottomSheet,
+  BaseScrollView,
+  BaseText,
+  TouchInput,
+} from '../../Components';
 import CountryFlag from 'react-native-country-flag';
 import { OnboardingDataContext } from '../../_shared/context';
 import { getCurrencyMap, supportedBaseCurrencies } from '../../_shared/util';
@@ -41,7 +46,7 @@ const CurrencyOnboarding = () => {
         </BaseText>
       </View>
 
-      <View>
+      <BaseScrollView showsVerticalScrollIndicator={false}>
         <TouchInput
           leftIcon={
             <CountryFlag
@@ -61,7 +66,7 @@ const CurrencyOnboarding = () => {
           items={getCurrencyOptions()}
           label="name"
         />
-      </View>
+      </BaseScrollView>
     </View>
   );
 };

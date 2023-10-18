@@ -49,9 +49,13 @@ const AmountText = ({
     }
 
     // use sign string to show negative
-    let value = Number(amount.getAmount());
-    value = Math.abs(value).toFixed(decimal);
-    let amountStr = value.toLocaleString(undefined, { style: 'decimal' });
+    let value = parseFloat(Math.abs(amount.getAmount()));
+    let amountStr = value.toLocaleString('en-US', {
+      style: 'decimal',
+      useGrouping: true,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
     text = `${currencySymbol} ${amountStr}`;
 
