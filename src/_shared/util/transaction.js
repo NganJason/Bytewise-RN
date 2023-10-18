@@ -1,8 +1,15 @@
 import {
   ACCOUNT_TYPE_BANK_ACCOUNT,
   TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_TRANSFER,
 } from '../apis/enum';
 import { getFormattedDateString, parseDateStringWithoutDelim } from './date';
+
+export const isTransactionTypeTransfer = (
+  transaction_type = TRANSACTION_TYPE_EXPENSE,
+) => {
+  return transaction_type === TRANSACTION_TYPE_TRANSFER;
+};
 
 export const groupTransactionGroupsByDateStr = (transactionGroups = []) => {
   const dateStrToTransactionGroup = {};

@@ -8,7 +8,7 @@ import BaseListItem from '../View/BaseListItem';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
-import { getDate, getDay } from '../../_shared/util';
+import { getDate, getDay, isTransactionTypeTransfer } from '../../_shared/util';
 import { BaseChip } from '../View';
 import { Amount } from '../../_shared/object';
 
@@ -53,6 +53,25 @@ const DailyTransactions = ({
     return name;
   };
 
+  const formatNote = (transaction = {}) => {
+    if (isTransactionTypeTransfer(transaction.transaction_type)) {
+      return 'Transfer';
+    }
+
+    return transaction.note !== '' ? transaction.note : '-';
+  };
+
+  const formatAccountName = (transaction = {}) => {
+    if (isTransactionTypeTransfer(transaction.transaction_type)) {
+      const from_account_name = transaction?.from_account?.account_name || 'NA';
+      const to_account_name = transaction?.to_account?.account_name || 'NA';
+
+      return `${from_account_name} -> ${to_account_name}`;
+    }
+
+    return transaction?.account?.account_name || '-';
+  };
+
   return (
     <View style={styles.body}>
       <View style={styles.row}>
@@ -85,14 +104,14 @@ const DailyTransactions = ({
                     style={styles.note}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {t.note !== '' ? t.note : '-'}
+                    {formatNote(t)}
                   </BaseText>
                   <BaseText
                     text5
                     style={styles.account}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {t?.account?.account_name || '-'}
+                    {formatAccountName(t)}
                   </BaseText>
                 </View>
                 <AmountText
@@ -100,7 +119,7 @@ const DailyTransactions = ({
                   amount={new Amount(t.amount, t.currency)}
                   style={styles.amount}
                   numberOfLines={1}
-                  showSign
+                  showSign={!isTransactionTypeTransfer(t.transaction_type)}
                   ellipsizeMode="tail"
                 />
               </View>
