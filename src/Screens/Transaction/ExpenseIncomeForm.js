@@ -248,11 +248,10 @@ const ExpenseIncomeForm = ({
 
   const onCurrencyChange = e => {
     let currency = e?.code || getUserBaseCurrency();
-    e?.code ||
-      setTransactionForm({
-        ...transactionForm,
-        currency: currency,
-      });
+    setTransactionForm({
+      ...transactionForm,
+      currency: currency,
+    });
     updateLastTransactionCurrency(currency);
   };
 
