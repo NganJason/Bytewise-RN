@@ -1,10 +1,27 @@
+import { HOLDING_TYPE_DEFAULT } from '../apis/enum';
 import { isTsLargerThanCurrTime } from '../util';
 
-export const validateHolding = ({ symbol = '' } = {}) => {
+export const validateHolding = ({
+  symbol = '',
+  holding_type = 0,
+  lots = [{ shares: 0 }],
+} = {}) => {
   const errors = {};
   if (symbol === '') {
     errors.symbol = 'Symbol cannot be empty';
   }
+
+  if (holding_type === HOLDING_TYPE_DEFAULT) {
+    if (lots.length !== 1) {
+      errors.lots = 'Must have one and only one lot';
+    }
+
+    const lot = lots[0];
+    if (lot.shares === 0) {
+      errors.lots = 'Lot shares cannot be empty';
+    }
+  }
+
   return errors;
 };
 

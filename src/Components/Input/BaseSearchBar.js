@@ -21,10 +21,11 @@ const BaseSearchBar = ({
       onCancel={onCancel}
       inputContainerStyle={styles.inputContainer}
       cancelButtonProps={styles.cancelBtn}
-      placeholder="Type Here..."
+      placeholder="Type here..."
       showLoading={isLoading}
       onChangeText={onChangeText}
       value={value}
+      showCancel
     />
   );
 };

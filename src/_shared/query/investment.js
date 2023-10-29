@@ -8,7 +8,7 @@ import { queryKeys, useQueryWrapper } from './keys';
 
 export const useSearchSecurities = ({ keyword = '' } = {}, opts = {}) => {
   return useQueryWrapper({
-    queryFn: () => searchSecurities({ symbol: keyword }),
+    queryFn: ({ signal }) => searchSecurities({ symbol: keyword }, { signal }),
     queryKey: [queryKeys.securities, { symbol: keyword }],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,

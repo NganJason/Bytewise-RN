@@ -8,7 +8,7 @@ const BaseRow = ({
   disabled = false,
   onPress = function () {},
   children,
-  dividerMargin = 10,
+  dividerMargin = 4,
   showDivider = true,
   containerStyle = {},
 }) => {

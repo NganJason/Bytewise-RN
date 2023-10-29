@@ -10,7 +10,7 @@ import {
   getBudgetAmountFromBreakdown,
 } from './budget';
 import { getIDToCategoryMap } from './category';
-import { debounce, getProgress } from './common';
+import { getProgress } from './common';
 import {
   CURRENCY_USD,
   CURRENCY_SGD,
@@ -68,7 +68,6 @@ export {
   getDefaultMonthlyBudgetBreakdown,
   getBudgetAmountFromBreakdown,
   getIDToCategoryMap,
-  debounce,
   getProgress,
   CURRENCY_USD,
   CURRENCY_SGD,

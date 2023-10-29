@@ -53,10 +53,10 @@ const BaseChip = ({
 const getStyles = theme =>
   StyleSheet.create({
     chip: {
-      marginLeft: 10,
       paddingVertical: 3,
       paddingHorizontal: 8,
       borderRadius: 15,
+      alignSelf: 'flex-start',
     },
     chipText: {
       ...theme.fontStyles.text4,

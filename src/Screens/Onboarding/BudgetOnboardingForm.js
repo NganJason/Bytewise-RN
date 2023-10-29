@@ -49,7 +49,7 @@ const BudgetOnboardingForm = ({ route }) => {
       toast.custom(<BudgetTypeDesc />);
       markBudgetTypeDesc();
     }
-  }, []);
+  }, [isBudgetTypeDescShown, markBudgetTypeDesc, toast]);
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);

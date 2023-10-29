@@ -3,66 +3,76 @@ import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
-  BaseButton,
+  DeleteSaveButton,
   BaseMonetaryInput,
-  BaseInput,
   BaseKeyboardAwareScrollView,
   BaseRow,
   BaseScreen,
-  BaseScrollableTab,
   BaseText,
   SearchBottomSheetInput,
+  BaseInput,
 } from '../../../Components';
 import {
   HOLDING_TYPE_CUSTOM,
   HOLDING_TYPE_DEFAULT,
 } from '../../../_shared/apis/enum';
 import { useCreateHolding, useUpdateHolding } from '../../../_shared/mutations';
-import { useGetHolding, useSearchSecurities } from '../../../_shared/query';
+import {
+  queryKeys,
+  useGetHolding,
+  useSearchSecurities,
+} from '../../../_shared/query';
 import { useError, useValidation } from '../../../_shared/hooks';
 import { validateHolding } from '../../../_shared/validator';
-import { toolTipMessage } from '../../../_shared/constant/message';
-import { CURRENCY_USD } from '../../../_shared/util';
+import { useDeleteHolding } from '../../../_shared/mutations/investment';
 
-const scrollableTabs = [
-  { name: 'Common stocks', iconName: 'line-graph', iconType: 'entypo' },
-  { name: 'Custom symbol', iconName: 'edit', iconType: 'entypo' },
-];
+const HoldingSearchResult = ({
+  item = { symbol: '', desc: '' },
+  onPress = function () {},
+}) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <BaseRow dividerMargin={2} onPress={onPress}>
+      <View>
+        <BaseText text3>{item.symbol}</BaseText>
+        <BaseText
+          text4
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={styles.securityName}>
+          {item.desc}
+        </BaseText>
+      </View>
+    </BaseRow>
+  );
+};
 
 const HoldingForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { account_id: accountID = '', holding_id: holdingID = '' } =
-    route?.params || {};
+
+  const {
+    account_id: accountID = '',
+    holding_id: holdingID = '',
+    currency: accountCurrency = '',
+  } = route?.params || {};
+
   const isAddHolding = () => {
     return holdingID === '';
   };
 
-  const [activeTab, setActiveTab] = useState(
-    isAddHolding() ? scrollableTabs[0] : scrollableTabs[1],
-  );
-  const onTabChange = tab => {
-    setActiveTab(tab);
-
-    setHoldingForm({
-      ...holdingForm,
-      symbol: '',
-      holding_type:
-        tab.Name === 'Custom symbol'
-          ? HOLDING_TYPE_CUSTOM
-          : HOLDING_TYPE_DEFAULT,
-      total_cost: 0,
-      latest_value: 0,
-    });
-  };
-
   const [holdingForm, setHoldingForm] = useState({
+    holding_id: holdingID,
     account_id: accountID,
+    currency: accountCurrency,
     symbol: '',
-    holding_type: HOLDING_TYPE_DEFAULT,
+    holding_type: 0,
     total_cost: 0,
     latest_value: 0,
+    lots: [],
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -79,10 +89,10 @@ const HoldingForm = ({ route }) => {
   );
   useEffect(() => {
     if (getHolding.data) {
-      let { holding } = getHolding?.data || {};
+      const { holding } = getHolding?.data || {};
       setHoldingForm({ ...holding });
     }
-  }, [getHolding.data]);
+  }, [getHolding?.data]);
 
   const createHolding = useCreateHolding({
     onSuccess: () => {
@@ -96,19 +106,33 @@ const HoldingForm = ({ route }) => {
     },
   });
 
-  const onDefaultSymbolChange = e => {
+  const deleteHolding = useDeleteHolding({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+    meta: {
+      account_id: holdingForm.account_id,
+    },
+  });
+
+  const onHoldingSelect = (symbol, holdingType, symbolCurrency) => {
+    let lots = [];
+    if (holdingType === HOLDING_TYPE_DEFAULT) {
+      lots.push({ shares: 0, cost_per_share: 0 });
+    }
     setHoldingForm({
       ...holdingForm,
-      symbol: e,
-      holding_type: HOLDING_TYPE_DEFAULT,
+      symbol: symbol,
+      holding_type: holdingType,
+      currency: symbolCurrency === '' ? accountCurrency : symbolCurrency,
+      lots: lots,
     });
   };
 
-  const onCustomSymbolChange = e => {
+  const onSymbolChange = e => {
     setHoldingForm({
       ...holdingForm,
       symbol: e,
-      holding_type: HOLDING_TYPE_CUSTOM,
     });
   };
 
@@ -123,6 +147,27 @@ const HoldingForm = ({ route }) => {
     setHoldingForm({
       ...holdingForm,
       total_cost: e,
+    });
+  };
+
+  const onCurrencyChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      currency: e.code,
+    });
+  };
+
+  const onSharesChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      lots: [{ ...holdingForm.lots[0], shares: e }],
+    });
+  };
+
+  const onCostPerShareChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      lots: [{ ...holdingForm.lots[0], cost_per_share: e }],
     });
   };
 
@@ -146,11 +191,117 @@ const HoldingForm = ({ route }) => {
     }
   };
 
-  useError([createHolding, updateHolding]);
+  const onDelete = () => {
+    deleteHolding.mutate({
+      holding_id: holdingForm.holding_id,
+    });
+  };
+
+  useError([createHolding, updateHolding, deleteHolding]);
+
+  const renderHoldingSearchResult = e => {
+    let item;
+    if (e.item === null) {
+      item = { symbol: e.searchTerm, desc: 'Add as custom symbol' };
+    } else {
+      item = { symbol: e.item.symbol, desc: e.item.security_name };
+    }
+    return <HoldingSearchResult item={item} />;
+  };
+
+  const allowSelectCurrency = () =>
+    isAddHolding() && holdingForm.holding_type !== HOLDING_TYPE_DEFAULT;
+
+  const renderSymbolInput = () => {
+    if (isAddHolding()) {
+      return (
+        <SearchBottomSheetInput
+          label="Symbol"
+          queryKey={queryKeys.securities}
+          inputVal={holdingForm.symbol}
+          placeholder="Search (e.g. TSLA) or add custom"
+          useQuery={useSearchSecurities}
+          processResp={resp => resp.securities}
+          errorMessage={showValidation && formErrors.symbol}
+          disabled={
+            !isAddHolding() && holdingForm.holding_type === HOLDING_TYPE_DEFAULT
+          }
+          onSelect={e => {
+            if (e.item === null) {
+              onHoldingSelect(e.searchTerm, HOLDING_TYPE_CUSTOM, '');
+            } else {
+              onHoldingSelect(
+                e.item.symbol,
+                HOLDING_TYPE_DEFAULT,
+                e.item.currency,
+              );
+            }
+          }}
+          renderItem={e => renderHoldingSearchResult(e)}
+        />
+      );
+    } else {
+      return (
+        <BaseInput
+          label="Symbol"
+          value={holdingForm.symbol}
+          onChangeText={onSymbolChange}
+          errorMessage={showValidation && formErrors.symbol}
+          disabled={holdingForm.holding_type !== HOLDING_TYPE_CUSTOM}
+        />
+      );
+    }
+  };
+
+  const renderOtherInputs = () => {
+    if (holdingForm.holding_type === HOLDING_TYPE_CUSTOM) {
+      return (
+        <View>
+          <BaseMonetaryInput
+            label="Latest Value"
+            value={holdingForm.latest_value}
+            onChangeText={onLatestValueChange}
+            errorMessage={showValidation && formErrors.budget_amount}
+            currency={holdingForm.currency}
+            allowSelectCurrency={() => allowSelectCurrency()}
+            onChangeCurrency={onCurrencyChange}
+          />
+          <BaseMonetaryInput
+            label="Invested Amount"
+            value={holdingForm.total_cost}
+            onChangeText={onTotalCostChange}
+            errorMessage={showValidation && formErrors.budget_amount}
+            currency={holdingForm.currency}
+            allowSelectCurrency={() => allowSelectCurrency()}
+            onChangeCurrency={onCurrencyChange}
+          />
+        </View>
+      );
+    } else if (holdingForm.holding_type === HOLDING_TYPE_DEFAULT) {
+      return (
+        <View>
+          <BaseInput
+            label="Number of shares"
+            value={String(holdingForm.lots[0].shares)}
+            keyboardType="numeric"
+            onChangeText={onSharesChange}
+            errorMessage={showValidation && formErrors.lots}
+          />
+          <BaseMonetaryInput
+            label="Cost per share"
+            value={holdingForm.lots[0].cost_per_share}
+            onChangeText={onCostPerShareChange}
+            currency={holdingForm.currency}
+          />
+        </View>
+      );
+    }
+  };
 
   return (
     <BaseScreen
       scrollable
+      isLoading={getHolding.isLoading}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -161,85 +312,21 @@ const HoldingForm = ({ route }) => {
           </View>
         ),
       }}>
-      <View>
-        <BaseScrollableTab
-          tabs={scrollableTabs}
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          disableNonActive={!isAddHolding()}
-        />
-      </View>
       <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        {activeTab.name === scrollableTabs[0].name ? (
-          <SearchBottomSheetInput
-            label="Symbol"
-            tooltip={toolTipMessage.message}
-            itemLabel="symbol"
-            onChangeText={onDefaultSymbolChange}
-            useQuery={useSearchSecurities}
-            processResp={resp => resp.securities}
-            errorMessage={showValidation && formErrors.symbol}
-            renderItem={(item, onPress) => (
-              <BaseRow dividerMargin={2} onPress={onPress}>
-                <View>
-                  <BaseText text3>{item.symbol}</BaseText>
-                  <BaseText
-                    text4
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.securityName}>
-                    {item.security_name}
-                  </BaseText>
-                </View>
-              </BaseRow>
-            )}
-          />
-        ) : (
-          <View>
-            <BaseInput
-              label="Custom Symbol"
-              tooltip={toolTipMessage.customSymbolDesc}
-              value={holdingForm.symbol}
-              onChangeText={onCustomSymbolChange}
-              clearButtonMode="always"
-              maxLength={120}
-              errorMessage={showValidation && formErrors.symbol}
-            />
-
-            <BaseMonetaryInput
-              label="Latest Total Market Value"
-              tooltip={toolTipMessage.totalLatestMarketValueDesc}
-              value={holdingForm.latest_value}
-              onChangeText={onLatestValueChange}
-              errorMessage={showValidation && formErrors.budget_amount}
-              currency={CURRENCY_USD}
-            />
-
-            <BaseMonetaryInput
-              label="Total Invested Amount"
-              tooltip={toolTipMessage.totalInvestedAmount}
-              value={holdingForm.total_cost}
-              onChangeText={onTotalCostChange}
-              errorMessage={showValidation && formErrors.budget_amount}
-              currency={CURRENCY_USD}
-            />
-          </View>
-        )}
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={createHolding.isLoading || updateHolding.isLoading}
-          />
-        </View>
+        {renderSymbolInput()}
+        {renderOtherInputs()}
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={createHolding.isLoading || updateHolding.isLoading}
+          onDelete={onDelete}
+          isDeleteLoading={deleteHolding.isLoading}
+          allowDelete={!isAddHolding()}
+        />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );

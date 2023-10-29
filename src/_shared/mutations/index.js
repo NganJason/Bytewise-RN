@@ -13,6 +13,7 @@ import {
 import {
   useCreateHolding,
   useUpdateHolding,
+  useDeleteHolding,
   useCreateLot,
   useUpdateLot,
   useDeleteLot,
@@ -33,6 +34,7 @@ export {
   useDeleteTransaction,
   useCreateHolding,
   useUpdateHolding,
+  useDeleteHolding,
   useCreateLot,
   useUpdateLot,
   useDeleteLot,

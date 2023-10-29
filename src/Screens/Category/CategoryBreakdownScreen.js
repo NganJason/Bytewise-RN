@@ -86,7 +86,7 @@ const CategoryBreakdownScreen = ({ route }) => {
         ? TIME_RANGE_MONTHLY
         : TIME_RANGE_YEARLY,
     );
-  }, [budgetType]);
+  }, [budgetType, setTimeRangeType]);
 
   const sumCategoryTransactions = useSumCategoryTransactions({
     transaction_time: {

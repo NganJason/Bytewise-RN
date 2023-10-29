@@ -1,27 +1,29 @@
-import { ScrollView, Pressable, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 
 const BaseScrollView = ({
   children,
   showsVerticalScrollIndicator,
   onScrollEndDrag,
   containerStyle = {},
+  ...props
 }) => {
   const styles = getStyles();
 
   return (
     <ScrollView
-      contentContainerStyle={{ minHeight: '100%' }}
+      {...props}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       onScrollEndDrag={onScrollEndDrag}>
-      <Pressable style={[styles.container, containerStyle]}>
-        {children}
-      </Pressable>
+      <View style={[styles.container, containerStyle]}>{children}</View>
     </ScrollView>
   );
 };
 
 const getStyles = theme =>
   StyleSheet.create({
+    scrollContainer: { minHeight: '100%' },
     container: {
       flex: 1,
       marginBottom: 20,

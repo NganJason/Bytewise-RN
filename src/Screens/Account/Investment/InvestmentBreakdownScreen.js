@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Icon, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import { useDimension } from '../../../_shared/hooks';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
@@ -9,21 +9,16 @@ import {
   AmountText,
   BaseImage,
   BaseText,
-  BaseButton,
   BaseScreen2,
   EarningText,
   BaseLoadableView,
   EmptyContent,
   HoldingRow,
-  InfoToolTip,
+  IconButton,
+  BaseDivider,
 } from '../../../Components';
 import { useGetAccount } from '../../../_shared/query';
-import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
-import {
-  DEFAULT_INVESTMENT_CURRENCY,
-  getStockUpdateTime,
-  tsToDateTimeStr,
-} from '../../../_shared/util';
+import { DEFAULT_INVESTMENT_CURRENCY } from '../../../_shared/util';
 import { Amount } from '../../../_shared/object';
 
 const InvestmentBreakdownScreen = ({ route }) => {
@@ -69,14 +64,29 @@ const InvestmentBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
-            {account_name}
-          </BaseText>
+          <View style={styles.accountNameContainer}>
+            <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+              {account_name}
+            </BaseText>
+            <IconButton
+              iconType="feather"
+              iconName="edit"
+              type="clear"
+              color={theme.colors.color1}
+              iconSize={18}
+              buttonStyle={styles.editIcon}
+              onPress={() => {
+                navigation.navigate(ROUTES.accountForm, {
+                  account_id: accountID,
+                });
+              }}
+            />
+          </View>
           <AmountText
             h2
             amount={new Amount(balance, currency)}
             style={styles.titleText}
-            margin={{ top: 8 }}
+            margin={{ top: 8, bottom: 8 }}
             isLoading={getAccount.isLoading}
             sensitive
           />
@@ -84,44 +94,12 @@ const InvestmentBreakdownScreen = ({ route }) => {
             text5
             gain={new Amount(gain, currency)}
             percentGain={percentGain}
-            margin={{ vertical: 4 }}
             isLoading={getAccount.isLoading}
+            margin={{ bottom: 8 }}
+            sensitive
           />
 
-          <View style={styles.accountType}>
-            <BaseText text4 margin={{ right: 6 }}>
-              Investment
-            </BaseText>
-            {getStockUpdateTime(holdings) !== 0 && (
-              <InfoToolTip
-                message={genStockUpdateTimeMsg(
-                  tsToDateTimeStr(getStockUpdateTime(holdings)),
-                )}
-              />
-            )}
-          </View>
-
-          <BaseButton
-            title="Edit Account"
-            type="clear"
-            align="flex-start"
-            size="sm"
-            textStyle={{ color: theme.colors.color1 }}
-            margin={{ top: 6 }}
-            icon={
-              <Icon
-                name="edit"
-                type="feather"
-                color={theme.colors.color1}
-                size={13}
-              />
-            }
-            onPress={() => {
-              navigation.navigate(ROUTES.accountForm, {
-                account_id: accountID,
-              });
-            }}
-          />
+          <BaseText text4>Investment</BaseText>
         </View>
         <BaseImage source={graph} containerStyle={styles.image} />
       </>
@@ -130,31 +108,60 @@ const InvestmentBreakdownScreen = ({ route }) => {
 
   return (
     <BaseScreen2
+      fabProps={{
+        show: true,
+        placement: 'right',
+        iconName: 'plus',
+        iconType: 'entypo',
+        iconColor: theme.colors.white,
+        color: theme.colors.color1,
+        onPress: () =>
+          navigation.navigate(ROUTES.holdingForm, {
+            account_id: accountID,
+            currency: currency,
+          }),
+        marginBottom: screenHeight * 0.02,
+      }}
       headerProps={{
         component: renderHeader(),
         allowBack: true,
         backgroundColor: theme.colors.color4,
       }}>
       <View style={styles.body}>
-        <BaseText h3>Holdings</BaseText>
-        <BaseButton
-          title="Add Holding"
-          type="clear"
-          align="flex-start"
-          size="sm"
-          icon={
-            <Icon
-              name="plus-circle"
-              type="feather"
-              color={theme.colors.color1}
-              size={13}
-              iconStyle={styles.icon}
-            />
-          }
-          onPress={() => {
-            navigation.navigate(ROUTES.holdingForm, { account_id: accountID });
-          }}
-        />
+        <View style={styles.columns}>
+          <View style={styles.column}>
+            <View>
+              <BaseText text6 style={styles.columnText}>
+                Price
+              </BaseText>
+            </View>
+            <BaseDivider margin={4} orientation="vertical" />
+            <View>
+              <BaseText text6 style={styles.columnText}>
+                1D % Change
+              </BaseText>
+            </View>
+            <BaseDivider margin={4} orientation="vertical" />
+            <View>
+              <BaseText text6 style={styles.columnText}>
+                Qty
+              </BaseText>
+            </View>
+          </View>
+          <View style={styles.column}>
+            <View>
+              <BaseText text6 style={styles.columnText}>
+                Value
+              </BaseText>
+            </View>
+            <BaseDivider margin={4} orientation="vertical" />
+            <View>
+              <BaseText text6 style={styles.columnText}>
+                Unrealised P&L
+              </BaseText>
+            </View>
+          </View>
+        </View>
         <BaseLoadableView scrollable={true} isLoading={getAccount.isLoading}>
           {renderRows()}
         </BaseLoadableView>
@@ -176,10 +183,26 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       flex: 1,
       paddingVertical: theme.spacing.lg,
     },
-    accountType: {
-      // marginTop: 8,
+    accountNameContainer: {
+      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    editIcon: {
+      marginLeft: 10,
+    },
+    columns: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 6,
+    },
+    column: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    columnText: {
+      color: theme.colors.color8,
     },
   });
 

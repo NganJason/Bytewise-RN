@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -57,7 +56,6 @@ const ExpenseIncomeForm = ({
   onTransactionTypeChange = function () {},
 }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
   const {
     updateLastTransactionCurrency,
@@ -161,7 +159,7 @@ const ExpenseIncomeForm = ({
     if (transaction_type !== transactionType) {
       onTransactionTypeChange(transaction_type);
     }
-  }, [transaction]);
+  }, [transaction, onTransactionTypeChange, transactionType]);
 
   useEffect(() => {
     if (transactionForm.category.category_type !== transactionType) {
@@ -174,7 +172,7 @@ const ExpenseIncomeForm = ({
       });
       updateLastTransactionCategory({ category_id: '', category_name: '' });
     }
-  }, [transactionType]);
+  }, [transactionType, transactionForm, updateLastTransactionCategory]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {
@@ -467,10 +465,3 @@ const ExpenseIncomeForm = ({
 };
 
 export default ExpenseIncomeForm;
-
-const getStyles = _ =>
-  StyleSheet.create({
-    btnContainer: {
-      flexDirection: 'row',
-    },
-  });

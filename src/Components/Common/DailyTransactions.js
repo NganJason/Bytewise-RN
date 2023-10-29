@@ -1,4 +1,5 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
@@ -60,7 +61,9 @@ const DailyTransactions = ({
           <BaseText text1 style={styles.titleItemText}>
             {`${getDate(ts)}`.padStart(2, '0')}
           </BaseText>
-          <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
+          <View style={styles.chip}>
+            <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
+          </View>
         </View>
         <AmountText amount={dailyTotal} showColor style={styles.sumText} />
       </View>
@@ -163,5 +166,8 @@ const getStyles = theme =>
       flex: 1,
       textAlign: 'right',
       ...theme.fontStyles.text3,
+    },
+    chip: {
+      marginLeft: 10,
     },
   });

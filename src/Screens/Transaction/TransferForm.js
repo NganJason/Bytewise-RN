@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon, useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
@@ -15,7 +16,6 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { useGetTransaction } from '../../_shared/query';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useValidation } from '../../_shared/hooks';
 import { validateTransfer } from '../../_shared/validator';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
