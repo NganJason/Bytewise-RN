@@ -13,11 +13,12 @@ import {
 import {
   useCreateHolding,
   useUpdateHolding,
+  useDeleteHolding,
   useCreateLot,
   useUpdateLot,
   useDeleteLot,
 } from './investment';
-import { useLogin, useSignup } from './user';
+import { useLogin, useSignup, useUpdateUserMeta } from './user';
 
 export {
   useCreateAccount,
@@ -33,9 +34,11 @@ export {
   useDeleteTransaction,
   useCreateHolding,
   useUpdateHolding,
+  useDeleteHolding,
   useCreateLot,
   useUpdateLot,
   useDeleteLot,
   useLogin,
   useSignup,
+  useUpdateUserMeta,
 };

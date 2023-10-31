@@ -7,14 +7,18 @@ import ChartLegend from './ChartLegend';
 import { AmountText, BaseText } from '../Text';
 import { BaseDivider, BaseLoadableView } from '../View';
 import { useTheme } from '@rneui/themed';
-import { genColors } from '../../_shared/util';
+import { DEFAULT_CURRENCY, genColors } from '../../_shared/util';
+import { Amount } from '../../_shared/object';
 
 const BaseDonutChartWithRows = ({
-  items = [{ name: '', value: 0, onPress: function () {} }],
-  donutInnerLabel = { title: '', subtitle: '' },
+  items = [
+    { name: '', value: 0, currency: DEFAULT_CURRENCY, onPress: function () {} },
+  ],
+  donutInnerLabel = { title: null, subtitle: null },
   donutRadius = 100,
   isLoading = false,
   emptyContent = <></>,
+  rowSensitive = false,
 }) => {
   const [processedItems, setProcessedItems] = useState([]);
   const { theme } = useTheme();
@@ -32,7 +36,11 @@ const BaseDonutChartWithRows = ({
     let p = [];
     let sum = 0;
     items.map(d => (sum += Number(d.value)));
+
     let colors = generateColors(items.length);
+    items.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
 
     items.map((d, idx) => {
       if (d.name === '') {
@@ -43,9 +51,11 @@ const BaseDonutChartWithRows = ({
       if (isNaN(percentage)) {
         percentage = 0;
       }
-      d.percentage = percentage.toFixed(0);
+      d.percentage = percentage.toFixed(1);
       p.push(d);
     });
+
+    p.sort((a, b) => b.value - a.value);
     setProcessedItems(p);
   }, [items]);
 
@@ -58,14 +68,21 @@ const BaseDonutChartWithRows = ({
           key={idx}
           disabled={!d.onPress}
           onPress={d.onPress && d.onPress}>
-          <ChartLegend color={d.color} text={d.name} text3 />
+          <View style={styles.legend}>
+            <ChartLegend color={d.color} text={d.name} text3 />
+          </View>
           <View style={styles.rowValue}>
-            <AmountText showNegativeOnly text3>
-              {d.value}
-            </AmountText>
+            <AmountText
+              text3
+              amount={new Amount(d.value, d.currency)}
+              showNegativeOnly
+              sensitive={rowSensitive}
+            />
             <BaseText
               text5
               margin={{ left: 10 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
               color={theme.colors.color7}>{`(${d.percentage}%)`}</BaseText>
           </View>
         </BaseRow>,
@@ -105,9 +122,14 @@ const getStyles = theme =>
     rowsContainer: {
       flex: 1,
     },
+    legend: {
+      flex: 1,
+    },
     rowValue: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'flex-end',
     },
   });
 

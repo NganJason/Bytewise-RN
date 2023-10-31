@@ -6,6 +6,7 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../apis/enum';
 import { useInitUser } from '../mutations/user';
+import { DEFAULT_CURRENCY } from '../util';
 
 const DefaultCategoryBudgets = [
   {
@@ -43,6 +44,7 @@ const defaultData = {
     account_type: ACCOUNT_TYPE_INVESTMENT,
     holdings: [],
   },
+  currency: DEFAULT_CURRENCY,
 };
 
 const defaultMeta = {
@@ -115,6 +117,28 @@ const OnboardingDataProvider = ({ children }) => {
     });
   };
 
+  const updateInvestmentHolding = (idx = 0, holding = {}) => {
+    const newHoldings = [...(data?.investmentAccount?.holdings || [])];
+    newHoldings[idx] = holding;
+    setData({
+      ...data,
+      investmentAccount: { ...data.investmentAccount, holdings: newHoldings },
+    });
+  };
+
+  const deleteInvestmentHolding = idx => {
+    const holdings = [...(data?.investmentAccount?.holdings || [])];
+    const newHoldings = holdings.filter((_, index) => index !== idx);
+    setData({
+      ...data,
+      investmentAccount: { ...data.investmentAccount, holdings: newHoldings },
+    });
+  };
+
+  const addBaseCurrency = (currency = DEFAULT_CURRENCY) => {
+    setData({ ...data, currency: currency });
+  };
+
   // To reset all the state
   // In case users signup, logout, resignup using different account
   const reset = () => {
@@ -142,46 +166,20 @@ const OnboardingDataProvider = ({ children }) => {
     let { investmentAccount = { account_name: '', holdings: [] } } = finalData;
 
     if (investmentAccount.account_name !== '') {
-      let symbolToHoldingsMap = {};
-      investmentAccount.holdings.map(holding => {
-        if (!(holding.symbol in symbolToHoldingsMap)) {
-          symbolToHoldingsMap[holding.symbol] = [];
-        }
-        symbolToHoldingsMap[holding.symbol].push(holding);
-      });
-
-      let holdingsReq = [];
-      for (const symbol in symbolToHoldingsMap) {
-        let holdings = symbolToHoldingsMap[symbol];
-        let lots = [];
-
-        holdings.map(holding => {
-          lots.push({
-            shares: holding.shares,
-            cost_per_share: holding.cost_per_share,
-            trade_date: holding.trade_date,
-          });
-        });
-
-        holdingsReq.push({
-          symbol: symbol,
-          holding_type: holdings[0]?.holding_type || HOLDING_TYPE_DEFAULT,
-          lots: lots,
-        });
-      }
-
-      let investmentAccountReq = {
+      const investmentAccountReq = {
         account_name: investmentAccount.account_name,
         account_type: ACCOUNT_TYPE_INVESTMENT,
-        holdings: holdingsReq,
+        holdings: investmentAccount.holdings,
       };
 
       finalData.accounts = [...finalData.accounts, investmentAccountReq];
     }
 
     initUser.mutate({
-      accounts: finalData.accounts,
       categories: finalData.categoryBudgets,
+      accounts: finalData.accounts,
+      currency: finalData.currency,
+      ...finalData,
     });
   };
 
@@ -199,6 +197,9 @@ const OnboardingDataProvider = ({ children }) => {
         updateAccount,
         addInvestmentAccountName,
         addInvestmentHolding,
+        updateInvestmentHolding,
+        deleteInvestmentHolding,
+        addBaseCurrency,
         reset,
 
         commitData,

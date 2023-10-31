@@ -11,17 +11,18 @@ import {
 } from '../../Components';
 import { getUnixRangeOfMonth, getYear, getMonth } from '../../_shared/util';
 import ROUTES from '../../_shared/constant/routes';
-import { useAggrTransactions, useGetTransactions } from '../../_shared/query';
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useError, useDimension } from '../../_shared/hooks';
+import {
+  useError,
+  useDimension,
+  useTransactionGroups,
+} from '../../_shared/hooks';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-
-const PAGING_LIMIT = 500;
-const STARTING_PAGE = 1;
+import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
 
@@ -31,51 +32,33 @@ const TransactionScreen = ({ navigation }) => {
   const styles = getStyles(theme, screenHeight);
 
   const [activeDate, setActiveDate] = useState(TODAY);
-  const [timeRange, setTimeRange] = useState(
-    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-  );
-
-  const getTransactions = useGetTransactions(
-    {
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
-    },
-    {},
-  );
-
-  const aggrTransactionsQuery = useAggrTransactions({
-    transaction_types: [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME],
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-  });
+  const {
+    setTimeRange,
+    transactionGroups,
+    getMonthlyTotalIncome,
+    getMonthlyTotalExpense,
+    selectedFilters,
+    getFilterOptions,
+    onFilterChange,
+    isLoading,
+    getErrors,
+  } = useTransactionGroups(activeDate);
 
   const onDateMove = newDate => {
     setActiveDate(newDate);
     setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
 
-  const isScreenLoading = () =>
-    getTransactions.isLoading || aggrTransactionsQuery.isLoading;
-
   const renderRows = () => {
-    let { transactions = [] } = getTransactions?.data || {};
     return (
       <Transactions
-        transactions={transactions}
+        transactionGroups={transactionGroups}
         emptyContentConfig={EmptyContentConfig.transactionv2}
       />
     );
   };
 
-  useError([getTransactions, aggrTransactionsQuery]);
+  useError(getErrors());
 
   return (
     <BaseScreen
@@ -117,23 +100,26 @@ const TransactionScreen = ({ navigation }) => {
           aggrs={[
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-              amount:
-                aggrTransactionsQuery.data?.results?.[
-                  String(TRANSACTION_TYPE_INCOME)
-                ]?.sum || 0,
+              amount: getMonthlyTotalIncome(),
+              sensitive: true,
             },
             {
               label: TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-              amount:
-                -aggrTransactionsQuery.data?.results?.[
-                  String(TRANSACTION_TYPE_EXPENSE)
-                ]?.sum || 0,
+              amount: getMonthlyTotalExpense(),
+              sensitive: true,
             },
           ]}
         />
       </View>
       <View style={styles.body}>
-        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
+        <View style={styles.filter}>
+          <BaseFilter
+            options={getFilterOptions()}
+            selectedItems={selectedFilters}
+            onChange={onFilterChange}
+          />
+        </View>
+        <BaseLoadableView scrollable={true} isLoading={isLoading}>
           {renderRows()}
         </BaseLoadableView>
       </View>
@@ -149,6 +135,7 @@ const getStyles = theme => {
     body: {
       flex: 1,
       padding: theme.spacing.xl,
+      paddingTop: 16,
       backgroundColor: theme.colors.white,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
@@ -160,6 +147,9 @@ const getStyles = theme => {
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    filter: {
+      marginBottom: 8,
     },
   });
 };

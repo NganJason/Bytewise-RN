@@ -6,6 +6,7 @@ const TouchInput = ({
   value = '',
   disabled = false,
   hide = false,
+  placeholder = '',
   ...props
 }) => {
   if (hide) {
@@ -19,6 +20,7 @@ const TouchInput = ({
       readOnly
       onPressIn={onPress}
       disabled={disabled}
+      placeholder={placeholder}
       {...props}
     />
   );

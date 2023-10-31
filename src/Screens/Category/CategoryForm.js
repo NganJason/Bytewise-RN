@@ -6,9 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import {
   BaseScreen,
   BaseText,
-  BaseButton,
   BaseInput,
   BaseToggle,
+  DeleteSaveButton,
 } from '../../Components';
 
 import {
@@ -131,6 +131,7 @@ const CategoryForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       isLoading={isFormLoading()}
       headerProps={{
         allowBack: true,
@@ -157,25 +158,13 @@ const CategoryForm = ({ route }) => {
             onToggle={onCategoryTypeChange}
           />
         )}
-
-        <BaseButton
-          title="Delete"
-          size="lg"
-          type="outline"
-          width={200}
-          onPress={onDelete}
-          loading={deleteCategory.isLoading}
+        <DeleteSaveButton
+          onSave={onFormSubmit}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteCategory.isLoading}
+          allowDelete={!isAddCategory()}
         />
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onFormSubmit}
-            loading={isFormButtonLoading()}
-          />
-        </View>
       </View>
     </BaseScreen>
   );

@@ -21,7 +21,7 @@ const BudgetTypeDesc = () => {
         </BaseText>
         <BaseText text3>Budget for monthly costs.</BaseText>
         <BaseText text3 margin={{ top: 6 }}>
-          Eg: Food, groceries, rental.
+          E.g. Food, groceries, rental.
         </BaseText>
       </View>
 
@@ -31,7 +31,7 @@ const BudgetTypeDesc = () => {
         </BaseText>
         <BaseText>Budget for one-time or yearly costs.</BaseText>
         <BaseText text3 margin={{ top: 6 }}>
-          Eg: Vacation, skincare, supplement.
+          E.g. Vacation, skincare, supplement.
         </BaseText>
       </View>
     </View>

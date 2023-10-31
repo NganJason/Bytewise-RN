@@ -3,7 +3,7 @@ import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
 import BaseText from '../Text/BaseText';
-import { InfoToolTip } from '../Common';
+import InfoToolTip from '../Common/InfoToolTip';
 
 const BaseInput = forwardRef(
   (
@@ -122,12 +122,14 @@ const BaseInput = forwardRef(
         autoFocus={autoFocus}
         containerStyle={[styles.container, containerStyle]}
         clearButtonMode={clearButtonMode}
-        inputStyle={[styles.input, disabled && styles.inputDisabled]}
+        inputStyle={[styles.input]}
+        disabledInputStyle={styles.inputDisabled}
         pointerEvents={pointerEvents}
         renderErrorMessage={true}
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
         errorMessage={errorMessage}
+        disabled={disabled}
         {...props}
       />
     );

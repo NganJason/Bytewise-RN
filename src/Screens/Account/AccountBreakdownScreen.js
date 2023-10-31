@@ -1,5 +1,5 @@
-import { Icon, useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useTheme } from '@rneui/themed';
+import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
@@ -8,8 +8,8 @@ import {
   BaseText,
   DateNavigator,
   BaseLoadableView,
-  BaseButton,
   Transactions,
+  IconButton,
 } from '../../Components';
 import { card, coin, coinsack } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
@@ -19,7 +19,7 @@ import {
   ACCOUNT_TYPE_CREDIT_CARD,
 } from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
-import { useGetAccount, useGetTransactions } from '../../_shared/query';
+import { useGetAccount } from '../../_shared/query';
 import {
   getMonth,
   getUnixRangeOfMonth,
@@ -27,11 +27,14 @@ import {
   isAccountTypeAsset,
 } from '../../_shared/util';
 import { ACCOUNT_TYPE_LOAN } from '../../_shared/apis/enum';
-import { useError, useDimension } from '../../_shared/hooks';
+import {
+  useError,
+  useDimension,
+  useTransactionGroups,
+} from '../../_shared/hooks';
 import { sapiens3 } from '../../_shared/constant/asset';
-
-const PAGING_LIMIT = 500;
-const STARTING_PAGE = 1;
+import { Amount } from '../../_shared/object';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const AccountBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -44,30 +47,17 @@ const AccountBreakdownScreen = ({ route }) => {
     account_type: accountType = ACCOUNT_TYPE_CASH,
   } = route?.params || {};
 
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
+
   const [activeDate, setActiveDate] = useState(new Date());
-  const [timeRange, setTimeRange] = useState(
-    getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
-  );
+
+  const { setTimeRange, transactionGroups, isLoading, getErrors } =
+    useTransactionGroups(activeDate, accountID);
 
   const onDateMove = newDate => {
     setActiveDate(newDate);
     setTimeRange(getUnixRangeOfMonth(getYear(newDate), getMonth(newDate)));
   };
-
-  const getTransactions = useGetTransactions(
-    {
-      account_id: accountID,
-      transaction_time: {
-        gte: timeRange[0],
-        lte: timeRange[1],
-      },
-      paging: {
-        limit: PAGING_LIMIT,
-        page: STARTING_PAGE,
-      },
-    },
-    { enabled: accountID !== '' },
-  );
 
   const getAccount = useGetAccount(
     { account_id: accountID },
@@ -75,8 +65,7 @@ const AccountBreakdownScreen = ({ route }) => {
   );
 
   const renderRows = () => {
-    let { transactions = [] } = getTransactions?.data || {};
-    return <Transactions transactions={transactions} />;
+    return <Transactions transactionGroups={transactionGroups} />;
   };
 
   const renderHeader = () => {
@@ -84,11 +73,8 @@ const AccountBreakdownScreen = ({ route }) => {
       account_name = '',
       account_type = 0,
       balance = '0',
+      currency = getUserBaseCurrency(),
     } = getAccount?.data?.account || {};
-
-    const textColor = isAccountTypeAsset(accountType)
-      ? theme.colors.color1
-      : theme.colors.color12;
 
     const getImg = () => {
       if (isAccountTypeAsset(accountType)) {
@@ -103,37 +89,36 @@ const AccountBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
-            {account_name}
-          </BaseText>
+          <View style={styles.accountNameContainer}>
+            <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+              {account_name}
+            </BaseText>
+            <IconButton
+              iconType="feather"
+              iconName="edit"
+              type="clear"
+              color={theme.colors.color1}
+              iconSize={18}
+              buttonStyle={styles.editIcon}
+              onPress={() => {
+                navigation.navigate(ROUTES.accountForm, {
+                  account_id: accountID,
+                });
+              }}
+            />
+          </View>
           <AmountText
             h2
+            amount={new Amount(balance, currency)}
             showNegativeOnly={isAccountTypeAsset(accountType)}
-            margin={{ top: 8, bottom: 6 }}
-            isLoading={getAccount.isLoading}>
-            {balance}
-          </AmountText>
-          <BaseText
-            text4
-            margin={{ bottom: 4 }}
-            isLoading={getAccount.isLoading}>
+            margin={{ top: 8, bottom: 8 }}
+            isLoading={getAccount.isLoading}
+            sensitive
+          />
+
+          <BaseText text4 isLoading={getAccount.isLoading}>
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
-          <BaseButton
-            title="Edit Account"
-            type="clear"
-            align="flex-start"
-            size="sm"
-            textStyle={{ color: textColor }}
-            icon={
-              <Icon name="edit" type="feather" color={textColor} size={13} />
-            }
-            onPress={() => {
-              navigation.navigate(ROUTES.accountForm, {
-                account_id: accountID,
-              });
-            }}
-          />
         </View>
         <BaseImage source={getImg()} containerStyle={styles.image} />
       </>
@@ -154,9 +139,7 @@ const AccountBreakdownScreen = ({ route }) => {
             onBackward={onDateMove}
           />
         </View>
-        <BaseLoadableView
-          scrollable={true}
-          isLoading={getTransactions.isLoading}>
+        <BaseLoadableView scrollable={true} isLoading={isLoading}>
           {renderRows()}
         </BaseLoadableView>
       </>
@@ -183,7 +166,7 @@ const AccountBreakdownScreen = ({ route }) => {
     );
   };
 
-  useError([getAccount, getTransactions]);
+  useError([getAccount, ...getErrors()]);
 
   return (
     <BaseScreen2
@@ -244,6 +227,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     debtText: {
       marginBottom: theme.spacing.md,
       color: theme.colors.color7,
+    },
+    accountNameContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    editIcon: {
+      marginLeft: 10,
     },
   });
 

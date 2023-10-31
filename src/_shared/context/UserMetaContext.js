@@ -1,69 +1,183 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useEffect, useState } from 'react';
-import { UserError } from '../apis/user';
+import { useUpdateUserMeta } from '../mutations';
+import { queryKeys, useGetUser } from '../query';
+import { checkIsUserOnboarded } from '../util/user';
+import { DEFAULT_CURRENCY } from '../util';
 
-const USER_META = 'USER_META';
 const UserMetaContext = createContext();
+const defaultMeta = {
+  user: {
+    email: '',
+    meta: {
+      currency: DEFAULT_CURRENCY,
+      hide_info: false,
+      last_transaction_currency: DEFAULT_CURRENCY,
+      last_transaction_category: {},
+      last_transaction_account: {},
+    },
+    username: '',
+  },
+  appMeta: {
+    showSetupSplashScreen: false,
+  },
+};
 
 const UserMetaProvider = ({ children }) => {
-  const [userMeta, setUserMeta] = useState({
-    onboardingCompleted: true,
-    showSetupSplashScreen: false,
-  });
+  const [isLogin, setIsUserLogin] = useState(false);
+  const [userMeta, setUserMeta] = useState(defaultMeta);
 
-  const isUserOnboarded = () => {
-    return userMeta.onboardingCompleted;
-  };
+  const getUser = useGetUser({ enabled: isLogin });
+  useEffect(() => {
+    const { user = null } = getUser?.data || {};
+    if (user === null) {
+      return;
+    }
+    updateUserMeta(user);
+  }, [getUser.data]);
 
-  const setOnboardingStatus = status => {
-    setUserMeta(prev => {
-      let newMeta = { ...prev, onboardingCompleted: status };
-      save(newMeta);
-      return newMeta;
+  const updateUserMeta = user => {
+    setUserMeta({
+      ...userMeta,
+      user: {
+        ...user,
+        meta: {
+          ...(user?.meta || {}),
+          last_transaction_currency: user?.meta?.currency || DEFAULT_CURRENCY,
+        },
+      },
     });
   };
 
-  const showSetupSplashScreen = () => {
-    return userMeta.showSetupSplashScreen;
+  const queryClient = useQueryClient();
+  const clearUserMeta = () => {
+    setUserMeta(defaultMeta);
+    queryClient.removeQueries(queryKeys.user);
   };
 
   const setShowSetupSplashScreen = status => {
-    setUserMeta(prev => ({ ...prev, showSetupSplashScreen: status }));
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        appMeta: { ...(prev?.appMeta || {}), showSetupSplashScreen: status },
+      };
+    });
   };
 
-  const save = async meta => {
-    try {
-      await AsyncStorage.setItem(USER_META, JSON.stringify(meta));
-    } catch {
-      throw new UserError('set user meta error');
-    }
+  const updateMetaMutation = useUpdateUserMeta();
+  const toggleHideUserInfo = () => {
+    let hideInfo = !shouldHideSensitiveInfo();
+    setUserMeta(prev => {
+      let newMeta = { ...prev };
+      newMeta.user.meta.hide_info = hideInfo;
+
+      return newMeta;
+    });
+
+    updateMetaMutation.mutate({
+      hide_info: hideInfo,
+    });
   };
 
-  useEffect(() => {
-    async function getMeta() {
-      try {
-        const metaStr = await AsyncStorage.getItem(USER_META);
-        const meta = JSON.parse(metaStr);
-        if (meta !== null) {
-          setUserMeta({
-            ...userMeta,
-            onboardingCompleted: meta.onboardingCompleted,
-          });
-        }
-      } catch {
-        throw new UserError('get user meta error');
-      }
-    }
-    getMeta();
-  }, []);
+  const updateLastTransactionCurrency = (code = DEFAULT_CURRENCY) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_currency: code,
+          },
+        },
+      };
+    });
+  };
+
+  const updateLastTransactionCategory = (category = {}) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_category: category,
+          },
+        },
+      };
+    });
+  };
+
+  const updateLastTransactionAccount = (account = {}) => {
+    setUserMeta(prev => {
+      return {
+        ...prev,
+        user: {
+          ...(prev?.user || {}),
+          meta: {
+            ...(prev?.user?.meta || {}),
+            last_transaction_account: account,
+          },
+        },
+      };
+    });
+  };
+
+  const isUserOnboarded = () => {
+    const { user_flag: userFlag = 0 } = userMeta?.user || {};
+    return checkIsUserOnboarded(userFlag);
+  };
+
+  const showSetupSplashScreen = () => {
+    return userMeta?.appMeta?.showSetupSplashScreen || false;
+  };
+
+  const shouldHideSensitiveInfo = () => {
+    return userMeta?.user?.meta?.hide_info || false;
+  };
+
+  const getUserBaseCurrency = () => {
+    return userMeta?.user?.meta?.currency || DEFAULT_CURRENCY;
+  };
+
+  const getUserName = () => {
+    return userMeta?.user?.username || '';
+  };
+
+  const getLastTransactionCurrency = () => {
+    return (
+      userMeta?.user?.meta?.last_transaction_currency || getUserBaseCurrency()
+    );
+  };
+
+  const getLastTransactionCategory = () => {
+    return userMeta?.user?.meta?.last_transaction_category || {};
+  };
+
+  const getLastTransactionAccount = () => {
+    return userMeta?.user?.meta?.last_transaction_account || {};
+  };
 
   return (
     <UserMetaContext.Provider
       value={{
+        setIsUserLogin,
+        updateUserMeta,
+        clearUserMeta,
+        toggleHideUserInfo,
+        updateLastTransactionCurrency,
+        updateLastTransactionCategory,
+        updateLastTransactionAccount,
         isUserOnboarded,
-        setOnboardingStatus,
         showSetupSplashScreen,
         setShowSetupSplashScreen,
+        shouldHideSensitiveInfo,
+        getUserName,
+        getUserBaseCurrency,
+        getLastTransactionCurrency,
+        getLastTransactionCategory,
+        getLastTransactionAccount,
       }}>
       {children}
     </UserMetaContext.Provider>

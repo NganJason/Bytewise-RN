@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AmountText, BaseButton, BaseText, IconButton } from '../../Components';
 import { EmptyContent, InfoToolTip } from '../../Components/Common';
@@ -16,11 +16,13 @@ import {
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import { toolTipMessage } from '../../_shared/constant/message';
 import ROUTES from '../../_shared/constant/routes';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import {
   useDimension,
   useGetCategoriesHelper,
   useError,
 } from '../../_shared/hooks';
+import { Amount } from '../../_shared/object';
 import BudgetOverviewRow from './BudgetOverviewRow';
 
 const BudgetOverview = ({ activeDate = new Date() }) => {
@@ -28,6 +30,7 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
   const { screenHeight } = useDimension();
   const styles = getStyles(theme, screenHeight);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const [isEdit, setIsEdit] = useState(false);
   const toggleEdit = () => {
@@ -41,30 +44,40 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
 
   const getBudgetSum = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
+    let budgetCurrency = getUserBaseCurrency();
+
     categoriesWithBudget.map(category => {
-      const { budget_type: budgetType = BUDGET_TYPE_MONTHLY, amount = 0 } =
-        category?.budget || {};
+      const {
+        budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+        amount = 0,
+        currency = getUserBaseCurrency(),
+      } = category?.budget || {};
 
       if (budgetType === type) {
         sum += Number(amount);
       }
+      budgetCurrency = currency;
     });
-    return sum;
+    return new Amount(sum, budgetCurrency);
   };
 
   const getTotalUsedAmount = (type = BUDGET_TYPE_MONTHLY) => {
     let sum = 0;
+    let budgetCurrency = getUserBaseCurrency();
+
     categoriesWithBudget.map(category => {
       const {
         budget_type: budgetType = BUDGET_TYPE_MONTHLY,
         used_amount: usedAmount = 0,
+        currency = getUserBaseCurrency(),
       } = category?.budget || {};
 
       if (budgetType === type) {
         sum += Number(usedAmount);
       }
+      budgetCurrency = currency;
     });
-    return sum;
+    return new Amount(sum, budgetCurrency);
   };
 
   const renderRows = (type = BUDGET_TYPE_MONTHLY) => {
@@ -138,13 +151,19 @@ const BudgetOverview = ({ activeDate = new Date() }) => {
             />
           ) : (
             <View style={styles.aggr}>
-              <AmountText text4 style={{ color: theme.colors.color7 }}>
-                {getTotalUsedAmount(type)}
-              </AmountText>
+              <AmountText
+                text4
+                amount={getTotalUsedAmount(type)}
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
               <BaseDivider orientation={'vertical'} margin={5} />
-              <AmountText text4 style={{ color: theme.colors.color7 }}>
-                {getBudgetSum(type)}
-              </AmountText>
+              <AmountText
+                text4
+                amount={getBudgetSum(type)}
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
             </View>
           )}
         </View>

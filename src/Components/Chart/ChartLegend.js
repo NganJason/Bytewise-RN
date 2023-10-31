@@ -12,7 +12,11 @@ const ChartLegend = ({ color = '', text = '', ...props }) => {
         }}
       />
 
-      <BaseText margin={{ left: 12 }} {...props}>
+      <BaseText
+        margin={{ left: 12 }}
+        {...props}
+        numberOfLines={1}
+        ellipsizeMode="tail">
         {text}
       </BaseText>
     </View>

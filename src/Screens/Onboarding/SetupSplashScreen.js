@@ -7,11 +7,8 @@ import { useError } from '../../_shared/hooks';
 
 const SetupSplashScreen = () => {
   const { theme } = useTheme();
-  const { setOnboardingStatus, setShowSetupSplashScreen } =
-    useContext(UserMetaContext);
-  const { isSetupLoading, isSetupSuccess, initUserError } = useContext(
-    OnboardingDataContext,
-  );
+  const { setShowSetupSplashScreen } = useContext(UserMetaContext);
+  const { isSetupLoading, initUserError } = useContext(OnboardingDataContext);
 
   // Setup screen should load at least n seconds to prevent flickering
   const [minLoadingTimeDone, setMinLoadingTimeDone] = useState(false);
@@ -36,11 +33,6 @@ const SetupSplashScreen = () => {
 
   useEffect(() => {
     if (minLoadingTimeDone && !isSetupLoading) {
-      if (isSetupSuccess) {
-        setOnboardingStatus(true);
-      } else {
-        setOnboardingStatus(false);
-      }
       setShowSetupSplashScreen(false);
     }
   }, [minLoadingTimeDone, isSetupLoading]);

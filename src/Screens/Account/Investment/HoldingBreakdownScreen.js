@@ -16,10 +16,10 @@ import {
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
 import { genStockUpdateTimeMsg } from '../../../_shared/constant/message';
 import ROUTES from '../../../_shared/constant/routes';
+import { Amount } from '../../../_shared/object';
 import { useGetHolding, useGetLots } from '../../../_shared/query';
 import {
-  CURRENCY_SGD,
-  CURRENCY_USD,
+  DEFAULT_INVESTMENT_CURRENCY,
   tsToDateTimeStr,
 } from '../../../_shared/util';
 
@@ -35,10 +35,13 @@ const HoldingBreakdownScreen = ({ route }) => {
 
   const getHolding = useGetHolding({ holding_id: holdingID });
   const {
-    latest_value = 0,
-    total_cost = 0,
-    total_shares = 0,
-    avg_cost_per_share = 0,
+    latest_value: latestValue = 0,
+    total_cost: totalCost = 0,
+    total_shares: totalShares = 0,
+    avg_cost_per_share: avgCostPerShare = 0,
+    gain = 0,
+    percent_gain: percentGain = 0,
+    currency = DEFAULT_INVESTMENT_CURRENCY,
     quote = {
       latest_price: 0,
       update_time: 0,
@@ -100,40 +103,38 @@ const HoldingBreakdownScreen = ({ route }) => {
           Current value
         </BaseText>
         <AmountText
-          style={styles.titleText}
           h2
+          style={styles.titleText}
+          amount={new Amount(latestValue, currency)}
           margin={{ bottom: 8 }}
           isLoading={getHolding.isLoading}
           loadingLen={10}
-          currency={CURRENCY_SGD}>
-          {latest_value}
-        </AmountText>
-
+          sensitive
+        />
         <View style={styles.headerRow}>
           <BaseText text5>Invested amount</BaseText>
           <AmountText
             text5
+            amount={new Amount(totalCost, currency)}
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_SGD}>
-            {total_cost}
-          </AmountText>
+            sensitive
+          />
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Profit/Loss</BaseText>
           <EarningText
-            currVal={latest_value}
-            initialVal={total_cost}
             text5
+            gain={new Amount(gain, currency)}
+            percentGain={percentGain}
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_SGD}
           />
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>Quantity</BaseText>
           <BaseText text5 isLoading={getHolding.isLoading}>
-            {total_shares}
+            {totalShares} {totalShares > 1 ? 'units' : 'unit'}
           </BaseText>
         </View>
 
@@ -141,20 +142,18 @@ const HoldingBreakdownScreen = ({ route }) => {
           <BaseText text5>Latest price</BaseText>
           <AmountText
             text5
+            amount={new Amount(quote.latest_price, quote.currency)}
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_USD}>
-            {quote.latest_price}
-          </AmountText>
+          />
         </View>
 
         <View style={styles.headerRow}>
           <BaseText text5>WAC</BaseText>
           <AmountText
             text5
+            amount={new Amount(avgCostPerShare, currency)}
             isLoading={getHolding.isLoading}
-            currency={CURRENCY_SGD}>
-            {avg_cost_per_share}
-          </AmountText>
+          />
         </View>
       </>
     );

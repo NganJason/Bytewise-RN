@@ -5,9 +5,7 @@ import {
   BaseLoadableView,
   BaseScreen,
   BaseText,
-  DailyTransactions,
   DateNavigator,
-  EmptyContent,
 } from '../../Components';
 import { useTheme } from '@rneui/themed';
 import { useEffect, useState } from 'react';
@@ -18,16 +16,15 @@ import {
   getMonth,
   getUnixRangeOfMonth,
   getYear,
-  groupTransactionsByDateStr,
 } from '../../_shared/util';
-import { useDimension, useError } from '../../_shared/hooks';
+import {
+  useDimension,
+  useError,
+  useTransactionGroups,
+} from '../../_shared/hooks';
 import ROUTES from '../../_shared/constant/routes';
 import { useNavigation } from '@react-navigation/native';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetTransactions } from '../../_shared/query';
-
-const PAGING_LIMIT = 500;
-const STARTING_PAGE = 1;
+import { BaseFilter, Transactions } from '../../Components/Common';
 
 const TransactionCalendarScreen = () => {
   const { theme } = useTheme();
@@ -37,30 +34,20 @@ const TransactionCalendarScreen = () => {
 
   const [selectedDate, setSelectedDate] = useState(getFormattedDateString());
   const [currMonth, setCurrMonth] = useState(new Date());
-  const [timeRange, setTimeRange] = useState(
-    getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)),
-  );
+
+  const {
+    setTimeRange,
+    selectedFilters,
+    getDailyTotalExpenseIncome,
+    getTransactionGroupByDateStr,
+    getFilterOptions,
+    onFilterChange,
+    isLoading,
+    getErrors,
+  } = useTransactionGroups(currMonth);
   useEffect(() => {
     setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
   }, [currMonth]);
-
-  const getTransactions = useGetTransactions({
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-    paging: {
-      limit: PAGING_LIMIT,
-      page: STARTING_PAGE,
-    },
-  });
-
-  let dateStrToTransactions = groupTransactionsByDateStr(
-    getTransactions?.data?.transactions || [],
-  );
-  const getSelectedDateTransactions = () => {
-    return dateStrToTransactions[selectedDate]?.transactions || [];
-  };
 
   const onCurrMonthMove = e => {
     setCurrMonth(e);
@@ -76,27 +63,22 @@ const TransactionCalendarScreen = () => {
     setSelectedDate(getFormattedDateString());
   };
 
-  useError([getTransactions]);
+  useError(getErrors());
 
   const renderDayExtraInfo = date => {
-    let totalIncome = Math.abs(
-      dateStrToTransactions[date.dateString]?.totalIncome || 0,
-    );
-
-    let totalExpense = Math.abs(
-      dateStrToTransactions[date.dateString]?.totalExpense || 0,
-    );
+    const { dateString } = date;
+    const [expense, income] = getDailyTotalExpenseIncome(dateString);
 
     return (
       <View style={styles.dayInfoContainer}>
-        {totalExpense > 0 && (
-          <BaseText text6 margin={{ top: 0 }} color={theme.colors.regularRed}>
-            {totalExpense.toFixed(2)}
+        {Math.abs(expense) > 0 && (
+          <BaseText text7 margin={{ top: 0 }} color={theme.colors.regularRed}>
+            {expense.toFixed(2)}
           </BaseText>
         )}
-        {totalIncome > 0 && (
-          <BaseText text6 color={theme.colors.color1}>
-            {totalIncome.toFixed(2)}
+        {Math.abs(income) > 0 && (
+          <BaseText text7 color={theme.colors.color1}>
+            {income.toFixed(2)}
           </BaseText>
         )}
       </View>
@@ -118,12 +100,14 @@ const TransactionCalendarScreen = () => {
           />
         ),
         rightComponent: (
-          <BaseButton
-            title="Today"
-            type="secondary"
-            size="sm"
-            onPress={onTodayPress}
-          />
+          <>
+            <BaseButton
+              title="Today"
+              type="secondary"
+              size="sm"
+              onPress={onTodayPress}
+            />
+          </>
         ),
       }}
       fabProps={{
@@ -145,21 +129,20 @@ const TransactionCalendarScreen = () => {
         dayExtraInfo={renderDayExtraInfo}
       />
       <View style={styles.transactions}>
+        <View style={styles.filter}>
+          <BaseFilter
+            options={getFilterOptions()}
+            selectedItems={selectedFilters}
+            onChange={onFilterChange}
+          />
+        </View>
         <BaseLoadableView
           containerStyle={styles.loadableContainer}
           scrollable
-          isLoading={getTransactions.isLoading}>
-          {getSelectedDateTransactions().length > 0 ? (
-            <DailyTransactions
-              timestamp={Date.parse(selectedDate)}
-              transactions={getSelectedDateTransactions()}
-            />
-          ) : (
-            <EmptyContent
-              item={EmptyContentConfig.transaction}
-              route={ROUTES.transactionForm}
-            />
-          )}
+          isLoading={isLoading}>
+          <Transactions
+            transactionGroups={[getTransactionGroupByDateStr(selectedDate)]}
+          />
         </BaseLoadableView>
       </View>
     </BaseScreen>
@@ -176,6 +159,7 @@ const getStyles = theme => {
       marginTop: 12,
       flex: 1,
       padding: theme.spacing.xl,
+      paddingTop: 16,
       backgroundColor: theme.colors.white,
       borderRadius: 20,
       shadowColor: theme.colors.black,
@@ -186,6 +170,9 @@ const getStyles = theme => {
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    filter: {
+      marginBottom: 8,
     },
     loadableContainer: {
       flex: 1,

@@ -1,4 +1,5 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from '@rneui/themed';
 
 import { BaseText } from '../Text';

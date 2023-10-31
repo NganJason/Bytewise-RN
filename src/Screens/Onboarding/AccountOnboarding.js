@@ -12,6 +12,7 @@ import {
 import { EQUITY_TYPE_ASSET, EQUITY_TYPE_DEBT } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 import { getEquityType } from '../../_shared/util';
 
 const AccountOnboarding = ({}) => {
@@ -56,7 +57,7 @@ const AccountOnboarding = ({}) => {
               {accountName}
             </BaseText>
           </View>
-          <AmountText>{balance}</AmountText>
+          <AmountText amount={new Amount(balance, data.currency)} />
         </BaseRow>,
       );
     });
@@ -71,10 +72,9 @@ const AccountOnboarding = ({}) => {
   return (
     <View style={styles.container}>
       <View>
-        <BaseText h1>Setup your</BaseText>
-        <BaseText h1>accounts</BaseText>
-        <BaseText text2 style={styles.subtitle}>
-          Accounts keep track of your money and net worth
+        <BaseText h1>Create assets and debts</BaseText>
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
+          Organise your net worth in one place
         </BaseText>
       </View>
 
@@ -94,14 +94,14 @@ const AccountOnboarding = ({}) => {
 
       <BaseScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <BaseRow dividerMargin={0}>
+          <BaseRow dividerMargin={0} disabled>
             <BaseText text1>Asset</BaseText>
           </BaseRow>
           {renderRows(EQUITY_TYPE_ASSET)}
         </View>
 
         <View style={styles.section}>
-          <BaseRow dividerMargin={0}>
+          <BaseRow dividerMargin={0} disabled>
             <BaseText text1>Debt</BaseText>
           </BaseRow>
           {renderRows(EQUITY_TYPE_DEBT)}
@@ -113,24 +113,31 @@ const AccountOnboarding = ({}) => {
 
 const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   const { theme } = useTheme();
+  const { data } = useContext(OnboardingDataContext);
 
   if (equityType === EQUITY_TYPE_ASSET) {
     return (
-      <BaseRow disabled={true} showDivider={false}>
+      <BaseRow showDivider={false} disabled>
         <BaseText style={{ color: theme.colors.color8 }}>
-          Eg: OCBC Savings Account
+          E.g. OCBC Savings Account
         </BaseText>
-        <AmountText style={{ color: theme.colors.color8 }}>300</AmountText>
+        <AmountText
+          amount={new Amount(300, data.currency)}
+          style={{ color: theme.colors.color8 }}
+        />
       </BaseRow>
     );
   }
 
   return (
-    <BaseRow disabled={true} showDivider={false}>
+    <BaseRow showDivider={false} disabled>
       <BaseText style={{ color: theme.colors.color8 }}>
-        Eg: Tuition Fee Loan
+        E.g. Tuition Fee Loan
       </BaseText>
-      <AmountText style={{ color: theme.colors.color8 }}>4000</AmountText>
+      <AmountText
+        amount={new Amount(4000, data.currency)}
+        style={{ color: theme.colors.color8 }}
+      />
     </BaseRow>
   );
 };

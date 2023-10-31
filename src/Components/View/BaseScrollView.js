@@ -5,12 +5,15 @@ const BaseScrollView = ({
   showsVerticalScrollIndicator,
   onScrollEndDrag,
   containerStyle = {},
+  ...props
 }) => {
   const styles = getStyles();
 
   return (
     <ScrollView
-      contentContainerStyle={{ minHeight: '100%' }}
+      {...props}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       onScrollEndDrag={onScrollEndDrag}>
       <Pressable style={[styles.container, containerStyle]}>
@@ -22,6 +25,7 @@ const BaseScrollView = ({
 
 const getStyles = theme =>
   StyleSheet.create({
+    scrollContainer: { height: '100%' },
     container: {
       flex: 1,
       marginBottom: 20,

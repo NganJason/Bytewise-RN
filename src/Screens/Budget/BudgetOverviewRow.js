@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -14,6 +15,8 @@ import {
   TRANSACTION_TYPE_EXPENSE,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
+import { Amount } from '../../_shared/object';
 import { getProgress } from '../../_shared/util';
 
 const BudgetOverviewRow = ({
@@ -25,6 +28,7 @@ const BudgetOverviewRow = ({
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     category_id: categoryID = '',
@@ -36,6 +40,7 @@ const BudgetOverviewRow = ({
     used_amount: usedAmount = 0,
     amount = 0,
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
+    currency = getUserBaseCurrency(),
   } = budget;
 
   const onPress = () => {
@@ -70,13 +75,19 @@ const BudgetOverviewRow = ({
           />
         ) : (
           <View style={styles.aggr}>
-            <AmountText text4 style={{ color: theme.colors.color7 }}>
-              {usedAmount}
-            </AmountText>
+            <AmountText
+              text4
+              amount={new Amount(usedAmount, currency)}
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
             <BaseDivider orientation={'vertical'} margin={5} />
-            <AmountText text4 style={{ color: theme.colors.color7 }}>
-              {amount}
-            </AmountText>
+            <AmountText
+              text4
+              amount={new Amount(amount, currency)}
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
           </View>
         )}
       </View>

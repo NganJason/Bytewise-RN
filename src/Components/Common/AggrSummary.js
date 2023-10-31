@@ -20,7 +20,11 @@ const AggrSummary = ({ aggrs = [] }) => {
               <BaseText text3 center style={styles.label}>
                 {aggr.label}:
               </BaseText>
-              <AmountText text5>{aggr.amount}</AmountText>
+              <AmountText
+                text5
+                amount={aggr.amount}
+                sensitive={aggr.sensitive}
+              />
             </Col>
             {i < aggrs.length - 1 && <BaseDivider orientation="vertical" />}
           </React.Fragment>

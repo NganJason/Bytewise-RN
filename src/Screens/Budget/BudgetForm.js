@@ -1,16 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
   BaseCheckboxInput,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
   TouchInput,
+  DeleteSaveButton,
 } from '../../Components';
 import {
   BUDGET_REPEAT_ALL_TIME,
@@ -39,6 +40,7 @@ import {
   getMonthStr,
   getYear,
 } from '../../_shared/util';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const TODAY = new Date();
 
@@ -46,13 +48,14 @@ const BudgetForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     category_id: categoryID = '',
     budget_type: budgetType = BUDGET_TYPE_MONTHLY,
     active_date: activeDate = TODAY.valueOf(),
   } = route?.params || {};
-  const [activeD, setActiveD] = useState(getDateObjFromTs(activeDate));
+  const [activeD] = useState(getDateObjFromTs(activeDate));
 
   const isAddBudget = () => {
     return categoryID === '';
@@ -223,6 +226,7 @@ const BudgetForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isLoading()}
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -289,11 +293,12 @@ const BudgetForm = ({ route }) => {
           label="name"
         />
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={budgetForm.amount}
           onChangeText={onBudgetAmountChange}
           errorMessage={showValidation && formErrors.amount}
+          currency={getUserBaseCurrency()}
         />
 
         <View style={{ marginBottom: 40 }}>
@@ -305,34 +310,20 @@ const BudgetForm = ({ route }) => {
           />
         </View>
 
-        {!isAddBudget() && (
-          <View style={styles.btnContainer}>
-            <BaseButton
-              title="Delete"
-              size="lg"
-              type="outline"
-              width={200}
-              onPress={toggleDeleteModal}
-            />
-
-            <DeleteBudgetOverlay
-              isVisible={isDeleteModalVisible}
-              close={toggleDeleteModal}
-              onChange={onBudgetRepeatChange}
-              value={budgetForm.budget_repeat}
-              items={getEditEnums()}
-              onConfirm={onDelete}
-              isConfirmLoading={deleteBudget.isLoading}
-            />
-          </View>
-        )}
-
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onSave}
-          isLoading={createBudget.isLoading || updateBudget.isLoading}
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
+          onDelete={toggleDeleteModal}
+          allowDelete={!isAddBudget()}
+        />
+        <DeleteBudgetOverlay
+          isVisible={isDeleteModalVisible}
+          close={toggleDeleteModal}
+          onChange={onBudgetRepeatChange}
+          value={budgetForm.budget_repeat}
+          items={getEditEnums()}
+          onConfirm={onDelete}
+          isConfirmLoading={deleteBudget.isLoading}
         />
       </BaseKeyboardAwareScrollView>
     </BaseScreen>

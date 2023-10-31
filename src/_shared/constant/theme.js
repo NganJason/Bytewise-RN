@@ -38,7 +38,7 @@ const FONT_SIZES = {
   h5: 17,
   h6: 15,
   h7: 13,
-  h8: 10,
+  h8: 11,
   h9: 9,
 };
 
@@ -143,6 +143,11 @@ export const THEME = createTheme({
     },
     text6: {
       fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h8,
+      color: COLORS.black,
+    },
+    text7: {
+      fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h9,
       color: COLORS.black,
     },
@@ -184,7 +189,12 @@ export const THEME = createTheme({
       week: {
         marginBottom: 0,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+      },
+      dayHeader: {
+        width: 28,
+        height: 28,
+        textAlign: 'center',
       },
     },
     'stylesheet.calendar.main': {
@@ -229,7 +239,7 @@ LocaleConfig.locales['.'] = {
     'Aug',
     'Sep',
     'Oct',
-    'Oct',
+    'Nov',
     'Dec',
   ],
   monthNamesShort: [
@@ -243,7 +253,7 @@ LocaleConfig.locales['.'] = {
     'Aug',
     'Sep',
     'Oct',
-    'Oct',
+    'Nov',
     'Dec',
   ],
   dayNames: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],

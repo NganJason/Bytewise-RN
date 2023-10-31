@@ -1,4 +1,5 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,9 +11,11 @@ import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
 import { getDate, getDay } from '../../_shared/util';
 import { BaseChip } from '../View';
+import { Amount } from '../../_shared/object';
 
 const DailyTransactions = ({
   timestamp = 0,
+  dailyTotal = new Amount(),
   transactions = [
     {
       transaction_id: '',
@@ -38,15 +41,6 @@ const DailyTransactions = ({
 
   const navigation = useNavigation();
 
-  const computeAmountSum = () => {
-    let sum = 0;
-    transactions.forEach(t => {
-      sum += Number(t.amount);
-    });
-
-    return sum;
-  };
-
   const navigateToForm = t => {
     navigation.navigate(ROUTES.transactionForm, {
       transaction_id: t.transaction_id,
@@ -67,11 +61,11 @@ const DailyTransactions = ({
           <BaseText text1 style={styles.titleItemText}>
             {`${getDate(ts)}`.padStart(2, '0')}
           </BaseText>
-          <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
+          <View style={styles.chip}>
+            <BaseChip>{DAYS[getDay(ts)]}</BaseChip>
+          </View>
         </View>
-        <AmountText showColor style={styles.sumText}>
-          {computeAmountSum()}
-        </AmountText>
+        <AmountText amount={dailyTotal} showColor style={styles.sumText} />
       </View>
       {transactions.map((t, i) => {
         return (
@@ -106,12 +100,12 @@ const DailyTransactions = ({
                 </View>
                 <AmountText
                   text5
+                  amount={new Amount(t.amount, t.currency)}
                   style={styles.amount}
                   numberOfLines={1}
-                  showSymbol
-                  ellipsizeMode="tail">
-                  {t.amount}
-                </AmountText>
+                  showSign
+                  ellipsizeMode="tail"
+                />
               </View>
             </BaseListItem>
           </TouchableOpacity>
@@ -162,7 +156,7 @@ const getStyles = theme =>
       color: theme.colors.color7,
     },
     noteWrapper: {
-      flex: 2,
+      flex: 1,
       marginHorizontal: 10,
     },
     note: {
@@ -172,5 +166,8 @@ const getStyles = theme =>
       flex: 1,
       textAlign: 'right',
       ...theme.fontStyles.text3,
+    },
+    chip: {
+      marginLeft: 10,
     },
   });

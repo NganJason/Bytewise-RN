@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import {
   BaseScreen,
   BaseBottomSelectTab,
   BaseDonutChartWithRows,
+  AmountText,
 } from '../../Components';
 import {
   EmptyContentConfig,
@@ -23,6 +24,8 @@ import {
 import ROUTES from '../../_shared/constant/routes';
 import { useTimeRange, useError } from '../../_shared/hooks';
 import { useSumCategoryTransactions } from '../../_shared/query/category';
+import { Amount } from '../../_shared/object';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const CategoryOverviewScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -51,7 +54,8 @@ const CategoryOverviewScreen = ({ route }) => {
     categoriesInfo.forEach(d => {
       items.push({
         name: d.category_name,
-        value: Math.abs(d.sum),
+        value: Math.abs(d.sum.getAmount()),
+        currency: d.sum.getCurrency(),
         onPress: () => {
           navigation.navigate(ROUTES.categoryBreakdown, {
             category_id: d.category_id ? d.category_id : '',
@@ -92,9 +96,22 @@ const CategoryOverviewScreen = ({ route }) => {
       }}>
       <BaseDonutChartWithRows
         items={chartItems()}
+        rowSensitive={true}
         donutInnerLabel={{
-          title: `S$ ${totalSum}`,
-          subtitle: TRANSACTION_TYPES[categoryType],
+          title: (
+            <AmountText
+              h1
+              amount={totalSum}
+              sensitive
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            />
+          ),
+          subtitle: (
+            <BaseText text3 adjustsFontSizeToFit numberOfLines={1}>
+              {TRANSACTION_TYPES[categoryType]}
+            </BaseText>
+          ),
         }}
         isLoading={isLoading}
         emptyContent={
@@ -110,8 +127,9 @@ const CategoryOverviewScreen = ({ route }) => {
 };
 
 const useCategoryInfo = (timeRange, categoryType) => {
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
   const [categoriesInfo, setCategoriesInfo] = useState([]);
-  const [totalSum, setTotalSum] = useState(0);
+  const [totalSum, setTotalSum] = useState(new Amount(0));
 
   const sumCategoryTransactions = useSumCategoryTransactions({
     transaction_time: {
@@ -125,9 +143,12 @@ const useCategoryInfo = (timeRange, categoryType) => {
     const { sums = [] } = sumCategoryTransactions?.data || {};
 
     let total = 0;
+    let totalSumCurrency = getUserBaseCurrency();
     sums.map(d => {
       total += Math.abs(d.sum);
+      totalSumCurrency = d.currency;
     });
+    setTotalSum(new Amount(total, totalSumCurrency));
 
     let info = [];
     let uncategorisedCategory = null;
@@ -136,12 +157,14 @@ const useCategoryInfo = (timeRange, categoryType) => {
         info.push({
           category_id: d.category.category_id,
           category_name: d.category.category_name,
-          sum: Math.abs(d.sum).toFixed(2),
+          sum: new Amount(Math.abs(d.sum).toFixed(2), d.currency),
+          currency: d.category.currency,
         });
       } else {
         uncategorisedCategory = {
           category_name: 'Uncategorised',
           sum: Math.abs(d.sum).toFixed(2),
+          currency: d.currency,
         };
       }
     });
@@ -151,7 +174,6 @@ const useCategoryInfo = (timeRange, categoryType) => {
       info.push(uncategorisedCategory);
     }
 
-    setTotalSum(total.toFixed(2));
     setCategoriesInfo(info);
   }, [sumCategoryTransactions.data]);
 

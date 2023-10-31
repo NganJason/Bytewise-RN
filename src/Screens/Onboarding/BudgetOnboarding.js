@@ -18,6 +18,7 @@ import {
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { OnboardingDataContext } from '../../_shared/context';
+import { Amount } from '../../_shared/object';
 
 const BudgetOnboarding = () => {
   const { theme } = useTheme();
@@ -74,7 +75,7 @@ const BudgetOnboarding = () => {
               }}
             />
           ) : (
-            <AmountText>{amount}</AmountText>
+            <AmountText amount={new Amount(amount, data.currency)} />
           )}
         </BaseRow>,
       );
@@ -87,9 +88,8 @@ const BudgetOnboarding = () => {
     <View style={styles.container}>
       <View>
         <BaseText h1>Allocate budgets</BaseText>
-        <BaseText h1>to your categories</BaseText>
-        <BaseText text2 style={styles.subtitle}>
-          How much do you wish to spend for each category?
+        <BaseText text2 style={styles.subtitle} numberOfLines={0}>
+          Set your spending limit for each category
         </BaseText>
       </View>
       <BaseScrollView showsVerticalScrollIndicator={false}>

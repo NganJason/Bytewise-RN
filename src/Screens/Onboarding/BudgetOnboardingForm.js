@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import {
   BaseBottomSheet,
   BaseButton,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
   BaseScreen,
   BaseText,
@@ -49,7 +49,7 @@ const BudgetOnboardingForm = ({ route }) => {
       toast.custom(<BudgetTypeDesc />);
       markBudgetTypeDesc();
     }
-  }, []);
+  }, [isBudgetTypeDescShown, markBudgetTypeDesc, toast]);
 
   const [isBudgetTypeModalVisible, setIsBudgetTypeModalVisible] =
     useState(false);
@@ -73,6 +73,7 @@ const BudgetOnboardingForm = ({ route }) => {
 
   return (
     <BaseScreen
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -104,9 +105,10 @@ const BudgetOnboardingForm = ({ route }) => {
           onSelect={onBudgetTypeChange}
         />
 
-        <BaseCurrencyInput
+        <BaseMonetaryInput
           label="Amount"
           value={budgetForm.amount}
+          currency={data.currency}
           onChangeText={onAmountChange}
           autoFocus={isBudgetTypeDescShown()}
         />

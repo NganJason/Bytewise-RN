@@ -9,7 +9,9 @@ export const queryKeys = {
 
   transaction: 'transaction',
   transactions: 'transactions',
+  transactionGroups: 'transaction_groups',
   transactionsAggr: 'transactions_aggr',
+  transactionsSum: 'transactions_sum',
 
   budget: 'budget',
   budgets: 'budgets',
@@ -22,6 +24,8 @@ export const queryKeys = {
   holding: 'holding',
   lot: 'lot',
   lots: 'lots',
+
+  currencies: 'currencies',
 };
 
 export const useQueryWrapper = (queryOpts = {}) => {

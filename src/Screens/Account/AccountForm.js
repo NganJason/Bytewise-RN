@@ -7,11 +7,12 @@ import {
   BaseBottomSheet,
   BaseButton,
   BaseCheckbox,
-  BaseCurrencyInput,
+  BaseMonetaryInput,
   BaseInput,
   BaseScreen,
   BaseText,
   TouchInput,
+  DeleteSaveButton,
 } from '../../Components';
 import {
   ACCOUNT_TYPES,
@@ -26,15 +27,17 @@ import { useCreateAccount, useUpdateAccount } from '../../_shared/mutations';
 import ROUTES from '../../_shared/constant/routes';
 import { validateAccount } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
-import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
+import { isAccountTypeAsset } from '../../_shared/util';
 import { OnboardingDataContext } from '../../_shared/context';
 import { useDeleteAccount } from '../../_shared/mutations/account';
 import { BaseOverlay } from '../../Components/View';
+import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const AccountForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     account_id: accountID = '',
@@ -51,6 +54,7 @@ const AccountForm = ({ route }) => {
     account_name: '',
     account_type: accountType,
     balance: 0,
+    currency: getUserBaseCurrency(),
     update_mode: ACCOUNT_UPDATE_MODE_DEFAULT,
   });
 
@@ -176,6 +180,10 @@ const AccountForm = ({ route }) => {
     setAccountForm({ ...accountForm, balance: e });
   };
 
+  const onCurrencyChange = e => {
+    setAccountForm({ ...accountForm, currency: e.code });
+  };
+
   const toggleUpdateMode = () => {
     if (accountForm.update_mode === ACCOUNT_UPDATE_MODE_DEFAULT) {
       setAccountForm({
@@ -289,6 +297,7 @@ const AccountForm = ({ route }) => {
   return (
     <BaseScreen
       isLoading={isFormLoading()}
+      scrollable
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -332,17 +341,19 @@ const AccountForm = ({ route }) => {
 
         {canSetBalance() && (
           <>
-            <BaseCurrencyInput
+            <BaseMonetaryInput
               label={
                 isAccountTypeAsset(accountForm.account_type)
                   ? 'Balance'
                   : 'Amount Owed'
               }
-              hide={shouldDisableBalance()}
               value={
                 accountForm.balance === null ? 0 : Math.abs(accountForm.balance)
               }
+              currency={isOnboarding ? data.currency : accountForm.currency}
               onChangeText={onBalanceChange}
+              onChangeCurrency={onCurrencyChange}
+              hide={shouldDisableBalance()}
             />
 
             {!isAddAccount() && (
@@ -359,26 +370,13 @@ const AccountForm = ({ route }) => {
           </>
         )}
 
-        {!isAddAccount() && (
-          <BaseButton
-            title="Delete"
-            size="lg"
-            type="outline"
-            width={200}
-            onPress={onDelete}
-            loading={deleteAccount.isLoading}
-          />
-        )}
-
-        <View style={styles.btnContainer}>
-          <BaseButton
-            title="Save"
-            size="lg"
-            width={200}
-            onPress={onSave}
-            loading={isFormButtonLoading()}
-          />
-        </View>
+        <DeleteSaveButton
+          onSave={onSave}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteAccount.isLoading}
+          allowDelete={!isAddAccount()}
+        />
 
         <BaseOverlay
           isVisible={isDeleteModalVisible}

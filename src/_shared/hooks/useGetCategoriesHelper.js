@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useGetCategories, useGetCategoriesBudget } from '../query';
-import * as Localization from 'expo-localization';
 import { getDateStringWithoutDelim } from '../util';
 
 const useGetCategoriesHelper = ({
@@ -27,7 +26,6 @@ const useGetCategoriesHelper = ({
     {
       category_ids: categoryIDs,
       budget_date: getDateStringWithoutDelim(budgetDate),
-      timezone: Localization.timezone,
     },
     {
       enabled: categoryIDs.length > 0 && enabled,

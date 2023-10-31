@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { Text } from '@rneui/themed';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -16,12 +16,13 @@ const BaseText = ({
   text4 = false,
   text5 = false,
   text6 = false,
+  text7 = false,
   btn1 = false,
   btn2 = false,
   btn3 = false,
   children = '',
   adjustsFontSizeToFit = false,
-  numberOfLines = 0,
+  numberOfLines = null,
   ellipsizeMode = 'tail',
   center = false,
   margin = { top: 0, bottom: 0, left: 0, right: 0, vertical: 0, horizontal: 0 },
@@ -59,6 +60,8 @@ const BaseText = ({
         return theme.fontStyles.text5;
       case text6:
         return theme.fontStyles.text6;
+      case text7:
+        return theme.fontStyles.text7;
 
       case btn1:
         return styles.btn1Style;
@@ -120,6 +123,7 @@ const BaseText = ({
           shadow && styles.textShadow,
           semibold && { fontFamily: theme.fontFamily.semibold },
           bold && { fontFamily: theme.fontFamily.bold },
+          styles.textWrap,
         ]}
         adjustsFontSizeToFit={adjustsFontSizeToFit}
         numberOfLines={numberOfLines}
@@ -142,5 +146,8 @@ const getStyles = _ =>
       textShadowColor: 'rgba(0, 0, 0, 0.5)', // Shadow color (black with 50% transparency)
       textShadowOffset: { width: 0, height: 0 }, // Shadow offset (2 pixels to the right and 2 pixels down)
       textShadowRadius: 2,
+    },
+    textWrap: {
+      flexShrink: 1,
     },
   });
