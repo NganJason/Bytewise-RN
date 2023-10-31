@@ -14,6 +14,7 @@ import BaseCalendar from './BaseCalendar';
 import Currency from './Currency';
 import BaseFilter from './BaseFilter';
 import DeleteSaveButton from './DeleteSaveButton';
+import HoldingSearchResult from './HoldingSearchResult';
 
 export {
   DailyTransactions,
@@ -33,4 +34,5 @@ export {
   Currency,
   BaseFilter,
   DeleteSaveButton,
+  HoldingSearchResult,
 };

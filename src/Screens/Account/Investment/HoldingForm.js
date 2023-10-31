@@ -6,11 +6,11 @@ import {
   DeleteSaveButton,
   BaseMonetaryInput,
   BaseKeyboardAwareScrollView,
-  BaseRow,
   BaseScreen,
   BaseText,
   SearchBottomSheetInput,
   BaseInput,
+  HoldingSearchResult,
 } from '../../../Components';
 import {
   HOLDING_TYPE_CUSTOM,
@@ -25,29 +25,6 @@ import {
 import { useError, useValidation } from '../../../_shared/hooks';
 import { validateHolding } from '../../../_shared/validator';
 import { useDeleteHolding } from '../../../_shared/mutations/investment';
-
-const HoldingSearchResult = ({
-  item = { symbol: '', desc: '' },
-  onPress = function () {},
-}) => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
-
-  return (
-    <BaseRow dividerMargin={2} onPress={onPress}>
-      <View>
-        <BaseText text3>{item.symbol}</BaseText>
-        <BaseText
-          text4
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={styles.securityName}>
-          {item.desc}
-        </BaseText>
-      </View>
-    </BaseRow>
-  );
-};
 
 const HoldingForm = ({ route }) => {
   const { theme } = useTheme();

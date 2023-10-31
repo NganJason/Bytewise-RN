@@ -6,7 +6,7 @@ export const toolTipMessage = {
   annualBudgetDesc: {
     title: 'Annual Budget',
     message:
-      'Budget allocated for the whole year.\n\nEg: Travel, Beauty & Self-Care.',
+      'Budget allocated for the whole year.\n\nE.g. Travel, Beauty & Self-Care.',
   },
   symbolDesc: {
     title: 'Symbol',

@@ -47,7 +47,7 @@ const TransactionCalendarScreen = () => {
   } = useTransactionGroups(currMonth);
   useEffect(() => {
     setTimeRange(getUnixRangeOfMonth(getYear(currMonth), getMonth(currMonth)));
-  }, [currMonth, setTimeRange]);
+  }, [currMonth]);
 
   const onCurrMonthMove = e => {
     setCurrMonth(e);

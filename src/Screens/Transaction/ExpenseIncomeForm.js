@@ -159,7 +159,7 @@ const ExpenseIncomeForm = ({
     if (transaction_type !== transactionType) {
       onTransactionTypeChange(transaction_type);
     }
-  }, [transaction, onTransactionTypeChange, transactionType]);
+  }, [transaction]);
 
   useEffect(() => {
     if (transactionForm.category.category_type !== transactionType) {
@@ -172,7 +172,7 @@ const ExpenseIncomeForm = ({
       });
       updateLastTransactionCategory({ category_id: '', category_name: '' });
     }
-  }, [transactionType, transactionForm, updateLastTransactionCategory]);
+  }, [transactionType]);
 
   const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
   const toggleCalendarModal = () => {

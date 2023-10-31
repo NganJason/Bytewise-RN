@@ -101,7 +101,7 @@ const Ratings = ({ onScoreChange = function (score) {} }) => {
   };
   useEffect(() => {
     onScoreChange(score);
-  }, [score, onScoreChange]);
+  }, [score]);
 
   return (
     <View style={styles.rating}>

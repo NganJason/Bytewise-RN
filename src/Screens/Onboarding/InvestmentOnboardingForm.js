@@ -1,48 +1,56 @@
 import { useNavigation } from '@react-navigation/native';
-import { Dialog, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Calendar } from 'react-native-calendars';
 import {
   BaseButton,
   BaseMonetaryInput,
   BaseInput,
   BaseKeyboardAwareScrollView,
-  BaseRow,
   BaseScreen,
   BaseText,
   SearchBottomSheetInput,
-  TouchInput,
+  HoldingSearchResult,
+  DeleteSaveButton,
 } from '../../Components';
-import { HOLDING_TYPE_DEFAULT } from '../../_shared/apis/enum';
-import { toolTipMessage } from '../../_shared/constant/message';
+import {
+  HOLDING_TYPE_CUSTOM,
+  HOLDING_TYPE_DEFAULT,
+} from '../../_shared/apis/enum';
 import { OnboardingDataContext } from '../../_shared/context';
 import { useValidation } from '../../_shared/hooks';
 import { useSearchSecurities } from '../../_shared/query';
-import {
-  CURRENCY_USD,
-  getDateStringFromTs,
-  renderCalendarTs,
-} from '../../_shared/util';
+import { queryKeys } from '../../_shared/query';
 import { validateOnboardingHolding } from '../../_shared/validator/investment';
 
-const InvestmentOnboardingForm = () => {
+const InvestmentOnboardingForm = ({ route }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { addInvestmentHolding } = useContext(OnboardingDataContext);
+  const {
+    addInvestmentHolding,
+    updateInvestmentHolding,
+    deleteInvestmentHolding,
+    data: { currency: baseCurrency = '' },
+  } = useContext(OnboardingDataContext);
 
-  const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
-  const toggleCalendarModal = () => {
-    setIsCalendarModalVisible(!isCalendarModalVisible);
-  };
+  const {
+    idx = -1,
+    symbol: selectedSymbol = '',
+    holding_type: selectedHoldingType = 0,
+    lots: selectedLots = [],
+    total_cost: totalCost = 0,
+    latest_value: latestValue = 0,
+    currency = baseCurrency,
+  } = route?.params || {};
 
   const [holdingForm, setHoldingForm] = useState({
-    symbol: '',
-    cost_per_share: 0,
-    shares: 0,
-    trade_date: new Date().valueOf(),
-    holding_type: HOLDING_TYPE_DEFAULT,
+    currency: currency,
+    symbol: selectedSymbol,
+    holding_type: selectedHoldingType,
+    total_cost: totalCost,
+    latest_value: latestValue,
+    lots: selectedLots,
   });
   const [formErrors, setFormErrors] = useState({});
   const { validate, showValidation } = useValidation();
@@ -50,24 +58,53 @@ const InvestmentOnboardingForm = () => {
     setFormErrors(validateOnboardingHolding(holdingForm));
   }, [holdingForm]);
 
-  const onSymbolChange = e => {
+  const onHoldingSelect = (symbol, holdingType, symbolCurrency) => {
+    let lots = [];
+    if (holdingType === HOLDING_TYPE_DEFAULT) {
+      lots.push({ shares: 0, cost_per_share: 0 });
+    }
     setHoldingForm({
       ...holdingForm,
-      symbol: e,
+      symbol: symbol,
+      holding_type: holdingType,
+      currency: symbolCurrency === '' ? baseCurrency : symbolCurrency,
+      lots: lots,
+    });
+  };
+
+  const onLatestValueChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      latest_value: e,
+    });
+  };
+
+  const onTotalCostChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      total_cost: e,
+    });
+  };
+
+  const onCurrencyChange = e => {
+    setHoldingForm({
+      ...holdingForm,
+      currency: e.code,
     });
   };
 
   const onSharesChange = e => {
-    setHoldingForm({ ...holdingForm, shares: e });
+    setHoldingForm({
+      ...holdingForm,
+      lots: [{ ...holdingForm.lots[0], shares: e }],
+    });
   };
 
   const onCostPerShareChange = e => {
-    setHoldingForm({ ...holdingForm, cost_per_share: e });
-  };
-
-  const onTradeDateChange = e => {
-    setHoldingForm({ ...holdingForm, trade_date: e });
-    toggleCalendarModal();
+    setHoldingForm({
+      ...holdingForm,
+      lots: [{ ...holdingForm.lots[0], cost_per_share: e }],
+    });
   };
 
   const onAdd = () => {
@@ -77,8 +114,125 @@ const InvestmentOnboardingForm = () => {
       return;
     }
 
-    addInvestmentHolding(holdingForm);
+    addInvestmentHolding(stringifyHolding());
     navigation.goBack();
+  };
+
+  const onDelete = () => {
+    deleteInvestmentHolding(idx);
+    navigation.goBack();
+  };
+
+  const onSave = () => {
+    updateInvestmentHolding(idx, stringifyHolding());
+    navigation.goBack();
+  };
+
+  const stringifyHolding = () => ({
+    currency: holdingForm.currency,
+    symbol: holdingForm.symbol,
+    holding_type: holdingForm.holding_type,
+    total_cost:
+      holdingForm.holding_type === HOLDING_TYPE_DEFAULT
+        ? null
+        : String(holdingForm.total_cost),
+    latest_value:
+      holdingForm.holding_type === HOLDING_TYPE_DEFAULT
+        ? null
+        : String(holdingForm.latest_value),
+    lots:
+      holdingForm.lots.length > 0
+        ? [
+            {
+              shares: String(holdingForm.lots[0].shares),
+              cost_per_share: String(holdingForm.lots[0].cost_per_share),
+            },
+          ]
+        : [],
+  });
+
+  const renderHoldingSearchResult = e => {
+    let item;
+    if (e.item === null) {
+      item = { symbol: e.searchTerm, desc: 'Add as custom symbol' };
+    } else {
+      item = { symbol: e.item.symbol, desc: e.item.security_name };
+    }
+    return <HoldingSearchResult item={item} />;
+  };
+
+  const allowSelectCurrency = () =>
+    holdingForm.holding_type !== HOLDING_TYPE_DEFAULT;
+
+  const renderSymbolInput = () => {
+    return (
+      <SearchBottomSheetInput
+        label="Symbol"
+        queryKey={queryKeys.securities}
+        inputVal={holdingForm.symbol}
+        placeholder="Search (e.g. TSLA) or add custom"
+        useQuery={useSearchSecurities}
+        processResp={resp => resp.securities}
+        errorMessage={showValidation && formErrors.symbol}
+        onSelect={e => {
+          if (e.item === null) {
+            onHoldingSelect(e.searchTerm, HOLDING_TYPE_CUSTOM, '');
+          } else {
+            onHoldingSelect(
+              e.item.symbol,
+              HOLDING_TYPE_DEFAULT,
+              e.item.currency,
+            );
+          }
+        }}
+        renderItem={e => renderHoldingSearchResult(e)}
+      />
+    );
+  };
+
+  const renderOtherInputs = () => {
+    if (holdingForm.holding_type === HOLDING_TYPE_CUSTOM) {
+      return (
+        <View>
+          <BaseMonetaryInput
+            label="Latest Value"
+            value={holdingForm.latest_value}
+            onChangeText={onLatestValueChange}
+            errorMessage={showValidation && formErrors.budget_amount}
+            currency={holdingForm.currency}
+            allowSelectCurrency={() => allowSelectCurrency()}
+            onChangeCurrency={onCurrencyChange}
+          />
+          <BaseMonetaryInput
+            label="Invested Amount"
+            value={holdingForm.total_cost}
+            onChangeText={onTotalCostChange}
+            errorMessage={showValidation && formErrors.budget_amount}
+            currency={holdingForm.currency}
+            allowSelectCurrency={() => allowSelectCurrency()}
+            onChangeCurrency={onCurrencyChange}
+          />
+        </View>
+      );
+    } else if (holdingForm.holding_type === HOLDING_TYPE_DEFAULT) {
+      return (
+        <View>
+          <BaseInput
+            label="Number of shares"
+            value={String(holdingForm.lots[0].shares)}
+            keyboardType="numeric"
+            onChangeText={onSharesChange}
+            errorMessage={showValidation && formErrors.lots}
+          />
+          <BaseMonetaryInput
+            label="Cost per share"
+            value={holdingForm.lots[0].cost_per_share}
+            onChangeText={onCostPerShareChange}
+            currency={holdingForm.currency}
+          />
+        </View>
+      );
+    }
   };
 
   return (
@@ -98,78 +252,17 @@ const InvestmentOnboardingForm = () => {
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formBody}>
-        <SearchBottomSheetInput
-          label="Symbol"
-          tooltip={toolTipMessage.symbolDesc}
-          itemLabel="symbol"
-          onChangeText={onSymbolChange}
-          useQuery={useSearchSecurities}
-          processResp={resp => resp.securities}
-          errorMessage={showValidation && formErrors.symbol}
-          renderItem={(item, onPress) => (
-            <BaseRow dividerMargin={2} onPress={onPress}>
-              <View>
-                <BaseText text3>{item.symbol}</BaseText>
-                <BaseText
-                  text4
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.securityName}>
-                  {item.security_name}
-                </BaseText>
-              </View>
-            </BaseRow>
-          )}
-        />
-
-        <BaseInput
-          label="Number of shares"
-          value={String(holdingForm.shares)}
-          keyboardType="numeric"
-          onChangeText={onSharesChange}
-          clearButtonMode="always"
-          maxLength={120}
-          errorMessage={showValidation && formErrors.shares}
-        />
-
-        <BaseMonetaryInput
-          label="Cost per share"
-          value={holdingForm.cost_per_share}
-          onChangeText={onCostPerShareChange}
-          currency={CURRENCY_USD}
-        />
-
-        <TouchInput
-          label="Trading Date"
-          value={renderCalendarTs(holdingForm.trade_date)}
-          onPress={toggleCalendarModal}
-          errorMessage={showValidation && formErrors.trade_date}
-        />
-        <Dialog
-          isVisible={isCalendarModalVisible}
-          onBackdropPress={toggleCalendarModal}>
-          <Calendar
-            showSixWeeks
-            initialDate={getDateStringFromTs(holdingForm.trade_date)}
-            hideExtraDays={false}
-            onDayPress={obj => {
-              onTradeDateChange(new Date(obj.timestamp).setHours(0, 0, 0, 0));
-            }}
-            markedDates={{
-              [getDateStringFromTs(holdingForm.trade_date)]: {
-                selected: true,
-                disableTouchEvent: true,
-                selectedColor: theme.colors.primary,
-              },
-            }}
-            theme={{
-              todayTextColor: theme.colors.primary,
-              arrowColor: theme.colors.primary,
-            }}
+        {renderSymbolInput()}
+        {renderOtherInputs()}
+        {idx > -1 ? (
+          <DeleteSaveButton
+            onSave={onSave}
+            onDelete={onDelete}
+            allowDelete={true}
           />
-        </Dialog>
-
-        <BaseButton title="Add" size="lg" width={200} onPress={onAdd} />
+        ) : (
+          <BaseButton title="Add" size="lg" width={200} onPress={onAdd} />
+        )}
       </BaseKeyboardAwareScrollView>
     </BaseScreen>
   );

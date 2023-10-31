@@ -39,8 +39,7 @@ const CurrencyOnboarding = () => {
   return (
     <View style={styles.container}>
       <View>
-        <BaseText h1>Select your</BaseText>
-        <BaseText h1>base currency</BaseText>
+        <BaseText h1>Select your base currency</BaseText>
         <BaseText text2 style={styles.subtitle} numberOfLines={0}>
           All monetary values will be displayed in base currency
         </BaseText>
