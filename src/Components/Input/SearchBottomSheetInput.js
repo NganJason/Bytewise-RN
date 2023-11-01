@@ -1,38 +1,44 @@
 import React from 'react';
 import { BottomSheet, useTheme } from '@rneui/themed';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { useDimension } from '../../_shared/hooks';
+import { debounce } from 'lodash';
 
-import { debounce } from '../../_shared/util';
 import BaseSearchBar from './BaseSearchBar';
 import TouchInput from './TouchInput';
 import { BaseScrollView } from '../View';
+import { useQueryClient } from '@tanstack/react-query';
 import { EmptyContent } from '../Common';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 
 const SearchBottomSheetInput = ({
   label = '',
-  itemLabel = '',
-  onChangeText = function () {},
+  inputVal = '',
+  placeholder = '',
+  queryKey = '',
   useQuery = function () {},
   processResp = function (resp) {},
-  renderItem = function (item, onPress) {},
+  onSelect = function (item) {},
+  renderItem = function (item) {},
+  disabled = false,
   ...props
 }) => {
   const { screenHeight } = useDimension();
   const { theme } = useTheme();
   const styles = getStyles(theme, screenHeight);
+  const queryClient = useQueryClient();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const toggleModal = () => {
+    if (disabled) {
+      return;
+    }
     setIsModalVisible(!isModalVisible);
   };
 
-  const [inputVal, setInputVal] = useState('');
-  const onItemPress = item => {
-    setInputVal(item[itemLabel]);
-    onChangeText(item[itemLabel]);
+  const onItemPress = (searchTerm = '', item = null) => {
+    onSelect({ searchTerm: searchTerm, item: item });
     toggleModal();
   };
 
@@ -40,14 +46,10 @@ const SearchBottomSheetInput = ({
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const debouncedSearch = debounce(e => {
     setDebouncedSearchTerm(e);
-  }, 0.5);
-
-  const onSearchTermChange = e => {
-    setSearchTerm(e);
-    if (e !== '') {
-      debouncedSearch(e);
+    if (queryKey !== '') {
+      queryClient.cancelQueries(queryKey);
     }
-  };
+  }, 0.5);
 
   const { data = {}, isLoading = false } = useQuery(
     { keyword: debouncedSearchTerm },
@@ -58,33 +60,38 @@ const SearchBottomSheetInput = ({
     },
   );
 
+  const onSearchTermChange = e => {
+    setSearchTerm(e);
+    if (e !== '') {
+      debouncedSearch(e);
+    }
+  };
+
   const onCancel = () => {
     toggleModal();
   };
 
   const renderRows = () => {
-    let rows = [];
-    let items = processResp(data) || [];
+    const rows = [];
+    const items = processResp(data) || [];
+
+    if (searchTerm === '') {
+      return <EmptyContent item={EmptyContentConfig.emptySearchText} />;
+    }
 
     items.map((d, idx) => {
-      const onPress = () => {
-        onItemPress(d);
-      };
-
       rows.push(
-        <React.Fragment key={idx}>{renderItem(d, onPress)}</React.Fragment>,
+        <Pressable key={idx} onPress={() => onItemPress(searchTerm, d)}>
+          {renderItem({ searchTerm: searchTerm, item: d })}
+        </Pressable>,
       );
     });
 
     if (rows.length === 0 && !isLoading) {
       return (
-        <EmptyContent
-          item={
-            debouncedSearchTerm === ''
-              ? EmptyContentConfig.emptySearchText
-              : EmptyContentConfig.noSearchDataFound
-          }
-        />
+        <Pressable onPress={() => onItemPress(searchTerm, null)}>
+          {renderItem({ searchTerm: searchTerm, item: null })}
+        </Pressable>
       );
     }
 
@@ -97,6 +104,8 @@ const SearchBottomSheetInput = ({
         label={label}
         value={inputVal}
         onPress={toggleModal}
+        placeholder={placeholder}
+        disabled={disabled}
         {...props}
       />
 
@@ -104,6 +113,7 @@ const SearchBottomSheetInput = ({
         fullScreen={true}
         scrollViewProps={{
           showsVerticalScrollIndicator: false,
+          keyboardShouldPersistTaps: 'always',
         }}
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}>
@@ -118,7 +128,7 @@ const SearchBottomSheetInput = ({
           <BaseScrollView
             style={styles.body}
             showsVerticalScrollIndicator={false}>
-            {renderRows()}
+            {!isLoading && renderRows()}
           </BaseScrollView>
         </View>
       </BottomSheet>

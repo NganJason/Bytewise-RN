@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -57,7 +56,6 @@ const ExpenseIncomeForm = ({
   onTransactionTypeChange = function () {},
 }) => {
   const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
   const {
     updateLastTransactionCurrency,
@@ -248,11 +246,10 @@ const ExpenseIncomeForm = ({
 
   const onCurrencyChange = e => {
     let currency = e?.code || getUserBaseCurrency();
-    e?.code ||
-      setTransactionForm({
-        ...transactionForm,
-        currency: currency,
-      });
+    setTransactionForm({
+      ...transactionForm,
+      currency: currency,
+    });
     updateLastTransactionCurrency(currency);
   };
 
@@ -467,10 +464,3 @@ const ExpenseIncomeForm = ({
 };
 
 export default ExpenseIncomeForm;
-
-const getStyles = _ =>
-  StyleSheet.create({
-    btnContainer: {
-      flexDirection: 'row',
-    },
-  });

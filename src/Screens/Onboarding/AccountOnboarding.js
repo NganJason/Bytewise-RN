@@ -72,10 +72,9 @@ const AccountOnboarding = ({}) => {
   return (
     <View style={styles.container}>
       <View>
-        <BaseText h1>Setup your</BaseText>
-        <BaseText h1>accounts</BaseText>
+        <BaseText h1>Create assets and debts</BaseText>
         <BaseText text2 style={styles.subtitle} numberOfLines={0}>
-          Accounts keep track of your money and net worth
+          Organise your net worth in one place
         </BaseText>
       </View>
 
@@ -114,20 +113,13 @@ const AccountOnboarding = ({}) => {
 
 const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
   const { data } = useContext(OnboardingDataContext);
 
   if (equityType === EQUITY_TYPE_ASSET) {
     return (
-      <BaseRow
-        showDivider={false}
-        onPress={() =>
-          navigation.navigate(ROUTES.accountSelection, {
-            is_onboarding: true,
-          })
-        }>
+      <BaseRow showDivider={false} disabled>
         <BaseText style={{ color: theme.colors.color8 }}>
-          Eg: OCBC Savings Account
+          E.g. OCBC Savings Account
         </BaseText>
         <AmountText
           amount={new Amount(300, data.currency)}
@@ -138,15 +130,9 @@ const ExampleRow = ({ equityType = EQUITY_TYPE_ASSET }) => {
   }
 
   return (
-    <BaseRow
-      showDivider={false}
-      onPress={() =>
-        navigation.navigate(ROUTES.accountSelection, {
-          is_onboarding: true,
-        })
-      }>
+    <BaseRow showDivider={false} disabled>
       <BaseText style={{ color: theme.colors.color8 }}>
-        Eg: Tuition Fee Loan
+        E.g. Tuition Fee Loan
       </BaseText>
       <AmountText
         amount={new Amount(4000, data.currency)}

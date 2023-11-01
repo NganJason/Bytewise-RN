@@ -1,13 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
-import {
-  BaseScreen,
-  BaseText,
-  BaseCard,
-  BaseGrid,
-  BaseScrollView,
-} from '../../Components';
+import { BaseScreen, BaseText, BaseCard, BaseGrid } from '../../Components';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,

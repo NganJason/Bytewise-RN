@@ -72,12 +72,12 @@ const TransactionCalendarScreen = () => {
     return (
       <View style={styles.dayInfoContainer}>
         {Math.abs(expense) > 0 && (
-          <BaseText text6 margin={{ top: 0 }} color={theme.colors.regularRed}>
+          <BaseText text7 margin={{ top: 0 }} color={theme.colors.regularRed}>
             {expense.toFixed(2)}
           </BaseText>
         )}
         {Math.abs(income) > 0 && (
-          <BaseText text6 color={theme.colors.color1}>
+          <BaseText text7 color={theme.colors.color1}>
             {income.toFixed(2)}
           </BaseText>
         )}

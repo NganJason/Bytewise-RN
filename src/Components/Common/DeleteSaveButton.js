@@ -26,6 +26,7 @@ const DeleteSaveButton = ({
           width={'48%'}
           onPress={onDelete}
           loading={isDeleteLoading}
+          disabled={isSaveLoading}
         />
       )}
       <BaseButton
@@ -34,6 +35,7 @@ const DeleteSaveButton = ({
         width={allowDelete ? '48%' : 200}
         onPress={onSave}
         loading={isSaveLoading}
+        disabled={isDeleteLoading}
       />
     </View>
   );

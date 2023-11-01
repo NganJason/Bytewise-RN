@@ -38,7 +38,7 @@ const FONT_SIZES = {
   h5: 17,
   h6: 15,
   h7: 13,
-  h8: 10,
+  h8: 11,
   h9: 9,
 };
 
@@ -142,6 +142,11 @@ export const THEME = createTheme({
       color: COLORS.black,
     },
     text6: {
+      fontFamily: FONT_FAMILY.medium,
+      fontSize: FONT_SIZES.h8,
+      color: COLORS.black,
+    },
+    text7: {
       fontFamily: FONT_FAMILY.medium,
       fontSize: FONT_SIZES.h9,
       color: COLORS.black,

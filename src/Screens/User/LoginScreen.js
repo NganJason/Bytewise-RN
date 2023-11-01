@@ -59,7 +59,7 @@ const LoginScreen = () => {
   useError([getLoginError()]);
 
   return (
-    <BaseScreen scrollable>
+    <BaseScreen>
       <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}

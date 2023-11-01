@@ -42,9 +42,12 @@ const AmountText = ({
   const renderAmountText = () => {
     let text = '';
     const { sign } = getAmountAttr();
-    let currencySymbol = getCurrencyMap(amount.getCurrency()).symbol;
+    const currencySymbol = getCurrencyMap(amount.getCurrency()).symbol;
 
     if (sensitive && shouldHideSensitiveInfo()) {
+      if (suffix !== '') {
+        return `${currencySymbol} - ${suffix}`;
+      }
       return `${currencySymbol} -`;
     }
 
@@ -63,15 +66,15 @@ const AmountText = ({
     if (showSign) {
       shouldShowSign = true;
     }
-    if (showNegativeOnly && sign === '-') {
+    if (showNegativeOnly && sign === '- ') {
       shouldShowSign = true;
     }
-    if (showPositiveOnly && sign === '+') {
+    if (showPositiveOnly && sign === '+ ') {
       shouldShowSign = true;
     }
 
     if (shouldShowSign) {
-      text = `${sign} ${text}`;
+      text = `${sign}${text}`;
     }
 
     if (suffix !== '') {

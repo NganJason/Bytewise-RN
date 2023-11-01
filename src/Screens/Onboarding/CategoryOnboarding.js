@@ -48,10 +48,9 @@ const CategoryOnboarding = () => {
   return (
     <View style={styles.container}>
       <View>
-        <BaseText h1>Customise your</BaseText>
-        <BaseText h1>categories</BaseText>
+        <BaseText h1>Create categories</BaseText>
         <BaseText text2 style={styles.subtitle} numberOfLines={0}>
-          Categories group and track your daily transactions
+          Categorise your daily transactions
         </BaseText>
       </View>
 

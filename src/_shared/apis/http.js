@@ -56,14 +56,22 @@ export const setAxiosResponseInterceptors = ({ on401 }) => {
   }
 };
 
-export const sendPostRequest = async (endpoint = '', body = {}) => {
+export const sendPostRequest = async (
+  endpoint = '',
+  body = {},
+  { signal } = {},
+) => {
   try {
-    const { data } = await axiosInstance.post(endpoint, {
-      app_meta: {
-        timezone: Localization.timezone,
+    const { data } = await axiosInstance.post(
+      endpoint,
+      {
+        app_meta: {
+          timezone: Localization.timezone,
+        },
+        ...body,
       },
-      ...body,
-    });
+      { signal },
+    );
     return data?.body;
   } catch (e) {
     console.log(

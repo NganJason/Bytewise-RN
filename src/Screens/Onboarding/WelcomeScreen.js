@@ -15,7 +15,7 @@ import { useDimension } from '../../_shared/hooks';
 
 const items = [
   {
-    desc: 'Setup your base currency',
+    desc: 'Set up your base currency',
     iconName: 'dollar-sign',
     iconType: 'feather',
   },
@@ -25,17 +25,17 @@ const items = [
     iconType: 'feather',
   },
   {
-    desc: 'Allocate budgets to your categories',
+    desc: 'Allocate budgets',
     iconName: 'profile',
     iconType: 'antdesign',
   },
   {
-    desc: 'Setup accounts to track your net worth',
+    desc: 'Create assets and debts',
     iconName: 'wallet',
     iconType: 'antdesign',
   },
   {
-    desc: 'Track your investment holdings',
+    desc: 'Track your investments',
     iconName: 'line-graph',
     iconType: 'entypo',
   },
@@ -116,7 +116,6 @@ const getStyles = (theme, screenHeight) => {
     },
     body: {
       flex: 1,
-      paddingTop: screenHeight * 0.015,
     },
     row: {
       flexDirection: 'row',

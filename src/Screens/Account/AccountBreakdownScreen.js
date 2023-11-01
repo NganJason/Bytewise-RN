@@ -1,4 +1,4 @@
-import { Icon, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
@@ -8,8 +8,8 @@ import {
   BaseText,
   DateNavigator,
   BaseLoadableView,
-  BaseButton,
   Transactions,
+  IconButton,
 } from '../../Components';
 import { card, coin, coinsack } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
@@ -76,10 +76,6 @@ const AccountBreakdownScreen = ({ route }) => {
       currency = getUserBaseCurrency(),
     } = getAccount?.data?.account || {};
 
-    const textColor = isAccountTypeAsset(accountType)
-      ? theme.colors.color1
-      : theme.colors.color12;
-
     const getImg = () => {
       if (isAccountTypeAsset(accountType)) {
         return coin;
@@ -93,39 +89,36 @@ const AccountBreakdownScreen = ({ route }) => {
     return (
       <>
         <View style={styles.title}>
-          <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
-            {account_name}
-          </BaseText>
+          <View style={styles.accountNameContainer}>
+            <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+              {account_name}
+            </BaseText>
+            <IconButton
+              iconType="feather"
+              iconName="edit"
+              type="clear"
+              color={theme.colors.color1}
+              iconSize={18}
+              buttonStyle={styles.editIcon}
+              onPress={() => {
+                navigation.navigate(ROUTES.accountForm, {
+                  account_id: accountID,
+                });
+              }}
+            />
+          </View>
           <AmountText
             h2
             amount={new Amount(balance, currency)}
             showNegativeOnly={isAccountTypeAsset(accountType)}
-            margin={{ top: 8, bottom: 6 }}
+            margin={{ top: 8, bottom: 8 }}
             isLoading={getAccount.isLoading}
             sensitive
           />
 
-          <BaseText
-            text4
-            margin={{ bottom: 4 }}
-            isLoading={getAccount.isLoading}>
+          <BaseText text4 isLoading={getAccount.isLoading}>
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
-          <BaseButton
-            title="Edit Account"
-            type="clear"
-            align="flex-start"
-            size="sm"
-            textStyle={{ color: textColor }}
-            icon={
-              <Icon name="edit" type="feather" color={textColor} size={13} />
-            }
-            onPress={() => {
-              navigation.navigate(ROUTES.accountForm, {
-                account_id: accountID,
-              });
-            }}
-          />
         </View>
         <BaseImage source={getImg()} containerStyle={styles.image} />
       </>
@@ -230,6 +223,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     debtText: {
       marginBottom: theme.spacing.md,
       color: theme.colors.color7,
+    },
+    accountNameContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    editIcon: {
+      marginLeft: 10,
     },
   });
 
