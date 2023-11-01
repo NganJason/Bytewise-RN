@@ -49,6 +49,7 @@ import { getTotalInvestmentCost, getStockUpdateTime } from './investment';
 import { capitalize, capitalizeFirstWord } from './string';
 import { toastError } from './toast';
 import {
+  isTransactionTypeTransfer,
   groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,
@@ -104,6 +105,7 @@ export {
   capitalize,
   capitalizeFirstWord,
   toastError,
+  isTransactionTypeTransfer,
   groupDatesByMonth,
   mergeTransactionsCategory,
   mergeTransactionCategory,

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Icon, useTheme } from '@rneui/themed';
+import { Dialog, Icon, useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
 import {
@@ -12,28 +12,25 @@ import {
   BaseLoadableView,
   EmptyContent,
   TouchInput,
+  DeleteSaveButton,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { useGetTransaction } from '../../_shared/query';
+import { useGetAccounts, useGetTransaction } from '../../_shared/query';
 import { useValidation } from '../../_shared/hooks';
 import { validateTransfer } from '../../_shared/validator';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
-
-const mockAccounts = [
-  {
-    account_id: '1',
-    account_name: 'OCBC',
-  },
-  {
-    account_id: '2',
-    account_name: 'DBS',
-  },
-  {
-    account_id: '3',
-    account_name: 'Credit Card',
-  },
-];
+import {
+  useCreateTransaction,
+  useDeleteTransaction,
+  useUpdateTransaction,
+} from '../../_shared/mutations';
+import {
+  ACCOUNT_TYPE_INVESTMENT,
+  TRANSACTION_TYPE_TRANSFER,
+} from '../../_shared/apis/enum';
+import { getDateStringFromTs, renderCalendarTs } from '../../_shared/util';
+import { Calendar } from 'react-native-calendars';
 
 const fromAccountFocus = 1;
 const toAccountFocus = 2;
@@ -72,10 +69,36 @@ const TransferForm = ({ transactionID = '' }) => {
     );
   }, [transactionForm]);
 
+  const isAddTransaction = () => {
+    return transactionForm.transaction_id === '';
+  };
+
   const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
   const toggleAccountModal = () => {
     setIsAccountModalVisible(!isAccountModalVisible);
   };
+
+  const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
+  const toggleCalendarModal = () => {
+    setIsCalendarModalVisible(!isCalendarModalVisible);
+  };
+
+  const createTransaction = useCreateTransaction({
+    onSuccess: navigation.goBack,
+  });
+
+  const updateTransaction = useUpdateTransaction({
+    onSuccess: navigation.goBack,
+  });
+
+  const deleteTransaction = useDeleteTransaction({
+    onSuccess: navigation.goBack,
+    meta: {
+      account_id: transactionForm?.account?.account_id || '',
+      from_account_id: transactionForm?.from_account?.account_id || '',
+      to_account_id: transactionForm?.to_account?.account_id || '',
+    },
+  });
 
   const getTransaction = useGetTransaction(
     { transaction_id: transactionID },
@@ -87,6 +110,22 @@ const TransferForm = ({ transactionID = '' }) => {
       setTransactionForm(getTransaction.data.transaction);
     }
   }, [getTransaction.data]);
+
+  const getAccounts = useGetAccounts({});
+
+  const getAccountOptions = () => {
+    let { accounts = [] } = getAccounts?.data || {};
+    accounts = accounts.filter(d => d.account_type !== ACCOUNT_TYPE_INVESTMENT);
+    return accounts;
+  };
+
+  const onTransactionTimeChange = e => {
+    setTransactionForm({
+      ...transactionForm,
+      transaction_time: e,
+    });
+    toggleCalendarModal();
+  };
 
   const onAmountChange = e => {
     setTransactionForm({ ...transactionForm, amount: e });
@@ -139,7 +178,26 @@ const TransferForm = ({ transactionID = '' }) => {
       return;
     }
 
-    navigation.goBack();
+    let mutation;
+    if (!isAddTransaction()) {
+      mutation = updateTransaction;
+    } else {
+      mutation = createTransaction;
+    }
+
+    mutation.mutate({
+      ...transactionForm,
+      transaction_type: TRANSACTION_TYPE_TRANSFER,
+      amount: String(transactionForm.amount),
+      from_account_id: transactionForm.from_account.account_id,
+      to_account_id: transactionForm.to_account.account_id,
+    });
+  };
+
+  const onDelete = () => {
+    deleteTransaction.mutate({
+      transaction_id: transactionForm.transaction_id,
+    });
   };
 
   const isFormLoading = () => {
@@ -157,6 +215,37 @@ const TransferForm = ({ transactionID = '' }) => {
         enableOnAndroid={true}
         keyboardOpeningTime={0}
         showsVerticalScrollIndicator={false}>
+        <TouchInput
+          label="Date"
+          value={renderCalendarTs(transactionForm.transaction_time)}
+          onPress={toggleCalendarModal}
+        />
+        <Dialog
+          isVisible={isCalendarModalVisible}
+          onBackdropPress={toggleCalendarModal}>
+          <Calendar
+            showSixWeeks
+            initialDate={getDateStringFromTs(transactionForm.transaction_time)}
+            hideExtraDays={false}
+            onDayPress={obj => {
+              onTransactionTimeChange(
+                new Date(obj.timestamp).setHours(0, 0, 0, 0),
+              );
+            }}
+            markedDates={{
+              [getDateStringFromTs(transactionForm.transaction_time)]: {
+                selected: true,
+                disableTouchEvent: true,
+                selectedColor: theme.colors.primary,
+              },
+            }}
+            theme={{
+              todayTextColor: theme.colors.primary,
+              arrowColor: theme.colors.primary,
+            }}
+          />
+        </Dialog>
+
         <BaseMonetaryInput
           label="Amount"
           value={transactionForm.amount}
@@ -195,7 +284,7 @@ const TransferForm = ({ transactionID = '' }) => {
           onBackdropPress={toggleAccountModal}
           close={toggleAccountModal}
           onSelect={onAccountChange}
-          items={mockAccounts}
+          items={getAccountOptions()}
           label="account_name"
           headerProps={{
             leftComponent: (
@@ -217,12 +306,12 @@ const TransferForm = ({ transactionID = '' }) => {
           )}
         />
 
-        <BaseButton
-          title="Save"
-          size="lg"
-          width={200}
-          onPress={onFormSubmit}
-          loading={isFormButtonLoading()}
+        <DeleteSaveButton
+          onSave={onFormSubmit}
+          isSaveLoading={isFormButtonLoading()}
+          onDelete={onDelete}
+          isDeleteLoading={deleteTransaction.isLoading}
+          allowDelete={!isAddTransaction()}
         />
       </BaseKeyboardAwareScrollView>
     </BaseLoadableView>

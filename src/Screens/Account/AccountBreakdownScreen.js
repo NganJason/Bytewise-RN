@@ -126,10 +126,6 @@ const AccountBreakdownScreen = ({ route }) => {
   };
 
   const renderContent = () => {
-    if (accountType === ACCOUNT_TYPE_LOAN) {
-      return renderMoreFeature();
-    }
-
     return (
       <>
         <View style={styles.dataNavigator}>
