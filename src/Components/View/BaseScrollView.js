@@ -25,7 +25,7 @@ const BaseScrollView = ({
 
 const getStyles = theme =>
   StyleSheet.create({
-    scrollContainer: { height: '100%' },
+    scrollContainer: { minHeight: '100%' },
     container: {
       flex: 1,
       marginBottom: 20,
