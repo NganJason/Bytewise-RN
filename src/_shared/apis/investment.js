@@ -120,6 +120,7 @@ export const updateHolding = async ({
         lots.length > 0
           ? [
               {
+                lot_id: lots[0].lot_id,
                 shares: String(lots[0].shares),
                 cost_per_share: String(lots[0].cost_per_share),
               },
