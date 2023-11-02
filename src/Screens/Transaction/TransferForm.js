@@ -209,7 +209,7 @@ const TransferForm = ({ transactionID = '' }) => {
   };
 
   return (
-    <BaseLoadableView isLoading={isFormLoading()}>
+    <BaseLoadableView isLoading={isFormLoading()} scrollable={true}>
       <BaseKeyboardAwareScrollView
         keyboardShouldPersistTaps="always"
         enableOnAndroid={true}
