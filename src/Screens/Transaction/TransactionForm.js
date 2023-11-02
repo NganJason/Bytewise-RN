@@ -23,12 +23,12 @@ const scrollableTabs = [
     iconName: 'credit-card',
     iconType: 'feather',
   },
-  {
-    name: 'Transfer',
-    val: TRANSACTION_TYPE_TRANSFER,
-    iconName: 'repeat',
-    iconType: 'feather',
-  },
+  // {
+  //   name: 'Transfer',
+  //   val: TRANSACTION_TYPE_TRANSFER,
+  //   iconName: 'repeat',
+  //   iconType: 'feather',
+  // },
 ];
 
 const TransactionForm = ({ route }) => {

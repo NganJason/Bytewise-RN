@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bytewise Test",
-    "slug": "BytewiseTest",
+    "name": "Bytewise",
+    "slug": "Pocketeer",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,8 +10,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bytewisetest",
-      "buildNumber": "33"
+      "bundleIdentifier": "com.pocketeer",
+      "buildNumber": "35"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2c5343e3-694e-4b4b-805e-d4d431a38e56"
+        "projectId": "f4f00864-6a7f-4aee-ab8a-ebd2b7bed048"
       }
     }
   }
