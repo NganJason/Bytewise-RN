@@ -32,7 +32,6 @@ import {
   useDimension,
   useTransactionGroups,
 } from '../../_shared/hooks';
-import { sapiens3 } from '../../_shared/constant/asset';
 import { Amount } from '../../_shared/object';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
@@ -48,7 +47,6 @@ const AccountBreakdownScreen = ({ route }) => {
   } = route?.params || {};
 
   const { getUserBaseCurrency } = useContext(UserMetaContext);
-
   const [activeDate, setActiveDate] = useState(new Date());
 
   const { setTimeRange, transactionGroups, isLoading, getErrors } =
@@ -90,7 +88,11 @@ const AccountBreakdownScreen = ({ route }) => {
       <>
         <View style={styles.title}>
           <View style={styles.accountNameContainer}>
-            <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+            <BaseText
+              h1
+              isLoading={getAccount.isLoading}
+              loadingLen={10}
+              numberOfLines={1}>
               {account_name}
             </BaseText>
             <IconButton
@@ -139,26 +141,6 @@ const AccountBreakdownScreen = ({ route }) => {
           {renderRows()}
         </BaseLoadableView>
       </>
-    );
-  };
-
-  const renderMoreFeature = () => {
-    return (
-      <View style={styles.debtContainer}>
-        <BaseImage
-          width={screenWidth * 0.4}
-          height={screenWidth * 0.4}
-          source={sapiens3}
-        />
-        <View style={styles.debtTextContainer}>
-          <BaseText text3 style={styles.debtText}>
-            More features coming soon.
-          </BaseText>
-          <BaseText text3 style={styles.debtText}>
-            Stay tuned!
-          </BaseText>
-        </View>
-      </View>
     );
   };
 
@@ -224,10 +206,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       marginBottom: theme.spacing.md,
       color: theme.colors.color7,
     },
+    title: {
+      flex: 1,
+    },
     accountNameContainer: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      width: '75%',
     },
     editIcon: {
       marginLeft: 10,

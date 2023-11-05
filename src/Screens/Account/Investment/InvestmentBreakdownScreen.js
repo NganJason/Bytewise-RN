@@ -65,7 +65,11 @@ const InvestmentBreakdownScreen = ({ route }) => {
       <>
         <View style={styles.title}>
           <View style={styles.accountNameContainer}>
-            <BaseText h1 isLoading={getAccount.isLoading} loadingLen={10}>
+            <BaseText
+              h1
+              isLoading={getAccount.isLoading}
+              loadingLen={10}
+              numberOfLines={1}>
               {account_name}
             </BaseText>
             <IconButton
@@ -183,10 +187,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       flex: 1,
       paddingVertical: theme.spacing.lg,
     },
+    title: {
+      flex: 1,
+    },
     accountNameContainer: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      width: '75%',
     },
     editIcon: {
       marginLeft: 10,

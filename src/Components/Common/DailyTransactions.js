@@ -94,26 +94,14 @@ const DailyTransactions = ({
               showDivider
               dividerMargin={1}>
               <View style={styles.listItemContent}>
-                <BaseText
-                  text5
-                  style={styles.category}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
+                <BaseText text5 style={styles.category} numberOfLines={1}>
                   {formatCategoryName(t?.category?.category_name || '')}
                 </BaseText>
                 <View style={styles.noteWrapper}>
-                  <BaseText
-                    text3
-                    style={styles.note}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
+                  <BaseText text3 style={styles.note} numberOfLines={1}>
                     {formatNote(t)}
                   </BaseText>
-                  <BaseText
-                    text5
-                    style={styles.account}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
+                  <BaseText text5 style={styles.account} numberOfLines={1}>
                     {formatAccountName(t)}
                   </BaseText>
                 </View>
@@ -123,7 +111,6 @@ const DailyTransactions = ({
                   style={styles.amount}
                   numberOfLines={1}
                   showSign={!isTransactionTypeTransfer(t.transaction_type)}
-                  ellipsizeMode="tail"
                 />
               </View>
             </BaseListItem>

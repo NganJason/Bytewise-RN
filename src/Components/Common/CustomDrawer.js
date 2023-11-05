@@ -94,8 +94,8 @@ const CustomDrawer = () => {
     <View style={styles.screen}>
       <DrawerContentScrollView>
         <View>
-          <BaseText h2 margin={{ bottom: 18 }}>
-            {capitalize(getUserName())}
+          <BaseText h3 margin={{ bottom: 18 }} numberOfLines={1}>
+            Hi, {capitalize(getUserName())}
           </BaseText>
         </View>
         <Currency code={getUserBaseCurrency()} />

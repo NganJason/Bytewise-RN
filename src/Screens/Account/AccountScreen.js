@@ -98,13 +98,15 @@ const AccountScreen = () => {
           onPress={() => {
             onAccountPress(item);
           }}>
-          <View>
-            <BaseText text3>{item.account_name}</BaseText>
+          <View style={styles.infoCol}>
+            <BaseText text3 numberOfLines={1}>
+              {item.account_name}
+            </BaseText>
             <BaseText text5 color={theme.colors.color8} margin={{ top: 4 }}>
               {capitalize(ACCOUNT_TYPES[item.account_type])}
             </BaseText>
           </View>
-          <View style={styles.rowCol}>
+          <View style={styles.amountCol}>
             <AmountText
               text4
               amount={amount}
@@ -241,7 +243,14 @@ const getStyles = (_, screenWidth, screenHeight) =>
       right: screenWidth * -0.2,
       zIndex: -1,
     },
-    rowCol: { justifyContent: 'center' },
+    amountCol: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    },
+    infoCol: {
+      flex: 2,
+    },
   });
 
 export default AccountScreen;
