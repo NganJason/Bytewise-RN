@@ -9,6 +9,7 @@ import {
   BaseDivider,
   AmountText,
   BaseScreen3,
+  BaseScreenV2,
   BaseLinearProgress,
   BaseLoadableView,
   BaseButton,
@@ -305,7 +306,7 @@ const CategoryBreakdownScreen = ({ route }) => {
             date={activeDate}
             onForward={onDateMove}
             onBackward={onDateMove}
-            year={timeRangeType === TIME_RANGE_YEARLY}
+            isYear={timeRangeType === TIME_RANGE_YEARLY}
           />
         </View>
 

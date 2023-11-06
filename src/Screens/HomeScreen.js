@@ -6,8 +6,8 @@ import TransactionScreen from './Transaction/TransactionScreen';
 
 import ROUTES from '../_shared/constant/routes';
 
-import OverviewScreen from './Overview/OverviewScreen';
 import AccountScreen from './Account/AccountScreen';
+import BudgetScreen from './Budget/BudgetScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +26,9 @@ const HomeScreen = () => {
         break;
       case ROUTES.account:
         iconName = 'credit-card';
+        break;
+      case ROUTES.budget:
+        iconName = 'list';
         break;
     }
     return (
@@ -54,7 +57,7 @@ const HomeScreen = () => {
       })}>
       <Tab.Screen name={ROUTES.account} component={AccountScreen} />
       <Tab.Screen name={ROUTES.transaction} component={TransactionScreen} />
-      <Tab.Screen name={ROUTES.overview} component={OverviewScreen} />
+      <Tab.Screen name={ROUTES.budget} component={BudgetScreen} />
     </Tab.Navigator>
   );
 };

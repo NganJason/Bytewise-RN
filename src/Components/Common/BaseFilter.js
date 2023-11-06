@@ -5,7 +5,6 @@ import { useDimension } from '../../_shared/hooks';
 import BaseCheckbox from '../Input/BaseCheckbox';
 import { BaseButton, IconButton } from '../Touch';
 import { BaseScrollableTab, BaseScrollView } from '../View';
-import EmptyContent from './EmptyContent';
 
 const BaseFilter = ({
   options = [
@@ -14,9 +13,7 @@ const BaseFilter = ({
       iconName: 'filetext1',
       iconType: 'ant-design',
       items: [{ name: 'item1' }, { name: 'item2' }],
-      emptyContentWithCallback: onPress => (
-        <EmptyContent onRedirect={onPress} />
-      ),
+      emptyContentWithCallback: onPress => {},
     },
   ],
   selectedItems = {},
@@ -27,9 +24,6 @@ const BaseFilter = ({
   const styles = getStyles(theme, screenHeight);
 
   const [activeTabIdx, setActiveTabIdx] = useState(0);
-  const onTabChange = (_, idx) => {
-    setActiveTabIdx(idx);
-  };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const toggleModal = () => {
@@ -84,8 +78,8 @@ const BaseFilter = ({
   };
 
   const renderRows = () => {
-    let rows = [];
-    let activeTab = options[activeTabIdx];
+    const rows = [];
+    const activeTab = options[activeTabIdx];
 
     activeTab.items.map((d, idx) => {
       rows.push(
@@ -143,9 +137,8 @@ const BaseFilter = ({
           </View>
           <BaseScrollableTab
             tabs={options}
-            activeTab={options[activeTabIdx]}
-            onTabChange={onTabChange}
-            highlightActiveTab={options.length > 1}
+            activeTabIdx={activeTabIdx}
+            onTabChange={setActiveTabIdx}
           />
           <BaseScrollView
             containerStyle={styles.rows}

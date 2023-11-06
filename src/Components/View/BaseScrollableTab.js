@@ -2,96 +2,44 @@ import { Icon } from '@rneui/base';
 import { useTheme } from '@rneui/themed';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { capitalize } from '../../_shared/util';
+
 import { BaseText } from '../Text';
+import { capitalize } from '../../_shared/util';
 
 const BaseScrollableTab = ({
   tabs = [{ name: '', iconName: '', iconType: '' }],
-  activeTab = { name: '', iconName: '', iconType: '' },
-  onTabChange = function (tab, idx) {},
-  disableNonActive = false,
-  highlightActiveTab = true,
-  hideNonActive = false,
-  highlightedTabs = [],
-  highlightedColors = null,
+  activeTabIdx = 0,
+  onTabChange = function (idx) {},
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const isActive = tabName => {
-    return activeTab.name === tabName;
-  };
-
-  const shouldHide = tabName => {
-    return hideNonActive && !isActive(tabName);
-  };
-
-  const shouldDisable = tabName => {
-    return disableNonActive && !isActive(tabName);
-  };
-
-  const getTextStyle = tabName => {
-    if (shouldHighlightTab(tabName)) {
-      return {
-        color: highlightedColors ? highlightedColors : theme.colors.color1,
-      };
-    }
-    if (shouldDisable(tabName)) {
-      return styles.disabledTabText;
-    }
-    return styles.tabText;
-  };
-
-  const getIconColor = tabName => {
-    if (shouldHighlightTab(tabName)) {
-      return highlightedColors ? highlightedColors : theme.colors.color1;
-    }
-    if (shouldDisable(tabName)) {
-      return theme.colors.color8;
-    }
-    return theme.colors.black;
-  };
-
-  const shouldHighlightTab = tabName => {
-    if (activeTab.name === tabName && highlightActiveTab) {
-      return true;
-    }
-
-    if (highlightedTabs.some(d => d.name === tabName)) {
-      return true;
-    }
-
-    return false;
-  };
+  const activeColor = theme.colors.color1;
+  const inActiveColor = theme.colors.black;
 
   const renderTabs = () => {
-    let allTabs = [];
+    const allTabs = [];
 
     tabs.map((tab, idx) => {
-      if (tab.name === '') {
-        return;
-      }
-
-      if (shouldHide(tab.name)) {
-        return;
-      }
-
       allTabs.push(
         <TouchableOpacity
-          key={tab.name}
-          onPress={() => onTabChange(tab, idx)}
-          disabled={shouldDisable(tab.name)}
+          key={idx}
+          onPress={() => onTabChange(idx)}
           style={styles.tab}>
           {tab.iconName !== '' && tab.iconType !== '' && (
             <Icon
               name={tab.iconName}
               type={tab.iconType}
               containerStyle={styles.icon}
-              color={getIconColor(tab.name)}
+              color={idx === activeTabIdx ? activeColor : inActiveColor}
               size={17}
             />
           )}
-          <BaseText text4 style={getTextStyle(tab.name)}>
+          <BaseText
+            text4
+            style={{
+              color: idx === activeTabIdx ? activeColor : inActiveColor,
+            }}>
             {capitalize(tab.name)}
           </BaseText>
         </TouchableOpacity>,
@@ -116,7 +64,7 @@ const BaseScrollableTab = ({
 const getStyles = theme =>
   StyleSheet.create({
     scrollContainer: {
-      padding: 2,
+      padding: 4,
     },
     tab: {
       flexDirection: 'row',
@@ -136,12 +84,6 @@ const getStyles = theme =>
       shadowRadius: 2,
     },
     icon: { marginRight: 6 },
-    tabText: {
-      color: theme.colors.black,
-    },
-    disabledTabText: {
-      color: theme.colors.color8,
-    },
   });
 
 export default BaseScrollableTab;

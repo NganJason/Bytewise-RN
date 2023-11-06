@@ -7,11 +7,10 @@ import {
   BaseButton,
   BaseCheckboxInput,
   BaseMonetaryInput,
-  BaseKeyboardAwareScrollView,
-  BaseScreen,
   BaseText,
   TouchInput,
   DeleteSaveButton,
+  BaseScreenV2,
 } from '../../Components';
 import {
   BUDGET_REPEAT_ALL_TIME,
@@ -224,9 +223,9 @@ const BudgetForm = ({ route }) => {
   useError([...getQueries(), updateBudget]);
 
   return (
-    <BaseScreen
+    <BaseScreenV2
       isLoading={isLoading()}
-      scrollable
+      backButtonProps={{ show: true }}
       headerProps={{
         allowBack: true,
         centerComponent: (
@@ -237,96 +236,89 @@ const BudgetForm = ({ route }) => {
           </View>
         ),
       }}>
-      <BaseKeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
-        enableOnAndroid={true}
-        keyboardOpeningTime={0}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.formBody}>
-        <TouchInput
-          label="Category"
-          value={budgetForm.category_name}
-          onPress={toggleCategoryModal}
-          errorMessage={showValidation && formErrors.category}
-          disabled={!isAddBudget()}
-        />
-        <BaseBottomSheet
-          isVisible={isCategoryModalVisible}
-          onBackdropPress={toggleCategoryModal}
-          close={toggleCategoryModal}
-          onSelect={onCategoryChange}
-          items={getCategoryItems()}
-          label="name"
-          headerProps={{
-            leftComponent: (
-              <BaseButton
-                title="Edit"
-                type="clear"
-                align="flex-end"
-                size="md"
-                onPress={onEditCategory}
-              />
-            ),
-          }}
-          renderEmptyItems={() => (
-            <EmptyContent
-              item={EmptyContentConfig.category}
-              route={ROUTES.categoryForm}
-              routeParam={{ category_type: TRANSACTION_TYPE_EXPENSE }}
-              onRedirect={toggleCategoryModal}
+      <TouchInput
+        label="Category"
+        value={budgetForm.category_name}
+        onPress={toggleCategoryModal}
+        errorMessage={showValidation && formErrors.category}
+        disabled={!isAddBudget()}
+      />
+      <BaseBottomSheet
+        isVisible={isCategoryModalVisible}
+        onBackdropPress={toggleCategoryModal}
+        close={toggleCategoryModal}
+        onSelect={onCategoryChange}
+        items={getCategoryItems()}
+        label="name"
+        headerProps={{
+          leftComponent: (
+            <BaseButton
+              title="Edit"
+              type="clear"
+              align="flex-end"
+              size="md"
+              onPress={onEditCategory}
             />
-          )}
-        />
-
-        <TouchInput
-          label="Budget Type"
-          value={BUDGET_TYPES[budgetForm.budget_type]}
-          onPress={toggleBudgetTypeModal}
-          errorMessage={showValidation && formErrors.budget_type}
-        />
-        <BaseBottomSheet
-          isVisible={isBudgetTypeModalVisible}
-          onBackdropPress={toggleBudgetTypeModal}
-          close={toggleBudgetTypeModal}
-          onSelect={onBudgetTypeChange}
-          items={getBudgetTypes()}
-          label="name"
-        />
-
-        <BaseMonetaryInput
-          label="Amount"
-          value={budgetForm.amount}
-          onChangeText={onBudgetAmountChange}
-          errorMessage={showValidation && formErrors.amount}
-          currency={getUserBaseCurrency()}
-        />
-
-        <View style={{ marginBottom: 40 }}>
-          <BaseCheckboxInput
-            label={isAddBudget() ? 'Add Budget For' : 'Edit Budget For'}
-            value={budgetForm.budget_repeat}
-            onChange={onBudgetRepeatChange}
-            items={getEditEnums()}
+          ),
+        }}
+        renderEmptyItems={() => (
+          <EmptyContent
+            item={EmptyContentConfig.category}
+            route={ROUTES.categoryForm}
+            routeParam={{ category_type: TRANSACTION_TYPE_EXPENSE }}
+            onRedirect={toggleCategoryModal}
           />
-        </View>
+        )}
+      />
 
-        <DeleteSaveButton
-          onSave={onSave}
-          isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
-          onDelete={toggleDeleteModal}
-          allowDelete={!isAddBudget()}
-        />
-        <DeleteBudgetOverlay
-          isVisible={isDeleteModalVisible}
-          close={toggleDeleteModal}
-          onChange={onBudgetRepeatChange}
+      <TouchInput
+        label="Budget Type"
+        value={BUDGET_TYPES[budgetForm.budget_type]}
+        onPress={toggleBudgetTypeModal}
+        errorMessage={showValidation && formErrors.budget_type}
+      />
+      <BaseBottomSheet
+        isVisible={isBudgetTypeModalVisible}
+        onBackdropPress={toggleBudgetTypeModal}
+        close={toggleBudgetTypeModal}
+        onSelect={onBudgetTypeChange}
+        items={getBudgetTypes()}
+        label="name"
+      />
+
+      <BaseMonetaryInput
+        label="Amount"
+        value={budgetForm.amount}
+        onChangeText={onBudgetAmountChange}
+        errorMessage={showValidation && formErrors.amount}
+        currency={getUserBaseCurrency()}
+      />
+
+      <View style={{ marginBottom: 40 }}>
+        <BaseCheckboxInput
+          label={isAddBudget() ? 'Add Budget For' : 'Edit Budget For'}
           value={budgetForm.budget_repeat}
+          onChange={onBudgetRepeatChange}
           items={getEditEnums()}
-          onConfirm={onDelete}
-          isConfirmLoading={deleteBudget.isLoading}
         />
-      </BaseKeyboardAwareScrollView>
-    </BaseScreen>
+      </View>
+
+      <DeleteSaveButton
+        onSave={onSave}
+        isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
+        onDelete={toggleDeleteModal}
+        allowDelete={!isAddBudget()}
+      />
+      <DeleteBudgetOverlay
+        isVisible={isDeleteModalVisible}
+        close={toggleDeleteModal}
+        onChange={onBudgetRepeatChange}
+        value={budgetForm.budget_repeat}
+        items={getEditEnums()}
+        onConfirm={onDelete}
+        isConfirmLoading={deleteBudget.isLoading}
+      />
+    </BaseScreenV2>
   );
 };
 

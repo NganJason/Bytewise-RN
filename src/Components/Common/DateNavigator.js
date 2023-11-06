@@ -15,7 +15,7 @@ const DateNavigator = ({
   date = new Date(),
   onForward = function () {},
   onBackward = function () {},
-  year = false,
+  isYear = false,
   enablePicker = false,
 }) => {
   const { theme } = useTheme();
@@ -31,7 +31,7 @@ const DateNavigator = ({
   };
 
   const renderDate = () => {
-    if (year) {
+    if (isYear) {
       return `${getYear(date)}`;
     }
 
@@ -41,7 +41,7 @@ const DateNavigator = ({
 
   const moveForward = () => {
     let newDate;
-    if (year) {
+    if (isYear) {
       newDate = moveMonth(date, 12);
     } else {
       newDate = moveMonth(date, 1);
@@ -51,7 +51,7 @@ const DateNavigator = ({
 
   const moveBackward = () => {
     let newDate;
-    if (year) {
+    if (isYear) {
       newDate = moveMonth(date, -12);
     } else {
       newDate = moveMonth(date, -1);
@@ -79,7 +79,7 @@ const DateNavigator = ({
         color={theme.colors.color8}
       />
       <DatePickerBottomSheet
-        mode={year ? DatePickerMode.Year : DatePickerMode.YearMonth}
+        mode={isYear ? DatePickerMode.Year : DatePickerMode.YearMonth}
         initialDate={date}
         isVisible={isDatePickerVisible}
         close={toggleDatePicker}

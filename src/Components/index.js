@@ -12,6 +12,7 @@ import {
 
 // Screen
 import {
+  BaseScreenV2,
   BaseScreen,
   BaseScreen2,
   BaseScreen3,
@@ -68,8 +69,6 @@ import {
   HoldingSearchResult,
 } from './Common';
 
-import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
-
 export {
   BaseCheckbox,
   BaseCheckboxInput,
@@ -122,10 +121,8 @@ export {
   BaseCalendar,
   Currency,
   DeleteSaveButton,
-  BaseDonutChart,
-  ChartLegend,
-  BaseDonutChartWithRows,
   BaseProgressTab,
   BaseSwipeableView,
   HoldingSearchResult,
+  BaseScreenV2,
 };
