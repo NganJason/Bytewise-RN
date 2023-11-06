@@ -31,7 +31,6 @@ import {
 } from '../../_shared/util';
 import { useGetAccounts } from '../../_shared/query';
 import { useError, useDimension } from '../../_shared/hooks';
-import AccountCharts from './AccountCharts';
 import { Amount } from '../../_shared/object';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
@@ -210,18 +209,7 @@ const AccountScreen = () => {
         color: theme.colors.color1,
         onPress: () => navigation.navigate(ROUTES.accountSelection),
       }}>
-      <BaseSwipeableView
-        items={[
-          renderAccountOverview(),
-          <AccountCharts
-            accounts={getAccounts?.data?.accounts || []}
-            assetSum={new Amount(assetValue, currency)}
-            debtSum={new Amount(debtValue, currency)}
-            onAccountPress={onAccountPress}
-          />,
-        ]}
-        enableDotIndicator
-      />
+      <BaseSwipeableView items={[renderAccountOverview()]} enableDotIndicator />
     </BaseScreen2>
   );
 };

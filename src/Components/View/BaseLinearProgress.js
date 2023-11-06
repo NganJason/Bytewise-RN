@@ -13,18 +13,20 @@ const BaseLinearProgress = ({
 
   const getColor = () => {
     if (value >= 1) {
+      return theme.colors.regularRed;
+    } else if (value >= 0.6) {
       return theme.colors.lightRed;
     }
-    return theme.colors.color2;
+    return theme.colors.color1;
   };
 
   const getPercentage = val => {
     let percentage = val * 100;
-    return percentage.toFixed(2);
+    return percentage.toFixed(0);
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <ProgressBar
         progressPercentage={getPercentage(value)}
         targetPercentage={getPercentage(target)}
@@ -36,7 +38,7 @@ const BaseLinearProgress = ({
           {getPercentage(value)}%
         </BaseText>
       )}
-    </View>
+    </>
   );
 };
 
@@ -91,24 +93,14 @@ export default BaseLinearProgress;
 
 const getStyles = theme =>
   StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    progressBarMargin: {
-      marginRight: 10,
-    },
     progressBarContainer: {
-      height: 3.5,
+      height: 6,
       borderRadius: 10,
       backgroundColor: theme.colors.color9,
       flex: 1,
     },
     progressBar: {
       height: '100%',
-      borderRadius: 10,
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      borderRadius: 8,
     },
   });

@@ -3,5 +3,13 @@ import HideKeyboard from './HideKeyboard';
 import SplashScreen from './SplashScreen';
 import BaseScreen2 from './BaseScreen2';
 import BaseScreen3 from './BaseScreen3';
+import BaseScreenV2 from './BaseScreenV2';
 
-export { BaseScreen, BaseScreen2, BaseScreen3, HideKeyboard, SplashScreen };
+export {
+  BaseScreenV2,
+  BaseScreen,
+  BaseScreen2,
+  BaseScreen3,
+  HideKeyboard,
+  SplashScreen,
+};

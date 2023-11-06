@@ -47,8 +47,18 @@ export const BaseToast = () => {
   return <Toast config={toastTheme} />;
 };
 
-BaseToast.show = opt => {
-  Toast.show(opt);
+BaseToast.show = ({
+  type = '',
+  text1 = '',
+  text2 = '',
+  onHide = function () {},
+}) => {
+  Toast.show({
+    type: type,
+    text1: text1,
+    text2: text2,
+    onHide: onHide,
+  });
 };
 
 const getStyles = theme =>

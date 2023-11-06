@@ -44,7 +44,6 @@ const useTransactionGroups = (
   const { categories = [] } = getCategories?.data || {};
 
   const getAccounts = useGetAccounts({});
-  let { accounts = [] } = getAccounts?.data || {};
 
   const getFilteredCategoryIDs = () => {
     let catIDs = categoryIDs;
@@ -96,11 +95,6 @@ const useTransactionGroups = (
   const getFilterOptions = () => {
     let categoryOptions = categories.map(d => {
       d.name = d.category_name;
-      return d;
-    });
-
-    let accountOptions = accounts.map(d => {
-      d.name = d.account_name;
       return d;
     });
 

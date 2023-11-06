@@ -29,11 +29,11 @@ const AmountText = ({
   const getAmountAttr = () => {
     let value = amount.getAmount();
     if (value > 0) {
-      return { styles: showColor && styles.positive, sign: '+' };
+      return { styles: showColor && styles.positive, sign: '+ ' };
     }
 
     if (value < 0) {
-      return { styles: showColor && styles.negative, sign: '-' };
+      return { styles: showColor && styles.negative, sign: '- ' };
     }
 
     return { styles: {}, sign: '' };
