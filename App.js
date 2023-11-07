@@ -38,7 +38,6 @@ import HoldingForm from './src/Screens/Account/Investment/HoldingForm';
 import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
 import LotForm from './src/Screens/Account/Investment/LotForm';
 import BottomToast from './src/Components/Common/BottomToast';
-import CategoryOverviewScreen from './src/Screens/Category/CategoryOverviewScreen';
 import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
 import SetupSplashScreen from './src/Screens/Onboarding/SetupSplashScreen';
@@ -53,7 +52,7 @@ import { useInitApp } from './src/_shared/hooks';
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be-test.onrender.com/api/v1';
 const LIVE_BASE_URL = 'https://pocketeer-be-live.onrender.com/api/v1';
-const BASE_URL = TEST_BASE_URL;
+const BASE_URL = LIVE_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -166,10 +165,6 @@ function Main() {
           <Stack.Screen
             name={ROUTES.categoryBreakdown}
             component={CategoryBreakdownScreen}
-          />
-          <Stack.Screen
-            name={ROUTES.categoriesOverview}
-            component={CategoryOverviewScreen}
           />
           <Stack.Screen
             name={ROUTES.transactionCalendar}
@@ -296,7 +291,7 @@ const HomeWithDrawer = () => (
     screenOptions={{
       swipeEnabled: false,
       headerShown: false,
-      drawerPosition: 'left',
+      drawerPosition: 'right',
     }}
     drawerContent={CustomDrawer}>
     <Drawer.Screen name={ROUTES.home} component={HomeScreen} />

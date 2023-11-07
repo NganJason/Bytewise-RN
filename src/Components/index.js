@@ -12,6 +12,7 @@ import {
 
 // Screen
 import {
+  BaseScreenV2,
   BaseScreen,
   BaseScreen2,
   BaseScreen3,
@@ -69,8 +70,6 @@ import {
   AggrSummary2,
 } from './Common';
 
-import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
-
 export {
   BaseCheckbox,
   BaseCheckboxInput,
@@ -123,11 +122,9 @@ export {
   BaseCalendar,
   Currency,
   DeleteSaveButton,
-  BaseDonutChart,
-  ChartLegend,
-  BaseDonutChartWithRows,
   BaseProgressTab,
   BaseSwipeableView,
   HoldingSearchResult,
   AggrSummary2,
+  BaseScreenV2,
 };

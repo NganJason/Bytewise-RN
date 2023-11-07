@@ -58,7 +58,7 @@ const EmptyContent = ({
   );
 };
 
-const getStyles = theme => {
+const getStyles = _ => {
   return StyleSheet.create({
     container: {
       flex: 1,

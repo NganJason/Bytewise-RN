@@ -13,9 +13,8 @@ const ROUTES = {
   homeWithDrawer: 'Home With Drawer',
   home: 'Home',
 
-  overview: 'Overview',
   budgetForm: 'Budget Form',
-  categoriesOverview: 'Categories Overview',
+  budget: 'Budget',
 
   categoryEdit: 'Category Edit',
   categoryForm: 'Category Form',

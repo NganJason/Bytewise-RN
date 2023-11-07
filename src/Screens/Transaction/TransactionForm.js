@@ -42,17 +42,11 @@ const TransactionForm = ({ route }) => {
     transaction_time: transactionTime = new Date().valueOf(),
   } = route?.params || {};
 
-  const [activeTab, setActiveTab] = useState(scrollableTabs[0]);
-
-  const onTabChange = tab => {
-    setActiveTab(tab);
-  };
+  const [activeTabIdx, setActiveTabIdx] = useState(0);
 
   const onTransactionTypeChange = type => {
-    const targetTab = scrollableTabs.find(tab => tab.val === type);
-    if (targetTab !== undefined) {
-      setActiveTab(targetTab);
-    }
+    const idx = scrollableTabs.findIndex(tab => tab.val === type);
+    setActiveTabIdx(idx);
   };
 
   return (
@@ -66,20 +60,20 @@ const TransactionForm = ({ route }) => {
         <View style={styles.tabContainer}>
           <BaseScrollableTab
             tabs={scrollableTabs}
-            activeTab={activeTab}
-            onTabChange={onTabChange}
+            activeTabIdx={activeTabIdx}
+            onTabChange={setActiveTabIdx}
           />
         </View>
 
         <View style={styles.formBody}>
-          {activeTab.val === TRANSACTION_TYPE_TRANSFER ? (
+          {scrollableTabs[activeTabIdx].val === TRANSACTION_TYPE_TRANSFER ? (
             <TransferForm transactionID={transactionID} />
           ) : (
             <ExpenseIncomeForm
               transactionID={transactionID}
               account={account}
               category={category}
-              transactionType={activeTab.val}
+              transactionType={scrollableTabs[activeTabIdx].val}
               transactionTime={transactionTime}
               onTransactionTypeChange={onTransactionTypeChange}
             />
