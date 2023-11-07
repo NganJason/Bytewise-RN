@@ -66,6 +66,7 @@ import {
   Currency,
   DeleteSaveButton,
   HoldingSearchResult,
+  AggrSummary2,
 } from './Common';
 
 import { BaseDonutChart, ChartLegend, BaseDonutChartWithRows } from './Chart';
@@ -128,4 +129,5 @@ export {
   BaseProgressTab,
   BaseSwipeableView,
   HoldingSearchResult,
+  AggrSummary2,
 };

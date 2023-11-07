@@ -34,6 +34,8 @@ const ROUTES = {
   holdingBreakdown: 'Holding Breakdown',
   holdingForm: 'Holding Form',
   lotForm: 'Lot Form',
+
+  insights: 'Insights',
 };
 
 export default ROUTES;
