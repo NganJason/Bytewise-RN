@@ -1,44 +1,27 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Icon, useTheme } from '@rneui/themed';
+import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import {
   BaseText,
   IconButton,
   DateNavigator,
-  BaseDivider,
-  AmountText,
-  BaseScreen3,
   BaseScreenV2,
+  Transactions,
   BaseLinearProgress,
-  BaseLoadableView,
-  BaseButton,
+  AmountText,
 } from '../../Components';
-import {
-  BUDGET_TYPE_MONTHLY,
-  BUDGET_TYPE_ANNUAL,
-  TRANSACTION_TYPE_EXPENSE,
-  TRANSACTION_TYPE_INCOME,
-} from '../../_shared/apis/enum';
+import { BUDGET_TYPE_ANNUAL } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { Transactions } from '../../Components/Common';
 import {
   TIME_RANGE_MONTHLY,
   TIME_RANGE_YEARLY,
 } from '../../_shared/constant/constant';
-import {
-  useDimension,
-  useTimeRange,
-  useGetCategoriesHelper,
-  useError,
-} from '../../_shared/hooks';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getProgress } from '../../_shared/util';
+import { useTimeRange, useError } from '../../_shared/hooks';
+import { getDateStringWithoutDelim, getProgress } from '../../_shared/util';
 import { useGetTransactionGroups } from '../../_shared/query';
-import { useSumCategoryTransactions } from '../../_shared/query/category';
+import { useGetCategoryBudget } from '../../_shared/query/budget';
 import { Amount } from '../../_shared/object';
-import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 
 const PAGING_LIMIT = 500;
 const STARTING_PAGE = 1;
@@ -46,67 +29,23 @@ const TODAY = new Date();
 
 const CategoryBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
-  const { screenHeight } = useDimension();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-
-  const { getUserBaseCurrency } = useContext(UserMetaContext);
 
   const {
     active_ts: activeTs = TODAY.valueOf(),
     category_id: categoryID = '',
-    category_type: categoryType = TRANSACTION_TYPE_EXPENSE,
   } = route?.params || {};
 
-  const { activeDate, timeRange, onDateMove, timeRangeType, setTimeRangeType } =
-    useTimeRange(new Date(activeTs), TIME_RANGE_MONTHLY);
+  const { activeDate, timeRange, onDateMove, timeRangeType } = useTimeRange(
+    new Date(activeTs),
+    TIME_RANGE_MONTHLY,
+  );
 
-  const {
-    categoryIDToCategoryMap = {},
-    isLoading: isCategoryBudgetLoading = false,
-    getQueries = [],
-  } = useGetCategoriesHelper({
-    budgetDate: activeDate,
-    enabled: categoryID !== '',
+  const getCategoryBudget = useGetCategoryBudget({
+    budget_date: getDateStringWithoutDelim(activeDate),
+    category_id: categoryID,
   });
-  const { category_name: categoryName = 'Uncategorised', budget = null } =
-    categoryIDToCategoryMap[categoryID] || {};
-  const {
-    amount: budgetAmount = 0,
-    budget_type: budgetType,
-    currency: budgetCurrency = getUserBaseCurrency(),
-  } = budget || {};
-
-  useEffect(() => {
-    if (!budgetType) {
-      return;
-    }
-
-    setTimeRangeType(
-      budgetType === BUDGET_TYPE_MONTHLY
-        ? TIME_RANGE_MONTHLY
-        : TIME_RANGE_YEARLY,
-    );
-  }, [budgetType, setTimeRangeType]);
-
-  const sumCategoryTransactions = useSumCategoryTransactions({
-    transaction_time: {
-      gte: timeRange[0],
-      lte: timeRange[1],
-    },
-    transaction_type: categoryType,
-  });
-
-  const getCategoryUsedAmount = () => {
-    const { sums = [] } = sumCategoryTransactions?.data || {};
-    for (let i = 0; i < sums.length; i++) {
-      let id = sums[i]?.category?.category_id || '';
-      if (categoryID === id) {
-        return new Amount(Math.abs(sums[i].sum).toFixed(2), sums[i].currency);
-      }
-    }
-    return new Amount(0);
-  };
 
   const getTransactionGroups = useGetTransactionGroups({
     category_id: categoryID,
@@ -127,146 +66,99 @@ const CategoryBreakdownScreen = ({ route }) => {
     });
   };
 
-  const isScreenLoading = () => {
+  const renderFeedback = () => {
+    let prefix,
+      suffix = '';
+
+    let amount = null;
+
+    const remain = getCategoryBudget?.data?.category?.budget?.remain;
+    const currency = getCategoryBudget?.data?.category?.budget?.currency;
+    if (remain === 0) {
+      prefix = 'You are out of budget';
+    } else if (remain < 0) {
+      prefix = 'You exceed budget by ';
+      amount = (
+        <AmountText showColor text5 amount={new Amount(remain, currency)} />
+      );
+    } else {
+      prefix = 'You have ';
+      amount = (
+        <AmountText showColor text5 amount={new Amount(remain, currency)} />
+      );
+      suffix = ' left';
+    }
+
     return (
-      isCategoryBudgetLoading() ||
-      getTransactionGroups.isLoading ||
-      sumCategoryTransactions.isLoading
+      <View style={styles.feedback}>
+        <BaseText text5>{prefix}</BaseText>
+        {amount}
+        <BaseText text5>{suffix}</BaseText>
+      </View>
     );
   };
 
-  useError([...getQueries(), getTransactionGroups, sumCategoryTransactions]);
+  const isScreenLoading = () => {
+    return getCategoryBudget.isLoading || getTransactionGroups.isLoading;
+  };
 
-  const renderHeader = () => {
-    const addBudgetAggr = () => {
-      return (
-        <>
-          <BaseText
-            text4
-            margin={{ top: 14, bottom: 8 }}
-            isLoading={isCategoryBudgetLoading()}>
-            Used
-          </BaseText>
-          <AmountText
-            h4
-            amount={getCategoryUsedAmount()}
-            isLoading={isCategoryBudgetLoading()}
-            sensitive
-          />
-          <BaseButton
-            title="Add budget"
-            type="clear"
-            align="flex-start"
-            size="sm"
-            icon={
-              <Icon
-                name="plus-circle"
-                type="feather"
-                color={theme.colors.color1}
-                size={13}
-              />
-            }
-            onPress={onBudgetPress}
-          />
-        </>
-      );
-    };
+  useError([getTransactionGroups, getCategoryBudget]);
 
-    const budgetAggr = () => {
-      return (
-        <>
-          <BaseText
-            text4
-            margin={{ top: 14, bottom: 8 }}
-            isLoading={isCategoryBudgetLoading()}>
-            Used
-          </BaseText>
-          <TouchableOpacity onPress={onBudgetPress}>
-            <View style={styles.headerAggr}>
-              <AmountText
-                h4
-                amount={getCategoryUsedAmount()}
-                isLoading={isCategoryBudgetLoading()}
-                sensitive
-              />
-              <BaseDivider orientation="vertical" margin={6} />
-              <AmountText
-                h4
-                amount={new Amount(budgetAmount, budgetCurrency)}
-                isLoading={isCategoryBudgetLoading()}
-                sensitive
-              />
-            </View>
-            <BaseLinearProgress
-              value={getProgress(
-                getCategoryUsedAmount().getAmount(),
-                budget.amount,
-              )}
-              showPercentage
-            />
-          </TouchableOpacity>
-        </>
-      );
-    };
-
-    const noBudgetAggr = () => {
-      return (
-        <>
-          <BaseText
-            text4
-            margin={{ top: 14, bottom: 8 }}
-            isLoading={isCategoryBudgetLoading()}>
-            Total
-          </BaseText>
-          <AmountText
-            h4
-            amount={getCategoryUsedAmount()}
-            isLoading={isCategoryBudgetLoading()}
-            sensitive
-          />
-        </>
-      );
-    };
-
-    const getAggr = () => {
-      if (categoryID === '') {
-        return noBudgetAggr();
-      }
-      if (categoryType === TRANSACTION_TYPE_INCOME) {
-        return noBudgetAggr();
-      }
-      if (budget === null) {
-        return addBudgetAggr();
-      }
-      return budgetAggr();
-    };
-
+  const renderSubHeader = () => {
     return (
       <>
         <View style={styles.headerTitle}>
           <BaseText
             h2
-            isLoading={isCategoryBudgetLoading()}
+            isLoading={getCategoryBudget.isLoading}
             numberOfLines={1}
             ellipsizeMode="tail">
-            {categoryName}
+            {getCategoryBudget?.data?.category?.category_name}
           </BaseText>
           <IconButton
             buttonSize="xs"
             iconSize={20}
             type="clear"
-            iconName="settings"
+            iconName="edit"
             iconType="feather"
             align="flex-start"
             color={theme.colors.color8}
-            onPress={() => {
-              navigation.navigate(ROUTES.categoryForm, {
-                category_id: categoryID,
-              });
-            }}
+            onPress={onBudgetPress}
           />
         </View>
-        {getAggr()}
+        <View style={styles.budgetRow}>
+          {renderFeedback()}
+          <BaseLinearProgress
+            value={getProgress(
+              getCategoryBudget?.data?.category?.budget?.used_amount,
+              getCategoryBudget?.data?.category?.budget?.amount,
+            )}
+          />
+          <View style={styles.usageSummary}>
+            <AmountText
+              text4
+              amount={
+                new Amount(
+                  getCategoryBudget?.data?.category?.budget?.used_amount,
+                  getCategoryBudget?.data?.category?.budget?.currency,
+                )
+              }
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
+            <AmountText
+              text4
+              amount={
+                new Amount(
+                  getCategoryBudget?.data?.category?.budget?.amount,
+                  getCategoryBudget?.data?.category?.budget?.currency,
+                )
+              }
+              style={{ color: theme.colors.color7 }}
+              sensitive
+            />
+          </View>
+        </View>
       </>
     );
   };
@@ -276,29 +168,32 @@ const CategoryBreakdownScreen = ({ route }) => {
     return (
       <Transactions
         transactionGroups={groups}
-        showMonthLabel={budgetType === BUDGET_TYPE_ANNUAL}
+        showMonthLabel={
+          getCategoryBudget?.data?.category?.budget?.budget_type ===
+          BUDGET_TYPE_ANNUAL
+        }
       />
     );
   };
 
   return (
-    <BaseScreen3
-      headerProps={{
-        allowBack: true,
-        component: renderHeader(),
-      }}
+    <BaseScreenV2
+      isLoading={isScreenLoading()}
+      backButtonProps={{ show: true }}
+      subHeader={
+        !isScreenLoading() && (
+          <View style={styles.subHeader}>{renderSubHeader()}</View>
+        )
+      }
       fabProps={{
         show: true,
-        placement: 'right',
-        iconName: 'plus',
-        iconType: 'entypo',
-        iconColor: theme.colors.white,
-        color: theme.colors.color1,
         onPress: () =>
           navigation.navigate(ROUTES.transactionForm, {
-            category: { category_id: categoryID, category_name: categoryName },
+            category: {
+              category_id: categoryID,
+              category_name: getCategoryBudget?.data?.category?.category_name,
+            },
           }),
-        marginBottom: screenHeight * 0.02,
       }}>
       <>
         <View style={styles.dateContainer}>
@@ -309,30 +204,47 @@ const CategoryBreakdownScreen = ({ route }) => {
             isYear={timeRangeType === TIME_RANGE_YEARLY}
           />
         </View>
-
-        <BaseLoadableView scrollable={true} isLoading={isScreenLoading()}>
-          {renderRows()}
-        </BaseLoadableView>
+        {renderRows()}
       </>
-    </BaseScreen3>
+    </BaseScreenV2>
   );
 };
 
-const getStyles = _ => {
+const getStyles = theme => {
   return StyleSheet.create({
     headerTitle: {
-      flexDirection: 'row',
       justifyContent: 'space-between',
+      flexDirection: 'row',
       alignItems: 'center',
       width: '100%',
-    },
-    headerAggr: {
-      flexDirection: 'row',
-      marginBottom: 16,
     },
     dateContainer: {
       alignItems: 'center',
       marginBottom: 16,
+    },
+    subHeader: {
+      padding: 16,
+      backgroundColor: theme.colors.white,
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 2,
+        height: -5,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 10,
+      borderRadius: 12,
+    },
+    usageSummary: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 8,
+    },
+    budgetRow: {
+      marginTop: 14,
+    },
+    feedback: {
+      marginBottom: 8,
+      flexDirection: 'row',
     },
   });
 };
