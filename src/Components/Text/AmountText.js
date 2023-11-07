@@ -7,6 +7,9 @@ import { useContext } from 'react';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import { Amount } from '../../_shared/object';
 
+const POSITIVE = '+ ';
+const NEGATIVE = '- ';
+
 const AmountText = ({
   children = 0,
   amount = new Amount(),
@@ -29,11 +32,11 @@ const AmountText = ({
   const getAmountAttr = () => {
     let value = amount.getAmount();
     if (value > 0) {
-      return { styles: showColor && styles.positive, sign: '+ ' };
+      return { styles: showColor && styles.positive, sign: POSITIVE };
     }
 
     if (value < 0) {
-      return { styles: showColor && styles.negative, sign: '- ' };
+      return { styles: showColor && styles.negative, sign: NEGATIVE };
     }
 
     return { styles: {}, sign: '' };
@@ -66,10 +69,10 @@ const AmountText = ({
     if (showSign) {
       shouldShowSign = true;
     }
-    if (showNegativeOnly && sign === '- ') {
+    if (showNegativeOnly && sign === NEGATIVE) {
       shouldShowSign = true;
     }
-    if (showPositiveOnly && sign === '+ ') {
+    if (showPositiveOnly && sign === POSITIVE) {
       shouldShowSign = true;
     }
 

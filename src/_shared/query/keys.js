@@ -16,6 +16,7 @@ export const queryKeys = {
   budget: 'budget',
   budgets: 'budgets',
   categoriesBudget: 'categories_budget',
+  categoryBudget: 'category_budget',
 
   account: 'account',
   accounts: 'accounts',
