@@ -183,10 +183,7 @@ const AccountBreakdownScreen = ({ route }) => {
           color: theme.colors.color1,
           onPress: () =>
             navigation.navigate(ROUTES.transactionForm, {
-              account: {
-                account_id: accountID,
-                account_name: getAccount?.data?.account?.account_name || '',
-              },
+              accountID: accountID,
             }),
           marginBottom: screenHeight * 0.02,
         }

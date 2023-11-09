@@ -43,7 +43,7 @@ const DailyTransactions = ({
 
   const navigateToForm = t => {
     navigation.navigate(ROUTES.transactionForm, {
-      transaction_id: t.transaction_id,
+      transactionID: t.transaction_id,
     });
   };
 

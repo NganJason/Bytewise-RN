@@ -192,9 +192,9 @@ const BudgetScreen = () => {
                 }
                 progressValueColor={theme.colors.color7}
                 strokeColorConfig={[
-                  { color: theme.colors.color1, value: 0 },
-                  { color: theme.colors.lightRed, value: 60 },
-                  { color: theme.colors.regularRed, value: 100 },
+                  { color: theme.colors.success, value: 0 },
+                  { color: theme.colors.warning, value: 80 },
+                  { color: theme.colors.error, value: 100 },
                 ]}
               />
             </View>

@@ -8,6 +8,7 @@ const DeleteSaveButton = ({
   onDelete = function () {},
   isDeleteLoading = false,
   allowDelete = false,
+  disableSave = false,
 }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -35,7 +36,7 @@ const DeleteSaveButton = ({
         width={allowDelete ? '48%' : 200}
         onPress={onSave}
         loading={isSaveLoading}
-        disabled={isDeleteLoading}
+        disabled={isDeleteLoading || disableSave}
       />
     </View>
   );

@@ -27,6 +27,7 @@ const BaseInput = forwardRef(
       onBlur = function () {},
       onFocus = function () {},
       onPressIn = function () {},
+      onPressOut = function () {},
       containerStyle = {},
       labelStyle = {},
       clearButtonMode = 'never', // IOS only
@@ -90,6 +91,7 @@ const BaseInput = forwardRef(
         onBlur={handleBlur}
         placeholder={placeholder}
         onPressIn={onPressIn}
+        onPressOut={onPressOut}
         label={
           label !== '' && (
             <View style={styles.label}>
@@ -153,7 +155,7 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 16,
+      marginBottom: 12,
     },
     inputContainer: {
       paddingVertical: 4,

@@ -35,7 +35,7 @@
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-calendars": "^1.1300.0",
-    "react-native-circular-progress-indicator": "^4.4.2",
+    "react-native-circular-progress-indicator": "^4.3.0",
     "react-native-collapsible": "^1.6.1",
     "react-native-country-flag": "^2.0.2",
     "react-native-datepicker": "^1.7.2",
@@ -54,7 +54,7 @@
     "react-native-shadow": "^1.2.2",
     "react-native-shadow-cards": "^1.0.2",
     "react-native-super-grid": "^5.0.0",
-    "react-native-svg": "^13.10.0",
+    "react-native-svg": "^12.5.1",
     "react-native-toast-message": "^2.1.6",
     "react-native-wheel-pick": "^1.2.1"
   },

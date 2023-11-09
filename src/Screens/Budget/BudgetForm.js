@@ -44,8 +44,6 @@ import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 const TODAY = new Date();
 
 const BudgetForm = ({ route }) => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
   const { getUserBaseCurrency } = useContext(UserMetaContext);
 
@@ -229,11 +227,7 @@ const BudgetForm = ({ route }) => {
       headerProps={{
         allowBack: true,
         centerComponent: (
-          <View style={styles.header}>
-            <BaseText h2>
-              {isAddBudget() ? 'Add Budget' : 'Edit Budget'}
-            </BaseText>
-          </View>
+          <BaseText h2>{isAddBudget() ? 'Add Budget' : 'Edit Budget'}</BaseText>
         ),
       }}>
       <TouchInput
@@ -360,14 +354,8 @@ const DeleteBudgetOverlay = ({
   );
 };
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
-    formBody: {
-      paddingVertical: theme.spacing.xl,
-    },
-    btnContainer: {
-      marginBottom: 16,
-    },
     overlayBtnContainer: {
       marginBottom: 16,
       marginTop: 30,

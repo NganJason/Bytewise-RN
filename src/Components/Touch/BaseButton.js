@@ -150,7 +150,6 @@ const getStyles = theme =>
     commonDisabledButtonStyle: {
       opacity: 0.6,
     },
-
     solidDisabledButtonStyle: {
       backgroundColor: theme.colors.color8,
     },
@@ -170,7 +169,6 @@ const getStyles = theme =>
     outlineDisabledButtonTextStyle: {
       color: theme.colors.regularRed,
     },
-
     clearButtonStyle: {
       paddingHorizontal: 0,
     },
