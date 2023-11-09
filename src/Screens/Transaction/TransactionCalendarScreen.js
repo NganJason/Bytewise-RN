@@ -119,7 +119,7 @@ const TransactionCalendarScreen = () => {
         color: theme.colors.color1,
         onPress: () =>
           navigation.navigate(ROUTES.transactionForm, {
-            transaction_time: getDateObjFromDateStr(selectedDate).valueOf(),
+            transactionTime: getDateObjFromDateStr(selectedDate).valueOf(),
           }),
       }}>
       <BaseCalendar

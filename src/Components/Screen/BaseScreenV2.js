@@ -16,7 +16,8 @@ import {
 } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const WAIT_TIME_FOR_INDICATOR = 500;
+const WAIT_TIME_FOR_INDICATOR = 1000;
+const STANDARD_PADDING = 25;
 
 const HideKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -51,6 +52,7 @@ const BaseScreenV2 = ({
   const styles = getStyles(theme, {
     screenDimension: screenDimension,
     isKeyboardOpen,
+    hasFAB: showFab,
   });
 
   // show loading indicator if isLoading stays true for >= WAIT_TIME_FOR_INDICATOR
@@ -157,7 +159,7 @@ const BaseScreenV2 = ({
     if (showLoadingIndicator) {
       return (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={theme.colors.color1} />
+          <ActivityIndicator size="large" color={theme.colors.color1} />
         </View>
       );
     }
@@ -187,6 +189,8 @@ const BaseScreenV2 = ({
           )}
         </>
       );
+    } else {
+      return <></>;
     }
   };
 
@@ -203,7 +207,11 @@ const BaseScreenV2 = ({
 
 const getStyles = (
   theme,
-  { screenDimension: { screenHeight = 0 } = {}, isKeyboardOpen = false },
+  {
+    screenDimension: { screenHeight = 0 } = {},
+    isKeyboardOpen = false,
+    hasFAB = false,
+  },
 ) =>
   StyleSheet.create({
     screen: {
@@ -222,7 +230,7 @@ const getStyles = (
     },
     headerCenterComponent: {
       justifyContent: 'center',
-      flex: 2,
+      flex: 3,
     },
     headerLeftComponent: {
       justifyContent: 'flex-start',
@@ -233,19 +241,20 @@ const getStyles = (
       flex: 1,
     },
     subHeader: {
-      paddingHorizontal: 20,
+      paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
-      paddingBottom: 20,
+      paddingBottom: STANDARD_PADDING,
     },
     scrollView: {
       flexGrow: 1,
-      paddingHorizontal: 20,
+      paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
-      paddingBottom: isKeyboardOpen ? 20 : 70, // space for FAB
+      paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
     },
     loadingContainer: {
-      height: '100%',
+      flex: 1,
       justifyContent: 'center',
+      alignItems: 'center',
     },
     fab: {
       backgroundColor: theme.colors.black, // not the real backgroundColor, set to prevent warning

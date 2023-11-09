@@ -67,8 +67,7 @@ export const useGetTransaction = ({ transaction_id = '' } = {}, opts = {}) => {
         transaction_id: transaction_id,
       }),
     queryKey: [queryKeys.transaction, transaction_id],
-    onSuccess: opts.onSuccess || function () {},
-    enabled: opts.enabled,
+    ...opts,
   });
 };
 
