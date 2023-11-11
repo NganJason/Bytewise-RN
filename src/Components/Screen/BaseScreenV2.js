@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-  ActivityIndicator,
   View,
 } from 'react-native';
-import { BaseToast } from '../View';
-import { useDimension } from '../../_shared/hooks';
-import { Header, FAB, useTheme, Icon } from '@rneui/themed';
-import { BackIcon, DrawerIcon } from '../Common';
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
+import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 
-const WAIT_TIME_FOR_INDICATOR = 1000;
+import { BaseToast, BaseLoadableViewV2 } from '../View';
+import { useDimension } from '../../_shared/hooks';
+import { BackIcon, DrawerIcon } from '../Common';
+
 const STANDARD_PADDING = 25;
 
 const HideKeyboard = ({ children }) => (
@@ -29,6 +32,7 @@ const BaseScreenV2 = ({
   children,
   isLoading = false,
   subHeader = null,
+  disableScroll = false,
   headerProps: {
     leftComponent = null,
     rightComponent = null,
@@ -42,9 +46,13 @@ const BaseScreenV2 = ({
   } = {},
   backButtonProps: { show: showBackButton = false } = {},
   drawerButtonProps: { show: showDrawerButton = false } = {},
+  bottomSheetModalProps: {
+    show: showBottomSheetModel = false,
+    headerComponent: bottomSheetModalHeader = null,
+    bodyComponent: bottomSheetModalBody = null,
+  } = {},
 }) => {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
-  const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
 
   const { theme } = useTheme();
   const screenDimension = useDimension();
@@ -55,27 +63,12 @@ const BaseScreenV2 = ({
     hasFAB: showFab,
   });
 
-  // show loading indicator if isLoading stays true for >= WAIT_TIME_FOR_INDICATOR
-  useEffect(() => {
-    let timer = null;
-    if (isLoading) {
-      timer = setTimeout(() => {
-        // will only show indicator if isLoading takes too long to become false
-        setShowLoadingIndicator(true);
-      }, WAIT_TIME_FOR_INDICATOR);
-    } else {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-      setShowLoadingIndicator(false);
-    }
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ['20%', '40%', '70%', '95%'], []);
 
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isLoading]);
+  useEffect(() => {
+    bottomSheetModalRef?.current?.present();
+  }, [showBottomSheetModel]);
 
   // checks if keyboard is opened
   useEffect(() => {
@@ -155,50 +148,58 @@ const BaseScreenV2 = ({
     );
   };
 
-  const renderBody = () => {
-    if (showLoadingIndicator) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.colors.color1} />
-        </View>
-      );
-    }
-
-    if (!isLoading) {
-      return (
-        <>
-          {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
-          <KeyboardAwareScrollView
-            extraScrollHeight={20}
-            contentContainerStyle={styles.scrollView}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
-            {children}
-          </KeyboardAwareScrollView>
-          {showFab && (
-            <FAB
-              color={fabColor === '' ? theme.colors.color1 : fabColor}
-              placement={placement}
-              size={'medium'}
-              onPress={onFabPress}
-              style={styles.fab}
-              icon={
-                <Icon name="plus" type="entypo" color={theme.colors.white} />
-              }
-            />
-          )}
-        </>
-      );
-    } else {
-      return <></>;
-    }
-  };
+  bottomSheetModalRef.current?.present();
 
   return (
     <SafeAreaView style={styles.screen}>
       {renderHeader()}
       <HideKeyboard>
-        <>{renderBody()}</>
+        <BaseLoadableViewV2 isLoading={isLoading}>
+          <>
+            {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
+            <KeyboardAwareScrollView
+              scrollEnabled={!disableScroll}
+              extraScrollHeight={20}
+              contentContainerStyle={styles.scrollView}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}>
+              {children}
+              {showBottomSheetModel && (
+                <BottomSheetModalProvider>
+                  <BottomSheetModal
+                    backgroundStyle={styles.bottomSheetModal}
+                    handleStyle={styles.bottomSheetModalHandler}
+                    enablePanDownToClose={false}
+                    ref={bottomSheetModalRef}
+                    index={1}
+                    snapPoints={snapPoints}>
+                    <View style={styles.subHeader}>
+                      {bottomSheetModalHeader}
+                    </View>
+                    <KeyboardAwareScrollView
+                      contentContainerStyle={styles.scrollView}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}>
+                      {bottomSheetModalBody}
+                    </KeyboardAwareScrollView>
+                  </BottomSheetModal>
+                </BottomSheetModalProvider>
+              )}
+            </KeyboardAwareScrollView>
+            {showFab && (
+              <FAB
+                color={fabColor === '' ? theme.colors.color1 : fabColor}
+                placement={placement}
+                size={'medium'}
+                onPress={onFabPress}
+                style={styles.fab}
+                icon={
+                  <Icon name="plus" type="entypo" color={theme.colors.white} />
+                }
+              />
+            )}
+          </>
+        </BaseLoadableViewV2>
       </HideKeyboard>
       <BaseToast />
     </SafeAreaView>
@@ -243,12 +244,11 @@ const getStyles = (
     subHeader: {
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
-      paddingBottom: STANDARD_PADDING,
     },
     scrollView: {
       flexGrow: 1,
       paddingHorizontal: STANDARD_PADDING,
-      paddingTop: 0,
+      paddingTop: STANDARD_PADDING,
       paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
     },
     loadingContainer: {
@@ -266,6 +266,19 @@ const getStyles = (
       shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 4,
+    },
+    bottomSheetModalHandler: {
+      paddingTop: 20,
+    },
+    bottomSheetModal: {
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 2,
+        height: -5,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 10,
+      elevation: 10,
     },
   });
 

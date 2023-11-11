@@ -46,6 +46,7 @@ import {
   BaseBottomSelectTab,
   BaseProgressTab,
   BaseSwipeableView,
+  BaseLoadableViewV2,
 } from './View';
 
 // Common
@@ -94,6 +95,7 @@ export {
   BaseBottomSheet,
   BaseTabView,
   BaseLoadableView,
+  BaseLoadableViewV2,
   BaseGrid,
   BaseCard,
   BaseRow,

@@ -55,10 +55,6 @@ const DailyTransactions = ({
   };
 
   const formatNote = (transaction = {}) => {
-    if (isTransactionTypeTransfer(transaction.transaction_type)) {
-      return 'Transfer';
-    }
-
     return transaction.note !== '' ? transaction.note : '-';
   };
 
@@ -98,7 +94,7 @@ const DailyTransactions = ({
                   {formatCategoryName(t?.category?.category_name || '')}
                 </BaseText>
                 <View style={styles.noteWrapper}>
-                  <BaseText text3 style={styles.note} numberOfLines={1}>
+                  <BaseText text5 style={styles.note} numberOfLines={1}>
                     {formatNote(t)}
                   </BaseText>
                   <BaseText text5 style={styles.account} numberOfLines={1}>
@@ -159,6 +155,7 @@ const getStyles = theme =>
       color: theme.colors.color7,
     },
     account: {
+      marginTop: 4,
       color: theme.colors.color7,
     },
     noteWrapper: {
