@@ -155,7 +155,7 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 12,
+      marginBottom: 10,
     },
     inputContainer: {
       paddingVertical: 4,

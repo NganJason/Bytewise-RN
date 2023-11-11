@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Animated } from 'react-native';
 import { useTheme, Dialog } from '@rneui/themed';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -32,7 +32,7 @@ import {
   useGetCategory,
   useGetCategories,
 } from '../../_shared/query';
-import { useError, useValidation } from '../../_shared/hooks';
+import { useError } from '../../_shared/hooks';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
 import {
   useCreateTransaction,
@@ -72,7 +72,20 @@ const TransactionFormV2 = ({ route }) => {
   const navigation = useNavigation();
   const { getUserBaseCurrency } = useContext(UserMetaContext);
 
-  const [activeTabIdx, setActiveTabIdx] = useState(0);
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  const spinDeg = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  const spinArrow = () => {
+    spinValue.setValue(0);
+    Animated.spring(spinValue, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const {
     transactionID = '',
@@ -81,9 +94,13 @@ const TransactionFormV2 = ({ route }) => {
     transactionTime = new Date().valueOf(),
   } = route?.params || {};
 
+  const [activeTabIdx, setActiveTabIdx] = useState(
+    transactionID === '' ? 0 : null,
+  );
+
   const [transactionForm, setTransactionForm] = useState({
     transaction_id: transactionID,
-    transaction_type: TRANSACTION_TYPES[activeTabIdx].val,
+    transaction_type: TRANSACTION_TYPES[activeTabIdx]?.val,
     transaction_time: transactionTime,
     amount: '',
     currency: getUserBaseCurrency(),
@@ -97,6 +114,10 @@ const TransactionFormV2 = ({ route }) => {
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [activeAccountInput, setActiveAccountInput] = useState('');
+
+  const [isFormReady, setIsFormReady] = useState(
+    transactionForm.transaction_id === '',
+  );
 
   const [formErrors, setFormErrors] = useState({});
 
@@ -117,10 +138,15 @@ const TransactionFormV2 = ({ route }) => {
     {
       enabled: transactionID !== '',
       onSuccess: data => {
+        setActiveTabIdx(data?.transaction.transaction_type - 1);
         setTransactionForm({
           ...data?.transaction,
           amount: String(Math.abs(data?.transaction?.amount).toFixed(2)),
         });
+        setIsFormReady(true);
+      },
+      onError: _ => {
+        setIsFormReady(true);
       },
     },
   );
@@ -257,6 +283,7 @@ const TransactionFormV2 = ({ route }) => {
   };
 
   const onAccountSwap = () => {
+    spinArrow();
     setTransactionForm({
       ...transactionForm,
       to_account: transactionForm.from_account,
@@ -334,11 +361,13 @@ const TransactionFormV2 = ({ route }) => {
       isLoading={isFormLoading()}
       backButtonProps={{ show: true }}
       subHeader={
-        <BaseScrollableTab
-          tabs={TRANSACTION_TYPES}
-          activeTabIdx={activeTabIdx}
-          onTabChange={onTransactionTypeChange}
-        />
+        isFormReady && (
+          <BaseScrollableTab
+            tabs={TRANSACTION_TYPES}
+            activeTabIdx={activeTabIdx}
+            onTabChange={onTransactionTypeChange}
+          />
+        )
       }
       headerProps={{
         centerComponent: (
@@ -347,7 +376,7 @@ const TransactionFormV2 = ({ route }) => {
           </BaseText>
         ),
       }}>
-      {!isFormLoading() && (
+      {isFormReady && (
         <>
           <TouchInput
             label="Date"
@@ -410,13 +439,15 @@ const TransactionFormV2 = ({ route }) => {
                   onPress={() => toggleAccountModal(FROM_ACCOUNT_INPUT)}
                 />
 
-                <IconButton
-                  iconName="swap-vert"
-                  iconType="material"
-                  color={theme.colors.color1}
-                  buttonStyle={styles.swapBtn}
-                  onPress={onAccountSwap}
-                />
+                <Animated.View style={{ transform: [{ rotate: spinDeg }] }}>
+                  <IconButton
+                    iconName="swap-vert"
+                    iconType="material"
+                    color={theme.colors.color1}
+                    buttonStyle={styles.swapBtn}
+                    onPress={onAccountSwap}
+                  />
+                </Animated.View>
 
                 <TouchInput
                   label="To"
@@ -504,6 +535,6 @@ const getStyles = _ =>
       alignItems: 'center',
       justifyContent: 'center',
       alignSelf: 'center',
-      marginBottom: 12, // allign with BaseInput
+      marginBottom: 10, // allign with BaseInput
     },
   });
