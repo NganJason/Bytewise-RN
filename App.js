@@ -42,7 +42,6 @@ import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm'
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
 import SetupSplashScreen from './src/Screens/Onboarding/SetupSplashScreen';
 import FeedbackForm from './src/Screens/User/FeedbackForm';
-import TransactionCalendarScreen from './src/Screens/Transaction/TransactionCalendarScreen';
 import {
   UserMetaContext,
   UserMetaProvider,
@@ -165,10 +164,6 @@ function Main() {
           <Stack.Screen
             name={ROUTES.categoryBreakdown}
             component={CategoryBreakdownScreen}
-          />
-          <Stack.Screen
-            name={ROUTES.transactionCalendar}
-            component={TransactionCalendarScreen}
           />
           <Stack.Screen
             name={ROUTES.accountBreakdown}
