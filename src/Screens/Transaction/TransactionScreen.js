@@ -109,6 +109,7 @@ const TransactionScreen = ({ navigation }) => {
 
   return (
     <BaseScreenV2
+      isLoading={isLoading}
       drawerButtonProps={{ show: true }}
       headerProps={{
         allowBack: false,
@@ -135,6 +136,7 @@ const TransactionScreen = ({ navigation }) => {
         !isCalendarActive && (
           <>
             <AggrSummary
+              isLoading={isLoading}
               aggrs={[
                 {
                   label: TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
@@ -163,31 +165,29 @@ const TransactionScreen = ({ navigation }) => {
         headerComponent: filterComponent,
       }}
       fabProps={{
-        show: !isLoading,
+        show: true,
         onPress: () => navigation.navigate(ROUTES.transactionForm),
       }}>
-      <BaseLoadableViewV2 isLoading={isLoading}>
-        {isCalendarActive ? (
-          <>
-            <BaseButton
-              title="Today"
-              type="secondary"
-              size="sm"
-              onPress={onTodayPress}
-              align="flex-end"
-              margin={{ bottom: 4 }}
-            />
-            <BaseCalendar
-              currMonthStr={getFormattedDateString(activeDate)}
-              selectedDate={getFormattedDateString(activeDate)}
-              onDayPress={onDayPress}
-              dayExtraInfo={renderDayExtraInfo}
-            />
-          </>
-        ) : (
-          transactionsComponent
-        )}
-      </BaseLoadableViewV2>
+      {isCalendarActive ? (
+        <>
+          <BaseButton
+            title="Today"
+            type="secondary"
+            size="sm"
+            onPress={onTodayPress}
+            align="flex-end"
+            margin={{ bottom: 4 }}
+          />
+          <BaseCalendar
+            currMonthStr={getFormattedDateString(activeDate)}
+            selectedDate={getFormattedDateString(activeDate)}
+            onDayPress={onDayPress}
+            dayExtraInfo={renderDayExtraInfo}
+          />
+        </>
+      ) : (
+        transactionsComponent
+      )}
     </BaseScreenV2>
   );
 };

@@ -25,7 +25,7 @@ import { getBudgetTypes } from '../../_shared/util';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import { EmptyContentConfig } from '../../_shared/constant/constant';
 import ROUTES from '../../_shared/constant/routes';
-import { useError, useValidation } from '../../_shared/hooks';
+import { useError } from '../../_shared/hooks';
 import { BaseOverlay } from '../../Components/View';
 import { useGetCategoriesHelper } from '../../_shared/hooks';
 import {
@@ -92,7 +92,6 @@ const BudgetForm = ({ route }) => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const { validate, showValidation } = useValidation();
   useEffect(() => {
     setFormErrors(validateBudget(budgetForm));
   }, [budgetForm]);
@@ -112,13 +111,13 @@ const BudgetForm = ({ route }) => {
     }
 
     const { category_name: categoryName = '', budget = {} } = category;
-    setBudgetForm({
-      ...budgetForm,
+    setBudgetForm(oldBudgetForm => ({
+      ...oldBudgetForm,
       category_name: categoryName,
       amount: budget.amount || 0,
       budget_type: budget.budget_type || BUDGET_TYPE_MONTHLY,
-    });
-  }, [categoryIDToCategoryMap]);
+    }));
+  }, [categoryIDToCategoryMap, categoryID]);
 
   const createBudget = useCreateBudget({
     onSuccess: _ => {
@@ -135,7 +134,7 @@ const BudgetForm = ({ route }) => {
   const deleteBudget = useDeleteBudget({
     onSuccess: _ => {
       toggleDeleteModal();
-      navigation.goBack();
+      navigation.navigate(ROUTES.budget);
     },
   });
 
@@ -162,7 +161,6 @@ const BudgetForm = ({ route }) => {
   };
 
   const onSave = () => {
-    validate();
     let isValidationPassed = Object.keys(formErrors).length === 0;
 
     if (!isValidationPassed) {
@@ -218,6 +216,8 @@ const BudgetForm = ({ route }) => {
     ];
   };
 
+  const hasFormErrors = () => Object.keys(formErrors).length;
+
   useError([...getQueries(), updateBudget]);
 
   return (
@@ -234,7 +234,6 @@ const BudgetForm = ({ route }) => {
         label="Category"
         value={budgetForm.category_name}
         onPress={toggleCategoryModal}
-        errorMessage={showValidation && formErrors.category}
         disabled={!isAddBudget()}
       />
       <BaseBottomSheet
@@ -269,7 +268,6 @@ const BudgetForm = ({ route }) => {
         label="Budget Type"
         value={BUDGET_TYPES[budgetForm.budget_type]}
         onPress={toggleBudgetTypeModal}
-        errorMessage={showValidation && formErrors.budget_type}
       />
       <BaseBottomSheet
         isVisible={isBudgetTypeModalVisible}
@@ -284,7 +282,6 @@ const BudgetForm = ({ route }) => {
         label="Amount"
         value={budgetForm.amount}
         onChangeText={onBudgetAmountChange}
-        errorMessage={showValidation && formErrors.amount}
         currency={getUserBaseCurrency()}
       />
 
@@ -302,6 +299,7 @@ const BudgetForm = ({ route }) => {
         isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
         onDelete={toggleDeleteModal}
         allowDelete={!isAddBudget()}
+        disableSave={hasFormErrors()}
       />
       <DeleteBudgetOverlay
         isVisible={isDeleteModalVisible}
