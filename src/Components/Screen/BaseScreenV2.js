@@ -151,7 +151,7 @@ const BaseScreenV2 = ({
   bottomSheetModalRef.current?.present();
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
       {renderHeader()}
       <HideKeyboard>
         <>
@@ -202,7 +202,7 @@ const BaseScreenV2 = ({
         </>
       </HideKeyboard>
       <BaseToast />
-    </SafeAreaView>
+    </View>
   );
 };
 
