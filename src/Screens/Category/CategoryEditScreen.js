@@ -1,122 +1,105 @@
-import { StyleSheet, View } from 'react-native';
-import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import {
-  BaseScreen,
-  BaseText,
-  BaseScrollView,
-  BaseButton,
-} from '../../Components';
+import { BaseText, BaseScrollableTab, BaseScreenV2 } from '../../Components';
 
 import ROUTES from '../../_shared/constant/routes';
 import {
-  TRANSACTION_TYPES,
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
 } from '../../_shared/apis/enum';
 import { useGetCategories } from '../../_shared/query';
 import EmptyContent from '../../Components/Common/EmptyContent';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
-import { BaseRow, BaseTabView } from '../../Components/View';
+import { BaseRow } from '../../Components/View';
 import { useState } from 'react';
 import { useError } from '../../_shared/hooks';
 
+const CATEGORY_TYPES = [
+  {
+    name: 'Expense',
+    val: TRANSACTION_TYPE_EXPENSE,
+    iconName: 'shopping-bag',
+    iconType: 'feather',
+  },
+  {
+    name: 'Income',
+    val: TRANSACTION_TYPE_INCOME,
+    iconName: 'credit-card',
+    iconType: 'feather',
+  },
+];
+
 const CategoryEditScreen = ({ route }) => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
 
   const { category_type = TRANSACTION_TYPE_EXPENSE } = route?.params || {};
 
-  const getCategoriesQuery = useGetCategories({});
+  const [activeTabIdx, setActiveTabIdx] = useState(category_type - 1);
 
   const [categoryType, setCategoryType] = useState(category_type);
-  const onCategoryTypeChange = type => {
-    setCategoryType(type);
+
+  const onCategoryTypeChange = idx => {
+    setActiveTabIdx(idx);
+    setCategoryType(CATEGORY_TYPES[idx].val);
   };
 
-  const renderRows = () => {
-    let rows = [];
+  const getCategoriesQuery = useGetCategories({
+    category_type: categoryType,
+  });
 
-    getCategoriesQuery.data?.categories?.map((category, i) => {
-      if (category.category_type === categoryType) {
-        rows.push(
-          <BaseRow
-            key={i}
-            onPress={() => {
-              navigation.navigate(ROUTES.categoryForm, {
-                category_id: category.category_id,
-              });
-            }}>
-            <BaseText text2 numberOfLines={1} ellipsizeMode="tail">
-              {category.category_name}
-            </BaseText>
-          </BaseRow>,
-        );
-      }
-    });
-
-    if (rows.length === 0 && !getCategoriesQuery.isLoading) {
-      return (
-        <EmptyContent
-          item={EmptyContentConfig.category}
-          route={ROUTES.categoryForm}
-          routeParam={{ category_type: categoryType }}
-        />
-      );
+  const renderRowsV2 = () => {
+    if (
+      getCategoriesQuery.data?.categories?.length === 0 &&
+      !getCategoriesQuery.isLoading
+    ) {
+      return <EmptyContent />;
     }
+
+    const rows = [];
+    getCategoriesQuery.data?.categories?.map((category, i) => {
+      rows.push(
+        <BaseRow
+          key={i}
+          onPress={() => {
+            navigation.navigate(ROUTES.categoryForm, {
+              category_id: category.category_id,
+            });
+          }}>
+          <BaseText text2 numberOfLines={1} ellipsizeMode="tail">
+            {category.category_name}
+          </BaseText>
+        </BaseRow>,
+      );
+    });
 
     return rows;
   };
 
   useError([getCategoriesQuery]);
+
   return (
-    <BaseScreen
+    <BaseScreenV2
       isLoading={getCategoriesQuery.isLoading}
+      backButtonProps={{ show: true }}
+      subHeader={
+        <BaseScrollableTab
+          tabs={CATEGORY_TYPES}
+          activeTabIdx={activeTabIdx}
+          onTabChange={onCategoryTypeChange}
+        />
+      }
+      fabProps={{
+        show: true,
+        onPress: () =>
+          navigation.navigate(ROUTES.categoryForm, {
+            category_type: categoryType,
+          }),
+      }}
       headerProps={{
-        allowBack: true,
         centerComponent: <BaseText h2>Categories</BaseText>,
       }}>
-      <BaseTabView
-        onPress={idx => onCategoryTypeChange(idx + 1)}
-        selectedIndex={categoryType - 1}
-        titles={[
-          TRANSACTION_TYPES[TRANSACTION_TYPE_EXPENSE],
-          TRANSACTION_TYPES[TRANSACTION_TYPE_INCOME],
-        ]}
-      />
-      <View style={styles.buttonContainer}>
-        <BaseButton
-          title="Add Category"
-          type="secondary"
-          align="flex-end"
-          size="sm"
-          onPress={() =>
-            navigation.navigate(ROUTES.categoryForm, {
-              category_type: categoryType,
-            })
-          }
-        />
-      </View>
-      <BaseScrollView showsVerticalScrollIndicator={false}>
-        {renderRows()}
-      </BaseScrollView>
-    </BaseScreen>
+      {renderRowsV2()}
+    </BaseScreenV2>
   );
-};
-
-const getStyles = _ => {
-  return StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-    },
-    buttonContainer: {
-      marginVertical: 14,
-    },
-  });
 };
 
 export default CategoryEditScreen;

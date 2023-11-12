@@ -165,40 +165,6 @@ const BudgetScreen = () => {
             activeTabIdx={activeTabIdx}
             onTabChange={onBudgetTypeChange}
           />
-          {getBudgetSum().getAmount() > 0 && (
-            <View style={styles.circularProgressContainer}>
-              <CircularProgress
-                value={getUsagePercentage()}
-                radius={80}
-                duration={1000}
-                maxValue={getCircularProgressMaxValue()}
-                valueSuffix={'%'}
-                progressValueFontSize={34}
-                title={
-                  <>
-                    <BaseText text4>of </BaseText>
-                    <AmountText
-                      text4
-                      amount={
-                        new Amount(
-                          getBudgetSum().getAmount(),
-                          getBudgetSum().getCurrency(),
-                        )
-                      }
-                      style={{ color: theme.colors.color7 }}
-                      sensitive
-                    />
-                  </>
-                }
-                progressValueColor={theme.colors.color7}
-                strokeColorConfig={[
-                  { color: theme.colors.success, value: 0 },
-                  { color: theme.colors.warning, value: 80 },
-                  { color: theme.colors.error, value: 100 },
-                ]}
-              />
-            </View>
-          )}
         </>
       }
       headerProps={{
@@ -213,7 +179,45 @@ const BudgetScreen = () => {
         ),
       }}
       fabProps={{ show: true, onPress: onFabPress }}>
-      {renderBody(BUDGET_TYPES[activeTabIdx].budgetType)}
+      <>
+        {getBudgetSum().getAmount() > 0 && (
+          <View
+            isLoading={isLoading()}
+            style={styles.circularProgressContainer}>
+            <CircularProgress
+              value={getUsagePercentage()}
+              radius={80}
+              duration={1000}
+              maxValue={getCircularProgressMaxValue()}
+              valueSuffix={'%'}
+              progressValueFontSize={34}
+              title={
+                <>
+                  <BaseText text4>of </BaseText>
+                  <AmountText
+                    text4
+                    amount={
+                      new Amount(
+                        getBudgetSum().getAmount(),
+                        getBudgetSum().getCurrency(),
+                      )
+                    }
+                    style={{ color: theme.colors.color7 }}
+                    sensitive
+                  />
+                </>
+              }
+              progressValueColor={theme.colors.color7}
+              strokeColorConfig={[
+                { color: theme.colors.success, value: 0 },
+                { color: theme.colors.warning, value: 80 },
+                { color: theme.colors.error, value: 100 },
+              ]}
+            />
+          </View>
+        )}
+        {renderBody(BUDGET_TYPES[activeTabIdx].budgetType)}
+      </>
     </BaseScreenV2>
   );
 };
@@ -232,7 +236,7 @@ const getStyles = _ =>
     circularProgressContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginTop: 18,
+      marginBottom: 18,
     },
   });
 

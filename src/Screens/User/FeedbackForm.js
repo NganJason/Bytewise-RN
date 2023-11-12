@@ -1,9 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { Icon, useTheme } from '@rneui/themed';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { BaseScreen, BaseText, BaseInput, BaseButton } from '../../Components';
+import {
+  BaseScreenV2,
+  BaseText,
+  BaseInput,
+  BaseButton,
+} from '../../Components';
 import { useDimension } from '../../_shared/hooks';
 import { useCreateFeedback } from '../../_shared/mutations/user';
 
@@ -41,7 +46,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <BaseScreen headerProps={{ allowBack: true }} scrollable>
+    <BaseScreenV2 backButtonProps={{ show: true }}>
       <View style={styles.screen}>
         {isSubmitted ? (
           <>
@@ -81,7 +86,7 @@ const FeedbackForm = () => {
           />
         </View>
       </View>
-    </BaseScreen>
+    </BaseScreenV2>
   );
 };
 
@@ -98,10 +103,8 @@ const Ratings = ({ onScoreChange = function (score) {} }) => {
 
   const onPress = idx => {
     setScore(idx);
+    onScoreChange(idx);
   };
-  useEffect(() => {
-    onScoreChange(score);
-  }, [score]);
 
   return (
     <View style={styles.rating}>

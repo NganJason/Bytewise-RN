@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGetCategories, useGetCategoriesBudget } from '../query';
 import { getDateStringWithoutDelim } from '../util';
-import { BUDGET_TYPE_MONTHLY, BUDGET_TYPE_ANNUAL } from '../apis/enum';
 
 const useGetCategoriesHelper = ({
   budgetDate = new Date(),

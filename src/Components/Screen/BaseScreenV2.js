@@ -154,9 +154,9 @@ const BaseScreenV2 = ({
     <SafeAreaView style={styles.screen}>
       {renderHeader()}
       <HideKeyboard>
-        <BaseLoadableViewV2 isLoading={isLoading}>
-          <>
-            {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
+        <>
+          {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
+          <BaseLoadableViewV2 isLoading={isLoading}>
             <KeyboardAwareScrollView
               scrollEnabled={!disableScroll}
               extraScrollHeight={20}
@@ -186,20 +186,20 @@ const BaseScreenV2 = ({
                 </BottomSheetModalProvider>
               )}
             </KeyboardAwareScrollView>
-            {showFab && (
-              <FAB
-                color={fabColor === '' ? theme.colors.color1 : fabColor}
-                placement={placement}
-                size={'medium'}
-                onPress={onFabPress}
-                style={styles.fab}
-                icon={
-                  <Icon name="plus" type="entypo" color={theme.colors.white} />
-                }
-              />
-            )}
-          </>
-        </BaseLoadableViewV2>
+          </BaseLoadableViewV2>
+          {showFab && (
+            <FAB
+              color={fabColor === '' ? theme.colors.color1 : fabColor}
+              placement={placement}
+              size={'medium'}
+              onPress={onFabPress}
+              style={styles.fab}
+              icon={
+                <Icon name="plus" type="entypo" color={theme.colors.white} />
+              }
+            />
+          )}
+        </>
       </HideKeyboard>
       <BaseToast />
     </SafeAreaView>
@@ -250,11 +250,6 @@ const getStyles = (
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: STANDARD_PADDING,
       paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     fab: {
       backgroundColor: theme.colors.black, // not the real backgroundColor, set to prevent warning

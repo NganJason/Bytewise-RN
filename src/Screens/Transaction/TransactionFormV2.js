@@ -325,6 +325,7 @@ const TransactionFormV2 = ({ route }) => {
       account_id: transactionForm.account?.account_id,
       from_account_id: transactionForm.from_account?.account_id,
       to_account_id: transactionForm.to_account?.account_id,
+      timestamp: new Date(transactionForm.timestamp).setHours(0, 0, 0, 0),
     });
   };
 
@@ -394,9 +395,7 @@ const TransactionFormV2 = ({ route }) => {
               )}
               hideExtraDays={false}
               onDayPress={obj => {
-                onTransactionTimeChange(
-                  new Date(obj.timestamp).setHours(0, 0, 0, 0),
-                );
+                onTransactionTimeChange(obj.timestamp);
               }}
               markedDates={{
                 [getDateStringFromTs(transactionForm.transaction_time)]: {

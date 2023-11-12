@@ -23,7 +23,7 @@ import {
 } from '../../_shared/mutations';
 import { useGetCategory } from '../../_shared/query';
 import { validateCategory } from '../../_shared/validator';
-import { useError, useValidation } from '../../_shared/hooks';
+import { useError } from '../../_shared/hooks';
 import { OnboardingDataContext } from '../../_shared/context';
 
 const categoryTypes = [
@@ -61,7 +61,6 @@ const CategoryForm = ({ route }) => {
   const { addCategory } = useContext(OnboardingDataContext);
 
   const [formErrors, setFormErrors] = useState({});
-  const { validate, showValidation } = useValidation();
   useEffect(() => {
     setFormErrors(validateCategory(categoryForm));
   }, [categoryForm]);
@@ -97,8 +96,7 @@ const CategoryForm = ({ route }) => {
     onSuccess: navigation.goBack,
   });
 
-  const onFormSubmit = () => {
-    validate();
+  const onSave = () => {
     let isValidationPassed = Object.keys(formErrors).length === 0;
     if (!isValidationPassed) {
       return;
@@ -122,11 +120,15 @@ const CategoryForm = ({ route }) => {
     deleteCategory.mutate({ category_id: categoryID });
   };
 
-  const isFormButtonLoading = () => {
-    return createCategory.isLoading || updateCategory.isLoading;
-  };
+  const isSaveButtonLoading = () =>
+    createCategory.isLoading || updateCategory.isLoading;
+
+  const isDeleteButtonLoading = () => deleteCategory.isLoading;
+
+  const hasFormErrors = () => Object.keys(formErrors).length;
 
   const isFormLoading = () => getCategory.isLoading;
+
   useError([getCategory, createCategory, updateCategory]);
 
   return (
@@ -148,7 +150,6 @@ const CategoryForm = ({ route }) => {
           onChangeText={onCategoryNameChange}
           clearButtonMode="always"
           autoFocus={true}
-          errorMessage={showValidation && formErrors.category_name}
         />
         {categoryForm.category_id === '' && (
           <BaseToggle
@@ -159,11 +160,12 @@ const CategoryForm = ({ route }) => {
           />
         )}
         <DeleteSaveButton
-          onSave={onFormSubmit}
-          isSaveLoading={isFormButtonLoading()}
+          onSave={onSave}
           onDelete={onDelete}
-          isDeleteLoading={deleteCategory.isLoading}
+          isSaveLoading={isSaveButtonLoading()}
+          isDeleteLoading={isDeleteButtonLoading()}
           allowDelete={!isAddCategory()}
+          disableSave={hasFormErrors()}
         />
       </View>
     </BaseScreen>

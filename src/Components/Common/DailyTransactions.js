@@ -1,11 +1,9 @@
 import { View, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
-import BaseText from '../Text/BaseText';
-import AmountText from '../Text/AmountText';
-import BaseListItem from '../View/BaseListItem';
+import { BaseRow } from '../View';
+import { BaseText, AmountText } from '../Text';
 
 import ROUTES from '../../_shared/constant/routes';
 import { DAYS } from '../../_shared/constant/constant';
@@ -84,33 +82,33 @@ const DailyTransactions = ({
       </View>
       {transactions.map((t, i) => {
         return (
-          <TouchableOpacity key={i} onPress={() => navigateToForm(t)}>
-            <BaseListItem
-              containerStyle={styles.listItem}
-              showDivider
-              dividerMargin={1}>
-              <View style={styles.listItemContent}>
-                <BaseText text5 style={styles.category} numberOfLines={1}>
-                  {formatCategoryName(t?.category?.category_name || '')}
+          <BaseRow
+            key={i}
+            onPress={() => navigateToForm(t)}
+            containerStyle={styles.listItem}
+            showDivider
+            dividerMargin={2}>
+            <>
+              <BaseText text5 style={styles.category} numberOfLines={1}>
+                {formatCategoryName(t?.category?.category_name || '')}
+              </BaseText>
+              <View style={styles.noteWrapper}>
+                <BaseText text5 style={styles.note} numberOfLines={1}>
+                  {formatNote(t)}
                 </BaseText>
-                <View style={styles.noteWrapper}>
-                  <BaseText text5 style={styles.note} numberOfLines={1}>
-                    {formatNote(t)}
-                  </BaseText>
-                  <BaseText text5 style={styles.account} numberOfLines={1}>
-                    {formatAccountName(t)}
-                  </BaseText>
-                </View>
-                <AmountText
-                  text5
-                  amount={new Amount(t.amount, t.currency)}
-                  style={styles.amount}
-                  numberOfLines={1}
-                  showSign={!isTransactionTypeTransfer(t.transaction_type)}
-                />
+                <BaseText text5 style={styles.account} numberOfLines={1}>
+                  {formatAccountName(t)}
+                </BaseText>
               </View>
-            </BaseListItem>
-          </TouchableOpacity>
+              <AmountText
+                text5
+                amount={new Amount(t.amount, t.currency)}
+                style={styles.amount}
+                numberOfLines={1}
+                showSign={!isTransactionTypeTransfer(t.transaction_type)}
+              />
+            </>
+          </BaseRow>
         );
       })}
     </View>
@@ -145,10 +143,6 @@ const getStyles = theme =>
     },
     listItem: {
       paddingHorizontal: 0,
-    },
-    listItemContent: {
-      flexDirection: 'row',
-      alignItems: 'center',
     },
     category: {
       flex: 1,
