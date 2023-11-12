@@ -96,9 +96,10 @@ const CategoryForm = ({ route }) => {
     onSuccess: navigation.goBack,
   });
 
+  const isValidationPassed = () => Object.keys(formErrors).length === 0;
+
   const onSave = () => {
-    let isValidationPassed = Object.keys(formErrors).length === 0;
-    if (!isValidationPassed) {
+    if (!isValidationPassed()) {
       return;
     }
 
@@ -124,8 +125,6 @@ const CategoryForm = ({ route }) => {
     createCategory.isLoading || updateCategory.isLoading;
 
   const isDeleteButtonLoading = () => deleteCategory.isLoading;
-
-  const hasFormErrors = () => Object.keys(formErrors).length;
 
   const isFormLoading = () => getCategory.isLoading;
 
@@ -165,7 +164,7 @@ const CategoryForm = ({ route }) => {
           isSaveLoading={isSaveButtonLoading()}
           isDeleteLoading={isDeleteButtonLoading()}
           allowDelete={!isAddCategory()}
-          disableSave={hasFormErrors()}
+          disableSave={!isValidationPassed()}
         />
       </View>
     </BaseScreen>

@@ -5,11 +5,10 @@ import { Icon, useTheme } from '@rneui/themed';
 import {
   BaseButton,
   BaseInput,
-  BaseScreen,
   BaseText,
   BaseImage,
   LinkText,
-  BaseKeyboardAwareScrollView,
+  BaseScreenV2,
 } from '../../Components';
 
 import { signupHero } from '../../_shared/constant/asset';
@@ -17,7 +16,7 @@ import ROUTES from '../../_shared/constant/routes';
 import { AuthContext, OnboardingDataContext } from '../../_shared/context';
 import { useNavigation } from '@react-navigation/native';
 import { validateSignUp } from '../../_shared/validator';
-import { useError, useValidation, useDimension } from '../../_shared/hooks';
+import { useError, useDimension } from '../../_shared/hooks';
 
 const SignupScreen = () => {
   const { theme } = useTheme();
@@ -26,7 +25,6 @@ const SignupScreen = () => {
   const { reset } = useContext(OnboardingDataContext);
 
   const [formErrors, setFormErrors] = useState({});
-  const { validate, showValidation } = useValidation();
 
   const [signupForm, setSignupForm] = useState({
     email: '',
@@ -48,18 +46,15 @@ const SignupScreen = () => {
   const { signup, isSignupLoading, getSignupError } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  const onSignup = () => {
-    validate();
-    let isValidationPassed = Object.keys(formErrors).length === 0;
+  const isValidationPassed = () => Object.keys(formErrors).length === 0;
 
-    if (!isValidationPassed) {
+  const onSignup = () => {
+    if (!isValidationPassed()) {
       return;
     }
-    signup(signupForm, resp => {
-      navigation.navigate(ROUTES.otp, {
-        email: signupForm.email,
-        password: signupForm.password,
-      });
+
+    signup(signupForm, _ => {
+      navigation.navigate(ROUTES.onboarding);
       reset();
     });
   };
@@ -67,13 +62,8 @@ const SignupScreen = () => {
   useError([getSignupError()]);
 
   return (
-    <BaseScreen>
-      <BaseKeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
-        enableOnAndroid={true}
-        keyboardOpeningTime={0}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.screen}>
+    <BaseScreenV2 backButtonProps={{ show: true }}>
+      <View style={styles.body}>
         <View>
           <BaseText h2 style={styles.title}>
             Join us
@@ -101,7 +91,6 @@ const SignupScreen = () => {
             value={signupForm.email}
             onChangeText={onEmailChange}
             maxLength={60}
-            errorMessage={showValidation && formErrors.email}
             containerStyle={styles.input}
           />
           <BaseInput
@@ -112,7 +101,6 @@ const SignupScreen = () => {
             value={signupForm.password}
             onChangeText={onPasswordChange}
             secureTextEntry
-            errorMessage={showValidation && formErrors.password}
             containerStyle={styles.input}
           />
         </View>
@@ -125,6 +113,7 @@ const SignupScreen = () => {
               width={200}
               onPress={onSignup}
               loading={isSignupLoading}
+              disabled={!isValidationPassed()}
             />
           </View>
           <View style={styles.signUpContainer}>
@@ -136,16 +125,16 @@ const SignupScreen = () => {
             </LinkText>
           </View>
         </View>
-      </BaseKeyboardAwareScrollView>
-    </BaseScreen>
+      </View>
+    </BaseScreenV2>
   );
 };
 
 const getStyles = theme => {
   return StyleSheet.create({
-    screen: {
+    body: {
+      flex: 1,
       justifyContent: 'center',
-      height: '100%',
     },
     title: {
       marginBottom: 6,

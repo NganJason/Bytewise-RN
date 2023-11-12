@@ -306,9 +306,10 @@ const TransactionFormV2 = ({ route }) => {
     },
   });
 
+  const isValidationPassed = () => Object.keys(formErrors).length === 0;
+
   const onSave = () => {
-    const isValidationPass = Object.keys(formErrors).length === 0;
-    if (!isValidationPass) {
+    if (!isValidationPassed()) {
       return;
     }
 
@@ -343,8 +344,6 @@ const TransactionFormV2 = ({ route }) => {
     createTransaction.isLoading || updateTransaction.isLoading;
 
   const isDeleteButtonLoading = () => deleteTransaction.isLoading;
-
-  const hasFormErrors = () => Object.keys(formErrors).length;
 
   useError([
     getTransaction,
@@ -518,7 +517,7 @@ const TransactionFormV2 = ({ route }) => {
             isSaveLoading={isSaveButtonLoading()}
             isDeleteLoading={isDeleteButtonLoading()}
             allowDelete={!isAddTransaction()}
-            disableSave={hasFormErrors()}
+            disableSave={!isValidationPassed()}
           />
         </>
       )}

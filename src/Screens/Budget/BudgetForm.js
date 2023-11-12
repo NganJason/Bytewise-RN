@@ -160,10 +160,10 @@ const BudgetForm = ({ route }) => {
     setBudgetForm({ ...budgetForm, budget_repeat: e });
   };
 
-  const onSave = () => {
-    let isValidationPassed = Object.keys(formErrors).length === 0;
+  const isValidationPassed = () => Object.keys(formErrors).length === 0;
 
-    if (!isValidationPassed) {
+  const onSave = () => {
+    if (!isValidationPassed()) {
       return;
     }
 
@@ -215,8 +215,6 @@ const BudgetForm = ({ route }) => {
       },
     ];
   };
-
-  const hasFormErrors = () => Object.keys(formErrors).length;
 
   useError([...getQueries(), updateBudget]);
 
@@ -299,7 +297,7 @@ const BudgetForm = ({ route }) => {
         isSaveLoading={createBudget.isLoading || updateBudget.isLoading}
         onDelete={toggleDeleteModal}
         allowDelete={!isAddBudget()}
-        disableSave={hasFormErrors()}
+        disableSave={!isValidationPassed()}
       />
       <DeleteBudgetOverlay
         isVisible={isDeleteModalVisible}
