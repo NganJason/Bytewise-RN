@@ -18,7 +18,7 @@ const TouchInput = ({
       label={label}
       value={value}
       readOnly
-      onPressIn={onPress}
+      onPress={onPress}
       disabled={disabled}
       placeholder={placeholder}
       {...props}

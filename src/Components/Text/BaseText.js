@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { Text } from '@rneui/themed';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -79,7 +79,7 @@ const BaseText = ({
     let textStyle = getTextCommonStyles();
     const { fontSize = 20 } = textStyle;
 
-    return fontSize * 0.7;
+    return fontSize * 0.45;
   };
 
   // top, bottom, left, right take precedence over vertical and horizontal

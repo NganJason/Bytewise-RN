@@ -7,11 +7,11 @@ const BaseLinearProgress = ({ value = 0, showPercentage = false }) => {
 
   const getColor = () => {
     if (value >= 1) {
-      return theme.colors.regularRed;
-    } else if (value >= 0.6) {
-      return theme.colors.lightRed;
+      return theme.colors.error;
+    } else if (value >= 0.8) {
+      return theme.colors.warning;
     }
-    return theme.colors.color1;
+    return theme.colors.success;
   };
 
   const getPercentage = val => {

@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useLogin, useSignup } from '../mutations';
@@ -29,7 +35,7 @@ const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(isAxiosTokenSet());
   useEffect(() => {
     setIsUserLogin(isLogin);
-  }, [isLogin]);
+  }, [isLogin, setIsUserLogin]);
 
   const login = ({ email = '', password = '' }) => {
     loginMutation.mutate(
@@ -48,15 +54,18 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const signup = (
-    { email = '', password = '' },
-    onSuccess = function () {},
-  ) => {
+  const signup = ({ email = '', password = '' }) => {
     signupMutation.mutate(
       { email, password },
       {
-        onSuccess: resp => {
-          onSuccess(resp);
+        onSuccess: async resp => {
+          try {
+            await AsyncStorage.setItem(ACCESS_TOKEN, resp.access_token);
+            updateUserMeta(resp?.user || {});
+            onLoginSuccess(resp.access_token);
+          } catch {
+            throw new UserError('set access token error');
+          }
         },
       },
     );
@@ -79,13 +88,13 @@ const AuthProvider = ({ children }) => {
     );
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
+    // ignore error
+    await AsyncStorage.removeItem(ACCESS_TOKEN);
     setIsLogin(false);
     unsetAxiosAccessToken();
     clearUserMeta();
-    // ignore error
-    await AsyncStorage.removeItem(ACCESS_TOKEN);
-  };
+  }, [clearUserMeta]);
 
   useEffect(() => {
     async function getToken() {
@@ -102,7 +111,7 @@ const AuthProvider = ({ children }) => {
     getToken();
 
     setAxiosResponseInterceptors({ on401: logout });
-  }, []);
+  }, [logout]);
 
   const onLoginSuccess = (accessToken = '') => {
     setAxiosAccessToken(accessToken);

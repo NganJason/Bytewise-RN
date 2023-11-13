@@ -18,7 +18,7 @@ import WelcomeScreen from './src/Screens/Onboarding/WelcomeScreen';
 import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
-import TransactionForm from './src/Screens/Transaction/TransactionForm';
+import TransactionFormV2 from './src/Screens/Transaction/TransactionFormV2';
 import { ConnectionChecker, CustomDrawer } from './src/Components/Common';
 
 import ROUTES from './src/_shared/constant/routes';
@@ -42,7 +42,6 @@ import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm'
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
 import SetupSplashScreen from './src/Screens/Onboarding/SetupSplashScreen';
 import FeedbackForm from './src/Screens/User/FeedbackForm';
-import TransactionCalendarScreen from './src/Screens/Transaction/TransactionCalendarScreen';
 import {
   UserMetaContext,
   UserMetaProvider,
@@ -167,10 +166,6 @@ function Main() {
             component={CategoryBreakdownScreen}
           />
           <Stack.Screen
-            name={ROUTES.transactionCalendar}
-            component={TransactionCalendarScreen}
-          />
-          <Stack.Screen
             name={ROUTES.accountBreakdown}
             component={AccountBreakdownScreen}
           />
@@ -217,7 +212,7 @@ function Main() {
                 <Stack.Screen name={ROUTES.budgetForm} component={BudgetForm} />
                 <Stack.Screen
                   name={ROUTES.transactionForm}
-                  component={TransactionForm}
+                  component={TransactionFormV2}
                 />
                 <Stack.Screen
                   name={ROUTES.accountForm}

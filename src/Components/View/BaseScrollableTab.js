@@ -64,7 +64,7 @@ const BaseScrollableTab = ({
 const getStyles = theme =>
   StyleSheet.create({
     scrollContainer: {
-      padding: 4,
+      margin: 4,
     },
     tab: {
       flexDirection: 'row',
@@ -77,8 +77,8 @@ const getStyles = theme =>
       backgroundColor: theme.colors.white,
       shadowColor: theme.colors.black,
       shadowOffset: {
-        width: 2,
-        height: 2,
+        width: 1,
+        height: 1,
       },
       shadowOpacity: 0.2,
       shadowRadius: 2,

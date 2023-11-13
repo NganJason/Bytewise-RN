@@ -70,7 +70,7 @@ const getStyles = theme => {
   return StyleSheet.create({
     dayContainer: {
       alignItems: 'center',
-      marginBottom: 1,
+      marginBottom: 2,
     },
     dayTextContainer: {
       justifyContent: 'center',
@@ -78,7 +78,7 @@ const getStyles = theme => {
       width: 28,
       height: 28,
       borderRadius: 100,
-      marginBottom: 1,
+      marginBottom: 2,
     },
     selectedDay: {
       backgroundColor: theme.colors.color3,

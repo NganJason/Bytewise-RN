@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-  ActivityIndicator,
   View,
 } from 'react-native';
-import { BaseToast } from '../View';
-import { useDimension } from '../../_shared/hooks';
-import { Header, FAB, useTheme, Icon } from '@rneui/themed';
-import { BackIcon, DrawerIcon } from '../Common';
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
+import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 
-const WAIT_TIME_FOR_INDICATOR = 500;
+import { BaseToast, BaseLoadableViewV2 } from '../View';
+import { useDimension } from '../../_shared/hooks';
+import { BackIcon, DrawerIcon } from '../Common';
+
+const STANDARD_PADDING = 25;
 
 const HideKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -28,6 +32,7 @@ const BaseScreenV2 = ({
   children,
   isLoading = false,
   subHeader = null,
+  disableScroll = false,
   headerProps: {
     leftComponent = null,
     rightComponent = null,
@@ -41,9 +46,13 @@ const BaseScreenV2 = ({
   } = {},
   backButtonProps: { show: showBackButton = false } = {},
   drawerButtonProps: { show: showDrawerButton = false } = {},
+  bottomSheetModalProps: {
+    show: showBottomSheetModel = false,
+    headerComponent: bottomSheetModalHeader = null,
+    bodyComponent: bottomSheetModalBody = null,
+  } = {},
 }) => {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
-  const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
 
   const { theme } = useTheme();
   const screenDimension = useDimension();
@@ -51,29 +60,15 @@ const BaseScreenV2 = ({
   const styles = getStyles(theme, {
     screenDimension: screenDimension,
     isKeyboardOpen,
+    hasFAB: showFab,
   });
 
-  // show loading indicator if isLoading stays true for >= WAIT_TIME_FOR_INDICATOR
-  useEffect(() => {
-    let timer = null;
-    if (isLoading) {
-      timer = setTimeout(() => {
-        // will only show indicator if isLoading takes too long to become false
-        setShowLoadingIndicator(true);
-      }, WAIT_TIME_FOR_INDICATOR);
-    } else {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-      setShowLoadingIndicator(false);
-    }
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ['20%', '40%', '70%', '95%'], []);
 
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isLoading]);
+  useEffect(() => {
+    bottomSheetModalRef?.current?.present();
+  }, [showBottomSheetModel]);
 
   // checks if keyboard is opened
   useEffect(() => {
@@ -153,26 +148,45 @@ const BaseScreenV2 = ({
     );
   };
 
-  const renderBody = () => {
-    if (showLoadingIndicator) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={theme.colors.color1} />
-        </View>
-      );
-    }
+  bottomSheetModalRef.current?.present();
 
-    if (!isLoading) {
-      return (
+  return (
+    <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
+      {renderHeader()}
+      <HideKeyboard>
         <>
           {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
-          <KeyboardAwareScrollView
-            extraScrollHeight={20}
-            contentContainerStyle={styles.scrollView}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
-            {children}
-          </KeyboardAwareScrollView>
+          <BaseLoadableViewV2 isLoading={isLoading}>
+            <KeyboardAwareScrollView
+              scrollEnabled={!disableScroll}
+              extraScrollHeight={20}
+              contentContainerStyle={styles.scrollView}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}>
+              {children}
+              {showBottomSheetModel && (
+                <BottomSheetModalProvider>
+                  <BottomSheetModal
+                    backgroundStyle={styles.bottomSheetModal}
+                    handleStyle={styles.bottomSheetModalHandler}
+                    enablePanDownToClose={false}
+                    ref={bottomSheetModalRef}
+                    index={1}
+                    snapPoints={snapPoints}>
+                    <View style={styles.subHeader}>
+                      {bottomSheetModalHeader}
+                    </View>
+                    <KeyboardAwareScrollView
+                      contentContainerStyle={styles.scrollView}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}>
+                      {bottomSheetModalBody}
+                    </KeyboardAwareScrollView>
+                  </BottomSheetModal>
+                </BottomSheetModalProvider>
+              )}
+            </KeyboardAwareScrollView>
+          </BaseLoadableViewV2>
           {showFab && (
             <FAB
               color={fabColor === '' ? theme.colors.color1 : fabColor}
@@ -186,24 +200,19 @@ const BaseScreenV2 = ({
             />
           )}
         </>
-      );
-    }
-  };
-
-  return (
-    <SafeAreaView style={styles.screen}>
-      {renderHeader()}
-      <HideKeyboard>
-        <>{renderBody()}</>
       </HideKeyboard>
       <BaseToast />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const getStyles = (
   theme,
-  { screenDimension: { screenHeight = 0 } = {}, isKeyboardOpen = false },
+  {
+    screenDimension: { screenHeight = 0 } = {},
+    isKeyboardOpen = false,
+    hasFAB = false,
+  },
 ) =>
   StyleSheet.create({
     screen: {
@@ -222,7 +231,7 @@ const getStyles = (
     },
     headerCenterComponent: {
       justifyContent: 'center',
-      flex: 2,
+      flex: 3,
     },
     headerLeftComponent: {
       justifyContent: 'flex-start',
@@ -233,19 +242,14 @@ const getStyles = (
       flex: 1,
     },
     subHeader: {
-      paddingHorizontal: 20,
+      paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
-      paddingBottom: 20,
     },
     scrollView: {
       flexGrow: 1,
-      paddingHorizontal: 20,
-      paddingTop: 0,
-      paddingBottom: isKeyboardOpen ? 20 : 70, // space for FAB
-    },
-    loadingContainer: {
-      height: '100%',
-      justifyContent: 'center',
+      paddingHorizontal: STANDARD_PADDING,
+      paddingTop: STANDARD_PADDING,
+      paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
     },
     fab: {
       backgroundColor: theme.colors.black, // not the real backgroundColor, set to prevent warning
@@ -257,6 +261,19 @@ const getStyles = (
       shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 4,
+    },
+    bottomSheetModalHandler: {
+      paddingTop: 20,
+    },
+    bottomSheetModal: {
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 2,
+        height: -5,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 10,
+      elevation: 10,
     },
   });
 

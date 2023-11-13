@@ -19,6 +19,7 @@ import BaseBottomSelectTab from './BaseBottomSelectTab';
 import BaseProgressTab from './BaseProgressTab';
 import BaseSwipeableView from './BaseSwipeableView';
 import BaseHorizontalScrollView from './BaseHorizontalScrollView';
+import BaseLoadableViewV2 from './BaseLoadableViewV2';
 
 export {
   BaseBottomSheet,
@@ -42,4 +43,5 @@ export {
   BaseProgressTab,
   BaseSwipeableView,
   BaseHorizontalScrollView,
+  BaseLoadableViewV2,
 };

@@ -7,7 +7,7 @@ import BaseDivider from '../View/BaseDivider';
 import BaseText from '../Text/BaseText';
 import AmountText from '../Text/AmountText';
 
-const AggrSummary = ({ aggrs = [] }) => {
+const AggrSummary = ({ aggrs = [], isLoading = false }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -24,6 +24,7 @@ const AggrSummary = ({ aggrs = [] }) => {
                 text5
                 amount={aggr.amount}
                 sensitive={aggr.sensitive}
+                isLoading={isLoading}
               />
             </Col>
             {i < aggrs.length - 1 && <BaseDivider orientation="vertical" />}

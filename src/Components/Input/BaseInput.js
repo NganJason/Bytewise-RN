@@ -1,6 +1,7 @@
 import { useState, forwardRef } from 'react';
 import { useTheme, Input } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import BaseText from '../Text/BaseText';
 import InfoToolTip from '../Common/InfoToolTip';
@@ -26,7 +27,7 @@ const BaseInput = forwardRef(
       onChangeText = function () {},
       onBlur = function () {},
       onFocus = function () {},
-      onPressIn = function () {},
+      onPress = null,
       containerStyle = {},
       labelStyle = {},
       clearButtonMode = 'never', // IOS only
@@ -82,56 +83,60 @@ const BaseInput = forwardRef(
     };
 
     return (
-      <Input
-        ref={ref}
-        autoCapitalize="none"
-        keyboardType={keyboardType}
-        onChangeText={onChangeText}
-        onBlur={handleBlur}
-        placeholder={placeholder}
-        onPressIn={onPressIn}
-        label={
-          label !== '' && (
-            <View style={styles.label}>
-              <BaseText h4 style={labelStyle} margin={{ right: 6 }}>
-                {label}
-              </BaseText>
-              {showToolTip() && (
-                <InfoToolTip
-                  title={tooltip.title}
-                  message={tooltip.message}
-                  customChildren={tooltip.customChildren}
-                />
-              )}
-            </View>
-          )
-        }
-        value={value}
-        selectionColor={theme.colors.primary}
-        onFocus={handleFocus}
-        inputContainerStyle={[
-          styles.inputContainer,
-          getInputContainerStyle(),
-          getFocusedStyle(),
-        ]}
-        caretHidden={caretHidden}
-        readOnly={readOnly}
-        showSoftInputOnFocus={showSoftInputOnFocus}
-        leftIcon={leftIcon !== null && leftIcon}
-        rightIcon={rightIcon !== null && rightIcon}
-        autoFocus={autoFocus}
-        containerStyle={[styles.container, containerStyle]}
-        clearButtonMode={clearButtonMode}
-        inputStyle={[styles.input]}
-        disabledInputStyle={styles.inputDisabled}
-        pointerEvents={pointerEvents}
-        renderErrorMessage={true}
-        maxLength={maxLength}
-        secureTextEntry={secureTextEntry}
-        errorMessage={errorMessage}
-        disabled={disabled}
-        {...props}
-      />
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={onPress === null}
+        activeOpacity={1}>
+        <Input
+          ref={ref}
+          autoCapitalize="none"
+          keyboardType={keyboardType}
+          onChangeText={onChangeText}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          label={
+            label !== '' && (
+              <View style={styles.label}>
+                <BaseText h4 style={labelStyle} margin={{ right: 6 }}>
+                  {label}
+                </BaseText>
+                {showToolTip() && (
+                  <InfoToolTip
+                    title={tooltip.title}
+                    message={tooltip.message}
+                    customChildren={tooltip.customChildren}
+                  />
+                )}
+              </View>
+            )
+          }
+          value={value}
+          selectionColor={theme.colors.primary}
+          onFocus={handleFocus}
+          inputContainerStyle={[
+            styles.inputContainer,
+            getInputContainerStyle(),
+            getFocusedStyle(),
+          ]}
+          caretHidden={caretHidden}
+          readOnly={readOnly}
+          showSoftInputOnFocus={showSoftInputOnFocus}
+          leftIcon={leftIcon !== null && leftIcon}
+          rightIcon={rightIcon !== null && rightIcon}
+          autoFocus={autoFocus}
+          containerStyle={[styles.container, containerStyle]}
+          clearButtonMode={clearButtonMode}
+          inputStyle={[styles.input]}
+          disabledInputStyle={styles.inputDisabled}
+          pointerEvents={pointerEvents}
+          renderErrorMessage={true}
+          maxLength={maxLength}
+          secureTextEntry={secureTextEntry}
+          errorMessage={errorMessage}
+          disabled={disabled}
+          {...props}
+        />
+      </TouchableOpacity>
     );
   },
 );
@@ -153,7 +158,7 @@ const getStyles = theme =>
     },
     container: {
       paddingHorizontal: 0,
-      marginBottom: 16,
+      marginBottom: 10,
     },
     inputContainer: {
       paddingVertical: 4,

@@ -9,15 +9,9 @@ import {
 import DailyTransactions from './DailyTransactions';
 import { BaseText } from '../Text';
 import EmptyContent from './EmptyContent';
-import { EmptyContentConfig } from '../../_shared/constant/constant';
-import ROUTES from '../../_shared/constant/routes';
 import { Amount } from '../../_shared/object';
 
-const Transactions = ({
-  transactionGroups = [],
-  showMonthLabel = false,
-  emptyContentConfig,
-}) => {
+const Transactions = ({ transactionGroups = [], showMonthLabel = false }) => {
   const processTransactions = () => {
     let dateToSum = {};
     let dates = [];
@@ -74,16 +68,7 @@ const Transactions = ({
 
     if (rows.length === 0) {
       if (rows.length === 0) {
-        return (
-          <EmptyContent
-            item={
-              emptyContentConfig
-                ? emptyContentConfig
-                : EmptyContentConfig.transaction
-            }
-            route={ROUTES.transactionForm}
-          />
-        );
+        return <EmptyContent />;
       }
     }
     return rows;

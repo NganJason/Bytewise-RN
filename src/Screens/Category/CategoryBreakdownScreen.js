@@ -189,10 +189,7 @@ const CategoryBreakdownScreen = ({ route }) => {
         show: true,
         onPress: () =>
           navigation.navigate(ROUTES.transactionForm, {
-            category: {
-              category_id: categoryID,
-              category_name: getCategoryBudget?.data?.category?.category_name,
-            },
+            categoryID: categoryID,
           }),
       }}>
       <>
