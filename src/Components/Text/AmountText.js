@@ -15,6 +15,7 @@ const AmountText = ({
   amount = new Amount(),
   showColor = false,
   showSign = false,
+  showCurrency = true,
   showNegativeOnly = false,
   showPositiveOnly = false,
   center = false,
@@ -47,24 +48,16 @@ const AmountText = ({
     const { sign } = getAmountAttr();
     const currencySymbol = getCurrencyMap(amount.getCurrency()).symbol;
 
-    if (sensitive && shouldHideSensitiveInfo()) {
-      if (suffix !== '') {
-        return `${currencySymbol} - ${suffix}`;
-      }
-      return `${currencySymbol} -`;
-    }
-
     // use sign string to show negative
     let value = parseFloat(Math.abs(amount.getAmount()));
     let amountStr = value.toLocaleString('en-US', {
       style: 'decimal',
       useGrouping: true,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: decimal,
+      maximumFractionDigits: decimal,
     });
 
-    text = `${currencySymbol} ${amountStr}`;
-
+    text = `${amountStr}`;
     let shouldShowSign = false;
     if (showSign) {
       shouldShowSign = true;
@@ -76,7 +69,15 @@ const AmountText = ({
       shouldShowSign = true;
     }
 
-    if (shouldShowSign) {
+    if (sensitive && shouldHideSensitiveInfo()) {
+      text = '-';
+    }
+
+    if (showCurrency) {
+      text = `${currencySymbol} ${text}`;
+    }
+
+    if (shouldShowSign && !sensitive) {
       text = `${sign}${text}`;
     }
 

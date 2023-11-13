@@ -46,6 +46,7 @@ import {
   BaseBottomSelectTab,
   BaseProgressTab,
   BaseSwipeableView,
+  BaseHorizontalScrollView,
 } from './View';
 
 // Common
@@ -124,6 +125,7 @@ export {
   DeleteSaveButton,
   BaseProgressTab,
   BaseSwipeableView,
+  BaseHorizontalScrollView,
   HoldingSearchResult,
   AggrSummary2,
   BaseScreenV2,

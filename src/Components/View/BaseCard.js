@@ -6,6 +6,7 @@ const BaseCard = ({
   color = '#FFF',
   children,
   onPress = null,
+  width = '100%',
   containerStyle = {},
 }) => {
   const { theme } = useTheme();
@@ -14,7 +15,12 @@ const BaseCard = ({
   return (
     <TouchableOpacity disabled={onPress === null} onPress={onPress}>
       <View
-        style={{ ...styles.card, backgroundColor: color, ...containerStyle }}>
+        style={{
+          ...styles.card,
+          width: width,
+          backgroundColor: color,
+          ...containerStyle,
+        }}>
         {children}
       </View>
     </TouchableOpacity>
@@ -24,7 +30,6 @@ const BaseCard = ({
 const getStyles = theme =>
   StyleSheet.create({
     card: {
-      width: '100%',
       paddingVertical: 16,
       borderRadius: 15,
       paddingHorizontal: 12,
