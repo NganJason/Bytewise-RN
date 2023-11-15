@@ -26,7 +26,11 @@ import {
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useError, useTransactionGroups } from '../../_shared/hooks';
+import {
+  useError,
+  useTransactionGroups,
+  useDimension,
+} from '../../_shared/hooks';
 import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
@@ -36,6 +40,10 @@ const TransactionScreen = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const [isCalendarActive, setIsCalendarActive] = useState(false);
+
+  const [disableScroll, setDisableScroll] = useState(false);
+
+  const { screenWidth, screenHeight } = useDimension();
 
   const [activeDate, setActiveDate] = useState(TODAY);
   const {
@@ -110,6 +118,7 @@ const TransactionScreen = ({ navigation }) => {
   return (
     <BaseScreenV2
       isLoading={isLoading}
+      hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       headerProps={{
         allowBack: false,
@@ -150,11 +159,12 @@ const TransactionScreen = ({ navigation }) => {
                 },
               ]}
             />
+
             {filterComponent}
           </>
         )
       }
-      disableScroll={isCalendarActive}
+      disableScroll={isCalendarActive || disableScroll}
       bottomSheetModalProps={{
         show: isCalendarActive,
         bodyComponent: (
@@ -187,6 +197,20 @@ const TransactionScreen = ({ navigation }) => {
         </>
       ) : (
         transactionsComponent
+        // <View
+        //   onTouchStart={() => setDisableScroll(true)}
+        //   onTouchEnd={() => setDisableScroll(false)}>
+        //   <BaseLineChart
+        //     title="Net Worth"
+        //     data={[
+        //       { value: 0, labelText: 'Mar 2023' },
+        //       { value: 1000, labelText: 'Apr 2023' },
+        //       { value: 3000, labelText: 'May 2023' },
+        //       { value: -1000, labelText: 'Jun 2023' },
+        //       { value: 10000, labelText: 'Today' },
+        //     ]}
+        //   />
+        // </View>
       )}
     </BaseScreenV2>
   );
@@ -196,7 +220,6 @@ const getStyles = _ => {
   return StyleSheet.create({
     filter: {
       marginTop: 0,
-      marginBottom: 8,
     },
     dayInfoContainer: {
       minHeight: 14,

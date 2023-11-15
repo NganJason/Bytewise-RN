@@ -361,13 +361,11 @@ const TransactionFormV2 = ({ route }) => {
       isLoading={isFormLoading()}
       backButtonProps={{ show: true }}
       subHeader={
-        isFormReady && (
-          <BaseScrollableTab
-            tabs={TRANSACTION_TYPES}
-            activeTabIdx={activeTabIdx}
-            onTabChange={onTransactionTypeChange}
-          />
-        )
+        <BaseScrollableTab
+          tabs={TRANSACTION_TYPES}
+          activeTabIdx={activeTabIdx}
+          onTabChange={onTransactionTypeChange}
+        />
       }
       headerProps={{
         centerComponent: (

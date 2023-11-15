@@ -20,15 +20,14 @@ export const useCreateTransaction = (opts = {}) => {
       // refetch all transactions in the same time range
       queryClient.invalidateQueries([queryKeys.transactionGroups]);
 
-      // recompute aggregations with new transaction amount
-      queryClient.invalidateQueries([queryKeys.transactionsAggr]);
-
       queryClient.invalidateQueries([queryKeys.transactionsSum]);
 
       queryClient.invalidateQueries([queryKeys.categoryTransactions]);
 
       // refetch all accounts since the amount for a specific account has changed
       queryClient.invalidateQueries([queryKeys.accounts]);
+
+      queryClient.invalidateQueries([queryKeys.transactionsSummary]);
 
       // refetch account with given account_id
       if (account_id !== '') {
@@ -65,9 +64,6 @@ export const useUpdateTransaction = (opts = {}) => {
       // refetch all transactions
       queryClient.invalidateQueries([queryKeys.transactionGroups]);
 
-      // recompute aggregations as transaction amount may have changed
-      queryClient.invalidateQueries([queryKeys.transactionsAggr]);
-
       queryClient.invalidateQueries([queryKeys.transactionsSum]);
 
       queryClient.invalidateQueries([queryKeys.categoryTransactions]);
@@ -77,6 +73,8 @@ export const useUpdateTransaction = (opts = {}) => {
 
       // refetch all accounts since the amount for a specific account has changed
       queryClient.invalidateQueries([queryKeys.accounts]);
+
+      queryClient.invalidateQueries([queryKeys.transactionsSummary]);
 
       // refetch account with given account_id
       if (account_id !== '') {
@@ -109,10 +107,15 @@ export const useDeleteTransaction = (opts = {}) => {
   return useMutation(deleteTransaction, {
     onSuccess: () => {
       queryClient.invalidateQueries([queryKeys.transactionGroups]);
-      queryClient.invalidateQueries([queryKeys.transactionsAggr]);
+
       queryClient.invalidateQueries([queryKeys.transactionsSum]);
+
       queryClient.invalidateQueries([queryKeys.categoryTransactions]);
+
       queryClient.invalidateQueries([queryKeys.accounts]);
+
+      queryClient.invalidateQueries([queryKeys.transactionsSummary]);
+
       if (account_id !== '') {
         queryClient.invalidateQueries([queryKeys.account, account_id]);
       }

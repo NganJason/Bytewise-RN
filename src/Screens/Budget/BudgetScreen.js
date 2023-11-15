@@ -157,6 +157,7 @@ const BudgetScreen = () => {
   return (
     <BaseScreenV2
       isLoading={isLoading()}
+      hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       subHeader={
         <>

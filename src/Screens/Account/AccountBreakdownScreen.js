@@ -3,21 +3,15 @@ import { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
-  BaseImage,
-  BaseScreen2,
+  BaseScreenV2,
   BaseText,
   DateNavigator,
   BaseLoadableView,
   Transactions,
   IconButton,
 } from '../../Components';
-import { card, coin, coinsack } from '../../_shared/constant/asset';
 import ROUTES from '../../_shared/constant/routes';
-import {
-  ACCOUNT_TYPES,
-  ACCOUNT_TYPE_CASH,
-  ACCOUNT_TYPE_CREDIT_CARD,
-} from '../../_shared/apis/enum';
+import { ACCOUNT_TYPES, ACCOUNT_TYPE_CASH } from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount } from '../../_shared/query';
 import {
@@ -74,16 +68,6 @@ const AccountBreakdownScreen = ({ route }) => {
       currency = getUserBaseCurrency(),
     } = getAccount?.data?.account || {};
 
-    const getImg = () => {
-      if (isAccountTypeAsset(accountType)) {
-        return coin;
-      }
-      if (accountType === ACCOUNT_TYPE_CREDIT_CARD) {
-        return card;
-      }
-      return coinsack;
-    };
-
     return (
       <>
         <View style={styles.title}>
@@ -122,7 +106,6 @@ const AccountBreakdownScreen = ({ route }) => {
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
         </View>
-        <BaseImage source={getImg()} containerStyle={styles.image} />
       </>
     );
   };
@@ -147,31 +130,18 @@ const AccountBreakdownScreen = ({ route }) => {
   useError([getAccount, ...getErrors()]);
 
   return (
-    <BaseScreen2
-      headerProps={{
-        component: renderHeader(),
-        allowBack: true,
-        backgroundColor: isAccountTypeAsset(accountType)
-          ? theme.colors.color4
-          : theme.colors.color13,
-      }}
-      fabProps={
-        accountType !== ACCOUNT_TYPE_LOAN && {
-          show: true,
-          placement: 'right',
-          iconName: 'plus',
-          iconType: 'entypo',
-          iconColor: theme.colors.white,
-          color: theme.colors.color1,
-          onPress: () =>
-            navigation.navigate(ROUTES.transactionForm, {
-              accountID: accountID,
-            }),
-          marginBottom: screenHeight * 0.02,
-        }
-      }>
+    <BaseScreenV2
+      subHeader={renderHeader()}
+      backButtonProps={{ show: true }}
+      fabProps={{
+        show: accountType !== ACCOUNT_TYPE_LOAN,
+        onPress: () =>
+          navigation.navigate(ROUTES.transactionForm, {
+            accountID: accountID,
+          }),
+      }}>
       <View style={styles.body}>{renderContent()}</View>
-    </BaseScreen2>
+    </BaseScreenV2>
   );
 };
 
@@ -179,13 +149,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
     body: {
       flex: 1,
-    },
-    image: {
-      width: screenHeight * 0.2,
-      height: screenHeight * 0.18,
-      position: 'absolute',
-      right: screenWidth * -0.15,
-      zIndex: -1,
     },
     dataNavigator: {
       alignItems: 'center',
@@ -202,9 +165,6 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     debtText: {
       marginBottom: theme.spacing.md,
       color: theme.colors.color7,
-    },
-    title: {
-      flex: 1,
     },
     accountNameContainer: {
       display: 'flex',
