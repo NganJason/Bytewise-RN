@@ -132,8 +132,19 @@ const useTransactionGroups = (
     return getMonthlyTransactionsSum(TRANSACTION_TYPE_INCOME);
   };
 
-  const getMonthlyTotalExpense = () => {
-    return getMonthlyTransactionsSum(TRANSACTION_TYPE_EXPENSE);
+  const getMonthlyTotalExpense = (absNum = false) => {
+    let expense = getMonthlyTransactionsSum(TRANSACTION_TYPE_EXPENSE);
+    if (absNum) {
+      return new Amount(Math.abs(expense.amount), expense.currency);
+    }
+    return expense;
+  };
+
+  const getMonthlyTotalSavings = () => {
+    let expense = getMonthlyTotalExpense();
+    let income = getMonthlyTotalIncome();
+
+    return new Amount(income.amount + expense.amount, expense.currency);
   };
 
   const getMonthlyTransactionsSum = (transactionType = 0) => {
@@ -183,10 +194,12 @@ const useTransactionGroups = (
   };
 
   return {
+    timeRange,
     setTimeRange,
     transactionGroups: transactionGroups,
     getMonthlyTotalIncome,
     getMonthlyTotalExpense,
+    getMonthlyTotalSavings,
     getDailyTotalExpenseIncome,
     getTransactionGroupByDateStr,
     selectedFilters,

@@ -8,6 +8,7 @@ import {
   OnboardingDataContext,
   OnboardingDataProvider,
 } from './OnboardingDataContext';
+import { UserMetaContext } from './UserMetaContext';
 
 export {
   AuthContext,
@@ -17,4 +18,5 @@ export {
   ToastTypeInfo,
   OnboardingDataContext,
   OnboardingDataProvider,
+  UserMetaContext,
 };

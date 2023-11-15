@@ -2,6 +2,7 @@ import { Icon } from '@rneui/themed';
 
 import { THEME } from '../../_shared/constant/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View } from 'react-native';
 
 const IconButton = ({
   onPress = function () {},
@@ -11,13 +12,15 @@ const IconButton = ({
   color = THEME.colors.color4,
   align = 'flex-start',
   buttonStyle = {},
+  containerStyle = {},
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      containerStyle={buttonStyle}
-      style={{ alignItems: align }}>
-      <Icon name={iconName} type={iconType} size={iconSize} color={color} />
+      style={{ alignItems: align, ...buttonStyle }}>
+      <View style={containerStyle}>
+        <Icon name={iconName} type={iconType} size={iconSize} color={color} />
+      </View>
     </TouchableOpacity>
   );
 };

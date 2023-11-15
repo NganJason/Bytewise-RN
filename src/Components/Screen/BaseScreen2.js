@@ -125,7 +125,6 @@ const getStyles = (theme, screenHeight) =>
     },
     headerContent: {
       marginTop: theme.spacing.md,
-      paddingHorizontal: 24,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',

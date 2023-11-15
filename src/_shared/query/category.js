@@ -37,6 +37,7 @@ export const useSumCategoryTransactions = (
       queryKeys.categoryTransactions,
       {
         transaction_time: { gte, lte },
+        transaction_type: transaction_type,
       },
     ],
     onSuccess: opts.onSuccess || function () {},

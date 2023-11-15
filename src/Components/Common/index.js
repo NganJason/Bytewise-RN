@@ -15,7 +15,6 @@ import Currency from './Currency';
 import BaseFilter from './BaseFilter';
 import DeleteSaveButton from './DeleteSaveButton';
 import HoldingSearchResult from './HoldingSearchResult';
-import AggrSummary2 from './AggrSummary2';
 
 export {
   DailyTransactions,
@@ -36,5 +35,4 @@ export {
   BaseFilter,
   DeleteSaveButton,
   HoldingSearchResult,
-  AggrSummary2,
 };

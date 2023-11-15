@@ -1,6 +1,7 @@
 import useDimension from './useDimension';
 import useError from './useError';
 import useGetCategoriesHelper from './useGetCategoriesHelper';
+import useCategoriesSum from './useCategoriesSum';
 import useKeyboard from './useKeyboard';
 import useTimeRange from './useTimeRange';
 import useValidation from './useValidation';
@@ -13,6 +14,7 @@ export {
   useDimension,
   useError,
   useGetCategoriesHelper,
+  useCategoriesSum,
   useKeyboard,
   useTimeRange,
   useValidation,

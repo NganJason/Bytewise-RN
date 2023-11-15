@@ -1,7 +1,11 @@
 import { queryKeys } from './keys';
 import { useGetAccount, useGetAccounts } from './account';
 import { useGetCategoriesBudget } from './budget';
-import { useGetCategory, useGetCategories } from './category';
+import {
+  useGetCategory,
+  useGetCategories,
+  useSumCategoryTransactions,
+} from './category';
 import {
   useGetHolding,
   useGetLot,
@@ -26,6 +30,7 @@ export {
   useGetCategoriesBudget,
   useGetCategory,
   useGetCategories,
+  useSumCategoryTransactions,
   useGetHolding,
   useGetLot,
   useGetLots,

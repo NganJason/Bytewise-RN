@@ -1,4 +1,4 @@
-import { ScrollView, Pressable, StyleSheet } from 'react-native';
+import { ScrollView, Pressable, StyleSheet, View } from 'react-native';
 
 const BaseScrollView = ({
   children,
@@ -16,9 +16,7 @@ const BaseScrollView = ({
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       onScrollEndDrag={onScrollEndDrag}>
-      <Pressable style={[styles.container, containerStyle]}>
-        {children}
-      </Pressable>
+      <View style={[styles.container, containerStyle]}>{children}</View>
     </ScrollView>
   );
 };

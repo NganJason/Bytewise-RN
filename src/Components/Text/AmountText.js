@@ -77,14 +77,13 @@ const AmountText = ({
       text = `${currencySymbol} ${text}`;
     }
 
-    if (shouldShowSign && !sensitive) {
+    if (shouldShowSign && !shouldHideSensitiveInfo()) {
       text = `${sign}${text}`;
     }
 
     if (suffix !== '') {
       text = `${text} ${suffix}`;
     }
-
     return text;
   };
 

@@ -48,6 +48,7 @@ import {
   BaseSwipeableView,
   BaseHorizontalScrollView,
   BaseLoadableViewV2,
+  BaseHoriScrollableItems,
 } from './View';
 
 // Common
@@ -69,7 +70,6 @@ import {
   Currency,
   DeleteSaveButton,
   HoldingSearchResult,
-  AggrSummary2,
 } from './Common';
 
 export {
@@ -98,6 +98,7 @@ export {
   BaseTabView,
   BaseLoadableView,
   BaseLoadableViewV2,
+  BaseHoriScrollableItems,
   BaseGrid,
   BaseCard,
   BaseRow,
@@ -129,6 +130,5 @@ export {
   BaseSwipeableView,
   BaseHorizontalScrollView,
   HoldingSearchResult,
-  AggrSummary2,
   BaseScreenV2,
 };
