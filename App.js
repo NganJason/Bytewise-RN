@@ -5,7 +5,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
@@ -35,8 +34,6 @@ import AccountForm from './src/Screens/Account/AccountForm';
 import AccountBreakdownScreen from './src/Screens/Account/AccountBreakdownScreen';
 import InvestmentBreakdownScreen from './src/Screens/Account/Investment/InvestmentBreakdownScreen';
 import HoldingForm from './src/Screens/Account/Investment/HoldingForm';
-import HoldingBreakdownScreen from './src/Screens/Account/Investment/HoldingBreakdownScreen';
-import LotForm from './src/Screens/Account/Investment/LotForm';
 import BottomToast from './src/Components/Common/BottomToast';
 import BudgetOnboardingForm from './src/Screens/Onboarding/BudgetOnboardingForm';
 import InvestmentOnboardingForm from './src/Screens/Onboarding/InvestmentOnboardingForm';
@@ -51,7 +48,7 @@ import { useInitApp } from './src/_shared/hooks';
 const LOCAL_BASE_URL = 'http://localhost:9090/api/v1';
 const TEST_BASE_URL = 'https://pocketeer-be-test.onrender.com/api/v1';
 const LIVE_BASE_URL = 'https://pocketeer-be-live.onrender.com/api/v1';
-const BASE_URL = LIVE_BASE_URL;
+const BASE_URL = TEST_BASE_URL;
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -173,10 +170,6 @@ function Main() {
             name={ROUTES.investmentBreakdown}
             component={InvestmentBreakdownScreen}
           />
-          <Stack.Screen
-            name={ROUTES.holdingBreakdown}
-            component={HoldingBreakdownScreen}
-          />
         </>
       );
     }
@@ -226,7 +219,6 @@ function Main() {
                   name={ROUTES.holdingForm}
                   component={HoldingForm}
                 />
-                <Stack.Screen name={ROUTES.lotForm} component={LotForm} />
 
                 <Stack.Screen
                   name={ROUTES.budgetOnboardingForm}
@@ -255,10 +247,8 @@ function Main() {
     <ThemeProvider theme={THEME}>
       <BottomToastProvider>
         <OnboardingDataProvider>
-          <SafeAreaProvider>
-            <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
-            <BottomToast />
-          </SafeAreaProvider>
+          <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+          <BottomToast />
         </OnboardingDataProvider>
       </BottomToastProvider>
     </ThemeProvider>

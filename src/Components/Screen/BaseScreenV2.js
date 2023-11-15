@@ -5,10 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   BottomSheetModal,
@@ -18,7 +15,7 @@ import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 
 import { BaseToast, BaseLoadableViewV2 } from '../View';
 import { useDimension } from '../../_shared/hooks';
-import { BackIcon, DrawerIcon } from '../Common';
+import { BackIcon, DrawerIcon, HideInfoIcon } from '../Common';
 
 const STANDARD_PADDING = 25;
 
@@ -44,6 +41,7 @@ const BaseScreenV2 = ({
     onPress: onFabPress = function () {},
     color: fabColor = '',
   } = {},
+  hideInfoButtonProps: { show: showHideInfoButon = false } = {},
   backButtonProps: { show: showBackButton = false } = {},
   drawerButtonProps: { show: showDrawerButton = false } = {},
   bottomSheetModalProps: {
@@ -64,7 +62,7 @@ const BaseScreenV2 = ({
   });
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['20%', '40%', '70%', '95%'], []);
+  const snapPoints = useMemo(() => ['10%', '40%', '70%', '100%'], []);
 
   useEffect(() => {
     bottomSheetModalRef?.current?.present();
@@ -104,15 +102,17 @@ const BaseScreenV2 = ({
   };
 
   const getRightComponent = () => {
-    if (showDrawerButton) {
-      return (
-        <>
-          <DrawerIcon />
-          {rightComponent}
-        </>
-      );
-    }
-    return rightComponent;
+    return (
+      <>
+        {showHideInfoButon && (
+          <View style={styles.hideInfo}>
+            <HideInfoIcon />
+          </View>
+        )}
+        {showDrawerButton && <DrawerIcon />}
+        {rightComponent}
+      </>
+    );
   };
 
   const renderHeader = () => {
@@ -156,37 +156,43 @@ const BaseScreenV2 = ({
       <HideKeyboard>
         <>
           {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
-          <BaseLoadableViewV2 isLoading={isLoading}>
-            <KeyboardAwareScrollView
-              scrollEnabled={!disableScroll}
-              extraScrollHeight={20}
-              contentContainerStyle={styles.scrollView}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}>
-              {children}
-              {showBottomSheetModel && (
-                <BottomSheetModalProvider>
-                  <BottomSheetModal
-                    backgroundStyle={styles.bottomSheetModal}
-                    handleStyle={styles.bottomSheetModalHandler}
-                    enablePanDownToClose={false}
-                    ref={bottomSheetModalRef}
-                    index={1}
-                    snapPoints={snapPoints}>
-                    <View style={styles.subHeader}>
-                      {bottomSheetModalHeader}
-                    </View>
-                    <KeyboardAwareScrollView
-                      contentContainerStyle={styles.scrollView}
-                      showsHorizontalScrollIndicator={false}
-                      showsVerticalScrollIndicator={false}>
-                      {bottomSheetModalBody}
-                    </KeyboardAwareScrollView>
-                  </BottomSheetModal>
-                </BottomSheetModalProvider>
-              )}
-            </KeyboardAwareScrollView>
-          </BaseLoadableViewV2>
+          <View style={styles.body}>
+            <BaseLoadableViewV2 isLoading={isLoading}>
+              <KeyboardAwareScrollView
+                scrollEnabled={!disableScroll}
+                extraScrollHeight={20}
+                contentContainerStyle={styles.scrollView}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}>
+                {children}
+              </KeyboardAwareScrollView>
+            </BaseLoadableViewV2>
+            {showBottomSheetModel && (
+              <BottomSheetModalProvider>
+                <BottomSheetModal
+                  backgroundStyle={styles.bottomSheetModal}
+                  handleStyle={styles.bottomSheetModalHandler}
+                  enablePanDownToClose={false}
+                  ref={bottomSheetModalRef}
+                  index={0}
+                  snapPoints={snapPoints}>
+                  <View
+                    style={{
+                      ...styles.subHeader,
+                      backgroundColor: theme.colors.white,
+                    }}>
+                    {bottomSheetModalHeader}
+                  </View>
+                  <KeyboardAwareScrollView
+                    contentContainerStyle={styles.scrollView}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}>
+                    {bottomSheetModalBody}
+                  </KeyboardAwareScrollView>
+                </BottomSheetModal>
+              </BottomSheetModalProvider>
+            )}
+          </View>
           {showFab && (
             <FAB
               color={fabColor === '' ? theme.colors.color1 : fabColor}
@@ -219,10 +225,10 @@ const getStyles = (
       flex: 1,
     },
     header: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.color4,
       minHeight: screenHeight * 0.1,
-      paddingHorizontal: 20,
-      paddingVertical: 20,
+      paddingHorizontal: STANDARD_PADDING,
+      paddingVertical: STANDARD_PADDING,
       borderBottomWidth: 0,
     },
     headerComponent: {
@@ -244,12 +250,28 @@ const getStyles = (
     subHeader: {
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
+      paddingBottom: STANDARD_PADDING,
+      backgroundColor: theme.colors.color4,
     },
-    scrollView: {
-      flexGrow: 1,
+    body: {
+      flex: 1,
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: STANDARD_PADDING,
       paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
+      backgroundColor: theme.colors.white,
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 2,
+        height: -1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 10,
+      elevation: 10,
+    },
+    scrollView: {
+      flexGrow: 1,
     },
     fab: {
       backgroundColor: theme.colors.black, // not the real backgroundColor, set to prevent warning
@@ -274,6 +296,9 @@ const getStyles = (
       shadowOpacity: 0.2,
       shadowRadius: 10,
       elevation: 10,
+    },
+    hideInfo: {
+      marginRight: 12,
     },
   });
 
