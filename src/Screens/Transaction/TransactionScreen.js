@@ -142,7 +142,7 @@ const TransactionScreen = ({ navigation }) => {
         ),
       }}
       subHeader={
-        !isCalendarActive && (
+        !isCalendarActive ? (
           <>
             <AggrSummary
               isLoading={isLoading}
@@ -162,7 +162,7 @@ const TransactionScreen = ({ navigation }) => {
 
             {filterComponent}
           </>
-        )
+        ) : null
       }
       disableScroll={isCalendarActive || disableScroll}
       bottomSheetModalProps={{

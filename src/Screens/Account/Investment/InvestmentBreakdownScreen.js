@@ -61,48 +61,46 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const renderHeader = () => {
     return (
       <>
-        <View style={styles.title}>
-          <View style={styles.accountNameContainer}>
-            <BaseText
-              h1
-              isLoading={getAccount.isLoading}
-              loadingLen={10}
-              numberOfLines={1}>
-              {account_name}
-            </BaseText>
-            <IconButton
-              iconType="feather"
-              iconName="edit"
-              type="clear"
-              color={theme.colors.color1}
-              iconSize={18}
-              buttonStyle={styles.editIcon}
-              onPress={() => {
-                navigation.navigate(ROUTES.accountForm, {
-                  account_id: accountID,
-                });
-              }}
-            />
-          </View>
-          <AmountText
-            h2
-            amount={new Amount(balance, currency)}
-            style={styles.titleText}
-            margin={{ top: 8, bottom: 8 }}
+        <View style={styles.accountNameContainer}>
+          <BaseText
+            h1
             isLoading={getAccount.isLoading}
-            sensitive
+            loadingLen={10}
+            numberOfLines={1}>
+            {account_name}
+          </BaseText>
+          <IconButton
+            iconType="feather"
+            iconName="edit"
+            type="clear"
+            color={theme.colors.color1}
+            iconSize={18}
+            buttonStyle={styles.editIcon}
+            onPress={() => {
+              navigation.navigate(ROUTES.accountForm, {
+                account_id: accountID,
+              });
+            }}
           />
-          <EarningText
-            text5
-            gain={new Amount(gain, currency)}
-            percentGain={percentGain}
-            isLoading={getAccount.isLoading}
-            margin={{ bottom: 8 }}
-            sensitive
-          />
-
-          <BaseText text4>Investment</BaseText>
         </View>
+        <AmountText
+          h2
+          amount={new Amount(balance, currency)}
+          style={styles.titleText}
+          margin={{ top: 8, bottom: 8 }}
+          isLoading={getAccount.isLoading}
+          sensitive
+        />
+        <EarningText
+          text5
+          gain={new Amount(gain, currency)}
+          percentGain={percentGain}
+          isLoading={getAccount.isLoading}
+          margin={{ bottom: 8 }}
+          sensitive
+        />
+
+        <BaseText text4>Investment</BaseText>
       </>
     );
   };
