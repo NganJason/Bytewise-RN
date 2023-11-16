@@ -8,7 +8,7 @@ import {
   Transactions,
   IconButton,
   BaseScreenV2,
-  BaseLoadableViewV2,
+  BaseLineChart,
   BaseCalendar,
   BaseText,
   BaseButton,
@@ -167,11 +167,8 @@ const TransactionScreen = ({ navigation }) => {
       disableScroll={isCalendarActive || disableScroll}
       bottomSheetModalProps={{
         show: isCalendarActive,
-        bodyComponent: (
-          <BaseLoadableViewV2 isLoading={isLoading}>
-            {transactionsComponent}
-          </BaseLoadableViewV2>
-        ),
+        bodyComponent: transactionsComponent,
+        isLoading: isLoading,
         headerComponent: filterComponent,
       }}
       fabProps={{
@@ -197,20 +194,19 @@ const TransactionScreen = ({ navigation }) => {
         </>
       ) : (
         transactionsComponent
-        // <View
+        // SEE HERE JASON NGAN YIP HONG
+        // <BaseLineChart
         //   onTouchStart={() => setDisableScroll(true)}
-        //   onTouchEnd={() => setDisableScroll(false)}>
-        //   <BaseLineChart
-        //     title="Net Worth"
-        //     data={[
-        //       { value: 0, labelText: 'Mar 2023' },
-        //       { value: 1000, labelText: 'Apr 2023' },
-        //       { value: 3000, labelText: 'May 2023' },
-        //       { value: -1000, labelText: 'Jun 2023' },
-        //       { value: 10000, labelText: 'Today' },
-        //     ]}
-        //   />
-        // </View>
+        //   onTouchEnd={() => setDisableScroll(false)}
+        //   handleActiveData={e => console.log(e)}
+        //   data={[
+        //     { value: 0 },
+        //     { value: 100 },
+        //     { value: 150 },
+        //     { value: 90 },
+        //     { value: 140 },
+        //   ]}
+        // />
       )}
     </BaseScreenV2>
   );

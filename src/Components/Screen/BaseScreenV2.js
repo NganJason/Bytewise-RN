@@ -48,6 +48,7 @@ const BaseScreenV2 = ({
     show: showBottomSheetModel = false,
     headerComponent: bottomSheetModalHeader = null,
     bodyComponent: bottomSheetModalBody = null,
+    isLoading: isBottomSheetModalLoading = false,
   } = {},
 }) => {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
@@ -205,16 +206,18 @@ const BaseScreenV2 = ({
                     }}>
                     {bottomSheetModalHeader}
                   </View>
-                  <KeyboardAwareScrollView
-                    contentContainerStyle={{
-                      ...styles.scrollView,
-                      ...styles.body,
-                      ...styles.bottomSheetModalBody,
-                    }}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}>
-                    {bottomSheetModalBody}
-                  </KeyboardAwareScrollView>
+                  <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
+                    <KeyboardAwareScrollView
+                      contentContainerStyle={{
+                        ...styles.scrollView,
+                        ...styles.body,
+                        ...styles.bottomSheetModalBody,
+                      }}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}>
+                      {bottomSheetModalBody}
+                    </KeyboardAwareScrollView>
+                  </BaseLoadableViewV2>
                 </BottomSheetModal>
               </BottomSheetModalProvider>
             )}
