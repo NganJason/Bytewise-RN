@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
 import HomeScreen from './src/Screens/HomeScreen';
@@ -247,8 +248,10 @@ function Main() {
     <ThemeProvider theme={THEME}>
       <BottomToastProvider>
         <OnboardingDataProvider>
-          <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
-          <BottomToast />
+          <SafeAreaProvider>
+            <NavigationContainer theme={THEME}>{render()}</NavigationContainer>
+            <BottomToast />
+          </SafeAreaProvider>
         </OnboardingDataProvider>
       </BottomToastProvider>
     </ThemeProvider>

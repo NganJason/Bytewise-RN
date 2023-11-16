@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import {
   StyleSheet,
   Keyboard,
@@ -102,17 +102,29 @@ const BaseScreenV2 = ({
   };
 
   const getRightComponent = () => {
-    return (
-      <>
-        {showHideInfoButon && (
-          <View style={styles.hideInfo}>
-            <HideInfoIcon />
-          </View>
-        )}
-        {showDrawerButton && <DrawerIcon />}
-        {rightComponent}
-      </>
-    );
+    const comps = [];
+
+    if (showHideInfoButon) {
+      comps.push(
+        <View key={1} style={styles.hideInfo}>
+          <HideInfoIcon />
+        </View>,
+      );
+    }
+
+    if (showDrawerButton) {
+      comps.push(<DrawerIcon key={2} />);
+    }
+
+    if (rightComponent !== null) {
+      comps.push(<Fragment key={3}>{rightComponent}</Fragment>);
+    }
+
+    if (comps.length === 0) {
+      return null;
+    }
+
+    return <>{comps}</>;
   };
 
   const renderHeader = () => {
@@ -121,7 +133,7 @@ const BaseScreenV2 = ({
       getLeftComponent() === null &&
       getRightComponent() === null
     ) {
-      return <></>;
+      return null;
     }
     return (
       <Header
@@ -155,10 +167,20 @@ const BaseScreenV2 = ({
       {renderHeader()}
       <HideKeyboard>
         <>
-          {subHeader && <View style={styles.subHeader}>{subHeader}</View>}
-          <View style={styles.body}>
+          {subHeader !== null && (
+            <View style={styles.subHeader}>{subHeader}</View>
+          )}
+          <View
+            style={[
+              styles.body,
+              (renderHeader() !== null || subHeader !== null) &&
+                styles.bodyShadow,
+            ]}>
             <BaseLoadableViewV2 isLoading={isLoading}>
               <KeyboardAwareScrollView
+                // to solve keyboard jump problem
+                // https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/418
+                keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
                 scrollEnabled={!disableScroll}
                 extraScrollHeight={20}
                 contentContainerStyle={styles.scrollView}
@@ -184,7 +206,11 @@ const BaseScreenV2 = ({
                     {bottomSheetModalHeader}
                   </View>
                   <KeyboardAwareScrollView
-                    contentContainerStyle={styles.scrollView}
+                    contentContainerStyle={{
+                      ...styles.scrollView,
+                      ...styles.body,
+                      ...styles.bottomSheetModalBody,
+                    }}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}>
                     {bottomSheetModalBody}
@@ -218,7 +244,7 @@ const getStyles = (
     screenDimension: { screenHeight = 0 } = {},
     isKeyboardOpen = false,
     hasFAB = false,
-  },
+  } = {},
 ) =>
   StyleSheet.create({
     screen: {
@@ -228,7 +254,8 @@ const getStyles = (
       backgroundColor: theme.colors.color4,
       minHeight: screenHeight * 0.1,
       paddingHorizontal: STANDARD_PADDING,
-      paddingVertical: STANDARD_PADDING,
+      paddingTop: STANDARD_PADDING,
+      paddingBottom: STANDARD_PADDING,
       borderBottomWidth: 0,
     },
     headerComponent: {
@@ -259,6 +286,11 @@ const getStyles = (
       paddingTop: STANDARD_PADDING,
       paddingBottom: isKeyboardOpen || !hasFAB ? STANDARD_PADDING : 70, // space for FAB
       backgroundColor: theme.colors.white,
+    },
+    bottomSheetModalBody: {
+      paddingTop: 0, // remove paddingTop of body
+    },
+    bodyShadow: {
       shadowColor: theme.colors.black,
       shadowOffset: {
         width: 2,
