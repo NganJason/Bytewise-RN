@@ -15,7 +15,7 @@ import {
   useTransactionGroups,
 } from '../../_shared/hooks';
 import { Amount } from '../../_shared/object';
-import { Metrics, Aggr, Title } from './common';
+import { Metrics, Title } from './common';
 
 const metricItems = [
   {
@@ -73,16 +73,6 @@ const SpendingInsight = () => {
     <BaseLoadableView
       scrollable
       isLoading={isCategoriesSumLoading || isTransactionLoading}>
-      <View style={styles.aggr}>
-        <Aggr
-          items={[
-            { title: 'Income', amount: getMonthlyTotalIncome() },
-            { title: 'Savings', amount: getMonthlyTotalSavings() },
-            { title: 'Expense', amount: getMonthlyTotalExpense(true) },
-          ]}
-        />
-      </View>
-
       <Title>Metrics</Title>
       <Metrics items={metricItems} />
 
@@ -107,10 +97,11 @@ const SpendingInsight = () => {
 
 const SpendingItem = ({ category = {} }) => {
   const { theme } = useTheme();
+  const styles = getStyles();
   const { category_name: categoryName = '', sum = new Amount() } = category;
 
   return (
-    <>
+    <View style={styles.spendingItem}>
       <BaseText text3 numberOfLines={1} color={theme.colors.color6}>
         {categoryName}
       </BaseText>
@@ -121,13 +112,16 @@ const SpendingItem = ({ category = {} }) => {
         color={theme.colors.color7}
         amount={sum}
       />
-    </>
+    </View>
   );
 };
 
 const getStyles = theme =>
   StyleSheet.create({
-    aggr: { marginTop: 4, marginBottom: 6 },
+    spendingItem: {
+      minHeight: 50,
+      justifyContent: 'center',
+    },
   });
 
 export default SpendingInsight;

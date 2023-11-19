@@ -47,7 +47,7 @@ const useCategoriesSum = timeRange => {
       } else {
         uncategorisedCategory = {
           category_name: 'Uncategorised',
-          sum: Math.abs(d.sum).toFixed(2),
+          sum: new Amount(Math.abs(d.sum).toFixed(2), d.currency),
           currency: d.currency,
         };
       }

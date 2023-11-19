@@ -1,27 +1,15 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SimpleGrid } from 'react-native-super-grid';
 
 const BaseGrid = ({
   items = [],
   colNum = 2,
-  spacing = 20,
+  spacingPercentage = 2,
   renderItem = function (item) {},
   onItemPress = null,
   containerStyle = {},
 }) => {
   const styles = getStyles();
-  const [containerWidth, setContainerWidth] = useState(300);
-
-  const onLayout = event => {
-    const { width } = event.nativeEvent.layout;
-    setContainerWidth(width);
-  };
-
-  const getItemWidth = () => {
-    return (containerWidth - 2 * spacing) / colNum;
-  };
 
   const renderContent = item => {
     if (onItemPress !== null) {
@@ -36,17 +24,21 @@ const BaseGrid = ({
     return renderItem(item);
   };
 
+  const getItemWidth = () => {
+    let buffer = 0.5;
+    let spacing = 2 * spacingPercentage * colNum + buffer;
+    return (100 - spacing) / colNum + '%';
+  };
+
   return (
-    <View onLayout={onLayout}>
-      <SimpleGrid
-        itemDimension={getItemWidth()}
-        data={items}
-        style={{ margin: -1 * spacing, ...containerStyle }}
-        spacing={spacing}
-        renderItem={({ item }) => {
-          return renderContent(item);
-        }}
-      />
+    <View style={[styles.container, containerStyle]}>
+      {items.map((item, idx) => (
+        <View
+          style={{ width: getItemWidth(), margin: spacingPercentage + '%' }}
+          key={idx}>
+          {renderContent(item)}
+        </View>
+      ))}
     </View>
   );
 };
@@ -55,6 +47,11 @@ const getStyles = theme =>
   StyleSheet.create({
     touchable: {
       flex: 1,
+    },
+    container: {
+      width: '100%',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
     },
   });
 

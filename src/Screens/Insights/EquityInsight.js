@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useContext } from 'react';
 import {
@@ -8,23 +8,17 @@ import {
   ACCOUNT_TYPE_INVESTMENT,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
-import { BottomToastContext, UserMetaContext } from '../../_shared/context';
+import { UserMetaContext } from '../../_shared/context';
 import { useGetAccounts } from '../../_shared/query';
+import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 import {
-  isAccountTypeAsset,
-  isAccountTypeDebt,
-  capitalize,
-} from '../../_shared/util';
-import {
-  AggrSummary2,
   AmountText,
   BaseHoriScrollableItems,
   BaseLoadableView,
   BaseText,
-  BaseGrid,
 } from '../../Components';
 import { Amount } from '../../_shared/object';
-import { Aggr, Metrics, Title } from './common';
+import { Metrics, Title } from './common';
 
 const metricItems = [
   {
@@ -99,17 +93,6 @@ const EquityInsight = () => {
 
   return (
     <BaseLoadableView scrollable>
-      <Aggr
-        items={[
-          { title: 'Asset', amount: new Amount(assetValue, currency) },
-          { title: 'Net Worth', amount: new Amount(netWorth, currency) },
-          {
-            title: 'Debt',
-            amount: new Amount(Math.abs(debtValue), currency),
-          },
-        ]}
-      />
-
       <Title>Metrics</Title>
       <Metrics items={metricItems} />
 

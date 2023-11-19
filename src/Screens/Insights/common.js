@@ -108,7 +108,6 @@ const getStyles = theme =>
       alignItems: 'center',
     },
     metric: {
-      flex: 1,
       justifyContent: 'flex-start',
       alignItems: 'center',
     },

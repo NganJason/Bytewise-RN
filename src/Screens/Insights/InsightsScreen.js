@@ -1,7 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@rneui/themed';
-import { BaseScreen2, BaseScrollableTab, BaseText } from '../../Components';
+import { View } from 'react-native';
+import { BaseScreen2, BaseScrollableTab } from '../../Components';
 
 import EquityInsight from './EquityInsight';
 import SpendingInsight from './SpendingInsight';
@@ -23,7 +21,6 @@ const tabs = [
   },
 ];
 const InsightsScreen = () => {
-  const { theme } = useTheme();
   const [activeTabIdx, setActiveTabIdx] = useState(0);
 
   const onTabChange = idx => {
@@ -57,12 +54,9 @@ const InsightsScreen = () => {
         ),
       }}
       enablePadding={true}>
-      {}
       {renderTabContent()}
     </BaseScreen2>
   );
 };
-
-const getStyles = theme => StyleSheet.create({});
 
 export default InsightsScreen;

@@ -44,7 +44,7 @@ const AccountSelectionScreen = ({ route }) => {
     return (
       <BaseGrid
         items={items}
-        spacing={30}
+        spacingPercentage={3}
         containerStyle={styles.grid}
         renderItem={item => (
           <BaseCard
