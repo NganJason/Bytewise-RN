@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { BaseScreen2, BaseScrollableTab } from '../../Components';
+import { BaseScreenV2, BaseScrollableTab } from '../../Components';
 
 import EquityInsight from './EquityInsight';
 import SpendingInsight from './SpendingInsight';
@@ -39,23 +39,24 @@ const InsightsScreen = () => {
   };
 
   return (
-    <BaseScreen2
+    <BaseScreenV2
       headerProps={{
         allowDrawer: true,
         allowHideInfo: true,
-        component: (
-          <View style={{ height: 200 }}>
-            <BaseScrollableTab
-              tabs={tabs}
-              activeTabIdx={activeTabIdx}
-              onTabChange={onTabChange}
-            />
-          </View>
-        ),
+        centerComponent: <></>,
       }}
+      subHeader={
+        <View style={{ height: 200 }}>
+          <BaseScrollableTab
+            tabs={tabs}
+            activeTabIdx={activeTabIdx}
+            onTabChange={onTabChange}
+          />
+        </View>
+      }
       enablePadding={true}>
       {renderTabContent()}
-    </BaseScreen2>
+    </BaseScreenV2>
   );
 };
 

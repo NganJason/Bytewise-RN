@@ -71,7 +71,6 @@ const SpendingInsight = () => {
 
   return (
     <BaseLoadableView
-      scrollable
       isLoading={isCategoriesSumLoading || isTransactionLoading}>
       <Title>Metrics</Title>
       <Metrics items={metricItems} />

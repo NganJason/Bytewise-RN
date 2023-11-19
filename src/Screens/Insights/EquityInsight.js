@@ -92,7 +92,7 @@ const EquityInsight = () => {
   };
 
   return (
-    <BaseLoadableView scrollable>
+    <BaseLoadableView>
       <Title>Metrics</Title>
       <Metrics items={metricItems} />
 
