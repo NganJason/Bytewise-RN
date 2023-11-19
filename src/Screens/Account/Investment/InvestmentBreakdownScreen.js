@@ -3,13 +3,11 @@ import { useTheme } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import { useDimension } from '../../../_shared/hooks';
 import { EmptyContentConfig } from '../../../_shared/constant/constant';
-import { graph } from '../../../_shared/constant/asset';
 import ROUTES from '../../../_shared/constant/routes';
 import {
   AmountText,
-  BaseImage,
   BaseText,
-  BaseScreen2,
+  BaseScreenV2,
   EarningText,
   BaseLoadableView,
   EmptyContent,
@@ -63,74 +61,64 @@ const InvestmentBreakdownScreen = ({ route }) => {
   const renderHeader = () => {
     return (
       <>
-        <View style={styles.title}>
-          <View style={styles.accountNameContainer}>
-            <BaseText
-              h1
-              isLoading={getAccount.isLoading}
-              loadingLen={10}
-              numberOfLines={1}>
-              {account_name}
-            </BaseText>
-            <IconButton
-              iconType="feather"
-              iconName="edit"
-              type="clear"
-              color={theme.colors.color1}
-              iconSize={18}
-              buttonStyle={styles.editIcon}
-              onPress={() => {
-                navigation.navigate(ROUTES.accountForm, {
-                  account_id: accountID,
-                });
-              }}
-            />
-          </View>
-          <AmountText
-            h2
-            amount={new Amount(balance, currency)}
-            style={styles.titleText}
-            margin={{ top: 8, bottom: 8 }}
+        <View style={styles.accountNameContainer}>
+          <BaseText
+            h1
             isLoading={getAccount.isLoading}
-            sensitive
+            loadingLen={10}
+            numberOfLines={1}>
+            {account_name}
+          </BaseText>
+          <IconButton
+            iconType="feather"
+            iconName="edit"
+            type="clear"
+            color={theme.colors.color1}
+            iconSize={18}
+            buttonStyle={styles.editIcon}
+            onPress={() => {
+              navigation.navigate(ROUTES.accountForm, {
+                account_id: accountID,
+              });
+            }}
           />
-          <EarningText
-            text5
-            gain={new Amount(gain, currency)}
-            percentGain={percentGain}
-            isLoading={getAccount.isLoading}
-            margin={{ bottom: 8 }}
-            sensitive
-          />
-
-          <BaseText text4>Investment</BaseText>
         </View>
-        <BaseImage source={graph} containerStyle={styles.image} />
+        <AmountText
+          h2
+          amount={new Amount(balance, currency)}
+          style={styles.titleText}
+          margin={{ top: 8, bottom: 8 }}
+          isLoading={getAccount.isLoading}
+          sensitive
+        />
+        <EarningText
+          text5
+          gain={new Amount(gain, currency)}
+          percentGain={percentGain}
+          isLoading={getAccount.isLoading}
+          margin={{ bottom: 8 }}
+          sensitive
+        />
+
+        <BaseText text4>Investment</BaseText>
       </>
     );
   };
 
   return (
-    <BaseScreen2
+    <BaseScreenV2
+      backButtonProps={{
+        show: true,
+      }}
       fabProps={{
         show: true,
-        placement: 'right',
-        iconName: 'plus',
-        iconType: 'entypo',
-        iconColor: theme.colors.white,
-        color: theme.colors.color1,
         onPress: () =>
           navigation.navigate(ROUTES.holdingForm, {
             account_id: accountID,
             currency: currency,
           }),
-        marginBottom: screenHeight * 0.02,
       }}
-      headerProps={{
-        component: renderHeader(),
-        allowBack: true,
-        backgroundColor: theme.colors.color4,
-      }}>
+      subHeader={renderHeader()}>
       <View style={styles.body}>
         <View style={styles.columns}>
           <View style={styles.column}>
@@ -170,25 +158,15 @@ const InvestmentBreakdownScreen = ({ route }) => {
           {renderRows()}
         </BaseLoadableView>
       </View>
-    </BaseScreen2>
+    </BaseScreenV2>
   );
 };
 
 const getStyles = (theme, screenWidth, screenHeight) =>
   StyleSheet.create({
-    image: {
-      width: screenHeight * 0.2,
-      height: screenHeight * 0.18,
-      position: 'absolute',
-      right: screenWidth * -0.12,
-      zIndex: -1,
-    },
     body: {
       flex: 1,
       paddingVertical: theme.spacing.lg,
-    },
-    title: {
-      flex: 1,
     },
     accountNameContainer: {
       display: 'flex',

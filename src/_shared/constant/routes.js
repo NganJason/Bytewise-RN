@@ -29,7 +29,6 @@ const ROUTES = {
   accountBreakdown: 'Account Breakdown',
 
   investmentBreakdown: 'Investment Breakdown',
-  holdingBreakdown: 'Holding Breakdown',
   holdingForm: 'Holding Form',
   lotForm: 'Lot Form',
 

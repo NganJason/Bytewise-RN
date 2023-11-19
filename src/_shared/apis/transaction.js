@@ -6,7 +6,6 @@ export class TransactionError extends AppError {
   }
 }
 
-const AGGR_TRANSACTIONS = '/aggr_transactions';
 const SUM_TRANSACTIONS = '/sum_transactions';
 const CREATE_TRANSACTION = '/create_transaction';
 const GET_TRANSACTIONS = '/get_transactions';
@@ -14,19 +13,16 @@ const UPDATE_TRANSACTION = '/update_transaction';
 const GET_TRANSACTION = '/get_transaction';
 const DELETE_TRANSACTION = '/delete_transaction';
 const GET_TRANSACTION_GROUPS = '/get_transaction_groups';
+const GET_TRANSACTIONS_SUMMARY = '/get_transactions_summary';
 
-export const aggrTransactions = async ({
-  category_ids = [],
-  budget_ids = [],
-  transaction_types = [],
-  transaction_time: { gte = 0, lte = 0 } = {},
+export const getTransactionsSummary = async ({
+  unit = 0,
+  interval = 0,
 } = {}) => {
   try {
-    const body = await sendPostRequest(AGGR_TRANSACTIONS, {
-      category_ids: category_ids,
-      budget_ids: budget_ids,
-      transaction_types: transaction_types,
-      transaction_time: { gte, lte },
+    const body = await sendPostRequest(GET_TRANSACTIONS_SUMMARY, {
+      unit: unit,
+      interval: interval,
     });
     return body;
   } catch (e) {

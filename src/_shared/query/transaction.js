@@ -1,38 +1,23 @@
 import {
   getTransactions,
   getTransaction,
-  aggrTransactions,
   sumTransactions,
   getTransactionGroups,
+  getTransactionsSummary,
 } from '../apis/transaction';
 import { queryKeys, useQueryWrapper } from './keys';
 
-export const useAggrTransactions = (
-  {
-    category_ids = [],
-    budget_ids = [],
-    transaction_types = [],
-    transaction_time: { gte = 0, lte = 0 } = {},
-  } = {},
+export const useGetTransactionsSummary = (
+  { unit = 0, interval = 0 } = {},
   opts = {},
 ) => {
   return useQueryWrapper({
     queryFn: () =>
-      aggrTransactions({
-        category_ids: category_ids,
-        budget_ids: budget_ids,
-        transaction_types: transaction_types,
-        transaction_time: { gte, lte },
+      getTransactionsSummary({
+        unit: unit,
+        interval: interval,
       }),
-    queryKey: [
-      queryKeys.transactionsAggr,
-      {
-        transaction_time: { gte, lte },
-        budget_ids,
-        category_ids,
-        transaction_types,
-      },
-    ],
+    queryKey: [queryKeys.transactionsSummary],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });

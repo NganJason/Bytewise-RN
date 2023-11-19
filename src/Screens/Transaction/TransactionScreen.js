@@ -8,7 +8,7 @@ import {
   Transactions,
   IconButton,
   BaseScreenV2,
-  BaseLoadableViewV2,
+  BaseLineChart,
   BaseCalendar,
   BaseText,
   BaseButton,
@@ -26,7 +26,11 @@ import {
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import { useError, useTransactionGroups } from '../../_shared/hooks';
+import {
+  useError,
+  useTransactionGroups,
+  useDimension,
+} from '../../_shared/hooks';
 import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
@@ -36,6 +40,10 @@ const TransactionScreen = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const [isCalendarActive, setIsCalendarActive] = useState(false);
+
+  const [disableScroll, setDisableScroll] = useState(false);
+
+  const { screenWidth, screenHeight } = useDimension();
 
   const [activeDate, setActiveDate] = useState(TODAY);
   const {
@@ -110,6 +118,7 @@ const TransactionScreen = ({ navigation }) => {
   return (
     <BaseScreenV2
       isLoading={isLoading}
+      hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       headerProps={{
         allowBack: false,
@@ -133,7 +142,7 @@ const TransactionScreen = ({ navigation }) => {
         ),
       }}
       subHeader={
-        !isCalendarActive && (
+        !isCalendarActive ? (
           <>
             <AggrSummary
               isLoading={isLoading}
@@ -150,18 +159,16 @@ const TransactionScreen = ({ navigation }) => {
                 },
               ]}
             />
+
             {filterComponent}
           </>
-        )
+        ) : null
       }
-      disableScroll={isCalendarActive}
+      disableScroll={isCalendarActive || disableScroll}
       bottomSheetModalProps={{
         show: isCalendarActive,
-        bodyComponent: (
-          <BaseLoadableViewV2 isLoading={isLoading}>
-            {transactionsComponent}
-          </BaseLoadableViewV2>
-        ),
+        bodyComponent: transactionsComponent,
+        isLoading: isLoading,
         headerComponent: filterComponent,
       }}
       fabProps={{
@@ -187,6 +194,19 @@ const TransactionScreen = ({ navigation }) => {
         </>
       ) : (
         transactionsComponent
+        // SEE HERE JASON NGAN YIP HONG
+        // <BaseLineChart
+        //   onTouchStart={() => setDisableScroll(true)}
+        //   onTouchEnd={() => setDisableScroll(false)}
+        //   handleActiveData={e => console.log(e)}
+        //   data={[
+        //     { value: 0 },
+        //     { value: 100 },
+        //     { value: 150 },
+        //     { value: 90 },
+        //     { value: 140 },
+        //   ]}
+        // />
       )}
     </BaseScreenV2>
   );
@@ -196,7 +216,6 @@ const getStyles = _ => {
   return StyleSheet.create({
     filter: {
       marginTop: 0,
-      marginBottom: 8,
     },
     dayInfoContainer: {
       minHeight: 14,

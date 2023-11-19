@@ -18,12 +18,8 @@ const CustomDrawer = () => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { logout = function () {} } = useContext(AuthContext) || {};
-  const {
-    shouldHideSensitiveInfo = function () {},
-    toggleHideUserInfo = function () {},
-    getUserBaseCurrency = function () {},
-    getUserName = function () {},
-  } = useContext(UserMetaContext) || {};
+  const { getUserBaseCurrency = function () {}, getUserName = function () {} } =
+    useContext(UserMetaContext) || {};
 
   const onPress = item => {
     if (item.onPress) {
@@ -42,18 +38,6 @@ const CustomDrawer = () => {
         name: 'grid',
       },
       route: ROUTES.categoryEdit,
-    },
-    {
-      name: shouldHideSensitiveInfo()
-        ? 'Show sentive info'
-        : 'Hide sensitive info',
-      icon: {
-        type: 'feather',
-        name: shouldHideSensitiveInfo() ? 'eye-off' : 'eye',
-      },
-      onPress: function (item) {
-        toggleHideUserInfo();
-      },
     },
     {
       name: 'Feedback',

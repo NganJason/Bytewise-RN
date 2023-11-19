@@ -15,7 +15,6 @@ import {
 import {
   useGetTransaction,
   useGetTransactions,
-  useAggrTransactions,
   useSumTransactions,
   useGetTransactionGroups,
 } from './transaction';
@@ -37,7 +36,6 @@ export {
   useSearchSecurities,
   useGetTransaction,
   useGetTransactions,
-  useAggrTransactions,
   useSumTransactions,
   useGetTransactionGroups,
   useGetUser,

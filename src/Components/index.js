@@ -51,6 +51,9 @@ import {
   BaseHoriScrollableItems,
 } from './View';
 
+// Charts
+import { BaseLineChart } from './Chart';
+
 // Common
 import {
   DailyTransactions,
@@ -60,7 +63,6 @@ import {
   Category,
   EmptyContent,
   HoldingRow,
-  LotRow,
   InfoToolTip,
   BudgetTypeDesc,
   ConnectionChecker,
@@ -117,7 +119,6 @@ export {
   EarningText,
   EmptyContent,
   HoldingRow,
-  LotRow,
   InfoToolTip,
   BudgetTypeDesc,
   ConnectionChecker,
@@ -131,4 +132,5 @@ export {
   BaseHorizontalScrollView,
   HoldingSearchResult,
   BaseScreenV2,
+  BaseLineChart,
 };
