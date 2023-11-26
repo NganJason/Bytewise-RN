@@ -17,7 +17,7 @@ export const useGetTransactionsSummary = (
         unit: unit,
         interval: interval,
       }),
-    queryKey: [queryKeys.transactionsSummary],
+    queryKey: [queryKeys.transactionsSummary, unit, interval],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });

@@ -193,20 +193,20 @@ const TransactionScreen = ({ navigation }) => {
           />
         </>
       ) : (
-        // transactionsComponent
+        transactionsComponent
         // SEE HERE JASON NGAN YIP HONG
-        <BaseLineChart
-          onTouchStart={() => setDisableScroll(true)}
-          onTouchEnd={() => setDisableScroll(false)}
-          handleActiveData={e => console.log(e)}
-          data={[
-            { value: 0 },
-            { value: 100 },
-            { value: 150 },
-            { value: 90 },
-            { value: 140 },
-          ]}
-        />
+        // <BaseLineChart
+        //   onTouchStart={() => setDisableScroll(true)}
+        //   onTouchEnd={() => setDisableScroll(false)}
+        //   handleActiveData={e => console.log(e)}
+        //   data={[
+        //     { value: 0 },
+        //     { value: 100 },
+        //     { value: 150 },
+        //     { value: 90 },
+        //     { value: 140 },
+        //   ]}
+        // />
       )}
     </BaseScreenV2>
   );

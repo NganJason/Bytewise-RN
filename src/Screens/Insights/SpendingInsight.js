@@ -5,9 +5,11 @@ import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
   BaseHoriScrollableItems,
+  BaseLineChart,
   BaseLoadableView,
   BaseText,
 } from '../../Components';
+import { METRIC_TYPE_SAVINGS } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import {
   useCategoriesSum,
@@ -15,22 +17,33 @@ import {
   useTransactionGroups,
 } from '../../_shared/hooks';
 import { Amount } from '../../_shared/object';
+import { useGetMetrics } from '../../_shared/query';
+import { useGetTransactionsSummary } from '../../_shared/query/transaction';
 import { Metrics, Title } from './common';
 
-const metricItems = [
-  {
-    name: 'Debt Ratio',
-    val: '10%',
-  },
-  {
-    name: 'Investment Ratio',
-    val: '10%',
-  },
-  {
-    name: 'Emergency Fund Ratio',
-    val: '10%',
-  },
-];
+const SpendingGraph = () => {
+  const [value, setValue] = useState(0);
+  const getTransactionsSumamry = useGetTransactionsSummary({
+    unit: 1,
+    interval: 3,
+  });
+
+  const parseSummaryData = () => {
+    const data = getTransactionsSumamry?.data?.summary || [];
+    return data.map(d => ({ ...d, value: d.sum }));
+  };
+
+  return (
+    <View>
+      <AmountText h2 amount={new Amount(value)} margin={{ vertical: 10 }} />
+      <BaseLineChart
+        chartHeight={100}
+        handleActiveData={e => setValue(e.value)}
+        data={parseSummaryData()}
+      />
+    </View>
+  );
+};
 
 const SpendingInsight = () => {
   const { theme } = useTheme();
@@ -40,9 +53,7 @@ const SpendingInsight = () => {
   const [activeDate] = useState(new Date());
   const {
     timeRange,
-    getMonthlyTotalIncome,
-    getMonthlyTotalExpense,
-    getMonthlyTotalSavings,
+
     getErrors: getTransactionErrors,
     isLoading: isTransactionLoading,
   } = useTransactionGroups(activeDate);
@@ -53,6 +64,12 @@ const SpendingInsight = () => {
     getErrors: getCategoriesSumErrors,
     isLoading: isCategoriesSumLoading,
   } = useCategoriesSum(timeRange);
+
+  const getMetrics = useGetMetrics({ metric_type: METRIC_TYPE_SAVINGS });
+  const parseMetrics = () => {
+    const data = getMetrics?.data?.metrics || [];
+    return data;
+  };
 
   const renderSpendingItem = (category = {}) => {
     return <SpendingItem category={category} />;
@@ -73,7 +90,7 @@ const SpendingInsight = () => {
     <BaseLoadableView
       isLoading={isCategoriesSumLoading || isTransactionLoading}>
       <Title>Metrics</Title>
-      <Metrics items={metricItems} />
+      <Metrics items={parseMetrics()} />
 
       <Title>Expenses</Title>
       <BaseHoriScrollableItems
@@ -123,4 +140,4 @@ const getStyles = theme =>
     },
   });
 
-export default SpendingInsight;
+export { SpendingInsight, SpendingGraph };

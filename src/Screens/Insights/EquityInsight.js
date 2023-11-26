@@ -1,55 +1,63 @@
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
+  METRIC_TYPE_NET_WORTH,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { UserMetaContext } from '../../_shared/context';
-import { useGetAccounts } from '../../_shared/query';
+import {
+  useGetAccounts,
+  useGetAccountsSummary,
+  useGetMetrics,
+} from '../../_shared/query';
 import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 import {
   AmountText,
   BaseHoriScrollableItems,
+  BaseLineChart,
   BaseLoadableView,
   BaseText,
 } from '../../Components';
 import { Amount } from '../../_shared/object';
 import { Metrics, Title } from './common';
 
-const metricItems = [
-  {
-    name: 'Debt Ratio',
-    val: '10%',
-  },
-  {
-    name: 'Investment Ratio',
-    val: '10%',
-  },
-  {
-    name: 'Emergency Fund Ratio',
-    val: '10%',
-  },
-];
+const NetWorthGraph = () => {
+  const [value, setValue] = useState(0);
+  const getAccountsSummary = useGetAccountsSummary({ unit: 1, interval: 3 });
+
+  const parseSummaryData = () => {
+    const data = getAccountsSummary?.data?.net_worth || [];
+    return data.map(d => ({ ...d, value: d.sum }));
+  };
+
+  return (
+    <View>
+      <AmountText h2 amount={new Amount(value)} margin={{ vertical: 10 }} />
+      <BaseLineChart
+        chartHeight={100}
+        handleActiveData={e => setValue(e.value)}
+        data={parseSummaryData()}
+      />
+    </View>
+  );
+};
 
 const EquityInsight = () => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
 
-  const { getUserBaseCurrency } = useContext(UserMetaContext);
-
   const getAccounts = useGetAccounts({});
-  const {
-    net_worth: netWorth = 0,
-    asset_value: assetValue,
-    debt_value: debtValue,
-    currency = getUserBaseCurrency(),
-    accounts = [],
-  } = getAccounts?.data || {};
+  const { accounts = [] } = getAccounts?.data || {};
+
+  const getMetrics = useGetMetrics({ metric_type: METRIC_TYPE_NET_WORTH });
+  const parseMetrics = () => {
+    const data = getMetrics?.data?.metrics || [];
+    return data;
+  };
 
   const getSortedAssetAccounts = () => {
     let assetAccounts = accounts.filter(d =>
@@ -94,7 +102,7 @@ const EquityInsight = () => {
   return (
     <BaseLoadableView>
       <Title>Metrics</Title>
-      <Metrics items={metricItems} />
+      <Metrics items={parseMetrics()} />
 
       <Title>Assets</Title>
       <BaseHoriScrollableItems
@@ -157,4 +165,4 @@ const getStyles = theme =>
     },
   });
 
-export default EquityInsight;
+export { NetWorthGraph, EquityInsight };

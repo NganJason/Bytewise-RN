@@ -1,5 +1,5 @@
 import { queryKeys, useQueryWrapper } from './keys';
-import { getAccount, getAccounts } from '../apis/account';
+import { getAccount, getAccounts, getAccountsSummary } from '../apis/account';
 
 export const useGetAccount = ({ account_id = '' } = {}, opts = {}) => {
   return useQueryWrapper({
@@ -14,6 +14,18 @@ export const useGetAccounts = ({ account_type = 0 } = {}, opts = {}) => {
   return useQueryWrapper({
     queryFn: () => getAccounts({ account_type: account_type }),
     queryKey: [queryKeys.accounts, account_type],
+    onSuccess: opts.onSuccess || function () {},
+    enabled: opts.enabled,
+  });
+};
+
+export const useGetAccountsSummary = (
+  { unit = 1, interval = 1 } = {},
+  opts = {},
+) => {
+  return useQueryWrapper({
+    queryFn: () => getAccountsSummary({ unit, interval }),
+    queryKey: [queryKeys.accountsSummary, unit, interval],
     onSuccess: opts.onSuccess || function () {},
     enabled: opts.enabled,
   });

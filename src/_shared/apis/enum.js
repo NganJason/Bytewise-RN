@@ -82,3 +82,11 @@ export const USER_FLAGS = {
   [USER_FLAG_DEFAULT]: 'Default user',
   [USER_FLAG_NEW_USER]: 'New user',
 };
+
+export const METRIC_TYPE_NET_WORTH = 1;
+export const METRIC_TYPE_SAVINGS = 2;
+
+export const METRIC_TYPES = {
+  [METRIC_TYPE_NET_WORTH]: 'Net worth',
+  [METRIC_TYPE_SAVINGS]: 'Savings',
+};

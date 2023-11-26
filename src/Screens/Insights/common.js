@@ -20,11 +20,11 @@ export const Metrics = ({ items = [] }) => {
   const styles = getStyles(theme);
   const { toast } = useContext(BottomToastContext);
 
-  const renderMetric = ({ name = '', val = '', desc = '' }) => {
+  const renderMetric = ({ name = '', value = '', unit = '%', desc = '' }) => {
     return (
       <View style={styles.metric}>
         <BaseText text2 color={theme.colors.color6}>
-          {val}
+          {value + ' ' + unit}
         </BaseText>
         <View style={styles.metricName}>
           <BaseText text6 center color={theme.colors.color8}>

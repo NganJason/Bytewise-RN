@@ -12,6 +12,7 @@ const CREATE_ACCOUNT = '/create_account';
 const UPDATE_ACCOUNT = '/update_account';
 const DELETE_ACCOUNT = '/delete_account';
 const CREATE_ACCOUNTS = '/create_accounts';
+const GET_ACCOUNTS_SUMMARY = '/get_accounts_summary';
 
 export const getAccount = async ({ account_id = '' } = {}) => {
   try {
@@ -112,6 +113,22 @@ export const createAccounts = async ({ accounts = [] } = {}) => {
   try {
     const body = await sendPostRequest(CREATE_ACCOUNTS, {
       accounts: accounts,
+    });
+    return body;
+  } catch (e) {
+    throw new AccountError({
+      requestID: e.requestID,
+      message: e.message,
+      code: e.code,
+    });
+  }
+};
+
+export const getAccountsSummary = async ({ unit = 1, interval = 1 } = {}) => {
+  try {
+    const body = await sendPostRequest(GET_ACCOUNTS_SUMMARY, {
+      unit: unit,
+      interval: interval,
     });
     return body;
   } catch (e) {
