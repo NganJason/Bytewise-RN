@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
@@ -19,27 +19,81 @@ import {
 import { Amount } from '../../_shared/object';
 import { useGetMetrics } from '../../_shared/query';
 import { useGetTransactionsSummary } from '../../_shared/query/transaction';
+import {
+  getFormattedDateString,
+  parseDateStringWithoutDelim,
+} from '../../_shared/util';
 import { Metrics, Title } from './common';
 
-const SpendingGraph = () => {
-  const [value, setValue] = useState(0);
-  const getTransactionsSumamry = useGetTransactionsSummary({
+const threeM = '3M';
+const sixM = '6M';
+const oneY = '1Y';
+const granularities = [
+  { name: threeM, val: 3 },
+  { name: sixM, val: 6 },
+  { name: oneY, val: 12 },
+];
+
+const SpendingGraph = ({ height = 0 }) => {
+  const { theme } = useTheme();
+  // We are not using object
+  // because it will cause inifinite state update in BaseLineChart
+  const [currSavings, setCurrSavings] = useState(0);
+  const [currDate, setCurrDate] = useState(getFormattedDateString());
+
+  const [granularityIdx, setGranularityIdx] = useState(0);
+  const onGranularityChange = idx => {
+    setGranularityIdx(idx);
+  };
+
+  const getTransactionsSummary = useGetTransactionsSummary({
     unit: 1,
-    interval: 3,
+    interval: granularities[granularityIdx].val,
   });
+  const summaries = useMemo(
+    () => getTransactionsSummary?.data?.summary || [],
+    [getTransactionsSummary],
+  );
 
   const parseSummaryData = () => {
-    const data = getTransactionsSumamry?.data?.summary || [];
-    return data.map(d => ({ ...d, value: d.sum }));
+    return summaries.map(d => ({ ...d, value: d.sum }));
+  };
+
+  useEffect(() => {
+    resetCurrSummary();
+  }, [resetCurrSummary, summaries]);
+
+  const resetCurrSummary = useCallback(() => {
+    const { sum = 0, date = '' } = summaries[summaries.length - 1] || {};
+    setCurrDataPoint(sum, date);
+  }, [summaries]);
+
+  const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
+    setCurrSavings(sum);
+    setCurrDate(
+      getFormattedDateString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+    );
   };
 
   return (
     <View>
-      <AmountText h2 amount={new Amount(value)} margin={{ vertical: 10 }} />
+      <AmountText
+        h2
+        sensitive
+        showNegativeOnly
+        amount={new Amount(currSavings)}
+        margin={{ vertical: 10 }}
+      />
+      <BaseText text5 color={theme.colors.color7}>
+        {currDate}
+      </BaseText>
       <BaseLineChart
-        chartHeight={100}
-        handleActiveData={e => setValue(e.value)}
+        chartHeight={height}
+        handleActiveData={e => setCurrDataPoint(e.sum, e.date)}
         data={parseSummaryData()}
+        granularities={granularities}
+        onGranularityChange={onGranularityChange}
+        granularityIdx={granularityIdx}
       />
     </View>
   );

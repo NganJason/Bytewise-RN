@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
@@ -15,7 +15,12 @@ import {
   useGetAccountsSummary,
   useGetMetrics,
 } from '../../_shared/query';
-import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
+import {
+  isAccountTypeAsset,
+  isAccountTypeDebt,
+  getFormattedDateString,
+  parseDateStringWithoutDelim,
+} from '../../_shared/util';
 import {
   AmountText,
   BaseHoriScrollableItems,
@@ -26,22 +31,81 @@ import {
 import { Amount } from '../../_shared/object';
 import { Metrics, Title } from './common';
 
-const NetWorthGraph = () => {
-  const [value, setValue] = useState(0);
-  const getAccountsSummary = useGetAccountsSummary({ unit: 1, interval: 3 });
+const threeM = '3M';
+const sixM = '6M';
+const oneY = '1Y';
+const granularities = [
+  { name: threeM, val: 3 },
+  { name: sixM, val: 6 },
+  { name: oneY, val: 12 },
+];
+
+const NetWorthGraph = ({ height = 0 }) => {
+  const { theme } = useTheme();
+
+  // We are not using object
+  // because it will cause inifinite state update in BaseLineChart
+  const [currSum, setCurrSum] = useState(0);
+  const [currDate, setCurrDate] = useState(getFormattedDateString());
+
+  const [granularityIdx, setGranularityIdx] = useState(0);
+  const onGranularityChange = idx => {
+    setGranularityIdx(idx);
+  };
+
+  const getAccountsSummary = useGetAccountsSummary({
+    unit: 1,
+    interval: granularities[granularityIdx].val,
+  });
 
   const parseSummaryData = () => {
     const data = getAccountsSummary?.data?.net_worth || [];
     return data.map(d => ({ ...d, value: d.sum }));
   };
 
+  useEffect(() => {
+    resetCurrSummary();
+  }, [resetCurrSummary, getAccountsSummary.data]);
+
+  const resetCurrSummary = useCallback(() => {
+    const data = getAccountsSummary?.data?.net_worth || [];
+    const { sum = 0, date = '' } = data[data.length - 1] || {};
+    setCurrDataPoint(sum, date);
+  }, [getAccountsSummary.data]);
+
+  const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
+    setCurrSum(sum);
+    setCurrDate(
+      getFormattedDateString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+    );
+  };
+
   return (
     <View>
-      <AmountText h2 amount={new Amount(value)} margin={{ vertical: 10 }} />
+      <AmountText
+        h1
+        sensitive
+        amount={new Amount(currSum)}
+        margin={{ top: 10, bottom: 5 }}
+        color={theme.colors.color6}
+      />
+      <BaseText text5 color={theme.colors.color7}>
+        {currDate}
+      </BaseText>
       <BaseLineChart
-        chartHeight={100}
-        handleActiveData={e => setValue(e.value)}
+        onTouchEnd={() => {
+          setTimeout(() => {
+            resetCurrSummary();
+          }, 200);
+        }}
+        chartHeight={height}
+        handleActiveData={e => {
+          setCurrDataPoint(e.sum, e.date);
+        }}
         data={parseSummaryData()}
+        granularities={granularities}
+        onGranularityChange={onGranularityChange}
+        granularityIdx={granularityIdx}
       />
     </View>
   );

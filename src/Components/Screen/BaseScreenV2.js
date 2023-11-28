@@ -34,6 +34,7 @@ const BaseScreenV2 = ({
     leftComponent = null,
     rightComponent = null,
     centerComponent = null,
+    headerStyle: headerStyle = {},
   } = {},
   fabProps: {
     show: showFab = false,
@@ -155,6 +156,7 @@ const BaseScreenV2 = ({
         rightComponent={getRightComponent()}
         containerStyle={{
           ...styles.header,
+          ...headerStyle,
           marginTop: -insets.top, // offset safe area inset
         }}
       />

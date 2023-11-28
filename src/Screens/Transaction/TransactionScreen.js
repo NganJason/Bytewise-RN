@@ -8,7 +8,6 @@ import {
   Transactions,
   IconButton,
   BaseScreenV2,
-  BaseLineChart,
   BaseCalendar,
   BaseText,
   BaseButton,
@@ -197,7 +196,7 @@ const TransactionScreen = ({ navigation }) => {
         // SEE HERE JASON NGAN YIP HONG
         // <BaseLineChart
         //   onTouchStart={() => setDisableScroll(true)}
-        //   onTouchEnd={() => setDisableScroll(false)}
+        // onTouchEnd={() => setDisableScroll(false)}
         //   handleActiveData={e => console.log(e)}
         //   data={[
         //     { value: 0 },

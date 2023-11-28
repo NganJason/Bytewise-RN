@@ -3,6 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { LineChart } from 'react-native-gifted-charts';
 import { EmptyContent } from '../Common';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BaseText } from '../Text';
 
 const NUM_OF_SECTIONS = 5;
 const LOWER_LIMIT = -100;
@@ -14,6 +16,9 @@ const BaseLineChart = ({
   onTouchEnd = () => {},
   handleActiveData = () => {},
   chartHeight = 0,
+  granularities = [],
+  granularityIdx = 0,
+  onGranularityChange = function (idx) {},
 } = {}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -25,18 +30,22 @@ const BaseLineChart = ({
     const min = Math.min(...vals);
     const max = Math.max(...vals);
 
-    return data.map((d, i) => {
+    let ds = data.map((d, i) => {
+      const normalizedValue =
+        ((d.value - min) / (max - min)) * (UPPER_LIMIT - LOWER_LIMIT) +
+        LOWER_LIMIT;
+
       return {
         ...d,
         // internal field
         idx: i,
         rawValue: d.value,
         // library field
-        value:
-          ((d.value - min) / (max - min)) * (UPPER_LIMIT - LOWER_LIMIT) +
-          LOWER_LIMIT,
+        value: normalizedValue,
       };
     });
+
+    return ds;
   };
 
   const getSpacing = () => {
@@ -96,16 +105,81 @@ const BaseLineChart = ({
               },
             }}
           />
+          {granularities.length > 0 && (
+            <GranularityTab
+              items={granularities}
+              onPress={onGranularityChange}
+              activeIdx={granularityIdx}
+            />
+          )}
         </>
       )}
     </View>
   );
 };
 
-const getStyles = _ => {
+const GranularityTab = ({
+  items = [],
+  activeIdx = 0,
+  onPress = function (idx) {},
+}) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
+  const isActive = i => {
+    return activeIdx === i;
+  };
+
+  return (
+    <View style={styles.granularityContainer}>
+      {items.map((d, i) => {
+        return (
+          <TouchableOpacity
+            key={i}
+            onPress={() => onPress(i)}
+            style={[
+              styles.granularityItem,
+              isActive(i) && styles.activeGranularity,
+            ]}>
+            <BaseText
+              text4
+              style={[
+                styles.granularityText,
+                isActive(i) && styles.activeGranularityText,
+              ]}>
+              {d.name}
+            </BaseText>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+};
+
+const getStyles = theme => {
   return StyleSheet.create({
     container: {
       width: '100%',
+    },
+    granularityContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+    },
+    granularityItem: {
+      borderRadius: 10,
+      paddingHorizontal: 18,
+      alignItems: 'center',
+      paddingVertical: 2,
+    },
+    activeGranularity: {
+      backgroundColor: theme.colors.color8,
+    },
+    granularityText: {
+      color: theme.colors.color8,
+    },
+    activeGranularityText: {
+      color: theme.colors.white,
     },
   });
 };

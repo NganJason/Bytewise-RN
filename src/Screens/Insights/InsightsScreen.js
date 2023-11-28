@@ -1,8 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { BaseScreenV2, BaseScrollableTab } from '../../Components';
 import { EquityInsight, NetWorthGraph } from './EquityInsight';
 import { SpendingInsight, SpendingGraph } from './SpendingInsight';
 import { useState } from 'react';
+import { useDimension } from '../../_shared/hooks';
 
 const netWorth = 'Net Worth';
 const savings = 'Savings';
@@ -21,6 +22,8 @@ const tabs = [
 ];
 const InsightsScreen = () => {
   const [activeTabIdx, setActiveTabIdx] = useState(0);
+  const { screenHeight } = useDimension();
+  const styles = getStyles();
 
   const onTabChange = idx => {
     setActiveTabIdx(idx);
@@ -40,22 +43,21 @@ const InsightsScreen = () => {
   const renderHeader = () => {
     switch (tabs[activeTabIdx].name) {
       case netWorth:
-        return <NetWorthGraph />;
+        return <NetWorthGraph height={screenHeight * 0.15} />;
       case savings:
-        return <SpendingGraph />;
+        return <SpendingGraph height={screenHeight * 0.15} />;
       default:
-        return <SpendingGraph />;
+        return <SpendingGraph height={screenHeight * 0.15} />;
     }
   };
 
   return (
     <BaseScreenV2
-      headerProps={{
-        allowDrawer: true,
-        allowHideInfo: true,
-      }}
+      hideInfoButtonProps={{ show: true }}
+      drawerButtonProps={{ show: true }}
+      headerProps={{ headerStyle: styles.header }}
       subHeader={
-        <View style={{ minHeight: 200 }}>
+        <View style={{ minHeight: screenHeight * 0.31 }}>
           <BaseScrollableTab
             tabs={tabs}
             activeTabIdx={activeTabIdx}
@@ -69,5 +71,12 @@ const InsightsScreen = () => {
     </BaseScreenV2>
   );
 };
+
+const getStyles = theme =>
+  StyleSheet.create({
+    header: {
+      paddingBottom: 0,
+    },
+  });
 
 export default InsightsScreen;
