@@ -41,7 +41,7 @@ const SpendingGraph = ({ height = 0 }) => {
   const [currSavings, setCurrSavings] = useState(0);
   const [currDate, setCurrDate] = useState(getFormattedDateString());
 
-  const [granularityIdx, setGranularityIdx] = useState(0);
+  const [granularityIdx, setGranularityIdx] = useState(1);
   const onGranularityChange = idx => {
     setGranularityIdx(idx);
   };
@@ -146,7 +146,12 @@ const SpendingInsight = () => {
       <Title>Metrics</Title>
       <Metrics items={parseMetrics()} />
 
-      <Title>Expenses</Title>
+      <Title
+        onPress={() => {
+          navigation.navigate();
+        }}>
+        Expenses
+      </Title>
       <BaseHoriScrollableItems
         onAdd={onAddCategory}
         onPress={onCategoryPress}
@@ -154,7 +159,12 @@ const SpendingInsight = () => {
         renderItem={renderSpendingItem}
       />
 
-      <Title>Incomes</Title>
+      <Title
+        onPress={() => {
+          navigation.navigate();
+        }}>
+        Incomes
+      </Title>
       <BaseHoriScrollableItems
         onAdd={onAddCategory}
         onPress={onCategoryPress}

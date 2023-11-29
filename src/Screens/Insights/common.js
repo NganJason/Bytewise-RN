@@ -1,17 +1,47 @@
 import { useTheme } from '@rneui/themed';
 import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { AmountText, BaseGrid, BaseText } from '../../Components';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AmountText, BaseGrid, BaseText, IconButton } from '../../Components';
 import { BottomToastContext } from '../../_shared/context';
 import { Amount } from '../../_shared/object';
 import { capitalize } from '../../_shared/util';
 
-export const Title = ({ children }) => {
+export const Title = ({ children, customIcon = null, onPress = null }) => {
   const { theme } = useTheme();
+  const styles = getStyles();
+
+  const renderRightIcon = () => {
+    if (onPress === null) {
+      return;
+    }
+
+    if (customIcon === null) {
+      return (
+        <IconButton
+          iconType="entypo"
+          iconName="bar-graph"
+          type="clear"
+          iconSize={14}
+          color={theme.colors.color8}
+          align="flex-end"
+          onPress={onPress}
+        />
+      );
+    }
+
+    return <TouchableOpacity onPress={onPress}>{customIcon}</TouchableOpacity>;
+  };
   return (
-    <BaseText text2 margin={{ top: 12, bottom: 8 }} color={theme.colors.color6}>
-      {children}
-    </BaseText>
+    <View style={styles.titleContainer}>
+      <BaseText
+        text2
+        margin={{ top: 12, bottom: 8 }}
+        color={theme.colors.color6}>
+        {children}
+      </BaseText>
+      {renderRightIcon()}
+    </View>
   );
 };
 
@@ -98,6 +128,11 @@ export const Aggr = ({ items = [{ title: '', amount: new Amount() }] }) => {
 
 const getStyles = theme =>
   StyleSheet.create({
+    titleContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     aggrContainer: {
       marginTop: 4,
       marginBottom: 6,

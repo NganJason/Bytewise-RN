@@ -48,7 +48,7 @@ const NetWorthGraph = ({ height = 0 }) => {
   const [currSum, setCurrSum] = useState(0);
   const [currDate, setCurrDate] = useState(getFormattedDateString());
 
-  const [granularityIdx, setGranularityIdx] = useState(0);
+  const [granularityIdx, setGranularityIdx] = useState(1);
   const onGranularityChange = idx => {
     setGranularityIdx(idx);
   };
@@ -168,7 +168,12 @@ const EquityInsight = () => {
       <Title>Metrics</Title>
       <Metrics items={parseMetrics()} />
 
-      <Title>Assets</Title>
+      <Title
+        onPress={() => {
+          navigation.navigate();
+        }}>
+        Assets
+      </Title>
       <BaseHoriScrollableItems
         onAdd={onAddAccount}
         onPress={onAccountPress}
@@ -176,7 +181,12 @@ const EquityInsight = () => {
         renderItem={renderAccountItem}
       />
 
-      <Title>Debts</Title>
+      <Title
+        onPress={() => {
+          navigation.navigate();
+          }}>
+        Debts
+      </Title>
       <BaseHoriScrollableItems
         onAdd={onAddAccount}
         onPress={onAccountPress}
