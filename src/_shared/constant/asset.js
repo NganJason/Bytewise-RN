@@ -11,3 +11,7 @@ export const card = require('../../../assets/images/card.png');
 export const expenseIcon = require('../../../assets/images/expense_icon.png');
 export const incomeIcon = require('../../../assets/images/income_icon.png');
 export const connectionIcon = require('../../../assets/images/connection.png');
+export const savingsIntro = require('../../../assets/images/savings.png');
+export const budgetIntro = require('../../../assets/images/budget.png');
+export const expensesIntro = require('../../../assets/images/expenses.png');
+export const metricsIntro = require('../../../assets/images/metrics.png');

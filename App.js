@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreen } from './src/Components';
+import IntroScreen from './src/Screens/IntroScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import CategoryBreakdownScreen from './src/Screens/Category/CategoryBreakdownScreen';
 import CategoryEditScreen from './src/Screens/Category/CategoryEditScreen';
@@ -197,6 +198,7 @@ function Main() {
             }}>
             {!isLogin ? (
               <>
+                <Stack.Screen name={ROUTES.intro} component={IntroScreen} />
                 <Stack.Screen name={ROUTES.login} component={LoginScreen} />
                 <Stack.Screen name={ROUTES.signup} component={SignupScreen} />
                 <Stack.Screen name={ROUTES.otp} component={OtpScreen} />

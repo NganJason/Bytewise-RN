@@ -9,8 +9,9 @@ const BaseImage = ({
   source = null,
   align = 'center',
   containerStyle = {},
+  resizeMode = 'contain',
 }) => {
-  const styles = getStyles();
+  const styles = getStyles({ resizeMode });
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const onImageLoad = () => {
@@ -51,7 +52,7 @@ const BaseImage = ({
   );
 };
 
-const getStyles = () =>
+const getStyles = ({ resizeMode }) =>
   StyleSheet.create({
     imgPlaceholder: {
       width: '100%',
@@ -61,7 +62,7 @@ const getStyles = () =>
     img: {
       width: '100%',
       height: '100%',
-      resizeMode: 'contain',
+      resizeMode: resizeMode,
     },
   });
 

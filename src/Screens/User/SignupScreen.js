@@ -62,7 +62,7 @@ const SignupScreen = () => {
   useError([getSignupError()]);
 
   return (
-    <BaseScreenV2 backButtonProps={{ show: true }}>
+    <BaseScreenV2>
       <View style={styles.body}>
         <View>
           <BaseText h2 style={styles.title}>
