@@ -1,4 +1,5 @@
 const ROUTES = {
+  intro: 'Intro',
   login: 'Login',
   signup: 'Signup',
   otp: 'OTP',
