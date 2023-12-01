@@ -14,6 +14,7 @@ import Currency from './Currency';
 import BaseFilter from './BaseFilter';
 import DeleteSaveButton from './DeleteSaveButton';
 import HoldingSearchResult from './HoldingSearchResult';
+import PieChartWithBreakdown from './PieChartWithBreakdown';
 
 export {
   DailyTransactions,
@@ -34,4 +35,5 @@ export {
   BaseFilter,
   DeleteSaveButton,
   HoldingSearchResult,
+  PieChartWithBreakdown,
 };

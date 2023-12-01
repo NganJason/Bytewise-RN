@@ -20,7 +20,7 @@ import { Amount } from '../../_shared/object';
 import { useGetMetrics } from '../../_shared/query';
 import { useGetTransactionsSummary } from '../../_shared/query/transaction';
 import {
-  getFormattedDateString,
+  getYearMonthString,
   parseDateStringWithoutDelim,
 } from '../../_shared/util';
 import { Metrics, Title } from './common';
@@ -39,7 +39,7 @@ const SpendingGraph = ({ height = 0 }) => {
   // We are not using object
   // because it will cause inifinite state update in BaseLineChart
   const [currSavings, setCurrSavings] = useState(0);
-  const [currDate, setCurrDate] = useState(getFormattedDateString());
+  const [currDate, setCurrDate] = useState(getYearMonthString());
 
   const [granularityIdx, setGranularityIdx] = useState(1);
   const onGranularityChange = idx => {
@@ -71,14 +71,14 @@ const SpendingGraph = ({ height = 0 }) => {
   const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
     setCurrSavings(sum);
     setCurrDate(
-      getFormattedDateString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+      getYearMonthString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
     );
   };
 
   return (
     <View>
       <AmountText
-        h2
+        h1
         sensitive
         showNegativeOnly
         amount={new Amount(currSavings)}

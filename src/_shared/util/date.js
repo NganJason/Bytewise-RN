@@ -84,6 +84,9 @@ export const getDateStringWithoutDelim = (d = new Date()) => {
 };
 
 export const parseDateStringWithoutDelim = (dateStr = '') => {
+  if (dateStr === '') {
+    return new Date();
+  }
   const year = dateStr.slice(0, 4);
   const month = dateStr.slice(4, 6) - 1; // Subtract 1 from month as months are 0-indexed
   const day = dateStr.slice(6, 8);

@@ -13,6 +13,7 @@ const EmptyContent = ({
     image: paper,
     italic: false,
   },
+  enableImage = true,
   route = '',
   routeParam = {},
   onRedirect = function () {},
@@ -30,12 +31,14 @@ const EmptyContent = ({
   return (
     <View style={styles.container}>
       <View>
-        <BaseImage
-          width={screenWidth * 0.4}
-          height={'80%'}
-          maxHeight={screenHeight * 0.15}
-          source={item.image}
-        />
+        {enableImage && (
+          <BaseImage
+            width={screenWidth * 0.4}
+            height={'80%'}
+            maxHeight={screenHeight * 0.15}
+            source={item.image}
+          />
+        )}
 
         <View style={styles.textContainer}>
           {item.text.map(d => (

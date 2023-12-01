@@ -33,6 +33,8 @@ const ROUTES = {
   lotForm: 'Lot Form',
 
   insights: 'Insights',
+  accountOverview: 'Account Overview',
+  categoryOverview: 'Category Overview',
 };
 
 export default ROUTES;

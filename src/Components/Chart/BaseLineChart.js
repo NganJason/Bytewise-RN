@@ -69,50 +69,52 @@ const BaseLineChart = ({
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
       }}>
-      {isDataEmpty() ? (
-        <EmptyContent />
-      ) : (
-        <>
-          <LineChart
-            data={scaleDataToRange()}
-            hideDataPoints
-            isAnimated
-            adjustToWidth
-            noOfSections={NUM_OF_SECTIONS}
-            noOfSectionsBelowXAxis={NUM_OF_SECTIONS}
-            stepValue={UPPER_LIMIT / NUM_OF_SECTIONS}
-            stepHeight={chartHeight / (NUM_OF_SECTIONS * 2 + 1)}
-            initialSpacing={10}
-            endSpacing={0}
-            maxValue={UPPER_LIMIT + 30}
-            mostNegativeValue={LOWER_LIMIT - 50}
-            color={theme.colors.color1}
-            thickness={2.5}
-            hideYAxisText
-            spacing={getSpacing()}
-            yAxisThickness={0}
-            xAxisThickness={0}
-            hideRules
-            disableScroll
-            pointerConfig={{
-              pointerColor: theme.colors.color1,
-              showPointerStrip: false,
-              radius: 6,
-              pointerLabelComponent: item => {
-                const { rawValue, ...fields } = item[0];
-                handleActiveData({ ...fields, value: rawValue });
-                return null;
-              },
-            }}
-          />
-          {granularities.length > 0 && (
-            <GranularityTab
-              items={granularities}
-              onPress={onGranularityChange}
-              activeIdx={granularityIdx}
+      <View style={{ minHeight: '70%' }}>
+        {isDataEmpty() ? (
+          <EmptyContent enableImage={false} />
+        ) : (
+          <>
+            <LineChart
+              data={scaleDataToRange()}
+              hideDataPoints
+              isAnimated
+              adjustToWidth
+              noOfSections={NUM_OF_SECTIONS}
+              noOfSectionsBelowXAxis={NUM_OF_SECTIONS}
+              stepValue={UPPER_LIMIT / NUM_OF_SECTIONS}
+              stepHeight={chartHeight / (NUM_OF_SECTIONS * 2 + 1)}
+              initialSpacing={10}
+              endSpacing={0}
+              maxValue={UPPER_LIMIT + 30}
+              mostNegativeValue={LOWER_LIMIT - 50}
+              color={theme.colors.color1}
+              thickness={2.5}
+              hideYAxisText
+              spacing={getSpacing()}
+              yAxisThickness={0}
+              xAxisThickness={0}
+              hideRules
+              disableScroll
+              pointerConfig={{
+                pointerColor: theme.colors.color1,
+                showPointerStrip: false,
+                radius: 6,
+                pointerLabelComponent: item => {
+                  const { rawValue, ...fields } = item[0];
+                  handleActiveData({ ...fields, value: rawValue });
+                  return null;
+                },
+              }}
             />
-          )}
-        </>
+          </>
+        )}
+      </View>
+      {granularities.length > 0 && (
+        <GranularityTab
+          items={granularities}
+          onPress={onGranularityChange}
+          activeIdx={granularityIdx}
+        />
       )}
     </View>
   );

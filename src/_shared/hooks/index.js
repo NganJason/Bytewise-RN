@@ -1,3 +1,4 @@
+import useAccounts from './useAccounts';
 import useDimension from './useDimension';
 import useError from './useError';
 import useGetCategoriesHelper from './useGetCategoriesHelper';
@@ -11,6 +12,7 @@ import useInitApp from './useInitApp';
 import useGetCurrencyMap from './useGetCurrencyMap';
 
 export {
+  useAccounts,
   useDimension,
   useError,
   useGetCategoriesHelper,

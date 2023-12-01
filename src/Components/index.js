@@ -72,6 +72,7 @@ import {
   Currency,
   DeleteSaveButton,
   HoldingSearchResult,
+  PieChartWithBreakdown,
 } from './Common';
 
 export {
@@ -131,6 +132,7 @@ export {
   BaseSwipeableView,
   BaseHorizontalScrollView,
   HoldingSearchResult,
+  PieChartWithBreakdown,
   BaseScreenV2,
   BaseLineChart,
 };

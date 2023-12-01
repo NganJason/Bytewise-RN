@@ -19,11 +19,11 @@ export const Title = ({ children, customIcon = null, onPress = null }) => {
     if (customIcon === null) {
       return (
         <IconButton
-          iconType="entypo"
-          iconName="bar-graph"
+          iconType="feather"
+          iconName="chevron-right"
           type="clear"
-          iconSize={14}
-          color={theme.colors.color8}
+          iconSize={18}
+          color={theme.colors.color7}
           align="flex-end"
           onPress={onPress}
         />

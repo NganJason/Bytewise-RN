@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { BaseScreenV2, BaseScrollableTab } from '../../Components';
-import { EquityInsight, NetWorthGraph } from './EquityInsight';
+import { NetWorthInsight, NetWorthGraph } from './NetWorthInsight';
 import { SpendingInsight, SpendingGraph } from './SpendingInsight';
 import { useState } from 'react';
 import { useDimension } from '../../_shared/hooks';
@@ -32,7 +32,7 @@ const InsightsScreen = () => {
   const renderTabContent = () => {
     switch (tabs[activeTabIdx].name) {
       case netWorth:
-        return <EquityInsight />;
+        return <NetWorthInsight />;
       case savings:
         return <SpendingInsight />;
       default:

@@ -6,20 +6,16 @@ import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
   ACCOUNT_TYPE_INVESTMENT,
+  EQUITY_TYPE_ASSET,
+  EQUITY_TYPE_DEBT,
   METRIC_TYPE_NET_WORTH,
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { UserMetaContext } from '../../_shared/context';
+import { useGetAccountsSummary, useGetMetrics } from '../../_shared/query';
 import {
-  useGetAccounts,
-  useGetAccountsSummary,
-  useGetMetrics,
-} from '../../_shared/query';
-import {
-  isAccountTypeAsset,
-  isAccountTypeDebt,
-  getFormattedDateString,
   parseDateStringWithoutDelim,
+  getYearMonthString,
 } from '../../_shared/util';
 import {
   AmountText,
@@ -30,6 +26,7 @@ import {
 } from '../../Components';
 import { Amount } from '../../_shared/object';
 import { Metrics, Title } from './common';
+import { useAccounts } from '../../_shared/hooks';
 
 const threeM = '3M';
 const sixM = '6M';
@@ -46,7 +43,7 @@ const NetWorthGraph = ({ height = 0 }) => {
   // We are not using object
   // because it will cause inifinite state update in BaseLineChart
   const [currSum, setCurrSum] = useState(0);
-  const [currDate, setCurrDate] = useState(getFormattedDateString());
+  const [currDate, setCurrDate] = useState(getYearMonthString());
 
   const [granularityIdx, setGranularityIdx] = useState(1);
   const onGranularityChange = idx => {
@@ -76,7 +73,7 @@ const NetWorthGraph = ({ height = 0 }) => {
   const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
     setCurrSum(sum);
     setCurrDate(
-      getFormattedDateString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+      getYearMonthString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
     );
   };
 
@@ -111,31 +108,14 @@ const NetWorthGraph = ({ height = 0 }) => {
   );
 };
 
-const EquityInsight = () => {
+const NetWorthInsight = () => {
   const navigation = useNavigation();
-
-  const getAccounts = useGetAccounts({});
-  const { accounts = [] } = getAccounts?.data || {};
+  const { getSortedAssetAccounts, getSortedDebtAccounts } = useAccounts();
 
   const getMetrics = useGetMetrics({ metric_type: METRIC_TYPE_NET_WORTH });
   const parseMetrics = () => {
     const data = getMetrics?.data?.metrics || [];
     return data;
-  };
-
-  const getSortedAssetAccounts = () => {
-    let assetAccounts = accounts.filter(d =>
-      isAccountTypeAsset(d?.account_type || 0),
-    );
-    assetAccounts.sort((a, b) => b.balance - a.balance);
-    return assetAccounts;
-  };
-
-  const getSortedDebtAccounts = () => {
-    let debtAccounts = accounts.filter(d =>
-      isAccountTypeDebt(d?.account_type || 0),
-    );
-    return debtAccounts.sort((a, b) => a.balance - b.balance);
   };
 
   const onAddAccount = () => {
@@ -169,9 +149,11 @@ const EquityInsight = () => {
       <Metrics items={parseMetrics()} />
 
       <Title
-        onPress={() => {
-          navigation.navigate();
-        }}>
+        onPress={() =>
+          navigation.navigate(ROUTES.accountOverview, {
+            type: EQUITY_TYPE_ASSET,
+          })
+        }>
         Assets
       </Title>
       <BaseHoriScrollableItems
@@ -182,9 +164,11 @@ const EquityInsight = () => {
       />
 
       <Title
-        onPress={() => {
-          navigation.navigate();
-          }}>
+        onPress={() =>
+          navigation.navigate(ROUTES.accountOverview, {
+            type: EQUITY_TYPE_DEBT,
+          })
+        }>
         Debts
       </Title>
       <BaseHoriScrollableItems
@@ -231,12 +215,6 @@ const AccountItem = ({ account = {} }) => {
   );
 };
 
-const getStyles = theme =>
-  StyleSheet.create({
-    aggr: {
-      marginTop: 4,
-      marginBottom: 6,
-    },
-  });
+const getStyles = theme => StyleSheet.create({});
 
-export { NetWorthGraph, EquityInsight };
+export { NetWorthGraph, NetWorthInsight };
