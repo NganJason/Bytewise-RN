@@ -64,9 +64,35 @@ const useCategoriesSum = timeRange => {
     return [expenseSum, incomeSum];
   };
 
+  const getTotalExpenses = () => {
+    const { sums = [] } = expenseSum?.data || {};
+    let total = 0;
+    let currency = '';
+
+    sums.map(d => {
+      total += Number(d.sum);
+      currency = d.currency;
+    });
+    return new Amount(Math.abs(total).toFixed(2), currency);
+  };
+
+  const getTotalIncomes = () => {
+    const { sums = [] } = incomeSum?.data || {};
+    let total = 0;
+    let currency = '';
+
+    sums.map(d => {
+      total += Number(d.sum);
+      currency = d.currency;
+    });
+    return new Amount(Math.abs(total).toFixed(2), currency);
+  };
+
   return {
     getSortedExpenseCategoriesSum,
     getSortedIncomeCategoriesSum,
+    getTotalExpenses,
+    getTotalIncomes,
     getErrors,
     isLoading: expenseSum.isLoading || incomeSum.isLoading,
   };

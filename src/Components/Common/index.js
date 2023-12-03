@@ -15,6 +15,7 @@ import BaseFilter from './BaseFilter';
 import DeleteSaveButton from './DeleteSaveButton';
 import HoldingSearchResult from './HoldingSearchResult';
 import PieChartWithBreakdown from './PieChartWithBreakdown';
+import LineChartWithGranularity from './LineChartWithGranularity';
 
 export {
   DailyTransactions,
@@ -36,4 +37,5 @@ export {
   DeleteSaveButton,
   HoldingSearchResult,
   PieChartWithBreakdown,
+  LineChartWithGranularity,
 };

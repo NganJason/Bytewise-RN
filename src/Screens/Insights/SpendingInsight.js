@@ -1,25 +1,32 @@
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   AmountText,
   BaseHoriScrollableItems,
-  BaseLineChart,
   BaseLoadableView,
   BaseText,
+  LineChartWithGranularity,
 } from '../../Components';
-import { METRIC_TYPE_SAVINGS } from '../../_shared/apis/enum';
+import {
+  METRIC_TYPE_SAVINGS,
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+} from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import {
   useCategoriesSum,
   useError,
+  useSpendingGraph,
   useTransactionGroups,
 } from '../../_shared/hooks';
 import { Amount } from '../../_shared/object';
 import { useGetMetrics } from '../../_shared/query';
-import { useGetTransactionsSummary } from '../../_shared/query/transaction';
 import {
+  getMonth,
+  getUnixRangeOfMonth,
+  getYear,
   getYearMonthString,
   parseDateStringWithoutDelim,
 } from '../../_shared/util';
@@ -36,44 +43,60 @@ const granularities = [
 
 const SpendingGraph = ({ height = 0 }) => {
   const { theme } = useTheme();
-  // We are not using object
-  // because it will cause inifinite state update in BaseLineChart
-  const [currSavings, setCurrSavings] = useState(0);
-  const [currDate, setCurrDate] = useState(getYearMonthString());
+  const styles = getStyles(theme);
+  const {
+    changeGranularity,
+    granularityIdx,
+    getSummaryData,
+    getCurrDataPoint,
+    setCurrDataPoint,
+    resetCurrDataPoint,
+    getErrors,
+    isLoading,
+  } = useSpendingGraph(granularities, 1);
+  const {
+    sum = 0,
+    currency = '',
+    date = '',
+    percent_change: percent = null,
+    absolute_change: absChange = 0,
+  } = getCurrDataPoint();
 
-  const [granularityIdx, setGranularityIdx] = useState(1);
-  const onGranularityChange = idx => {
-    setGranularityIdx(idx);
-  };
+  const renderPercentChange = () => {
+    let color;
+    let text;
 
-  const getTransactionsSummary = useGetTransactionsSummary({
-    unit: 1,
-    interval: granularities[granularityIdx].val,
-  });
-  const summaries = useMemo(
-    () => getTransactionsSummary?.data?.summary || [],
-    [getTransactionsSummary],
-  );
+    if (percent === null) {
+      text = '(N/A)';
+    } else {
+      let val = Number(Math.abs(percent) || 0).toFixed(2);
+      text = `(${val}%)`;
+    }
 
-  const parseSummaryData = () => {
-    return summaries.map(d => ({ ...d, value: d.sum }));
-  };
+    if (Number(absChange) === 0) {
+      color = theme.colors.color7;
+    } else if (Number(absChange) > 0) {
+      color = theme.colors.color1;
+    } else {
+      color = theme.colors.regularRed;
+    }
 
-  useEffect(() => {
-    resetCurrSummary();
-  }, [resetCurrSummary, summaries]);
-
-  const resetCurrSummary = useCallback(() => {
-    const { sum = 0, date = '' } = summaries[summaries.length - 1] || {};
-    setCurrDataPoint(sum, date);
-  }, [summaries]);
-
-  const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
-    setCurrSavings(sum);
-    setCurrDate(
-      getYearMonthString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+    return (
+      <View style={styles.percentChange}>
+        <AmountText
+          text5
+          color={color}
+          amount={new Amount(absChange, currency)}
+          showSign
+        />
+        <BaseText text5 color={color} margin={{ horizontal: 4 }}>
+          {text}
+        </BaseText>
+      </View>
     );
   };
+
+  useError(getErrors());
 
   return (
     <View>
@@ -81,43 +104,46 @@ const SpendingGraph = ({ height = 0 }) => {
         h1
         sensitive
         showNegativeOnly
-        amount={new Amount(currSavings)}
-        margin={{ vertical: 10 }}
+        amount={new Amount(sum, currency)}
+        margin={{ top: 10 }}
+        color={theme.colors.color6}
       />
-      <BaseText text5 color={theme.colors.color7}>
-        {currDate}
-      </BaseText>
-      <BaseLineChart
+
+      <View>
+        {renderPercentChange()}
+        <BaseText text5 color={theme.colors.color7}>
+          {getYearMonthString(parseDateStringWithoutDelim(date))}
+        </BaseText>
+      </View>
+
+      <LineChartWithGranularity
         chartHeight={height}
-        handleActiveData={e => setCurrDataPoint(e.sum, e.date)}
-        data={parseSummaryData()}
+        onTouchEnd={() => {
+          setTimeout(() => {
+            resetCurrDataPoint();
+          }, 200);
+        }}
+        handleActiveData={e => {
+          setCurrDataPoint(e);
+        }}
+        data={getSummaryData()}
         granularities={granularities}
-        onGranularityChange={onGranularityChange}
+        onGranularityChange={changeGranularity}
         granularityIdx={granularityIdx}
+        isDataLoading={isLoading}
       />
     </View>
   );
 };
 
 const SpendingInsight = () => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
-
-  const [activeDate] = useState(new Date());
-  const {
-    timeRange,
-
-    getErrors: getTransactionErrors,
-    isLoading: isTransactionLoading,
-  } = useTransactionGroups(activeDate);
-
   const {
     getSortedExpenseCategoriesSum,
     getSortedIncomeCategoriesSum,
     getErrors: getCategoriesSumErrors,
     isLoading: isCategoriesSumLoading,
-  } = useCategoriesSum(timeRange);
+  } = useCategoriesSum(getUnixRangeOfMonth(getYear(), getMonth()));
 
   const getMetrics = useGetMetrics({ metric_type: METRIC_TYPE_SAVINGS });
   const parseMetrics = () => {
@@ -138,17 +164,19 @@ const SpendingInsight = () => {
     navigation.navigate(ROUTES.categoryBreakdown, { category_id: categoryID });
   };
 
-  useError([...getCategoriesSumErrors(), ...getTransactionErrors()]);
+  const isLoading = isCategoriesSumLoading;
+  useError([...getCategoriesSumErrors()]);
 
   return (
-    <BaseLoadableView
-      isLoading={isCategoriesSumLoading || isTransactionLoading}>
+    <BaseLoadableView isLoading={isLoading}>
       <Title>Metrics</Title>
       <Metrics items={parseMetrics()} />
 
       <Title
         onPress={() => {
-          navigation.navigate();
+          navigation.navigate(ROUTES.categoryOverview, {
+            type: TRANSACTION_TYPE_EXPENSE,
+          });
         }}>
         Expenses
       </Title>
@@ -161,7 +189,9 @@ const SpendingInsight = () => {
 
       <Title
         onPress={() => {
-          navigation.navigate();
+          navigation.navigate(ROUTES.categoryOverview, {
+            type: TRANSACTION_TYPE_INCOME,
+          });
         }}>
         Incomes
       </Title>
@@ -196,11 +226,15 @@ const SpendingItem = ({ category = {} }) => {
   );
 };
 
-const getStyles = theme =>
+const getStyles = _ =>
   StyleSheet.create({
     spendingItem: {
       minHeight: 50,
       justifyContent: 'center',
+    },
+    percentChange: {
+      flexDirection: 'row',
+      marginVertical: 5,
     },
   });
 

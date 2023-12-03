@@ -20,7 +20,8 @@ import OnboardingScreen from './src/Screens/Onboarding/OnboardingScreen';
 import CategoryForm from './src/Screens/Category/CategoryForm';
 import BudgetForm from './src/Screens/Budget/BudgetForm';
 import TransactionFormV2 from './src/Screens/Transaction/TransactionFormV2';
-import { AccountsOverviewScreen } from './src/Screens/Insights/Charts/AccountsOverviewScreen';
+import AccountsOverviewScreen from './src/Screens/Insights/Charts/AccountsOverviewScreen';
+import CategoriesOverviewScreen from './src/Screens/Insights/Charts/CategoriesOverviewScreen';
 import { ConnectionChecker, CustomDrawer } from './src/Components/Common';
 
 import ROUTES from './src/_shared/constant/routes';
@@ -176,6 +177,10 @@ function Main() {
           <Stack.Screen
             name={ROUTES.accountOverview}
             component={AccountsOverviewScreen}
+          />
+          <Stack.Screen
+            name={ROUTES.categoryOverview}
+            component={CategoriesOverviewScreen}
           />
         </>
       );

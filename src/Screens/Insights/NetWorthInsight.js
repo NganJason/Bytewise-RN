@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_BANK_ACCOUNT,
@@ -12,7 +12,7 @@ import {
 } from '../../_shared/apis/enum';
 import ROUTES from '../../_shared/constant/routes';
 import { UserMetaContext } from '../../_shared/context';
-import { useGetAccountsSummary, useGetMetrics } from '../../_shared/query';
+import { useGetMetrics } from '../../_shared/query';
 import {
   parseDateStringWithoutDelim,
   getYearMonthString,
@@ -20,13 +20,13 @@ import {
 import {
   AmountText,
   BaseHoriScrollableItems,
-  BaseLineChart,
   BaseLoadableView,
   BaseText,
+  LineChartWithGranularity,
 } from '../../Components';
 import { Amount } from '../../_shared/object';
 import { Metrics, Title } from './common';
-import { useAccounts } from '../../_shared/hooks';
+import { useAccounts, useError, useNetWorthGraph } from '../../_shared/hooks';
 
 const threeM = '3M';
 const sixM = '6M';
@@ -39,70 +39,94 @@ const granularities = [
 
 const NetWorthGraph = ({ height = 0 }) => {
   const { theme } = useTheme();
+  const styles = getStyles(theme);
+  const {
+    changeGranularity,
+    granularityIdx,
+    getSummaryData,
+    getCurrDataPoint,
+    setCurrDataPoint,
+    resetCurrDataPoint,
+    getErrors,
+    isLoading,
+  } = useNetWorthGraph(granularities, 1);
+  const {
+    sum = 0,
+    currency = '',
+    date = '',
+    percent_change: percent = null,
+    absolute_change: absChange = 0,
+  } = getCurrDataPoint();
 
-  // We are not using object
-  // because it will cause inifinite state update in BaseLineChart
-  const [currSum, setCurrSum] = useState(0);
-  const [currDate, setCurrDate] = useState(getYearMonthString());
+  const renderPercentChange = () => {
+    let color;
+    let text;
 
-  const [granularityIdx, setGranularityIdx] = useState(1);
-  const onGranularityChange = idx => {
-    setGranularityIdx(idx);
-  };
+    if (percent === null) {
+      text = '(N/A)';
+    } else {
+      let val = Number(Math.abs(percent) || 0).toFixed(2);
+      text = `(${val}%)`;
+    }
 
-  const getAccountsSummary = useGetAccountsSummary({
-    unit: 1,
-    interval: granularities[granularityIdx].val,
-  });
+    if (Number(absChange) === 0) {
+      color = theme.colors.color7;
+    } else if (Number(absChange) > 0) {
+      color = theme.colors.color1;
+    } else {
+      color = theme.colors.regularRed;
+    }
 
-  const parseSummaryData = () => {
-    const data = getAccountsSummary?.data?.net_worth || [];
-    return data.map(d => ({ ...d, value: d.sum }));
-  };
-
-  useEffect(() => {
-    resetCurrSummary();
-  }, [resetCurrSummary, getAccountsSummary.data]);
-
-  const resetCurrSummary = useCallback(() => {
-    const data = getAccountsSummary?.data?.net_worth || [];
-    const { sum = 0, date = '' } = data[data.length - 1] || {};
-    setCurrDataPoint(sum, date);
-  }, [getAccountsSummary.data]);
-
-  const setCurrDataPoint = (sum = 0, dateStrWithoutDelimi = '') => {
-    setCurrSum(sum);
-    setCurrDate(
-      getYearMonthString(parseDateStringWithoutDelim(dateStrWithoutDelimi)),
+    return (
+      <View style={styles.percentChange}>
+        <AmountText
+          text5
+          color={color}
+          amount={new Amount(absChange, currency)}
+          showSign
+        />
+        <BaseText text5 color={color} margin={{ horizontal: 4 }}>
+          {text}
+        </BaseText>
+      </View>
     );
   };
+
+  useError(getErrors());
 
   return (
     <View>
       <AmountText
         h1
         sensitive
-        amount={new Amount(currSum)}
-        margin={{ top: 10, bottom: 5 }}
+        showNegativeOnly
+        amount={new Amount(sum, currency)}
+        margin={{ top: 10 }}
         color={theme.colors.color6}
       />
-      <BaseText text5 color={theme.colors.color7}>
-        {currDate}
-      </BaseText>
-      <BaseLineChart
+
+      <View>
+        {renderPercentChange()}
+        <BaseText text5 color={theme.colors.color7}>
+          {getYearMonthString(parseDateStringWithoutDelim(date))}
+        </BaseText>
+      </View>
+
+      <LineChartWithGranularity
+        chartHeight={height}
         onTouchEnd={() => {
           setTimeout(() => {
-            resetCurrSummary();
+            resetCurrDataPoint();
           }, 200);
         }}
-        chartHeight={height}
         handleActiveData={e => {
-          setCurrDataPoint(e.sum, e.date);
+          setCurrDataPoint(e);
         }}
-        data={parseSummaryData()}
+        data={getSummaryData()}
         granularities={granularities}
-        onGranularityChange={onGranularityChange}
+        onGranularityChange={changeGranularity}
         granularityIdx={granularityIdx}
+        isDataLoading={isLoading}
       />
     </View>
   );
@@ -110,7 +134,12 @@ const NetWorthGraph = ({ height = 0 }) => {
 
 const NetWorthInsight = () => {
   const navigation = useNavigation();
-  const { getSortedAssetAccounts, getSortedDebtAccounts } = useAccounts();
+  const {
+    getSortedAssetAccounts,
+    getSortedDebtAccounts,
+    isLoading: isAccountsLoading,
+    getErrors,
+  } = useAccounts();
 
   const getMetrics = useGetMetrics({ metric_type: METRIC_TYPE_NET_WORTH });
   const parseMetrics = () => {
@@ -143,8 +172,11 @@ const NetWorthInsight = () => {
     return <AccountItem account={account} />;
   };
 
+  const isLoading = getMetrics.isLoading || isAccountsLoading;
+  useError([...getErrors(), getMetrics]);
+
   return (
-    <BaseLoadableView>
+    <BaseLoadableView isLoading={isLoading}>
       <Title>Metrics</Title>
       <Metrics items={parseMetrics()} />
 
@@ -215,6 +247,12 @@ const AccountItem = ({ account = {} }) => {
   );
 };
 
-const getStyles = theme => StyleSheet.create({});
+const getStyles = _ =>
+  StyleSheet.create({
+    percentChange: {
+      flexDirection: 'row',
+      marginVertical: 5,
+    },
+  });
 
 export { NetWorthGraph, NetWorthInsight };

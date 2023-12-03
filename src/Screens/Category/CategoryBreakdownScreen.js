@@ -42,10 +42,17 @@ const CategoryBreakdownScreen = ({ route }) => {
     TIME_RANGE_MONTHLY,
   );
 
-  const getCategoryBudget = useGetCategoryBudget({
-    budget_date: getDateStringWithoutDelim(activeDate),
-    category_id: categoryID,
-  });
+  const isUncategorised = () => {
+    return categoryID === '';
+  };
+
+  const getCategoryBudget = useGetCategoryBudget(
+    {
+      budget_date: getDateStringWithoutDelim(activeDate),
+      category_id: categoryID,
+    },
+    { enabled: !isUncategorised() },
+  );
 
   const getTransactionGroups = useGetTransactionGroups({
     category_id: categoryID,
@@ -113,52 +120,58 @@ const CategoryBreakdownScreen = ({ route }) => {
             isLoading={getCategoryBudget.isLoading}
             numberOfLines={1}
             ellipsizeMode="tail">
-            {getCategoryBudget?.data?.category?.category_name}
+            {isUncategorised()
+              ? 'Uncategorised'
+              : getCategoryBudget?.data?.category?.category_name}
           </BaseText>
-          <IconButton
-            buttonSize="xs"
-            iconSize={20}
-            type="clear"
-            iconName="edit"
-            iconType="feather"
-            align="flex-start"
-            color={theme.colors.color8}
-            onPress={onBudgetPress}
-          />
+          {!isUncategorised() && (
+            <IconButton
+              buttonSize="xs"
+              iconSize={20}
+              type="clear"
+              iconName="edit"
+              iconType="feather"
+              align="flex-start"
+              color={theme.colors.color8}
+              onPress={onBudgetPress}
+            />
+          )}
         </View>
-        <View style={styles.budgetRow}>
-          {renderFeedback()}
-          <BaseLinearProgress
-            value={getProgress(
-              getCategoryBudget?.data?.category?.budget?.used_amount,
-              getCategoryBudget?.data?.category?.budget?.amount,
-            )}
-          />
-          <View style={styles.usageSummary}>
-            <AmountText
-              text4
-              amount={
-                new Amount(
-                  getCategoryBudget?.data?.category?.budget?.used_amount,
-                  getCategoryBudget?.data?.category?.budget?.currency,
-                )
-              }
-              style={{ color: theme.colors.color7 }}
-              sensitive
+        {!isUncategorised() && (
+          <View style={styles.budgetRow}>
+            {renderFeedback()}
+            <BaseLinearProgress
+              value={getProgress(
+                getCategoryBudget?.data?.category?.budget?.used_amount,
+                getCategoryBudget?.data?.category?.budget?.amount,
+              )}
             />
-            <AmountText
-              text4
-              amount={
-                new Amount(
-                  getCategoryBudget?.data?.category?.budget?.amount,
-                  getCategoryBudget?.data?.category?.budget?.currency,
-                )
-              }
-              style={{ color: theme.colors.color7 }}
-              sensitive
-            />
+            <View style={styles.usageSummary}>
+              <AmountText
+                text4
+                amount={
+                  new Amount(
+                    getCategoryBudget?.data?.category?.budget?.used_amount,
+                    getCategoryBudget?.data?.category?.budget?.currency,
+                  )
+                }
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
+              <AmountText
+                text4
+                amount={
+                  new Amount(
+                    getCategoryBudget?.data?.category?.budget?.amount,
+                    getCategoryBudget?.data?.category?.budget?.currency,
+                  )
+                }
+                style={{ color: theme.colors.color7 }}
+                sensitive
+              />
+            </View>
           </View>
-        </View>
+        )}
       </>
     );
   };

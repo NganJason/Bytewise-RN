@@ -90,3 +90,13 @@ export const METRIC_TYPES = {
   [METRIC_TYPE_NET_WORTH]: 'Net worth',
   [METRIC_TYPE_SAVINGS]: 'Savings',
 };
+
+export const METRIC_DEBT_RATIO = 1;
+export const METRIC_SAVING_RATIO = 2;
+export const METRIC_INVESTMENT_RATIO = 3;
+
+export const METRICS = {
+  [METRIC_DEBT_RATIO]: 'Debt Ratio',
+  [METRIC_SAVING_RATIO]: 'Savings Ratio',
+  [METRIC_INVESTMENT_RATIO]: 'Investment Ratio',
+};

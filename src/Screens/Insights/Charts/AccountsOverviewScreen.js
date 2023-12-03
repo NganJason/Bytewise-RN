@@ -1,6 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@rneui/themed';
-import { StyleSheet } from 'react-native';
 import {
   AmountText,
   BaseScreenV2,
@@ -20,8 +18,6 @@ import ROUTES from '../../../_shared/constant/routes';
 import { useState } from 'react';
 
 const AccountsOverviewScreen = ({ route }) => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
   const navigation = useNavigation();
   const { type = EQUITY_TYPE_ASSET } = route?.params || {};
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -41,9 +37,11 @@ const AccountsOverviewScreen = ({ route }) => {
     } else {
       acc = getSortedDebtAccounts();
     }
+
     return acc.map(d => {
       d.name = d.account_name;
       d.value = Math.abs(Number(d.balance));
+      d.currency = d.currency;
       d.onRowPress = () => onAccountPress(d);
       return d;
     });
@@ -108,6 +106,4 @@ const AccountsOverviewScreen = ({ route }) => {
   );
 };
 
-const getStyles = theme => StyleSheet.create({});
-
-export { AccountsOverviewScreen };
+export default AccountsOverviewScreen;

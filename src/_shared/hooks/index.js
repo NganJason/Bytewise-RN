@@ -10,6 +10,8 @@ import useConnection from './useConnection';
 import useTransactionGroups from './useTransactionGroups';
 import useInitApp from './useInitApp';
 import useGetCurrencyMap from './useGetCurrencyMap';
+import useNetWorthGraph from './useNetWorthGraph';
+import useSpendingGraph from './useSpendingGraph';
 
 export {
   useAccounts,
@@ -24,4 +26,6 @@ export {
   useTransactionGroups,
   useInitApp,
   useGetCurrencyMap,
+  useNetWorthGraph,
+  useSpendingGraph,
 };

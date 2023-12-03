@@ -73,6 +73,7 @@ import {
   DeleteSaveButton,
   HoldingSearchResult,
   PieChartWithBreakdown,
+  LineChartWithGranularity,
 } from './Common';
 
 export {
@@ -133,6 +134,7 @@ export {
   BaseHorizontalScrollView,
   HoldingSearchResult,
   PieChartWithBreakdown,
+  LineChartWithGranularity,
   BaseScreenV2,
   BaseLineChart,
 };
