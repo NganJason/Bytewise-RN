@@ -59,6 +59,8 @@ import {
 } from './transaction';
 import { checkIsUserNew } from './user';
 import { getColors } from './color';
+import { getLowestHighestValIdx } from './array';
+import { isMetricHealthy } from './metric';
 
 export {
   getEquityType,
@@ -114,4 +116,6 @@ export {
   groupTransactionGroupsByDateStr,
   checkIsUserNew,
   getColors,
+  getLowestHighestValIdx,
+  isMetricHealthy,
 };

@@ -2,15 +2,13 @@ import { useTheme } from '@rneui/themed';
 import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { BaseGrid, BaseText, IconButton } from '../../Components';
+import { BaseGrid, BaseText, Dot, IconButton } from '../../Components';
 import { BaseChip } from '../../Components/View';
 import { METRICS } from '../../_shared/apis/enum';
-import {
-  metricHealthyThreshold,
-  metricMessage,
-} from '../../_shared/constant/message';
+import { metricMessage } from '../../_shared/constant/message';
 import { BottomToastContext } from '../../_shared/context';
 import { useDimension } from '../../_shared/hooks';
+import { isMetricHealthy } from '../../_shared/util';
 
 export const Title = ({ children, customIcon = null, onPress = null }) => {
   const { theme } = useTheme();
@@ -57,13 +55,23 @@ export const Metrics = ({ items = [] }) => {
   const { screenHeight } = useDimension();
 
   const renderMetric = item => {
-    const { id = 0, value = '', unit = '%' } = item;
+    const { id = 0, value = '', unit = '%', status = 0 } = item;
     return (
       <View style={styles.metric}>
         <BaseText text2 color={theme.colors.color6}>
           {value + ' ' + unit}
         </BaseText>
         <View style={styles.metricName}>
+          <Dot
+            radius={6}
+            marginRight={2}
+            marginTop={4}
+            color={
+              isMetricHealthy(status)
+                ? theme.colors.color1
+                : theme.colors.brightRed
+            }
+          />
           <BaseText text6 center color={theme.colors.color8}>
             {METRICS[id]}
           </BaseText>
@@ -73,19 +81,17 @@ export const Metrics = ({ items = [] }) => {
   };
 
   const renderMetricDesc = item => {
-    const isHealthy = () => {
-      return metricHealthyThreshold[item.id](item.value);
-    };
+    const { id = 0, threshold = '', status = 0 } = item;
 
     return (
       <View style={{ minHeight: screenHeight * 0.2 }}>
         <BaseText h3 margin={{ bottom: 10 }}>
-          {METRICS[item.id]}
+          {METRICS[id]}
         </BaseText>
-        <BaseChip type={isHealthy() ? 'primary' : 'secondary'}>
-          {isHealthy() ? 'Healthy' : 'Unhealthy'}
+        <BaseChip type={isMetricHealthy(status) ? 'primary' : 'secondary'}>
+          {isMetricHealthy(status) ? 'Healthy' : 'Unhealthy'}
         </BaseChip>
-        <BaseText>{metricMessage[item.id]}</BaseText>
+        <BaseText>{metricMessage[id](threshold)}</BaseText>
       </View>
     );
   };
@@ -112,6 +118,8 @@ const getStyles = _ =>
       alignItems: 'center',
     },
     metricName: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
       width: 80,
     },
   });

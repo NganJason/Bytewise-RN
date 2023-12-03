@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import EmptyContent from '../../Components/Common/EmptyContent';
 import {
   TRANSACTION_TYPE_EXPENSE,
@@ -6,7 +6,6 @@ import {
 } from '../apis/enum';
 import { EmptyContentConfig } from '../constant/constant';
 import ROUTES from '../constant/routes';
-import { UserMetaContext } from '../context/UserMetaContext';
 import { Amount } from '../object';
 import {
   useGetAccounts,
@@ -29,8 +28,6 @@ const useTransactionGroups = (
   accountID = '',
   categoryIDs = [],
 ) => {
-  const { getUserBaseCurrency } = useContext(UserMetaContext);
-
   const [timeRange, setTimeRange] = useState(
     getUnixRangeOfMonth(getYear(activeDate), getMonth(activeDate)),
   );
@@ -152,7 +149,7 @@ const useTransactionGroups = (
       groupTransactionGroupsByDateStr(transactionGroups);
 
     let sum = 0;
-    let currency = getUserBaseCurrency();
+    let currency = '';
     for (let dateStr of Object.keys(dateStrToTransactionGroup)) {
       let group = dateStrToTransactionGroup[dateStr];
       if (transactionType === TRANSACTION_TYPE_EXPENSE) {
@@ -160,7 +157,7 @@ const useTransactionGroups = (
       } else {
         sum += Number(group?.total_income || 0);
       }
-      currency = group?.currency || getUserBaseCurrency();
+      currency = group?.currency || '';
     }
     return new Amount(sum, currency);
   };

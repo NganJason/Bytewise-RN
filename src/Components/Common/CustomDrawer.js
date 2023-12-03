@@ -25,7 +25,9 @@ const CustomDrawer = () => {
     if (item.onPress) {
       item.onPress(item);
     } else if (item.route) {
-      navigation.navigate(item.route);
+      setTimeout(() => {
+        navigation.navigate(item.route);
+      }, 200);
     }
     navigation.dispatch(DrawerActions.closeDrawer());
   };

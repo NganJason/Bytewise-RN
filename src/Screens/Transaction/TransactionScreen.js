@@ -25,11 +25,7 @@ import {
   TRANSACTION_TYPE_INCOME,
   TRANSACTION_TYPES,
 } from '../../_shared/apis/enum';
-import {
-  useError,
-  useTransactionGroups,
-  useDimension,
-} from '../../_shared/hooks';
+import { useError, useTransactionGroups } from '../../_shared/hooks';
 import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
@@ -40,9 +36,7 @@ const TransactionScreen = ({ navigation }) => {
 
   const [isCalendarActive, setIsCalendarActive] = useState(false);
 
-  const [disableScroll, setDisableScroll] = useState(false);
-
-  const { screenWidth, screenHeight } = useDimension();
+  const [disableScroll] = useState(false);
 
   const [activeDate, setActiveDate] = useState(TODAY);
   const {

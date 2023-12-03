@@ -74,6 +74,7 @@ import {
   HoldingSearchResult,
   PieChartWithBreakdown,
   LineChartWithGranularity,
+  Dot,
 } from './Common';
 
 export {
@@ -135,6 +136,7 @@ export {
   HoldingSearchResult,
   PieChartWithBreakdown,
   LineChartWithGranularity,
+  Dot,
   BaseScreenV2,
   BaseLineChart,
 };

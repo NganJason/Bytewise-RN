@@ -100,3 +100,11 @@ export const METRICS = {
   [METRIC_SAVING_RATIO]: 'Savings Ratio',
   [METRIC_INVESTMENT_RATIO]: 'Investment Ratio',
 };
+
+export const METRIC_STATUS_HEALTHY = 0;
+export const METRIC_STATUS_UNHEALTHY = 1;
+
+export const METRIC_STATUS = {
+  [METRIC_STATUS_HEALTHY]: 'Healthy',
+  [METRIC_STATUS_UNHEALTHY]: 'Unhealthy',
+};

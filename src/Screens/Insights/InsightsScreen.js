@@ -43,11 +43,11 @@ const InsightsScreen = () => {
   const renderHeader = () => {
     switch (tabs[activeTabIdx].name) {
       case netWorth:
-        return <NetWorthGraph height={screenHeight * 0.15} />;
+        return <NetWorthGraph height={screenHeight * 0.16} />;
       case savings:
-        return <SpendingGraph height={screenHeight * 0.15} />;
+        return <SpendingGraph height={screenHeight * 0.16} />;
       default:
-        return <SpendingGraph height={screenHeight * 0.15} />;
+        return <SpendingGraph height={screenHeight * 0.16} />;
     }
   };
 

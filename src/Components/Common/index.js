@@ -16,6 +16,7 @@ import DeleteSaveButton from './DeleteSaveButton';
 import HoldingSearchResult from './HoldingSearchResult';
 import PieChartWithBreakdown from './PieChartWithBreakdown';
 import LineChartWithGranularity from './LineChartWithGranularity';
+import Dot from './Dot';
 
 export {
   DailyTransactions,
@@ -38,4 +39,5 @@ export {
   HoldingSearchResult,
   PieChartWithBreakdown,
   LineChartWithGranularity,
+  Dot,
 };
