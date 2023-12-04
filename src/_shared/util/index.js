@@ -44,6 +44,7 @@ import {
   getCurrDatePercentage,
   getMonthPercentage,
   getFirstDayOfMonthFormatted,
+  getFormattedYearMonth,
 } from './date';
 import { getTotalInvestmentCost, getStockUpdateTime } from './investment';
 import { capitalize, capitalizeFirstWord } from './string';
@@ -102,6 +103,7 @@ export {
   getCurrDatePercentage,
   getMonthPercentage,
   getFirstDayOfMonthFormatted,
+  getFormattedYearMonth,
   getTotalInvestmentCost,
   getStockUpdateTime,
   capitalize,

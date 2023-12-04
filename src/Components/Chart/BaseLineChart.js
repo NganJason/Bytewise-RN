@@ -17,7 +17,7 @@ const BaseLineChart = ({
   chartHeight = 0,
   hideDataPoints = true,
   withPointer = true,
-  showLowestHighest = true,
+  showMinMax = false,
 } = {}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -74,22 +74,39 @@ const BaseLineChart = ({
       });
     }
 
-    if (showLowestHighest) {
+    if (showMinMax) {
       let [minIdx, maxIdx] = getLowestHighestValIdx(items.map(d => d.value));
-
       // if equal, we ignore
       if (minIdx !== maxIdx) {
         items[minIdx].hideDataPoint = false;
-        items[minIdx].dataPointText = 'min';
-        items[minIdx].textShiftY = 15;
+        items[minIdx].dataPointText = items[minIdx].rawValue;
+        items[minIdx].textShiftY = 16;
+        items[minIdx].textShiftX = getTextShiftX(
+          minIdx,
+          items[minIdx].rawValue,
+        );
 
         items[maxIdx].hideDataPoint = false;
-        items[maxIdx].dataPointText = 'max';
-        items[maxIdx].textShiftY = -5;
+        items[maxIdx].dataPointText = items[maxIdx].rawValue;
+        items[maxIdx].textShiftY = -6;
+        items[maxIdx].textShiftX = getTextShiftX(
+          maxIdx,
+          items[maxIdx].rawValue,
+        );
       }
     }
 
     return items;
+  };
+
+  const getTextShiftX = (idx, text = '') => {
+    if (idx === 0) {
+      return 5 * text.length;
+    }
+    if (idx === data.length - 1) {
+      return -5 * text.length;
+    }
+    return 0;
   };
 
   const isDataEmpty = () => {
@@ -100,7 +117,6 @@ const BaseLineChart = ({
     <View
       style={{
         ...styles.container,
-        height: chartHeight,
       }}
       onTouchStart={() => {
         setTouched(true);
@@ -114,45 +130,43 @@ const BaseLineChart = ({
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
       }}>
-      <View style={{ height: chartHeight }}>
-        {isDataEmpty() ? (
-          <EmptyContent enableImage={false} />
-        ) : (
-          <>
-            <LineChart
-              data={processData(scaleDataToRange())}
-              isAnimated
-              adjustToWidth
-              dataPointsColor={theme.colors.color1}
-              noOfSections={NUM_OF_SECTIONS}
-              noOfSectionsBelowXAxis={NUM_OF_SECTIONS}
-              stepValue={UPPER_LIMIT / NUM_OF_SECTIONS}
-              stepHeight={(chartHeight * 0.95) / (NUM_OF_SECTIONS * 2 + 1)}
-              initialSpacing={10}
-              endSpacing={0}
-              maxValue={UPPER_LIMIT + 30}
-              mostNegativeValue={LOWER_LIMIT - 50}
-              color={theme.colors.color1}
-              thickness={2.5}
-              hideYAxisText
-              spacing={getSpacing()}
-              yAxisThickness={0}
-              xAxisThickness={0}
-              hideRules
-              disableScroll
-              pointerConfig={{
-                showPointerStrip: false,
-                pointerComponent: LineChartPointer,
-                pointerLabelComponent: item => {
-                  const { rawValue, ...fields } = item[0];
-                  handleActiveData({ ...fields, value: rawValue });
-                  return null;
-                },
-              }}
-            />
-          </>
-        )}
-      </View>
+      {isDataEmpty() ? (
+        <EmptyContent enableImage={false} />
+      ) : (
+        <>
+          <LineChart
+            data={processData(scaleDataToRange())}
+            isAnimated
+            adjustToWidth
+            dataPointsColor={theme.colors.color1}
+            noOfSections={NUM_OF_SECTIONS}
+            noOfSectionsBelowXAxis={NUM_OF_SECTIONS}
+            stepValue={UPPER_LIMIT / NUM_OF_SECTIONS}
+            stepHeight={chartHeight / (NUM_OF_SECTIONS * 2 + 1)}
+            initialSpacing={10}
+            endSpacing={0}
+            maxValue={UPPER_LIMIT + 30}
+            mostNegativeValue={LOWER_LIMIT - 50}
+            color={theme.colors.color1}
+            thickness={2.5}
+            hideYAxisText
+            spacing={getSpacing()}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            hideRules
+            disableScroll
+            pointerConfig={{
+              showPointerStrip: false,
+              pointerComponent: LineChartPointer,
+              pointerLabelComponent: item => {
+                const { rawValue, ...fields } = item[0];
+                handleActiveData({ ...fields, value: rawValue });
+                return null;
+              },
+            }}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -176,6 +190,7 @@ const getStyles = theme => {
     },
     container: {
       width: '100%',
+      paddingVertical: 10,
     },
   });
 };

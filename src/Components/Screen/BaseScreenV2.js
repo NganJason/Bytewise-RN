@@ -16,6 +16,7 @@ import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 import { BaseToast, BaseLoadableViewV2 } from '../View';
 import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon, HideInfoIcon } from '../Common';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const STANDARD_PADDING = 25;
 
@@ -28,8 +29,9 @@ const HideKeyboard = ({ children }) => (
 const BaseScreenV2 = ({
   children,
   isLoading = false,
-  subHeader = null,
   disableScroll = false,
+  subHeader = null,
+  enableSubHeaderScroll = false,
   headerProps: {
     leftComponent = null,
     rightComponent = null,
@@ -166,80 +168,95 @@ const BaseScreenV2 = ({
   bottomSheetModalRef.current?.present();
 
   return (
-    <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
-      {renderHeader()}
-      <HideKeyboard>
-        <>
-          {subHeader !== null && (
-            <View style={styles.subHeader}>{subHeader}</View>
-          )}
-          <View
-            style={[
-              styles.body,
-              (renderHeader() !== null || subHeader !== null) &&
-                styles.bodyShadow,
-            ]}>
-            <BaseLoadableViewV2 isLoading={isLoading}>
-              <KeyboardAwareScrollView
-                // to solve keyboard jump problem
-                // https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/418
-                keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
-                scrollEnabled={!disableScroll}
-                extraScrollHeight={20}
-                contentContainerStyle={styles.scrollView}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}>
-                {children}
-              </KeyboardAwareScrollView>
-            </BaseLoadableViewV2>
-            {showBottomSheetModel && (
-              <BottomSheetModalProvider>
-                <BottomSheetModal
-                  backgroundStyle={styles.bottomSheetModal}
-                  handleStyle={styles.bottomSheetModalHandler}
-                  enablePanDownToClose={false}
-                  ref={bottomSheetModalRef}
-                  index={0}
-                  snapPoints={snapPoints}>
-                  <View
-                    style={{
-                      ...styles.subHeader,
-                      backgroundColor: theme.colors.white,
-                    }}>
-                    {bottomSheetModalHeader}
-                  </View>
-                  <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
-                    <KeyboardAwareScrollView
-                      contentContainerStyle={{
-                        ...styles.scrollView,
-                        ...styles.body,
-                        ...styles.bottomSheetModalBody,
-                      }}
-                      showsHorizontalScrollIndicator={false}
-                      showsVerticalScrollIndicator={false}>
-                      {bottomSheetModalBody}
-                    </KeyboardAwareScrollView>
-                  </BaseLoadableViewV2>
-                </BottomSheetModal>
-              </BottomSheetModalProvider>
+    <LinearGradient
+      colors={[theme.colors.color4, 'white']}
+      style={styles.linearGradient}>
+      <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
+        {renderHeader()}
+        <HideKeyboard>
+          <ScrollViewWrapper disableScroll={!enableSubHeaderScroll}>
+            {subHeader !== null && (
+              <View style={styles.subHeader}>{subHeader}</View>
             )}
-          </View>
-          {showFab && (
-            <FAB
-              color={fabColor === '' ? theme.colors.color1 : fabColor}
-              placement={placement}
-              size={'medium'}
-              onPress={onFabPress}
-              style={styles.fab}
-              icon={
-                <Icon name="plus" type="entypo" color={theme.colors.white} />
-              }
-            />
-          )}
-        </>
-      </HideKeyboard>
-      <BaseToast />
-    </View>
+            <View
+              style={[
+                styles.body,
+                (renderHeader() !== null || subHeader !== null) &&
+                  styles.bodyShadow,
+              ]}>
+              <BaseLoadableViewV2 isLoading={isLoading}>
+                <ScrollViewWrapper
+                  disableScroll={enableSubHeaderScroll || disableScroll}>
+                  {children}
+                </ScrollViewWrapper>
+              </BaseLoadableViewV2>
+              {showBottomSheetModel && (
+                <BottomSheetModalProvider>
+                  <BottomSheetModal
+                    backgroundStyle={styles.bottomSheetModal}
+                    handleStyle={styles.bottomSheetModalHandler}
+                    enablePanDownToClose={false}
+                    ref={bottomSheetModalRef}
+                    index={0}
+                    snapPoints={snapPoints}>
+                    <View
+                      style={{
+                        ...styles.subHeader,
+                        backgroundColor: theme.colors.white,
+                      }}>
+                      {bottomSheetModalHeader}
+                    </View>
+                    <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
+                      <KeyboardAwareScrollView
+                        contentContainerStyle={{
+                          ...styles.scrollView,
+                          ...styles.body,
+                          ...styles.bottomSheetModalBody,
+                        }}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}>
+                        {bottomSheetModalBody}
+                      </KeyboardAwareScrollView>
+                    </BaseLoadableViewV2>
+                  </BottomSheetModal>
+                </BottomSheetModalProvider>
+              )}
+            </View>
+            {showFab && (
+              <FAB
+                color={fabColor === '' ? theme.colors.color1 : fabColor}
+                placement={placement}
+                size={'medium'}
+                onPress={onFabPress}
+                style={styles.fab}
+                icon={
+                  <Icon name="plus" type="entypo" color={theme.colors.white} />
+                }
+              />
+            )}
+          </ScrollViewWrapper>
+        </HideKeyboard>
+        <BaseToast />
+      </View>
+    </LinearGradient>
+  );
+};
+
+const ScrollViewWrapper = ({ disableScroll = true, children }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+  return (
+    <KeyboardAwareScrollView
+      // to solve keyboard jump problem
+      // https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/418
+      keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
+      scrollEnabled={!disableScroll}
+      extraScrollHeight={20}
+      contentContainerStyle={styles.scrollView}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}>
+      {children}
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -252,6 +269,9 @@ const getStyles = (
   } = {},
 ) =>
   StyleSheet.create({
+    linearGradient: {
+      flex: 1,
+    },
     screen: {
       flex: 1,
     },
