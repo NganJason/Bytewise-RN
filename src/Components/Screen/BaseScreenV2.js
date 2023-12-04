@@ -66,7 +66,7 @@ const BaseScreenV2 = ({
   });
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['10%', '40%', '70%', '100%'], []);
+  const snapPoints = useMemo(() => ['10%', '40%', '70%', '90%'], []);
 
   useEffect(() => {
     bottomSheetModalRef?.current?.present();
@@ -166,7 +166,6 @@ const BaseScreenV2 = ({
   };
 
   bottomSheetModalRef.current?.present();
-
   return (
     <LinearGradient
       colors={[theme.colors.color4, 'white']}
@@ -245,12 +244,14 @@ const BaseScreenV2 = ({
 const ScrollViewWrapper = ({ disableScroll = true, children }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  if (disableScroll) {
+    return <View style={styles.scrollView}>{children}</View>;
+  }
   return (
     <KeyboardAwareScrollView
       // to solve keyboard jump problem
       // https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/418
       keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
-      scrollEnabled={!disableScroll}
       extraScrollHeight={20}
       contentContainerStyle={styles.scrollView}
       showsHorizontalScrollIndicator={false}
