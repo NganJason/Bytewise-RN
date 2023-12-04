@@ -16,8 +16,11 @@ const LineChartWithGranularity = ({
   ...props
 }) => {
   return (
-    <View style={{ height: chartHeight * 1.2 }}>
-      <View style={{ height: chartHeight }}>
+    <View>
+      <View
+        style={{
+          height: chartHeight * 1.2,
+        }}>
         <BaseLoadableViewV2 isLoading={isDataLoading}>
           <BaseLineChart
             data={data}

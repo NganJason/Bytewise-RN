@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 import { useContext } from 'react';
 import {
@@ -14,123 +13,14 @@ import ROUTES from '../../_shared/constant/routes';
 import { UserMetaContext } from '../../_shared/context';
 import { useGetMetrics } from '../../_shared/query';
 import {
-  parseDateStringWithoutDelim,
-  getYearMonthString,
-} from '../../_shared/util';
-import {
   AmountText,
   BaseHoriScrollableItems,
   BaseLoadableView,
   BaseText,
-  LineChartWithGranularity,
 } from '../../Components';
 import { Amount } from '../../_shared/object';
 import { Metrics, Title } from './common';
-import { useAccounts, useError, useNetWorthGraph } from '../../_shared/hooks';
-
-const threeM = '3M';
-const sixM = '6M';
-const oneY = '1Y';
-const granularities = [
-  { name: threeM, val: 3 },
-  { name: sixM, val: 6 },
-  { name: oneY, val: 12 },
-];
-
-const NetWorthGraph = ({ height = 0 }) => {
-  const { theme } = useTheme();
-  const styles = getStyles(theme);
-  const {
-    changeGranularity,
-    granularityIdx,
-    getSummaryData,
-    getCurrDataPoint,
-    setCurrDataPoint,
-    resetCurrDataPoint,
-    getErrors,
-    isLoading,
-  } = useNetWorthGraph(granularities, 1);
-  const {
-    sum = 0,
-    currency = '',
-    date = '',
-    percent_change: percent = null,
-    absolute_change: absChange = 0,
-  } = getCurrDataPoint();
-
-  const renderPercentChange = () => {
-    let color;
-    let text;
-
-    if (percent === null) {
-      text = '(N/A)';
-    } else {
-      let val = Number(Math.abs(percent) || 0).toFixed(2);
-      text = `(${val}%)`;
-    }
-
-    if (Number(absChange) === 0) {
-      color = theme.colors.color7;
-    } else if (Number(absChange) > 0) {
-      color = theme.colors.color1;
-    } else {
-      color = theme.colors.regularRed;
-    }
-
-    return (
-      <View style={styles.percentChange}>
-        <AmountText
-          text5
-          color={color}
-          amount={new Amount(absChange, currency)}
-          showSign
-        />
-        <BaseText text5 color={color} margin={{ horizontal: 4 }}>
-          {text}
-        </BaseText>
-      </View>
-    );
-  };
-
-  useError(getErrors());
-
-  return (
-    <View>
-      <AmountText
-        h1
-        sensitive
-        showNegativeOnly
-        amount={new Amount(sum, currency)}
-        margin={{ top: 10 }}
-        color={theme.colors.color6}
-      />
-
-      <View>
-        {renderPercentChange()}
-        <BaseText text5 color={theme.colors.color7}>
-          {getYearMonthString(parseDateStringWithoutDelim(date))}
-        </BaseText>
-      </View>
-
-      <LineChartWithGranularity
-        chartHeight={height}
-        onTouchEnd={() => {
-          setTimeout(() => {
-            resetCurrDataPoint();
-          }, 200);
-        }}
-        handleActiveData={e => {
-          setCurrDataPoint(e);
-        }}
-        data={getSummaryData()}
-        granularities={granularities}
-        onGranularityChange={changeGranularity}
-        granularityIdx={granularityIdx}
-        isDataLoading={isLoading}
-      />
-    </View>
-  );
-};
+import { useAccounts, useError } from '../../_shared/hooks';
 
 const NetWorthInsight = () => {
   const navigation = useNavigation();
@@ -247,12 +137,4 @@ const AccountItem = ({ account = {} }) => {
   );
 };
 
-const getStyles = _ =>
-  StyleSheet.create({
-    percentChange: {
-      flexDirection: 'row',
-      marginVertical: 5,
-    },
-  });
-
-export { NetWorthGraph, NetWorthInsight };
+export { NetWorthInsight };

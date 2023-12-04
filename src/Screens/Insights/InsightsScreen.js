@@ -1,9 +1,14 @@
 import { StyleSheet, View } from 'react-native';
 import { BaseScreenV2, BaseScrollableTab } from '../../Components';
-import { NetWorthInsight, NetWorthGraph } from './NetWorthInsight';
-import { SpendingInsight, SpendingGraph } from './SpendingInsight';
+import { NetWorthInsight } from './NetWorthInsight';
+import { SpendingInsight } from './SpendingInsight';
 import { useState } from 'react';
-import { useDimension } from '../../_shared/hooks';
+import {
+  useDimension,
+  useNetWorthGraph,
+  useSpendingGraph,
+} from '../../_shared/hooks';
+import { Graph } from './common';
 
 const netWorth = 'Net Worth';
 const savings = 'Savings';
@@ -22,6 +27,7 @@ const tabs = [
 ];
 const InsightsScreen = () => {
   const [activeTabIdx, setActiveTabIdx] = useState(0);
+  const [disableScroll, setDisableScroll] = useState(false);
   const { screenHeight } = useDimension();
   const styles = getStyles();
 
@@ -41,14 +47,25 @@ const InsightsScreen = () => {
   };
 
   const renderHeader = () => {
+    let useGraph;
     switch (tabs[activeTabIdx].name) {
       case netWorth:
-        return <NetWorthGraph height={screenHeight * 0.16} />;
+        useGraph = useNetWorthGraph;
+        break;
       case savings:
-        return <SpendingGraph height={screenHeight * 0.16} />;
+        useGraph = useSpendingGraph;
+        break;
       default:
-        return <SpendingGraph height={screenHeight * 0.16} />;
+        useGraph = useSpendingGraph;
+        break;
     }
+    return (
+      <Graph
+        height={screenHeight * 0.16}
+        setDisableScroll={setDisableScroll}
+        useGraph={useGraph}
+      />
+    );
   };
 
   return (
@@ -56,6 +73,8 @@ const InsightsScreen = () => {
       hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       headerProps={{ headerStyle: styles.header }}
+      enableSubHeaderScroll={!disableScroll}
+      disableScroll={disableScroll}
       subHeader={
         <View style={{ minHeight: screenHeight * 0.31 }}>
           <BaseScrollableTab

@@ -88,12 +88,16 @@ const AccountSelectionScreen = ({ route }) => {
         ),
       }}>
       <View>
-        <BaseText h3>Assets</BaseText>
+        <BaseText h3 margin={{ top: 22, bottom: 8 }}>
+          Assets
+        </BaseText>
         {renderContent(EQUITY_TYPE_ASSET)}
       </View>
 
       <View>
-        <BaseText h3>Debts</BaseText>
+        <BaseText h3 margin={{ top: 22, bottom: 8 }}>
+          Debts
+        </BaseText>
         {renderContent(EQUITY_TYPE_DEBT)}
       </View>
     </BaseScreen>

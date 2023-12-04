@@ -37,6 +37,12 @@ const useSpendingGraph = (granularities = [], defaultGranularity = 0) => {
     return data.map((d, idx) => ({ ...d, value: d.sum, index: idx }));
   };
 
+  const getChange = () => {
+    const lastDataPoint = data[data.length - 1] || {};
+    const { absolute_change = '0', percent_change = null } = lastDataPoint;
+    return [absolute_change, percent_change];
+  };
+
   const getErrors = () => {
     return [useGetTransactionsSummary];
   };
@@ -48,6 +54,7 @@ const useSpendingGraph = (granularities = [], defaultGranularity = 0) => {
     getCurrDataPoint,
     setCurrDataPoint,
     resetCurrDataPoint,
+    getChange,
     getErrors,
     isLoading: getTransactionsSummary.isLoading,
   };

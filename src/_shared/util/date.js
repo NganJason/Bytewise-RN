@@ -103,6 +103,13 @@ export const getYearMonthString = (d = new Date()) => {
   return `${year}-${formattedMonth}`;
 };
 
+// 2023 Nov
+export const getFormattedYearMonth = (d = new Date()) => {
+  const options = { year: 'numeric', month: 'short' };
+  const formattedDate = d.toLocaleDateString('en-US', options);
+  return formattedDate;
+};
+
 export const getYearString = (d = new Date()) => {
   return String(d.getFullYear());
 };
