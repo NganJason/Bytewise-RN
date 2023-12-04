@@ -15,3 +15,4 @@ export const savingsIntro = require('../../../assets/images/savings.png');
 export const budgetIntro = require('../../../assets/images/budget.png');
 export const expensesIntro = require('../../../assets/images/expenses.png');
 export const metricsIntro = require('../../../assets/images/metrics.png');
+export const baseScreenGradient = require('../../../assets/images/base_screen_gradient.png');

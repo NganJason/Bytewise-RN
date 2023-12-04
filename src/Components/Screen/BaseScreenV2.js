@@ -4,6 +4,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   View,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -16,7 +17,7 @@ import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 import { BaseToast, BaseLoadableViewV2 } from '../View';
 import { useDimension } from '../../_shared/hooks';
 import { BackIcon, DrawerIcon, HideInfoIcon } from '../Common';
-import { LinearGradient } from 'expo-linear-gradient';
+import { baseScreenGradient } from '../../_shared/constant/asset';
 
 const STANDARD_PADDING = 25;
 
@@ -167,77 +168,78 @@ const BaseScreenV2 = ({
 
   bottomSheetModalRef.current?.present();
   return (
-    <LinearGradient
-      colors={[theme.colors.color4, 'white']}
-      style={styles.linearGradient}>
-      <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
-        {renderHeader()}
-        <HideKeyboard>
-          <ScrollViewWrapper disableScroll={!enableSubHeaderScroll}>
-            {subHeader !== null && (
-              <View style={styles.subHeader}>{subHeader}</View>
+    <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
+      {enableSubHeaderScroll && (
+        // create background gradient to prevent white space during scroll
+        <Image source={baseScreenGradient} style={styles.backgroundImage} />
+      )}
+
+      {renderHeader()}
+      <HideKeyboard>
+        <ScrollViewWrapper disableScroll={!enableSubHeaderScroll}>
+          {subHeader !== null && (
+            <View style={styles.subHeader}>{subHeader}</View>
+          )}
+          <View
+            style={[
+              styles.body,
+              (renderHeader() !== null || subHeader !== null) &&
+                styles.bodyShadow,
+            ]}>
+            <BaseLoadableViewV2 isLoading={isLoading}>
+              <ScrollViewWrapper
+                disableScroll={enableSubHeaderScroll || disableScroll}>
+                {children}
+              </ScrollViewWrapper>
+            </BaseLoadableViewV2>
+            {showBottomSheetModel && (
+              <BottomSheetModalProvider>
+                <BottomSheetModal
+                  backgroundStyle={styles.bottomSheetModal}
+                  handleStyle={styles.bottomSheetModalHandler}
+                  enablePanDownToClose={false}
+                  ref={bottomSheetModalRef}
+                  index={0}
+                  snapPoints={snapPoints}>
+                  <View
+                    style={{
+                      ...styles.subHeader,
+                      backgroundColor: theme.colors.white,
+                    }}>
+                    {bottomSheetModalHeader}
+                  </View>
+                  <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
+                    <KeyboardAwareScrollView
+                      contentContainerStyle={{
+                        ...styles.scrollView,
+                        ...styles.body,
+                        ...styles.bottomSheetModalBody,
+                      }}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}>
+                      {bottomSheetModalBody}
+                    </KeyboardAwareScrollView>
+                  </BaseLoadableViewV2>
+                </BottomSheetModal>
+              </BottomSheetModalProvider>
             )}
-            <View
-              style={[
-                styles.body,
-                (renderHeader() !== null || subHeader !== null) &&
-                  styles.bodyShadow,
-              ]}>
-              <BaseLoadableViewV2 isLoading={isLoading}>
-                <ScrollViewWrapper
-                  disableScroll={enableSubHeaderScroll || disableScroll}>
-                  {children}
-                </ScrollViewWrapper>
-              </BaseLoadableViewV2>
-              {showBottomSheetModel && (
-                <BottomSheetModalProvider>
-                  <BottomSheetModal
-                    backgroundStyle={styles.bottomSheetModal}
-                    handleStyle={styles.bottomSheetModalHandler}
-                    enablePanDownToClose={false}
-                    ref={bottomSheetModalRef}
-                    index={0}
-                    snapPoints={snapPoints}>
-                    <View
-                      style={{
-                        ...styles.subHeader,
-                        backgroundColor: theme.colors.white,
-                      }}>
-                      {bottomSheetModalHeader}
-                    </View>
-                    <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
-                      <KeyboardAwareScrollView
-                        contentContainerStyle={{
-                          ...styles.scrollView,
-                          ...styles.body,
-                          ...styles.bottomSheetModalBody,
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}>
-                        {bottomSheetModalBody}
-                      </KeyboardAwareScrollView>
-                    </BaseLoadableViewV2>
-                  </BottomSheetModal>
-                </BottomSheetModalProvider>
-              )}
-            </View>
-            {showFab && (
-              <FAB
-                color={fabColor === '' ? theme.colors.color1 : fabColor}
-                placement={placement}
-                size={'medium'}
-                onPress={onFabPress}
-                style={styles.fab}
-                icon={
-                  <Icon name="plus" type="entypo" color={theme.colors.white} />
-                }
-              />
-            )}
-          </ScrollViewWrapper>
-        </HideKeyboard>
-        <BaseToast />
-      </View>
-    </LinearGradient>
+          </View>
+          {showFab && (
+            <FAB
+              color={fabColor === '' ? theme.colors.color1 : fabColor}
+              placement={placement}
+              size={'medium'}
+              onPress={onFabPress}
+              style={styles.fab}
+              icon={
+                <Icon name="plus" type="entypo" color={theme.colors.white} />
+              }
+            />
+          )}
+        </ScrollViewWrapper>
+      </HideKeyboard>
+      <BaseToast />
+    </View>
   );
 };
 
@@ -272,6 +274,13 @@ const getStyles = (
   StyleSheet.create({
     linearGradient: {
       flex: 1,
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover', // or 'stretch' or 'contain'
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
     },
     screen: {
       flex: 1,
