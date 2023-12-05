@@ -76,6 +76,7 @@ const InsightsScreen = () => {
       subHeaderScrollable
       enableSubHeaderScroll={!disableScroll}
       enableLinearGradientBackground
+      enableBodyShadow={false}
       disableScroll={disableScroll}
       subHeader={
         <View style={{ minHeight: screenHeight * 0.31 }}>
