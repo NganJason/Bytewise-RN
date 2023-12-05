@@ -73,7 +73,9 @@ const InsightsScreen = () => {
       hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       headerProps={{ headerStyle: styles.header }}
+      subHeaderScrollable
       enableSubHeaderScroll={!disableScroll}
+      enableLinearGradientBackground
       disableScroll={disableScroll}
       subHeader={
         <View style={{ minHeight: screenHeight * 0.31 }}>
