@@ -32,7 +32,9 @@ const BaseScreenV2 = ({
   isLoading = false,
   disableScroll = false,
   subHeader = null,
-  enableSubHeaderScroll = false,
+  subHeaderScrollable = false, // allows subheader to be scrollable
+  enableSubHeaderScroll = false, // controls the enable/disable of subheader scroll
+  enableLinearGradientBackground = false,
   headerProps: {
     leftComponent = null,
     rightComponent = null,
@@ -56,6 +58,7 @@ const BaseScreenV2 = ({
   } = {},
 }) => {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+  const [enableHeaderShadow, setEnableHeaderShadow] = useState(false);
 
   const { theme } = useTheme();
   const screenDimension = useDimension();
@@ -157,26 +160,37 @@ const BaseScreenV2 = ({
         leftComponent={getLeftComponent()}
         centerComponent={centerComponent}
         rightComponent={getRightComponent()}
-        containerStyle={{
-          ...styles.header,
-          ...headerStyle,
-          marginTop: -insets.top, // offset safe area inset
-        }}
+        containerStyle={[
+          styles.header,
+          headerStyle,
+          { marginTop: -insets.top }, // offset safe area inset
+          enableHeaderShadow && styles.headerShadow,
+        ]}
       />
     );
+  };
+
+  const onSubheaderAtTopChange = isAtTop => {
+    if (isAtTop) {
+      setEnableHeaderShadow(false);
+    } else {
+      setEnableHeaderShadow(true);
+    }
   };
 
   bottomSheetModalRef.current?.present();
   return (
     <View style={[styles.screen, { paddingTop: Math.max(insets.top, 16) }]}>
-      {enableSubHeaderScroll && (
+      {enableLinearGradientBackground && (
         // create background gradient to prevent white space during scroll
         <Image source={baseScreenGradient} style={styles.backgroundImage} />
       )}
-
-      {renderHeader()}
+      <View>{renderHeader()}</View>
       <HideKeyboard>
-        <ScrollViewWrapper disableScroll={!enableSubHeaderScroll}>
+        <ScrollViewWrapper
+          scrollable={subHeaderScrollable}
+          disableScroll={!enableSubHeaderScroll}
+          onIsAtTopChange={onSubheaderAtTopChange}>
           {subHeader !== null && (
             <View style={styles.subHeader}>{subHeader}</View>
           )}
@@ -188,6 +202,7 @@ const BaseScreenV2 = ({
             ]}>
             <BaseLoadableViewV2 isLoading={isLoading}>
               <ScrollViewWrapper
+                scrollable={!subHeaderScrollable}
                 disableScroll={enableSubHeaderScroll || disableScroll}>
                 {children}
               </ScrollViewWrapper>
@@ -224,6 +239,7 @@ const BaseScreenV2 = ({
               </BottomSheetModalProvider>
             )}
           </View>
+
           {showFab && (
             <FAB
               color={fabColor === '' ? theme.colors.color1 : fabColor}
@@ -243,21 +259,48 @@ const BaseScreenV2 = ({
   );
 };
 
-const ScrollViewWrapper = ({ disableScroll = true, children }) => {
+const ScrollViewWrapper = ({
+  scrollable = true,
+  disableScroll = true,
+  children,
+  onIsAtTopChange = function (isAtTop) {},
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
-  if (disableScroll) {
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    onIsAtTopChange(isAtTop);
+  }, [isAtTop]);
+
+  if (!scrollable) {
     return <View style={styles.scrollView}>{children}</View>;
   }
+
+  const handleScroll = event => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+
+    // Check if the scroll view is at the top
+    if (offsetY <= 0) {
+      setIsAtTop(true);
+    } else {
+      setIsAtTop(false);
+    }
+  };
+
   return (
     <KeyboardAwareScrollView
       // to solve keyboard jump problem
       // https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/418
       keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
       extraScrollHeight={20}
+      scrollEnabled={!disableScroll}
       contentContainerStyle={styles.scrollView}
       showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}>
+      showsVerticalScrollIndicator={false}
+      onScroll={handleScroll}
+      scrollEventThrottle={20}
+      nestedScrollEnabled>
       {children}
     </KeyboardAwareScrollView>
   );
@@ -292,6 +335,17 @@ const getStyles = (
       paddingTop: STANDARD_PADDING,
       paddingBottom: STANDARD_PADDING,
       borderBottomWidth: 0,
+    },
+    headerShadow: {
+      shadowColor: theme.colors.black,
+      shadowOffset: {
+        width: 4,
+        height: 1,
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 3,
+      elevation: 10,
+      marginBottom: 5,
     },
     headerComponent: {
       flexDirection: 'row',
