@@ -35,6 +35,7 @@ const BaseScreenV2 = ({
   subHeaderScrollable = false, // allows subheader to be scrollable
   enableSubHeaderScroll = false, // controls the enable/disable of subheader scroll
   enableLinearGradientBackground = false,
+  enableBodyShadow = true,
   headerProps: {
     leftComponent = null,
     rightComponent = null,
@@ -198,6 +199,7 @@ const BaseScreenV2 = ({
             style={[
               styles.body,
               (renderHeader() !== null || subHeader !== null) &&
+                enableBodyShadow &&
                 styles.bodyShadow,
             ]}>
             <BaseLoadableViewV2 isLoading={isLoading}>
