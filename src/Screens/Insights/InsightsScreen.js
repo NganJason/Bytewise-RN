@@ -73,21 +73,25 @@ const InsightsScreen = () => {
       hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
       headerProps={{ headerStyle: styles.header }}
-      subHeaderScrollable
-      enableSubHeaderScroll={!disableScroll}
-      enableLinearGradientBackground
-      enableBodyShadow={false}
+      bodyProps={{
+        enableLinearGradientBackground: true,
+        enableBodyShadow: false,
+      }}
       disableScroll={disableScroll}
-      subHeader={
-        <View style={{ minHeight: screenHeight * 0.31 }}>
-          <BaseScrollableTab
-            tabs={tabs}
-            activeTabIdx={activeTabIdx}
-            onTabChange={onTabChange}
-          />
-          {renderHeader()}
-        </View>
-      }
+      subHeaderProps={{
+        subHeaderScrollable: true,
+        enableSubHeaderScroll: !disableScroll,
+        subHeader: (
+          <View style={{ minHeight: screenHeight * 0.31 }}>
+            <BaseScrollableTab
+              tabs={tabs}
+              activeTabIdx={activeTabIdx}
+              onTabChange={onTabChange}
+            />
+            {renderHeader()}
+          </View>
+        ),
+      }}
       enablePadding={true}>
       {renderTabContent()}
     </BaseScreenV2>

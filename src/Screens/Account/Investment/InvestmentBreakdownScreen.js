@@ -14,10 +14,12 @@ import {
   HoldingRow,
   IconButton,
   BaseDivider,
+  BaseImage,
 } from '../../../Components';
 import { useGetAccount } from '../../../_shared/query';
 import { DEFAULT_INVESTMENT_CURRENCY } from '../../../_shared/util';
 import { Amount } from '../../../_shared/object';
+import { graph } from '../../../_shared/constant/asset';
 
 const InvestmentBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -101,12 +103,16 @@ const InvestmentBreakdownScreen = ({ route }) => {
         />
 
         <BaseText text4>Investment</BaseText>
+        <BaseImage source={graph} containerStyle={styles.image} />
       </>
     );
   };
 
   return (
     <BaseScreenV2
+      headerProps={{
+        backgroundColor: theme.colors.color4,
+      }}
       backButtonProps={{
         show: true,
       }}
@@ -118,7 +124,9 @@ const InvestmentBreakdownScreen = ({ route }) => {
             currency: currency,
           }),
       }}
-      subHeader={renderHeader()}>
+      subHeaderProps={{
+        subHeader: renderHeader(),
+      }}>
       <View style={styles.body}>
         <View style={styles.columns}>
           <View style={styles.column}>
@@ -189,6 +197,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     },
     columnText: {
       color: theme.colors.color8,
+    },
+    image: {
+      width: screenHeight * 0.2,
+      height: screenHeight * 0.18,
+      position: 'absolute',
+      right: screenWidth * -0.08,
+      bottom: 2,
+      zIndex: -1,
     },
   });
 

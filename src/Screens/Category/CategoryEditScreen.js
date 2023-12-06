@@ -80,13 +80,15 @@ const CategoryEditScreen = ({ route }) => {
     <BaseScreenV2
       isLoading={getCategoriesQuery.isLoading}
       backButtonProps={{ show: true }}
-      subHeader={
-        <BaseScrollableTab
-          tabs={CATEGORY_TYPES}
-          activeTabIdx={activeTabIdx}
-          onTabChange={onCategoryTypeChange}
-        />
-      }
+      subHeaderProps={{
+        subHeader: (
+          <BaseScrollableTab
+            tabs={CATEGORY_TYPES}
+            activeTabIdx={activeTabIdx}
+            onTabChange={onCategoryTypeChange}
+          />
+        ),
+      }}
       fabProps={{
         show: true,
         onPress: () =>

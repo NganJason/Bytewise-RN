@@ -29,12 +29,14 @@ import { useError, useTransactionGroups } from '../../_shared/hooks';
 import { BaseFilter } from '../../Components/Common';
 
 const TODAY = new Date();
+const defaultBottomSpace = 80;
 
 const TransactionScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const [isCalendarActive, setIsCalendarActive] = useState(false);
+  const [calendarBottomSheetHeight, setCalendarBottomHeight] = useState(100);
 
   const [disableScroll] = useState(false);
 
@@ -66,6 +68,10 @@ const TransactionScreen = ({ navigation }) => {
     setActiveDate(getDateObjFromDateStr(e.dateString));
   };
 
+  const onBottomPlaceholderLayout = e => {
+    const { height } = e.nativeEvent.layout;
+    setCalendarBottomHeight(height + defaultBottomSpace);
+  };
   const renderDayExtraInfo = date => {
     const { dateString } = date;
     const [expense, income] = getDailyTotalExpenseIncome(dateString);
@@ -134,8 +140,8 @@ const TransactionScreen = ({ navigation }) => {
           />
         ),
       }}
-      subHeader={
-        !isCalendarActive ? (
+      subHeaderProps={{
+        subHeader: !isCalendarActive ? (
           <>
             <AggrSummary
               isLoading={isLoading}
@@ -152,17 +158,17 @@ const TransactionScreen = ({ navigation }) => {
                 },
               ]}
             />
-
             {filterComponent}
           </>
-        ) : null
-      }
+        ) : null,
+      }}
       disableScroll={isCalendarActive || disableScroll}
       bottomSheetModalProps={{
         show: isCalendarActive,
         bodyComponent: transactionsComponent,
         isLoading: isLoading,
         headerComponent: filterComponent,
+        snapPoints: [calendarBottomSheetHeight, '70%', '90%'],
       }}
       fabProps={{
         show: true,
@@ -170,36 +176,29 @@ const TransactionScreen = ({ navigation }) => {
       }}>
       {isCalendarActive ? (
         <>
-          <BaseButton
-            title="Today"
-            type="secondary"
-            size="sm"
-            onPress={onTodayPress}
-            align="flex-end"
-            margin={{ bottom: 4 }}
-          />
-          <BaseCalendar
-            currMonthStr={getFormattedDateString(activeDate)}
-            selectedDate={getFormattedDateString(activeDate)}
-            onDayPress={onDayPress}
-            dayExtraInfo={renderDayExtraInfo}
+          <View>
+            <BaseButton
+              title="Today"
+              type="secondary"
+              size="sm"
+              onPress={onTodayPress}
+              align="flex-end"
+              margin={{ bottom: 4 }}
+            />
+            <BaseCalendar
+              currMonthStr={getFormattedDateString(activeDate)}
+              selectedDate={getFormattedDateString(activeDate)}
+              onDayPress={onDayPress}
+              dayExtraInfo={renderDayExtraInfo}
+            />
+          </View>
+          <View
+            style={styles.calendarBottomPlaceholder}
+            onLayout={onBottomPlaceholderLayout}
           />
         </>
       ) : (
         transactionsComponent
-        // SEE HERE JASON NGAN YIP HONG
-        // <BaseLineChart
-        //   onTouchStart={() => setDisableScroll(true)}
-        // onTouchEnd={() => setDisableScroll(false)}
-        //   handleActiveData={e => console.log(e)}
-        //   data={[
-        //     { value: 0 },
-        //     { value: 100 },
-        //     { value: 150 },
-        //     { value: 90 },
-        //     { value: 140 },
-        //   ]}
-        // />
       )}
     </BaseScreenV2>
   );
@@ -213,6 +212,9 @@ const getStyles = _ => {
     dayInfoContainer: {
       minHeight: 14,
       alignItems: 'center',
+    },
+    calendarBottomPlaceholder: {
+      flex: 1,
     },
   });
 };

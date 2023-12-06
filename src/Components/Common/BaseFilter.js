@@ -34,7 +34,7 @@ const BaseFilter = ({
     }
   };
 
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState(selectedItems);
 
   const onSelect = item => {
     let newSelected = { ...selected };

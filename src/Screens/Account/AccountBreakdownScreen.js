@@ -9,9 +9,14 @@ import {
   BaseLoadableView,
   Transactions,
   IconButton,
+  BaseImage,
 } from '../../Components';
 import ROUTES from '../../_shared/constant/routes';
-import { ACCOUNT_TYPES, ACCOUNT_TYPE_CASH } from '../../_shared/apis/enum';
+import {
+  ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CASH,
+  ACCOUNT_TYPE_CREDIT_CARD,
+} from '../../_shared/apis/enum';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAccount } from '../../_shared/query';
 import {
@@ -28,6 +33,7 @@ import {
 } from '../../_shared/hooks';
 import { Amount } from '../../_shared/object';
 import { UserMetaContext } from '../../_shared/context/UserMetaContext';
+import { card, coin, coinsack } from '../../_shared/constant/asset';
 
 const AccountBreakdownScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -58,6 +64,16 @@ const AccountBreakdownScreen = ({ route }) => {
 
   const renderRows = () => {
     return <Transactions transactionGroups={transactionGroups} />;
+  };
+
+  const getImg = () => {
+    if (isAccountTypeAsset(accountType)) {
+      return coin;
+    }
+    if (accountType === ACCOUNT_TYPE_CREDIT_CARD) {
+      return card;
+    }
+    return coinsack;
   };
 
   const renderHeader = () => {
@@ -106,6 +122,7 @@ const AccountBreakdownScreen = ({ route }) => {
             {ACCOUNT_TYPES[account_type]}
           </BaseText>
         </View>
+        <BaseImage source={getImg()} containerStyle={styles.image} />
       </>
     );
   };
@@ -131,7 +148,14 @@ const AccountBreakdownScreen = ({ route }) => {
 
   return (
     <BaseScreenV2
-      subHeader={renderHeader()}
+      headerProps={{
+        backgroundColor: isAccountTypeAsset(accountType)
+          ? theme.colors.color4
+          : theme.colors.color13,
+      }}
+      subHeaderProps={{
+        subHeader: renderHeader(),
+      }}
       backButtonProps={{ show: true }}
       fabProps={{
         show: accountType !== ACCOUNT_TYPE_LOAN,
@@ -174,6 +198,14 @@ const getStyles = (theme, screenWidth, screenHeight) =>
     },
     editIcon: {
       marginLeft: 10,
+    },
+    image: {
+      width: screenHeight * 0.2,
+      height: screenHeight * 0.18,
+      position: 'absolute',
+      right: screenWidth * -0.1,
+      bottom: 5,
+      zIndex: -1,
     },
   });
 

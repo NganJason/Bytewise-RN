@@ -193,11 +193,11 @@ const CategoryBreakdownScreen = ({ route }) => {
     <BaseScreenV2
       isLoading={isScreenLoading()}
       backButtonProps={{ show: true }}
-      subHeader={
-        !isScreenLoading() && (
+      subHeaderProps={{
+        subHeader: !isScreenLoading() && (
           <View style={styles.subHeader}>{renderSubHeader()}</View>
-        )
-      }
+        ),
+      }}
       fabProps={{
         show: true,
         onPress: () =>
