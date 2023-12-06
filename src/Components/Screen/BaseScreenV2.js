@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import { Header, FAB, useTheme, Icon } from '@rneui/themed';
 
@@ -238,21 +239,12 @@ const BaseScreenV2 = ({
                     {bottomSheetModalHeader}
                   </View>
                   <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
-                    <KeyboardAwareScrollView
-                      keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
-                      extraScrollHeight={20}
-                      scrollEnabled
-                      contentContainerStyle={{
-                        ...styles.scrollView,
-                        ...styles.body,
-                        ...styles.bottomSheetModalBody,
-                      }}
+                    <BottomSheetScrollView
+                      contentContainerStyle={styles.scrollView}
                       showsHorizontalScrollIndicator={false}
-                      showsVerticalScrollIndicator={false}
-                      scrollEventThrottle={20}
-                      nestedScrollEnabled>
-                      {bottomSheetModalBody}
-                    </KeyboardAwareScrollView>
+                      showsVerticalScrollIndicator={false}>
+                      <View style={styles.body}>{bottomSheetModalBody}</View>
+                    </BottomSheetScrollView>
                   </BaseLoadableViewV2>
                 </BottomSheetModal>
               </BottomSheetModalProvider>
