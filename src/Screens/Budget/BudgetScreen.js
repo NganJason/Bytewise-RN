@@ -159,15 +159,17 @@ const BudgetScreen = () => {
       isLoading={isLoading()}
       hideInfoButtonProps={{ show: true }}
       drawerButtonProps={{ show: true }}
-      subHeader={
-        <>
-          <BaseScrollableTab
-            tabs={BUDGET_TYPES}
-            activeTabIdx={activeTabIdx}
-            onTabChange={onBudgetTypeChange}
-          />
-        </>
-      }
+      subHeaderProps={{
+        subHeader: (
+          <>
+            <BaseScrollableTab
+              tabs={BUDGET_TYPES}
+              activeTabIdx={activeTabIdx}
+              onTabChange={onBudgetTypeChange}
+            />
+          </>
+        ),
+      }}
       headerProps={{
         centerComponent: (
           <DateNavigator

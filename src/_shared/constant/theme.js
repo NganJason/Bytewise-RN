@@ -20,6 +20,8 @@ const COLORS = {
   darkBlue: '#162B3F',
   veryLightBlue: '#F3F7FB',
 
+  lightPurple: '#F3F7FB',
+
   brightRed: '#B31312',
   regularRed: '#B85050',
   lightRed: '#EA6F7C',
@@ -75,6 +77,7 @@ export const THEME = createTheme({
 
     color12: COLORS.brown,
     color13: COLORS.lightBrown,
+    color14: COLORS.lightPurple,
 
     brightRed: COLORS.brightRed,
     regularRed: COLORS.regularRed,

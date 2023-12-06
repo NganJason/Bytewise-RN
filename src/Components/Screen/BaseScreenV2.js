@@ -31,16 +31,21 @@ const BaseScreenV2 = ({
   children,
   isLoading = false,
   disableScroll = false,
-  subHeader = null,
-  subHeaderScrollable = false, // allows subheader to be scrollable
-  enableSubHeaderScroll = false, // controls the enable/disable of subheader scroll
-  enableLinearGradientBackground = false,
-  enableBodyShadow = true,
+  subHeaderProps: {
+    subHeader = null,
+    subHeaderScrollable = false, // allows subheader to be scrollable
+    enableSubHeaderScroll = false, // controls the enable/disable of subheader scroll
+  } = {},
+  bodyProps: {
+    enableLinearGradientBackground: enableLinearGradientBackground = false,
+    enableBodyShadow: enableBodyShadow = true,
+  } = {},
   headerProps: {
     leftComponent = null,
     rightComponent = null,
     centerComponent = null,
     headerStyle: headerStyle = {},
+    backgroundColor = '#F3F7FB',
   } = {},
   fabProps: {
     show: showFab = false,
@@ -56,6 +61,7 @@ const BaseScreenV2 = ({
     headerComponent: bottomSheetModalHeader = null,
     bodyComponent: bottomSheetModalBody = null,
     isLoading: isBottomSheetModalLoading = false,
+    snapPoints: snapPoints = [],
   } = {},
 }) => {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
@@ -71,7 +77,7 @@ const BaseScreenV2 = ({
   });
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['10%', '40%', '70%', '90%'], []);
+  const defaultSnapPoints = useMemo(() => [160, '70%', '90%'], []);
 
   useEffect(() => {
     bottomSheetModalRef?.current?.present();
@@ -166,6 +172,7 @@ const BaseScreenV2 = ({
           headerStyle,
           { marginTop: -insets.top }, // offset safe area inset
           enableHeaderShadow && styles.headerShadow,
+          { backgroundColor: backgroundColor },
         ]}
       />
     );
@@ -193,7 +200,10 @@ const BaseScreenV2 = ({
           disableScroll={!enableSubHeaderScroll}
           onIsAtTopChange={onSubheaderAtTopChange}>
           {subHeader !== null && (
-            <View style={styles.subHeader}>{subHeader}</View>
+            <View
+              style={[styles.subHeader, { backgroundColor: backgroundColor }]}>
+              {subHeader}
+            </View>
           )}
           <View
             style={[
@@ -217,7 +227,9 @@ const BaseScreenV2 = ({
                   enablePanDownToClose={false}
                   ref={bottomSheetModalRef}
                   index={0}
-                  snapPoints={snapPoints}>
+                  snapPoints={
+                    snapPoints.length > 0 ? snapPoints : defaultSnapPoints
+                  }>
                   <View
                     style={{
                       ...styles.subHeader,
@@ -227,13 +239,18 @@ const BaseScreenV2 = ({
                   </View>
                   <BaseLoadableViewV2 isLoading={isBottomSheetModalLoading}>
                     <KeyboardAwareScrollView
+                      keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
+                      extraScrollHeight={20}
+                      scrollEnabled
                       contentContainerStyle={{
                         ...styles.scrollView,
                         ...styles.body,
                         ...styles.bottomSheetModalBody,
                       }}
                       showsHorizontalScrollIndicator={false}
-                      showsVerticalScrollIndicator={false}>
+                      showsVerticalScrollIndicator={false}
+                      scrollEventThrottle={20}
+                      nestedScrollEnabled>
                       {bottomSheetModalBody}
                     </KeyboardAwareScrollView>
                   </BaseLoadableViewV2>
@@ -331,7 +348,6 @@ const getStyles = (
       flex: 1,
     },
     header: {
-      backgroundColor: theme.colors.color4,
       minHeight: screenHeight * 0.1,
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: STANDARD_PADDING,
@@ -369,7 +385,6 @@ const getStyles = (
       paddingHorizontal: STANDARD_PADDING,
       paddingTop: 0,
       paddingBottom: STANDARD_PADDING,
-      backgroundColor: theme.colors.color4,
     },
     body: {
       flex: 1,
