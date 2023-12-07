@@ -21,7 +21,7 @@ const HoldingRow = ({
   latest_value: latestValue = 0,
   currency = DEFAULT_INVESTMENT_CURRENCY,
   gain = 0,
-  percent_gain: percentGain = 0,
+  percent_gain: percentGain,
   quote = { latest_price: 0, currency: 0, change_percent: 0 },
 }) => {
   const { theme } = useTheme();
