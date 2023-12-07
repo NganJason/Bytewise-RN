@@ -33,7 +33,8 @@ const useTransactionGroups = (
   );
 
   const [selectedFilters, setSelectedFilters] = useState({
-    Category: [],
+    Expense: [],
+    Income: [],
     Account: [],
   });
 
@@ -44,9 +45,13 @@ const useTransactionGroups = (
 
   const getFilteredCategoryIDs = () => {
     let catIDs = categoryIDs;
-    (selectedFilters?.Category || []).map(d => {
+    let filteredExpense = selectedFilters?.Expense || [];
+    let filteredIncome = selectedFilters?.Income || [];
+    let filteredCategories = [...filteredExpense, ...filteredIncome];
+
+    filteredCategories.map(d => {
       catIDs.push(d.category_id);
-    });
+    });console.log(catIDs);
     return catIDs;
   };
 
@@ -90,17 +95,41 @@ const useTransactionGroups = (
   };
 
   const getFilterOptions = () => {
-    let categoryOptions = categories.map(d => {
-      d.name = d.category_name;
-      return d;
+    let expenseOptions = [];
+    categories.map(d => {
+      if (d.category_type === TRANSACTION_TYPE_EXPENSE) {
+        d.name = d.category_name;
+        expenseOptions.push(d);
+      }
+    });
+
+    let incomeOptions = [];
+    categories.map(d => {
+      if (d.category_type === TRANSACTION_TYPE_INCOME) {
+        d.name = d.category_name;
+        incomeOptions.push(d);
+      }
     });
 
     return [
       {
-        name: 'Category',
+        name: 'Expense',
         iconName: 'grid',
         iconType: 'feather',
-        items: categoryOptions,
+        items: expenseOptions,
+        emptyContentWithCallback: onPress => (
+          <EmptyContent
+            item={EmptyContentConfig.category}
+            route={ROUTES.categoryForm}
+            onRedirect={onPress}
+          />
+        ),
+      },
+      {
+        name: 'Income',
+        iconName: 'grid',
+        iconType: 'feather',
+        items: incomeOptions,
         emptyContentWithCallback: onPress => (
           <EmptyContent
             item={EmptyContentConfig.category}
