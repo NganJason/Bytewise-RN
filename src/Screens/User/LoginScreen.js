@@ -26,8 +26,8 @@ const LoginScreen = () => {
   const [formErrors, setFormErrors] = useState({});
 
   const [loginForm, setLoginForm] = useState({
-    email: 'nganjason007@gmail.com',
-    password: 'Admin123',
+    email: '',
+    password: '',
   });
 
   useEffect(() => {
