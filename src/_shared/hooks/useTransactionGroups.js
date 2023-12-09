@@ -51,7 +51,7 @@ const useTransactionGroups = (
 
     filteredCategories.map(d => {
       catIDs.push(d.category_id);
-    });console.log(catIDs);
+    });
     return catIDs;
   };
 

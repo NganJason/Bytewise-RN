@@ -13,6 +13,8 @@ export const useCreateAccount = (opts = {}) => {
   return useMutation(createAccount, {
     onSuccess: resp => {
       queryClient.invalidateQueries([queryKeys.accounts]);
+      queryClient.invalidateQueries([queryKeys.accountsSummary]);
+      queryClient.invalidateQueries([queryKeys.metrics]);
       opts.onSuccess && opts.onSuccess(resp);
     },
   });
@@ -25,15 +27,11 @@ export const useUpdateAccount = (opts = {}) => {
     onSuccess: ({ account = {} }) => {
       const { account_id = '' } = account;
 
-      // refetch all accounts
       queryClient.invalidateQueries([queryKeys.accounts]);
-
-      // refetch account info
       queryClient.invalidateQueries([queryKeys.account, account_id]);
-
       queryClient.invalidateQueries([queryKeys.transactionGroups]);
-
-      // refetch all transactions since account name might have changed
+      queryClient.invalidateQueries([queryKeys.accountsSummary]);
+      queryClient.invalidateQueries([queryKeys.metrics]);
       opts.onSuccess && opts.onSuccess();
     },
   });
@@ -46,8 +44,8 @@ export const useDeleteAccount = (opts = {}) => {
     onSuccess: () => {
       // refetch all accounts
       queryClient.invalidateQueries([queryKeys.accounts]);
-
-      // refetch all transactions since account name might have changed
+      queryClient.invalidateQueries([queryKeys.accountsSummary]);
+      queryClient.invalidateQueries([queryKeys.metrics]);
       opts.onSuccess && opts.onSuccess();
     },
   });

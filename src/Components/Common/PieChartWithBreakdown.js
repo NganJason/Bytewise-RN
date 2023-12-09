@@ -7,7 +7,8 @@ import { DEFAULT_CURRENCY, getColors } from '../../_shared/util';
 import BaseChartLegend from '../Chart/BaseChartLegend';
 import BasePieChart from '../Chart/BasePieChart';
 import { AmountText, BaseText } from '../Text';
-import { BaseRow } from '../View';
+import { BaseDivider, BaseRow } from '../View';
+import EmptyContent from './EmptyContent';
 
 const defaultIdx = -1;
 
@@ -21,7 +22,7 @@ const PieChartWithBreakdown = ({
       onRowPress: function () {},
     },
   ],
-  emptyContent = <></>,
+  emptyContent = <EmptyContent />,
   centerComponent = <></>,
   rowSensitive = false,
   onSelectedItemChange = function (item) {}, // item=null if nothing is toggled
@@ -86,7 +87,12 @@ const PieChartWithBreakdown = ({
     });
 
     if (rows.length === 0) {
-      return emptyContent;
+      return (
+        <>
+          <BaseDivider margin={14} />
+          <View style={styles.emptyContent}>{emptyContent}</View>
+        </>
+      );
     }
     return rows;
   };
@@ -148,6 +154,10 @@ const getStyles = _ =>
     },
     legend: {
       flex: 1,
+    },
+    emptyContent: {
+      height: '50%',
+      justifyContent: 'center',
     },
     rowValue: {
       flex: 1,

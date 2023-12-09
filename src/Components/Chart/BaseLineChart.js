@@ -26,14 +26,18 @@ const BaseLineChart = ({
   const [touched, setTouched] = useState(false);
 
   const scaleDataToRange = () => {
-    const vals = data.map(d => d.value);
+    const vals = data.map(d => Number(d.value));
     const min = Math.min(...vals);
     const max = Math.max(...vals);
 
     let ds = data.map((d, i) => {
-      const normalizedValue =
-        ((d.value - min) / (max - min)) * (UPPER_LIMIT - LOWER_LIMIT) +
-        LOWER_LIMIT;
+      let normalizedValue = d.value;
+      if (max - min !== 0) {
+        normalizedValue =
+          ((Number(d.value) - min) / (max - min)) *
+            (UPPER_LIMIT - LOWER_LIMIT) +
+          LOWER_LIMIT;
+      }
 
       return {
         ...d,
@@ -44,7 +48,6 @@ const BaseLineChart = ({
         value: normalizedValue,
       };
     });
-
     return ds;
   };
 
