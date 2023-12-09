@@ -108,6 +108,7 @@ export const updateHolding = async ({
   holding_id = '',
   total_cost = 0,
   latest_value = 0,
+  currency = '',
   lots = [],
 }) => {
   try {
@@ -116,6 +117,7 @@ export const updateHolding = async ({
       symbol: symbol,
       total_cost: total_cost !== null ? String(total_cost) : total_cost,
       latest_value: latest_value !== null ? String(latest_value) : latest_value,
+      currency: currency,
       lots:
         lots.length > 0
           ? [
