@@ -27,7 +27,7 @@ import { useCreateAccount, useUpdateAccount } from '../../_shared/mutations';
 import ROUTES from '../../_shared/constant/routes';
 import { validateAccount } from '../../_shared/validator';
 import { useError, useValidation } from '../../_shared/hooks';
-import { isAccountTypeAsset } from '../../_shared/util';
+import { isAccountTypeAsset, isAccountTypeDebt } from '../../_shared/util';
 import { OnboardingDataContext } from '../../_shared/context';
 import { useDeleteAccount } from '../../_shared/mutations/account';
 import { BaseOverlay } from '../../Components/View';
@@ -218,7 +218,10 @@ const AccountForm = ({ route }) => {
       balance = null;
     } else if (isAccountTypeAsset(accountForm.account_type)) {
       balance = String(accountForm.balance);
-    } else {
+    } else if (
+      isAccountTypeDebt(accountForm.account_type) &&
+      accountForm.balance > 0
+    ) {
       balance = String(accountForm.balance * -1);
     }
 

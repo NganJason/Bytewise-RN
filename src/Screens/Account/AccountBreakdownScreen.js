@@ -203,7 +203,7 @@ const getStyles = (theme, screenWidth, screenHeight) =>
       width: screenHeight * 0.2,
       height: screenHeight * 0.18,
       position: 'absolute',
-      right: screenWidth * -0.1,
+      right: screenWidth * -0.15,
       bottom: 5,
       zIndex: -1,
     },
