@@ -45,7 +45,7 @@ const BaseLineChart = ({
         idx: i,
         rawValue: d.value,
         // library field
-        value: normalizedValue,
+        value: Number(normalizedValue),
       };
     });
     return ds;
